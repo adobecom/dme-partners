@@ -20,6 +20,7 @@ const CONFIG = {
   },
 };
 
+//
 // Load LCP image immediately
 (function loadLCPImage() {
   const lcpImg = document.querySelector('img');
