@@ -1,16 +1,4 @@
-/*
- * Copyright 2022 Adobe. All rights reserved.
- * This file is licensed to you under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License. You may obtain a copy
- * of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under
- * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
- * OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
-
-import { setLibs, decorateArea } from './utils.js';
+import { setLibs } from './utils.js';
 
 // Add project-wide style path here.
 const STYLES = '';
@@ -23,10 +11,8 @@ const CONFIG = {
   // codeRoot: '',
   // contentRoot: '',
   // imsClientId: 'college',
-  // imsScope: 'AdobeID,openid,gnav',
   // geoRouting: 'off',
   // fallbackRouting: 'off',
-  decorateArea,
   locales: {
     '': { ietf: 'en-US', tk: 'hah7vzn.css' },
     de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
@@ -34,8 +20,11 @@ const CONFIG = {
   },
 };
 
-// Decorate the page with site specific needs.
-decorateArea();
+// Load LCP image immediately
+(function loadLCPImage() {
+  const lcpImg = document.querySelector('img');
+  lcpImg?.removeAttribute('loading');
+}());
 
 /*
  * ------------------------------------------------------------
@@ -58,7 +47,8 @@ const miloLibs = setLibs(LIBS);
 
 (async function loadPage() {
   const { loadArea, setConfig } = await import(`${miloLibs}/utils/utils.js`);
-  const config = setConfig({ ...CONFIG, miloLibs });
-  console.log(config);
+
+  setConfig({ ...CONFIG, miloLibs });
   await loadArea();
 }());
+
