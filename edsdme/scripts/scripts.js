@@ -6,11 +6,19 @@ const STYLES = '';
 // Use 'https://milo.adobe.com/libs' if you cannot map '/libs' to milo's origin.
 const LIBS = '/libs';
 
+const prodHosts = [
+  'main--dme-partners--adobecom.hlx.page',
+  'main--dme-partners--adobecom.hlx.live',
+  'partners.adobe.com'
+];
+
+const imsClientId = prodHosts.includes(window.location.host) ? 'MILO_PARTNERS_PROD' : 'MILO_PARTNERS_STAGE';
+
 // Add any config options.
 const CONFIG = {
   // codeRoot: '',
   // contentRoot: '',
-  // imsClientId: 'college',
+  imsClientId: imsClientId,
   // geoRouting: 'off',
   // fallbackRouting: 'off',
   locales: {
@@ -20,7 +28,12 @@ const CONFIG = {
   },
 };
 
-//
+(function removeAccessToken() {
+  if (window.location.hash.startsWith('#access_token')) {
+    window.location.hash = '';
+  }
+}());
+
 // Load LCP image immediately
 (function loadLCPImage() {
   const lcpImg = document.querySelector('img');
