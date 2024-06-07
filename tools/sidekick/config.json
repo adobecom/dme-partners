@@ -37,7 +37,9 @@
       "title": "Send to CaaS",
       "id": "sendtocaas",
       "environments": [
-        "prod"
+        "prod",
+        "preview",
+        "live"
       ],
       "event": "send-to-caas",
       "excludePaths": [
