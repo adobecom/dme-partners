@@ -34,6 +34,21 @@
     },
     {
       "containerId": "tools",
+      "title": "Send to CaaS",
+      "id": "sendtocaas",
+      "environments": [
+        "prod",
+        "preview",
+        "live"
+      ],
+      "event": "send-to-caas",
+      "excludePaths": [
+        "https://milo.adobe.com/tools/caas**",
+        "*.json"
+      ]
+    },
+    {
+      "containerId": "tools",
       "title": "Check Schema",
       "id": "checkschema",
       "environments": ["prod"],
