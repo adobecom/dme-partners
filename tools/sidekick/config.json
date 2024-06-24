@@ -34,6 +34,19 @@
     },
     {
       "containerId": "tools",
+      "id": "localizev2",
+      "title": "Localize v2",
+      "environments": [
+        "edit"
+      ],
+      "url": "https://main--milo--adobecom.hlx.page/tools/loc/index.html?project=dc--adobecom",
+      "passReferrer": true,
+      "passConfig": true,
+      "excludePaths": [ "/**" ],
+      "includePaths": [ "**/:x**" ]
+    },
+    {
+      "containerId": "tools",
       "title": "Send to CaaS",
       "id": "sendtocaas",
       "environments": [
