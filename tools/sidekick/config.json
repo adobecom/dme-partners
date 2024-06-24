@@ -34,6 +34,16 @@
     },
     {
       "containerId": "tools",
+      "id": "localize-2",
+      "title": "Localize (V2)",
+      "environments": [ "edit" ],
+      "url": "https://stage--dme-partners--adobecom.hlx.page/tools/loc?milolibs=locui",
+      "passReferrer": true,
+      "passConfig": true,
+      "includePaths": [ "**.xlsx**" ]
+    },
+    {
+      "containerId": "tools",
       "title": "Send to CaaS",
       "id": "sendtocaas",
       "environments": [
