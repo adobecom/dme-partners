@@ -34,16 +34,13 @@
     },
     {
       "containerId": "tools",
-      "id": "localizev2",
-      "title": "Localize v2",
-      "environments": [
-        "edit"
-      ],
-      "url": "https://main--milo--adobecom.hlx.page/tools/loc/index.html?project=dc--adobecom",
+      "id": "localize-2",
+      "title": "Localize (V2)",
+      "environments": [ "edit" ],
+      "url": "https://main--dme-partners--adobecom.hlx.page/tools/loc?milolibs=locui",
       "passReferrer": true,
       "passConfig": true,
-      "excludePaths": [ "/**" ],
-      "includePaths": [ "**/:x**" ]
+      "includePaths": [ "**.xlsx**" ]
     },
     {
       "containerId": "tools",
