@@ -37,7 +37,7 @@
       "id": "localize-2",
       "title": "Localize (V2)",
       "environments": [ "edit" ],
-      "url": "https://stage--dme-partners--adobecom.hlx.page/tools/loc?milolibs=locui",
+      "url": "https://main--milo--adobecom.hlx.page/tools/loc/index.html?project=dc--adobecom",
       "passReferrer": true,
       "passConfig": true,
       "includePaths": [ "**.xlsx**" ]
