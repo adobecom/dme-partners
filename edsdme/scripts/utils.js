@@ -30,6 +30,12 @@ export const [setLibs, getLibs] = (() => {
   ];
 })();
 
+export const prodHosts = [
+  'main--dme-partners--adobecom.hlx.page',
+  'main--dme-partners--adobecom.hlx.live',
+  'partners.adobe.com'
+];
+
 /*
  * ------------------------------------------------------------
  * Edit above at your own risk.
@@ -40,4 +46,21 @@ export const [setLibs, getLibs] = (() => {
 
 export async function useMiloSample() {
   const { createTag } = await import(`${getLibs()}/utils/utils.js`);
+}
+
+const miloLibs = setLibs('/libs');
+
+const { createTag, localizeLink, getConfig } = await import(`${miloLibs}/utils/utils.js`);
+export { createTag, localizeLink, getConfig };
+
+const { replaceText } = await import(`${miloLibs}/features/placeholders.js`);
+export { replaceText };
+
+export function populateLocalizedTextFromListItems(el, localizedText) {
+  const liList = Array.from(el.querySelectorAll('li'));
+  liList.forEach(liEl => {
+    let liContent = liEl.innerText.trim().toLowerCase().replace(/ /g, '-');
+    if (liContent.endsWith('_default')) liContent = liContent.slice(0, -8);
+    localizedText[`{{${liContent}}}`] = liContent;
+  });
 }
