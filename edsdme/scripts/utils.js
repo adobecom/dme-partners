@@ -33,7 +33,7 @@ export const [setLibs, getLibs] = (() => {
 export const prodHosts = [
   'main--dme-partners--adobecom.hlx.page',
   'main--dme-partners--adobecom.hlx.live',
-  'partners.adobe.com'
+  'partners.adobe.com',
 ];
 
 /*
@@ -58,7 +58,7 @@ export { replaceText };
 
 export function populateLocalizedTextFromListItems(el, localizedText) {
   const liList = Array.from(el.querySelectorAll('li'));
-  liList.forEach(liEl => {
+  liList.forEach((liEl) => {
     let liContent = liEl.innerText.trim().toLowerCase().replace(/ /g, '-');
     if (liContent.endsWith('_default')) liContent = liContent.slice(0, -8);
     localizedText[`{{${liContent}}}`] = liContent;

@@ -9,7 +9,7 @@ const LIBS = '/libs';
 const prodHosts = [
   'main--dme-partners--adobecom.hlx.page',
   'main--dme-partners--adobecom.hlx.live',
-  'partners.adobe.com'
+  'partners.adobe.com',
 ];
 
 const imsClientId = prodHosts.includes(window.location.host) ? 'MILO_PARTNERS_PROD' : 'MILO_PARTNERS_STAGE';
@@ -77,4 +77,3 @@ const miloLibs = setLibs(LIBS);
   setConfig({ ...CONFIG, miloLibs });
   await loadArea();
 }());
-

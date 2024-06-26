@@ -1,0 +1,210 @@
+[
+  {
+    "id": "1b239578-762f-52a0-ae7c-d4613a4144d7",
+    "showCard": {
+      "from": "",
+      "until": ""
+    },
+    "styles": {
+      "typeOverride": "default",
+      "backgroundImage": "https://main--dme-partners--adobecom.hlx.live/default-meta-image.png?width=1200&format=pjpg&optimize=medium",
+      "backgroundAltText": "Test1",
+      "mnemonic": "",
+      "icon": "",
+      "iconAlt": ""
+    },
+    "overlays": {
+      "banner": {
+        "backgroundColor": "#EAEAEA",
+        "fontColor": "#323232",
+        "description": "",
+        "icon": ""
+      },
+      "logo": {
+        "src": ""
+      },
+      "label": {
+        "description": ""
+      },
+      "videoButton": {
+        "url": ""
+      }
+    },
+    "tags": [
+      {
+        "id": "caas:adobe-partners/cpp/partner-level/public"
+      },
+      {
+        "id": "caas:adobe-partners/cpp"
+      },
+      {
+        "id": "caas:adobe-partners/collections/announcements"
+      }
+    ],
+    "contentArea": {
+      "detailText": "This is the detail of automation regression",
+      "title": "\n              Dragana cpp card2\n            ",
+      "url": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card2",
+      "description": "Test1",
+      "dateDetailText": {
+        "type": "date-interval",
+        "startTime": "",
+        "endTime": ""
+      }
+    },
+    "footer": [
+      {
+        "divider": false,
+        "left": [
+          {
+            "type": "bookmark",
+            "saveCardIcon": "",
+            "unsaveCardIcon": "",
+            "cardSaveText": "",
+            "unsaveCardText": ""
+          }
+        ],
+        "center": [],
+        "right": [
+          {
+            "type": "button",
+            "style": "",
+            "text": "Read now",
+            "href": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card2"
+          }
+        ]
+      }
+    ],
+    "search": {
+      "key": "topic"
+    },
+    "cardDate": "2024-05-11T22:00:00.000Z",
+    "createdDate": "2024-05-11T22:00:00.000Z",
+    "modifiedDate": "2024-06-26T10:23:07.000Z",
+    "startDate": "",
+    "endDate": "",
+    "ctaLink": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card2",
+    "arbitrary": [
+      {
+        "key": "region",
+        "value": "americas"
+      },
+      {
+        "key": "applications",
+        "value": "advertising-cloud"
+      },
+      {
+        "key": "topic",
+        "value": "amplify"
+      }
+    ],
+    "overlayLink": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card2",
+    "lang": "en",
+    "country": "us",
+    "origin": "dme-partners"
+  },
+  {
+    "id": "eb36ed47-1b53-56c9-a231-65254b2fd6e5",
+    "showCard": {
+      "from": "",
+      "until": ""
+    },
+    "styles": {
+      "typeOverride": "default",
+      "backgroundImage": "https://main--dme-partners--adobecom.hlx.page/default-meta-image.png?width=1200&format=pjpg&optimize=medium",
+      "backgroundAltText": "Test1",
+      "mnemonic": "",
+      "icon": "",
+      "iconAlt": ""
+    },
+    "overlays": {
+      "banner": {
+        "backgroundColor": "#EAEAEA",
+        "fontColor": "#323232",
+        "description": "",
+        "icon": ""
+      },
+      "logo": {
+        "src": ""
+      },
+      "label": {
+        "description": ""
+      },
+      "videoButton": {
+        "url": ""
+      }
+    },
+    "tags": [
+      {
+        "id": "caas:adobe-partners/cpp/partner-level/public"
+      },
+      {
+        "id": "caas:adobe-partners/cpp"
+      },
+      {
+        "id": "caas:adobe-partners/collections/announcements"
+      }
+    ],
+    "contentArea": {
+      "detailText": "This is the detail of automation regression",
+      "title": "\n              Dragana cpp card1\n            ",
+      "url": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card1",
+      "description": "Test1",
+      "dateDetailText": {
+        "type": "date-interval",
+        "startTime": "",
+        "endTime": ""
+      }
+    },
+    "footer": [
+      {
+        "divider": false,
+        "left": [
+          {
+            "type": "bookmark",
+            "saveCardIcon": "",
+            "unsaveCardIcon": "",
+            "cardSaveText": "",
+            "unsaveCardText": ""
+          }
+        ],
+        "center": [],
+        "right": [
+          {
+            "type": "button",
+            "style": "",
+            "text": "Read now",
+            "href": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card1"
+          }
+        ]
+      }
+    ],
+    "search": {
+      "key": "topic"
+    },
+    "cardDate": "2024-05-11T22:00:00.000Z",
+    "createdDate": "2024-05-11T22:00:00.000Z",
+    "modifiedDate": "2024-06-26T11:07:50.000Z",
+    "startDate": "",
+    "endDate": "",
+    "ctaLink": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card1",
+    "arbitrary": [
+      {
+        "key": "region",
+        "value": "americas"
+      },
+      {
+        "key": "applications",
+        "value": "advertising-cloud"
+      },
+      {
+        "key": "topic",
+        "value": "amplify"
+      }
+    ],
+    "overlayLink": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card1",
+    "lang": "en",
+    "country": "us",
+    "origin": "dme-partners"
+  }
+]

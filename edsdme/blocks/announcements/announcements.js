@@ -1,7 +1,7 @@
-import { getLibs, replaceText, getConfig, populateLocalizedTextFromListItems } from './../../scripts/utils.js';
+import { getLibs, replaceText, getConfig, populateLocalizedTextFromListItems } from '../../scripts/utils.js';
 import { Announcements } from './AnnouncementsCards.js';
 
-function declarePartnerNews() {
+function declareAnnouncements() {
   if (customElements.get('announcements-cards')) return;
   customElements.define('announcements-cards', Announcements);
 }
@@ -21,7 +21,7 @@ export default async function init(el) {
 
   const sectionIndex = el.parentNode.getAttribute('data-idx');
 
-  let localizedText = {
+  const localizedText = {
     '{{apply}}': 'Apply',
     '{{back}}': 'Back',
     '{{clear-all}}': 'Clear all',
@@ -38,7 +38,7 @@ export default async function init(el) {
     '{{previous-month}}': 'Previous month',
     '{{results}}': 'Results',
     '{{search}}': 'Search',
-    '{{show-all}}': 'Show all'
+    '{{show-all}}': 'Show all',
   };
 
   populateLocalizedTextFromListItems(el, localizedText);
@@ -52,7 +52,7 @@ export default async function init(el) {
     import(`${miloLibs}/features/spectrum-web-components/dist/progress-circle.js`),
   ]);
 
-  declarePartnerNews();
+  declareAnnouncements();
 
   const dateFilter = {
     key: 'date',
@@ -62,20 +62,20 @@ export default async function init(el) {
       { key: 'current-month', value: localizedText['{{current-month}}'], parentKey: 'date', checked: false },
       { key: 'previous-month', value: localizedText['{{previous-month}}'], parentKey: 'date', checked: false },
       { key: 'last-90-days', value: localizedText['{{last-90-days}}'], parentKey: 'date', checked: false },
-    ]
+    ],
   };
 
   const blockData = {
-    'localizedText': localizedText,
-    'tableData' : el.children,
-    'dateFilter': dateFilter,
-    'cardsPerPage': 12,
-    'ietf': config.locale.ietf,
-    'collectionTags': '"caas:adobe-partners/collections/announcements"'
-  }
+    localizedText,
+    tableData: el.children,
+    dateFilter,
+    cardsPerPage: 12,
+    ietf: config.locale.ietf,
+    collectionTags: '"caas:adobe-partners/collections/announcements"',
+  };
 
   const app = document.createElement('announcements-cards');
-  app.className = 'content partner-news-wrapper';
+  app.className = 'content announcements-wrapper';
   app.blockData = blockData;
   app.setAttribute('data-idx', sectionIndex);
   el.replaceWith(app);
@@ -84,5 +84,4 @@ export default async function init(el) {
   performance.mark('announcements-cards:end');
   performance.measure('announcements-cards block', 'announcements-cards:start', 'announcements-cards:end');
   return app;
-  return el;
 }
