@@ -1,8 +1,8 @@
 import { readFile } from '@web/test-runner-commands';
 import { expect } from '@esm-bundle/chai';
 import sinon from 'sinon';
-import init from './../../../edsdme/blocks/announcements/announcements.js';
-import { PartnerCards } from "./../../../edsdme/components/PartnerCards.js";
+import init from '../../../edsdme/blocks/announcements/announcements.js';
+import PartnerCards from '../../../edsdme/components/PartnerCards.js';
 
 const cardsString = await readFile({ path: './mocks/cards.json' });
 const cards = JSON.parse(cardsString);
@@ -11,13 +11,14 @@ describe('announcements block', () => {
   beforeEach(async () => {
     sinon.stub(PartnerCards.prototype, 'fetchData').resolves({ cards });
 
-    sinon.stub(PartnerCards.prototype, 'firstUpdated').callsFake(async function() {
-      this.allCards = this.cards = cards;
+    sinon.stub(PartnerCards.prototype, 'firstUpdated').callsFake(async function () {
+      this.allCards = cards;
+      this.cards = cards;
       this.paginatedCards = this.cards.slice(0, 1);
       this.hasResponseData = true;
     });
 
-    await import('./../../../edsdme/scripts/scripts.js');
+    await import('../../../edsdme/scripts/scripts.js');
     document.body.innerHTML = await readFile({ path: './mocks/body.html' });
   });
 

@@ -1,14 +1,15 @@
-import { getLibs } from './../../scripts/utils.js';
-const miloLibs = getLibs();
-const { html, css, repeat } = await import (`${miloLibs}/deps/lit-all.min.js`);
-import { dateFilterStyles, loadMorePaginationStyles } from "./../../components/PartnerCardsStyles.js";
-import { PartnerCards } from "./../../components/PartnerCards.js";
+import { getLibs } from '../../scripts/utils.js';
+import { dateFilterStyles, loadMorePaginationStyles } from '../../components/PartnerCardsStyles.js';
+import PartnerCards from '../../components/PartnerCards.js';
 
-export class Announcements extends PartnerCards {
+const miloLibs = getLibs();
+const { html, css, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
+
+export default class Announcements extends PartnerCards {
   static styles = [
     PartnerCards.styles,
     css`${loadMorePaginationStyles}`,
-    css`${dateFilterStyles}`
+    css`${dateFilterStyles}`,
   ];
 
   static properties = {
@@ -26,32 +27,31 @@ export class Announcements extends PartnerCards {
     startDate.setHours(0, 0, 0, 0);
     startDate.setDate(startDate.getDate() - 180);
 
-    this.allCards =  this.allCards.filter(card => {
+    this.allCards = this.allCards.filter((card) => {
       const cardDate = new Date(card.cardDate);
       return cardDate >= startDate;
-    })
+    });
 
     if (this.blockData.dateFilter) this.selectedDateFilter = this.blockData.dateFilter.tags[0];
   }
 
   get pagination() {
     if (this.cards.length === this.paginatedCards.length) {
-      return ''
-    } else {
-      return html `<button class="load-more-btn" @click="${this.handleLoadMore}" aria-label="${this.blockData.localizedText['{{load-more}}']}">${this.blockData.localizedText['{{load-more}}']}</button>`
+      return '';
     }
+    return html`<button class="load-more-btn" @click="${this.handleLoadMore}" aria-label="${this.blockData.localizedText['{{load-more}}']}">${this.blockData.localizedText['{{load-more}}']}</button>`;
   }
 
   get dateFilter() {
     const { dateFilter: filter } = this.blockData;
 
-    return  html`
+    return html`
       <div class="filter">
         <button class="filter-header" @click=${(e) => this.toggleFilter(e.currentTarget.parentNode)} aria-label="${filter.value}">
           <span class="filter-label">${filter.value}</span>
           <sp-icon-chevron-down class="filter-chevron-icon" />
         </button>
-        <button class="filter-selected-tags-count-btn ${this.selectedDateFilter.default || !Object.keys(this.selectedDateFilter).length ? 'hidden' : ''}" @click="${(e) => this.handleResetDateTags(filter.tags)}" aria-label="${this.selectedDateFilter.default ? 0 : 1}">
+        <button class="filter-selected-tags-count-btn ${this.selectedDateFilter.default || !Object.keys(this.selectedDateFilter).length ? 'hidden' : ''}" @click="${() => this.handleResetDateTags(filter.tags)}" aria-label="${this.selectedDateFilter.default ? 0 : 1}">
           <span class="filter-selected-tags-total-num">1</span>
         </button>
         <ul class="filter-list">
@@ -64,29 +64,30 @@ export class Announcements extends PartnerCards {
   }
 
   get filters() {
-    return html `
+    return html`
       ${this.dateFilter}
       ${super.filters}
-    `
+    `;
   }
 
   get dateFilterMobile() {
     const { dateFilter: filter } = this.blockData;
 
+    /* eslint-disable indent */
     return html`
       <div class="filter-wrapper-mobile">
         <div class="filter-mobile">
           <button class="filter-header-mobile" @click=${(e) => this.toggleFilter(e.target.closest('.filter-wrapper-mobile'))} aria-label="${filter.value}">
             <div class="filter-header-content-mobile">
               <h3 class="filter-header-name-mobile">${filter.value}</h3>
-               ${this.selectedDateFilter.default
-                ? ''
-                : html `
-                   <div class="filter-header-selected-tags-mobile">
-                     <span class="filter-header-selected-tags-text-mobile">${this.selectedDateFilter.value}</span>
-                     <span className="filter-header-selected-tags-count-mobile">+ 1</span>
-                   </div>
-                 `
+                ${this.selectedDateFilter.default
+                  ? ''
+                  : html`
+                     <div class="filter-header-selected-tags-mobile">
+                       <span class="filter-header-selected-tags-text-mobile">${this.selectedDateFilter.value}</span>
+                       <span class="filter-header-selected-tags-count-mobile">+ 1</span>
+                     </div>
+                  `
                 }
             </div>
             <sp-icon-chevron-down class="filter-header-chevron-icon" />
@@ -100,7 +101,7 @@ export class Announcements extends PartnerCards {
             <div class="filter-footer-mobile">
               <span class="filter-footer-results-mobile">${this.cards?.length} ${this.blockData.localizedText['{{results}}']}</span>
               <div class="filter-footer-buttons-mobile">
-                <button class="filter-footer-clear-btn-mobile" @click="${(e) => this.handleResetDateTags(filter.tags)}" aria-label="${this.blockData.localizedText['{{clear-all}}']}">${this.blockData.localizedText['{{clear-all}}']}</button>
+                <button class="filter-footer-clear-btn-mobile" @click="${() => this.handleResetDateTags(filter.tags)}" aria-label="${this.blockData.localizedText['{{clear-all}}']}">${this.blockData.localizedText['{{clear-all}}']}</button>
                 <sp-theme theme="spectrum" color="light" scale="medium">
                   <sp-button @click=${(e) => this.toggleFilter(e.target.closest('.filter-wrapper-mobile'))} aria-label="${this.blockData.localizedText['{{apply}}']}">${this.blockData.localizedText['{{apply}}']}</sp-button>
                 </sp-theme>
@@ -109,14 +110,15 @@ export class Announcements extends PartnerCards {
           </div>
         </div>
       </div>
-    `
+    `;
+    /* eslint-enable indent */
   }
 
   get filtersMobile() {
-    return html `
+    return html`
       ${this.dateFilterMobile}
       ${super.filtersMobile}
-    `
+    `;
   }
 
   get chosenFilters() {
@@ -127,8 +129,8 @@ export class Announcements extends PartnerCards {
     let tagsCount = parentChosenFilters ? parentChosenFilters.tagsCount : 0;
 
     if (!this.selectedDateFilter.default && Object.keys(this.selectedDateFilter).length) {
-      htmlContent = html `
-        <button class="sidebar-chosen-filter-btn" @click="${(e) => this.handleResetDateTags(this.blockData.dateFilter.tags)}" aria-label="${this.selectedDateFilter.value}">
+      htmlContent = html`
+        <button class="sidebar-chosen-filter-btn" @click="${() => this.handleResetDateTags(this.blockData.dateFilter.tags)}" aria-label="${this.selectedDateFilter.value}">
           ${this.selectedDateFilter.value}
         </button>
         ${htmlContent}
@@ -136,6 +138,7 @@ export class Announcements extends PartnerCards {
       tagsCount += 1;
     }
 
+    // eslint-disable-next-line consistent-return
     return { htmlContent, tagsCount };
   }
 
@@ -144,16 +147,14 @@ export class Announcements extends PartnerCards {
 
     const { tags } = filter;
 
+    // eslint-disable-next-line consistent-return
     return html`${repeat(
       tags,
       (tag) => tag.key,
       (tag) => html`<li>
         <button class="date-filter-tag" @click="${() => this.handleDateTag(tags, tag)}" aria-label="${tag.value}">
           <span class="date-filter-tag-label">${tag.value}</span>
-          ${tag.checked
-            ? html `<sp-icon-checkmark300 class="date-filter-tag-checkmark" />`
-            : ''
-          }
+          ${tag.checked ? html`<sp-icon-checkmark300 class="date-filter-tag-checkmark" />` : ''}
         </button>
       </li>`,
     )}`;
@@ -182,7 +183,8 @@ export class Announcements extends PartnerCards {
       this.initDateTags(tags);
     } else {
       this.selectedDateFilter = tag;
-      tags.forEach(filterTag => filterTag.checked = filterTag.key === tag.key);
+      // eslint-disable-next-line no-return-assign
+      tags.forEach((filterTag) => filterTag.checked = filterTag.key === tag.key);
     }
 
     this.paginationCounter = 1;
@@ -220,12 +222,12 @@ export class Announcements extends PartnerCards {
         targetYear = currentMonth === 0 ? currentYear - 1 : currentYear;
       }
 
-      this.cards = this.cards.filter(card => {
+      this.cards = this.cards.filter((card) => {
         const cardDate = new Date(card.cardDate);
         const cardMonth = cardDate.getMonth();
         const cardYear = cardDate.getFullYear();
         return cardMonth === targetMonth && cardYear === targetYear;
-      })
+      });
     }
 
     if (key === 'last-90-days') {
@@ -233,14 +235,10 @@ export class Announcements extends PartnerCards {
       const startDate = new Date(currentDate);
       startDate.setDate(startDate.getDate() - 90);
 
-      this.cards = this.cards.filter(card => {
+      this.cards = this.cards.filter((card) => {
         const cardDate = new Date(card.cardDate);
         return cardDate >= startDate && cardDate <= currentDate;
-      })
-    }
-
-    if (key === 'show-all') {
-      return;
+      });
     }
   }
 

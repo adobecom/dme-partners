@@ -1,5 +1,5 @@
 import { getLibs, replaceText, getConfig, populateLocalizedTextFromListItems } from '../../scripts/utils.js';
-import { Announcements } from './AnnouncementsCards.js';
+import Announcements from './AnnouncementsCards.js';
 
 function declareAnnouncements() {
   if (customElements.get('announcements-cards')) return;
