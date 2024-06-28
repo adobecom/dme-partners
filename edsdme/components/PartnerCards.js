@@ -1,64 +1,9 @@
-// eslint-disable-next-line max-classes-per-file
 import { getLibs, prodHosts } from '../scripts/utils.js';
-import { partnerCardsStyles, newsCardStyles } from './PartnerCardsStyles.js';
+import { partnerCardsStyles } from './PartnerCardsStyles.js';
+import './NewsCard.js';
 
 const miloLibs = getLibs();
 const { html, LitElement, css, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
-
-function formatDate(cardDate) {
-  if (!cardDate) return;
-
-  const dateObject = new Date(cardDate);
-  const options = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  };
-
-  const formattedDate = dateObject.toLocaleString('en-US', options);
-  // eslint-disable-next-line consistent-return
-  return formattedDate;
-}
-
-class NewsCard extends LitElement {
-  static properties = { data: { type: Object } };
-
-  static styles = newsCardStyles;
-
-  // eslint-disable-next-line class-methods-use-this
-  transformCardUrl(url) {
-    if (!url) {
-      console.error('URL is null or undefined');
-      return '';
-    }
-    if (window.location.host === 'partners.adobe.com') {
-      return url;
-    }
-    const newUrl = new URL(url);
-    newUrl.protocol = window.location.protocol;
-    newUrl.host = window.location.host;
-    return newUrl;
-  }
-
-  render() {
-    return html`
-      <div class="news-card">
-        <div class="card-header" style="background-image: url('${this.data.styles?.backgroundImage}')" alt="${this.data.styles?.backgroundAltText}"></div>
-        <div class="card-content">
-          <div class="card-text">
-            <p class="card-title">${this.data.contentArea?.title !== 'card-metadata' ? this.data.contentArea?.title : ''}</p>
-            <p class="card-description">${this.data.contentArea?.description}</p>
-          </div>
-          <div class="card-footer">
-            <span class="card-date">${formatDate(this.data.cardDate)}</span>
-            <a class="card-btn" href="${this.transformCardUrl(this.data.contentArea?.url)}">${this.data.footer[0]?.right[0]?.text}</a>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-}
-customElements.define('news-card', NewsCard);
 
 export default class PartnerCards extends LitElement {
   static styles = css`
