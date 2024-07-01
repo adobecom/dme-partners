@@ -17,7 +17,7 @@ const imsClientId = prodHosts.includes(window.location.host) ? 'MILO_PARTNERS_PR
 // Add any config options.
 const CONFIG = {
   codeRoot: '/edsdme',
-  contentRoot: '/channelpartners/cpp-shared',
+  contentRoot: '/edsdme/partners-shared',
   imsClientId: imsClientId,
   geoRouting: 'on',
   // fallbackRouting: 'off',
