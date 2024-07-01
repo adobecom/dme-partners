@@ -19,6 +19,7 @@ export default async function init(el) {
   const miloLibs = getLibs();
   const config = getConfig();
 
+  const isArchive = el.classList.contains('archive');
   const sectionIndex = el.parentNode.getAttribute('data-idx');
 
   const localizedText = {
@@ -72,6 +73,7 @@ export default async function init(el) {
     cardsPerPage: 12,
     ietf: config.locale.ietf,
     collectionTags: '"caas:adobe-partners/collections/announcements"',
+    isArchive,
   };
 
   const app = document.createElement('announcements-cards');
