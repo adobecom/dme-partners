@@ -33,7 +33,7 @@ export default class Announcements extends PartnerCards {
 
       if (this.blockData.isArchive) {
         if (isNeverExpires) return false;
-        if (cardDate <= startDate) return true;
+        if (cardDate < startDate) return true;
 
         const cardEndDate = card.endDate ? new Date(card.endDate) : null;
         return cardEndDate && cardEndDate < Date.now();
