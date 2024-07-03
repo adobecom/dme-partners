@@ -64,3 +64,18 @@ export function populateLocalizedTextFromListItems(el, localizedText) {
     localizedText[`{{${liContent}}}`] = liContent;
   });
 }
+
+export function formatDate(cardDate) {
+  if (!cardDate) return;
+
+  const dateObject = new Date(cardDate);
+  const options = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  };
+
+  const formattedDate = dateObject.toLocaleString('en-US', options);
+  // eslint-disable-next-line consistent-return
+  return formattedDate;
+}
