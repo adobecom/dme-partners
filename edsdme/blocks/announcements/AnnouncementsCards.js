@@ -29,16 +29,14 @@ export default class Announcements extends PartnerCards {
 
     this.allCards = this.allCards.filter((card) => {
       const isNeverExpires = card.tags.some((tag) => tag.id === 'caas:adobe-partners/collections/announcements/never-expires');
+      if (isNeverExpires) return !this.blockData.isArchive;
       const cardDate = new Date(card.cardDate);
-
+      const cardEndDate = card.endDate ? new Date(card.endDate) : null;
+      const now = Date.now();
       if (this.blockData.isArchive) {
-        if (isNeverExpires) return false;
-        if (cardDate <= startDate) return true;
-
-        const cardEndDate = card.endDate ? new Date(card.endDate) : null;
-        return cardEndDate && cardEndDate < Date.now();
+        return cardDate <= startDate || (cardEndDate && cardEndDate < now);
       }
-      return cardDate > startDate || isNeverExpires;
+      return cardEndDate ? cardDate > startDate && cardEndDate >= now : cardDate > startDate;
     });
 
     if (this.blockData.dateFilter) {
