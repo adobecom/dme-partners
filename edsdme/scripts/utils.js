@@ -62,6 +62,7 @@ export function populateLocalizedTextFromListItems(el, localizedText) {
     let liContent = liEl.innerText.trim().toLowerCase().replace(/ /g, '-');
     if (liContent.endsWith('_default')) liContent = liContent.slice(0, -8);
     localizedText[`{{${liContent}}}`] = liContent;
+
   });
 }
 
