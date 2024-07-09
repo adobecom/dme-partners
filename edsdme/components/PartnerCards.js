@@ -1,4 +1,4 @@
-import { getLibs, prodHosts } from '../scripts/utils.js';
+import { getLibs, prodHosts, getPartnerDataCookieValue, getCurrentProgramType } from '../scripts/utils.js';
 import { partnerCardsStyles } from './PartnerCardsStyles.js';
 import './NewsCard.js';
 
@@ -186,53 +186,36 @@ export default class PartnerCards extends LitElement {
   }
 
   getComplexQueryParams() {
-    const portal = this.getProgramType(window.location.pathname);
-    let partnerLevelParams;
+    const portal = getCurrentProgramType();
+    if (!portal) return;
 
-    if (portal) {
-      const portalCollectionTag = `"caas:adobe-partners/${portal}"`;
-      if (!this.collectionTags.length || !this.collectionTags.includes(portalCollectionTag)) {
-        this.collectionTags = [...this.collectionTags, portalCollectionTag];
-      }
-
-      partnerLevelParams = this.getPartnerLevelParams(portal);
+    const portalCollectionTag = `"caas:adobe-partners/${portal}"`;
+    if (!this.collectionTags.includes(portalCollectionTag)) {
+      this.collectionTags = [...this.collectionTags, portalCollectionTag];
     }
 
-    if (!this.collectionTags.length) return;
+    const partnerLevelParams = this.getPartnerLevelParams(portal);
+    const partnerRegionParams = this.getPartnerRegionParams(portal);
 
-    const collectionTagsStr = this.collectionTags.filter((e) => e.length).join('+AND+');
+    let collectionTagsStr = this.collectionTags.filter((e) => e.length).join('+AND+');
+    collectionTagsStr = partnerRegionParams ? `((${collectionTagsStr}+AND+${partnerRegionParams}))` : `((${collectionTagsStr}))`;
+
     // eslint-disable-next-line consistent-return
-    return partnerLevelParams ? `((${collectionTagsStr}))+AND+${partnerLevelParams}` : `((${collectionTagsStr}))`;
+    return partnerLevelParams ? `${collectionTagsStr}+AND+${partnerLevelParams}` : collectionTagsStr;
   }
 
   // eslint-disable-next-line class-methods-use-this
   getPartnerLevelParams(portal) {
-    try {
-      const publicTag = `(("caas:adobe-partners/${portal}/partner-level/public"))`;
-      const cookies = document.cookie.split(';').map((cookie) => cookie.trim());
-      const partnerDataCookie = cookies.find((cookie) => cookie.startsWith('partner_data='));
-      if (!partnerDataCookie) return publicTag;
-
-      const cookieValue = JSON.parse(decodeURIComponent(partnerDataCookie.substring(('partner_data=').length).toLowerCase()));
-      if (cookieValue && cookieValue[portal]) {
-        const cookieLevel = cookieValue[portal].level;
-        if (cookieLevel) return `(("caas:adobe-partners/${portal}/partner-level/${cookieLevel}")+OR+("caas:adobe-partners/${portal}/partner-level/public"))`;
-      }
-      return publicTag;
-    } catch (error) {
-      console.error('Error parsing partner data object:', error);
-      return '';
-    }
+    const partnerLevel = getPartnerDataCookieValue(portal, 'level');
+    const baseTag = `("caas:adobe-partners/${portal}/partner-level/`;
+    return partnerLevel ? `(${baseTag}${partnerLevel}")+OR+${baseTag}public"))` : `(${baseTag}public"))`;
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getProgramType(path) {
-    switch (true) {
-      case /solutionpartners/.test(path): return 'spp';
-      case /technologypartners/.test(path): return 'tpp';
-      case /channelpartners/.test(path): return 'cpp';
-      default: return '';
-    }
+  getPartnerRegionParams(portal) {
+    const permisionRegion = getPartnerDataCookieValue(portal, 'permissionregion');
+    const region = permisionRegion ? permisionRegion.trim().replaceAll(' ', '-') : 'worldwide';
+    return `"caas:adobe-partners/${portal}/region/${region}"`;
   }
 
   initUrlSearchParams() {
