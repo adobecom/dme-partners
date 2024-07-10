@@ -79,3 +79,37 @@ export function formatDate(cardDate) {
   // eslint-disable-next-line consistent-return
   return formattedDate;
 }
+
+export function getProgramType(path) {
+  switch (true) {
+    case /solutionpartners/.test(path): return 'spp';
+    case /technologypartners/.test(path): return 'tpp';
+    case /channelpartners/.test(path): return 'cpp';
+    default: return '';
+  }
+}
+
+export function getCurrentProgramType() {
+  return getProgramType(window.location.pathname);
+}
+
+export function getCookieValue(key) {
+  const cookies = document.cookie.split(';').map((cookie) => cookie.trim());
+  const cookie = cookies.find((el) => el.startsWith(`${key}=`));
+  return cookie?.substring((`${key}=`).length);
+}
+
+export function getPartnerDataCookieValue(programType, key) {
+  try {
+    const partnerDataCookie = getCookieValue('partner_data');
+    if (!partnerDataCookie) return;
+    const partnerDataObj = JSON.parse(decodeURIComponent(partnerDataCookie.toLowerCase()));
+    const portalData = partnerDataObj?.[programType];
+    // eslint-disable-next-line consistent-return
+    return portalData?.[key];
+  } catch (error) {
+    console.error('Error parsing partner data object:', error);
+    // eslint-disable-next-line consistent-return
+    return '';
+  }
+}
