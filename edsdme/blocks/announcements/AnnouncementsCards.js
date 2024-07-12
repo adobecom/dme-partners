@@ -1,21 +1,18 @@
 import { getLibs } from '../../scripts/utils.js';
 import { partnerCardsDateFilterStyles } from '../../components/PartnerCardsStyles.js';
 import PartnerCards from '../../components/PartnerCards.js';
-import { PartnerCardsLoadMore } from '../../components/PartnerCardsLoadMore.js';
 
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
-const PartnerCardsLoadMoreClass = PartnerCardsLoadMore(PartnerCards);
-
-export default class Announcements extends PartnerCardsLoadMoreClass {
+export default class Announcements extends PartnerCards {
   static styles = [
-    PartnerCardsLoadMoreClass.styles,
+    PartnerCards.styles,
     partnerCardsDateFilterStyles,
   ];
 
   static properties = {
-    ...PartnerCardsLoadMoreClass.properties,
+    ...PartnerCards.properties,
     selectedDateFilter: { type: Object },
   };
 

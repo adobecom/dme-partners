@@ -1,17 +1,28 @@
-import { getLibs, prodHosts, getPartnerDataCookieValue, getCurrentProgramType } from '../scripts/utils.js';
-import { partnerCardsStyles } from './PartnerCardsStyles.js';
+import {
+  getLibs,
+  prodHosts,
+  getPartnerDataCookieValue,
+  getCurrentProgramType,
+} from '../scripts/utils.js';
+import {
+  partnerCardsStyles,
+  partnerCardsLoadMoreStyles,
+  partnerCardsPaginationStyles,
+} from './PartnerCardsStyles.js';
 import './NewsCard.js';
 
 const miloLibs = getLibs();
 const { html, LitElement, css, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
 export default class PartnerCards extends LitElement {
-  static styles = css`
-    ${partnerCardsStyles}
-    #search {
+  static styles = [
+    partnerCardsStyles,
+    partnerCardsLoadMoreStyles,
+    partnerCardsPaginationStyles,
+    css`#search {
       width: 100%;
-    }
-  `;
+    }`,
+  ];
 
   static properties = {
     blockData: { type: Object },
@@ -19,6 +30,7 @@ export default class PartnerCards extends LitElement {
     paginatedCards: { type: Array },
     searchTerm: { type: String },
     paginationCounter: { type: Number },
+    totalPages: { type: Number },
     selectedSortOrder: { type: Object },
     selectedFilters: { type: Object },
     urlSearchParams: { type: Object },
@@ -33,6 +45,7 @@ export default class PartnerCards extends LitElement {
     this.paginatedCards = [];
     this.searchTerm = '';
     this.paginationCounter = 1;
+    this.totalPages = 0;
     this.cardsPerPage = 12;
     this.selectedSortOrder = {};
     this.selectedFilters = {};
@@ -92,16 +105,19 @@ export default class PartnerCards extends LitElement {
         const [sortKeysEl] = cols;
         const sortKeys = Array.from(sortKeysEl.querySelectorAll('li'), (li) => li.innerText.trim().toLowerCase().replace(/ /g, '-'));
 
+        if (!sortKeys.length) return;
+
         const sortItems = sortKeys.map((sortKey) => {
           const key = sortKey.endsWith('_default') ? sortKey.slice(0, -8) : sortKey;
           const value = this.blockData.localizedText[`{{${key}}}`];
           return { key, value };
         });
 
-        const defaultKey = sortKeys.find((key) => key.endsWith('_default')).slice(0, -8) || sortKeys[0];
-        const defaultValue = sortItems.find((e) => e.key === defaultKey).value;
+        const defaultKey = sortKeys.find((key) => key.endsWith('_default'));
+        const finalDefaultKey = defaultKey ? defaultKey.slice(0, -8) : sortKeys[0];
+        const defaultValue = sortItems.find((e) => e.key === finalDefaultKey).value;
         // eslint-disable-next-line max-len
-        this.blockData.sort = { items: sortItems, default: { key: defaultKey, value: defaultValue } };
+        this.blockData.sort = { items: sortItems, default: { key: finalDefaultKey, value: defaultValue } };
       },
       'cards-per-page': (cols) => {
         const [cardsPerPageEl] = cols;
@@ -112,7 +128,14 @@ export default class PartnerCards extends LitElement {
       'collection-tags': (cols) => {
         const [collectionTagsEl] = cols;
         const collectionTags = Array.from(collectionTagsEl.querySelectorAll('li'), (li) => `"${li.innerText.trim().toLowerCase()}"`);
-        this.collectionTags = [...this.collectionTags, ...collectionTags];
+        if (collectionTags.length) {
+          this.collectionTags = [...this.collectionTags, ...collectionTags];
+        }
+      },
+      pagination: (cols) => {
+        const [paginationEl] = cols;
+        const paginationType = paginationEl.innerText.trim();
+        if (paginationType) this.blockData.pagination = paginationType.toLowerCase().replace(/ /g, '-');
       },
     };
 
@@ -275,16 +298,58 @@ export default class PartnerCards extends LitElement {
   }
 
   // eslint-disable-next-line class-methods-use-this,no-empty-function,getter-return
-  get pagination() {}
+  get pagination() {
+    if (this.blockData.pagination === 'load-more') return this.loadMorePagination;
+    return this.defaultPagination;
+  }
+
+  get loadMorePagination() {
+    if (this.cards.length === this.paginatedCards.length) return '';
+    return html`<button class="load-more-btn" @click="${this.handleLoadMore}" aria-label="${this.blockData.localizedText['{{load-more}}']}">${this.blockData.localizedText['{{load-more}}']}</button>`;
+  }
+
+  get defaultPagination() {
+    return html`
+      <div class="pagination-pages-list">
+        <button class="pagination-prev-btn ${this.paginationCounter === 1 || !this.paginatedCards?.length ? 'disabled' : ''}" @click="${this.handlePrevPage}" aria-label="${this.blockData.localizedText['{{previous-page}}']}">
+          ${this.blockData.localizedText['{{prev}}']}</button>
+        ${this.paginationList}
+        <button class="pagination-next-btn ${this.paginationCounter === this.totalPages || !this.paginatedCards?.length ? 'disabled' : ''}" @click="${this.handleNextPage}" aria-label="${this.blockData.localizedText['{{next-page}}']}">
+          ${this.blockData.localizedText['{{next}}']}</button>
+      </div>
+    `;
+  }
+
+  get paginationList() {
+    if (!this.cards.length) return;
+
+    const min = 1;
+    this.totalPages = Math.ceil(this.cards.length / this.cardsPerPage);
+
+    const pagesNumArray = Array.from({ length: this.totalPages }, (_, i) => i + min);
+    // eslint-disable-next-line consistent-return
+    return html`${repeat(
+      pagesNumArray,
+      (pageNum) => pageNum,
+      (pageNum) => html`<button
+        class="page-btn ${this.paginationCounter === pageNum ? 'selected' : ''}"
+        @click="${() => this.handlePageNum(pageNum)}"
+        aria-label="${this.blockData.localizedText['{{page}}']} ${pageNum}">
+        ${pageNum}
+      </button>`,
+    )}`;
+  }
 
   get cardsCounter() {
-    if (!this.paginatedCards.length) {
-      return 0;
-    }
+    const { length } = this.paginatedCards;
+    if (!length) return 0;
 
-    const lastIndex = this.paginatedCards.length - 1;
-    const { orderNum: lastElOrderNum } = this.paginatedCards[lastIndex];
-    return lastElOrderNum;
+    const { orderNum: lastElOrderNum } = this.paginatedCards[length - 1];
+
+    if (this.blockData.pagination === 'load-more') return lastElOrderNum;
+
+    const { orderNum: firstElOrderNum } = this.paginatedCards[0];
+    return `${firstElOrderNum} - ${lastElOrderNum}`;
   }
 
   get filters() {
@@ -430,6 +495,7 @@ export default class PartnerCards extends LitElement {
     if (this.blockData.sort.items.length) this.handleSortAction();
     if (this.blockData.filters.length) this.handleFilterAction();
     this.additionalActions();
+    this.updatePaginatedCards();
     // eslint-disable-next-line no-return-assign
     this.cards.forEach((card, index) => card.orderNum = index + 1);
   }
@@ -620,6 +686,38 @@ export default class PartnerCards extends LitElement {
       tagsString: tags.join(', '),
       tagsCount: tags.length,
     };
+  }
+
+  updatePaginatedCards() {
+    const endIndex = this.paginationCounter * this.cardsPerPage;
+    const startIndex = this.blockData.pagination === 'load-more' ? 0 : (this.paginationCounter - 1) * this.cardsPerPage;
+    this.paginatedCards = this.cards.slice(startIndex, endIndex);
+  }
+
+  handleLoadMore() {
+    this.paginationCounter += 1;
+    this.handleActions();
+  }
+
+  handlePageNum(pageNum) {
+    if (this.paginationCounter !== pageNum) {
+      this.paginationCounter = pageNum;
+      this.handleActions();
+    }
+  }
+
+  handlePrevPage() {
+    if (this.paginationCounter > 1) {
+      this.paginationCounter -= 1;
+      this.handleActions();
+    }
+  }
+
+  handleNextPage() {
+    if (this.paginationCounter < this.totalPages) {
+      this.paginationCounter += 1;
+      this.handleActions();
+    }
   }
 
   disconnectedCallback() {
