@@ -113,3 +113,39 @@ export function getPartnerDataCookieValue(programType, key) {
     return '';
   }
 }
+
+export function getLocale(locales, pathname = window.location.pathname) {
+  if (!locales) {
+    return { ietf: 'en-US', tk: 'hah7vzn.css', prefix: '' };
+  }
+  const LANGSTORE = 'langstore';
+  const split = pathname.split('/');
+  const localeString = split[1];
+  const locale = locales[localeString] || locales[''];
+  if (localeString === LANGSTORE) {
+    locale.prefix = `/${localeString}/${split[2]}`;
+    if (
+      Object.values(locales)
+        .find((loc) => loc.ietf?.startsWith(split[2]))?.dir === 'rtl'
+    ) locale.dir = 'rtl';
+    return locale;
+  }
+  const isUS = locale.ietf === 'en-US';
+  locale.prefix = isUS ? '' : `/${localeString}`;
+  locale.region = isUS ? 'us' : localeString.split('_')[0];
+  return locale;
+};
+
+export function getPartnerDataCookieObject(programType) {
+  const partnerDataCookie = getCookieValue('partner_data');
+  if (!partnerDataCookie) return {};
+  const partnerDataObj = JSON.parse(decodeURIComponent(partnerDataCookie));
+  const portalData = partnerDataObj?.[programType.toUpperCase()];
+  return portalData;
+}
+
+export function isNonMember() {
+  const { status } = getPartnerDataCookieObject(getCurrentProgramType());
+  return status !== 'member';
+}
+

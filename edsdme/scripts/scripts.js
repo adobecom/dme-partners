@@ -1,10 +1,4 @@
-import { setLibs } from './utils.js';
-
-// Add project-wide style path here.
-const STYLES = '';
-
-// Use 'https://milo.adobe.com/libs' if you cannot map '/libs' to milo's origin.
-const LIBS = '/libs';
+import { setLibs, isNonMember, getLocale } from './utils.js';
 
 const prodHosts = [
   'main--dme-partners--adobecom.hlx.page',
@@ -12,9 +6,20 @@ const prodHosts = [
   'partners.adobe.com',
 ];
 
+async function personalization(locales) {
+  if (isNonMember()) return;
+  const { prefix: localePrefix } = getLocale(locales);
+  const personalizationImport = import('./personalization.js');
+  const gnavPlaceholderReq = fetch(`${localePrefix}/edsdme/partners-shared/gnav-placeholders.json`)
+    .then((req) => req.json())
+    .catch(() => null);
+  const [personalization, gnavPlaceholder ] = await Promise.all([personalizationImport, gnavPlaceholderReq]);
+  const { personalizeGnav } = personalization;
+  personalizeGnav(gnavPlaceholder, localePrefix);
+}
+
 const imsClientId = prodHosts.includes(window.location.host) ? 'MILO_PARTNERS_PROD' : 'MILO_PARTNERS_STAGE';
 
-// Add any config options.
 const CONFIG = {
   codeRoot: '/edsdme',
   contentRoot: '/edsdme/partners-shared',
@@ -39,6 +44,15 @@ const CONFIG = {
     la: { ietf: 'es', tk: 'oln4yqj.css' },
   },
 };
+
+// Add project-wide style path here.
+const STYLES = '';
+
+// Use 'https://milo.adobe.com/libs' if you cannot map '/libs' to milo's origin.
+const LIBS = '/libs';
+
+
+// Add any config options.
 
 (function removeAccessToken() {
   if (window.location.hash.startsWith('#access_token')) {
@@ -72,8 +86,10 @@ const miloLibs = setLibs(LIBS);
 }());
 
 (async function loadPage() {
+  const gnav = personalization(CONFIG.locales);
   const { loadArea, setConfig } = await import(`${miloLibs}/utils/utils.js`);
-
   setConfig({ ...CONFIG, miloLibs });
   await loadArea();
+  // applyPersonalization(PLACEHOLDERS_TO_REPLACE);
+  await gnav;
 }());
