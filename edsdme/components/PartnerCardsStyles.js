@@ -538,65 +538,6 @@ export const partnerCardsStyles = css`
     padding: 5px 0;
   }
   
-  .pagination-wrapper .pagination-pages-list button {
-    border: none;
-    background-color: transparent;
-  }
-  
-  .pagination-wrapper .page-btn {
-    position: relative;
-    min-width: 32px;
-    min-height: 32px;
-    max-width: 70px;
-    padding: 8px 10px;
-    font-size: .875rem;
-    line-height: .875rem;
-    color: #4b4b4b;
-    word-break: break-word;
-    text-align: center;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    border-radius: 16px;
-    overflow: hidden;
-  }
-  
-  .pagination-wrapper .pagination-prev-btn {
-    padding-right: 10px;
-    font-weight: 700;
-  }
-  
-  .pagination-wrapper .pagination-next-btn {
-    padding-left: 10px;
-    font-weight: 700;
-  }
-  
-  .pagination-wrapper .pagination-prev-btn:hover,
-  .pagination-wrapper .pagination-next-btn:hover,
-  .pagination-wrapper .page-btn:hover {
-    cursor: pointer;
-    text-decoration: underline;
-    transition: all .3s;
-  }
-  
-  .pagination-wrapper .pagination-prev-btn.disabled,
-  .pagination-wrapper .pagination-prev-btn.disabled:hover,
-  .pagination-wrapper .pagination-next-btn.disabled,
-  .pagination-wrapper .pagination-next-btn.disabled:hover,
-  .pagination-wrapper .page-btn.selected:hover {
-    text-decoration: none;
-    cursor: default;
-  }
-  
-  .pagination-wrapper .pagination-prev-btn.disabled,
-  .pagination-wrapper .pagination-next-btn.disabled {
-    color: #9d9d9d;
-  }
-  
-  .pagination-wrapper .page-btn.selected {
-    background-color: #e5e5e5;
-    border-radius: 50%;
-  }
-  
   .pagination-wrapper .pagination-total-results {
     font-weight: 700;
     text-transform: lowercase;
@@ -897,6 +838,143 @@ export const partnerCardsStyles = css`
   }
 `;
 
+export const partnerCardsLoadMoreStyles = css`
+  .pagination-wrapper {
+    justify-content: center;
+    flex-direction: column-reverse;
+  }
+  
+  .pagination-wrapper .load-more-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: .875rem;
+    line-height: 1.063rem;
+    font-weight: 700;
+    min-width: 60px;
+    max-width: 100%;
+    height: 32px;
+    max-height: 32px;
+    padding-left: 14px;
+    padding-right: 14px;
+    color: #222222;
+    border: 2px solid #222222;
+    border-radius: 16px;
+    background-color: #ffffff00;
+    cursor: pointer;
+    transition: border-color .3s ease-in-out,background-color .3s ease-in-out;
+  }
+  
+  .pagination-wrapper .load-more-btn:hover {
+    text-decoration: none;
+    border-color: #222222;
+    background-color: #222222;
+    color: #ffffff;
+  }
+`;
+
+export const partnerCardsPaginationStyles = css`
+  .pagination-wrapper {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  @media screen and (max-width: 1200px) {
+    .pagination-wrapper {
+      justify-content: center;
+    }
+  }
+  
+  .pagination-wrapper .pagination-pages-list button {
+    border: none;
+    background-color: transparent;
+  }
+  
+  .pagination-wrapper .page-btn {
+    position: relative;
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 70px;
+    padding: 8px 10px;
+    font-size: .875rem;
+    line-height: .875rem;
+    color: #4b4b4b;
+    word-break: break-word;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  
+  .pagination-wrapper .pagination-prev-btn {
+    padding-right: 10px;
+    font-weight: 700;
+  }
+  
+  .pagination-wrapper .pagination-next-btn {
+    padding-left: 10px;
+    font-weight: 700;
+  }
+  
+  .pagination-wrapper .pagination-prev-btn:hover,
+  .pagination-wrapper .pagination-next-btn:hover,
+  .pagination-wrapper .page-btn:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    transition: all .3s;
+  }
+  
+  .pagination-wrapper .pagination-prev-btn.disabled,
+  .pagination-wrapper .pagination-prev-btn.disabled:hover,
+  .pagination-wrapper .pagination-next-btn.disabled,
+  .pagination-wrapper .pagination-next-btn.disabled:hover,
+  .pagination-wrapper .page-btn.selected:hover {
+    text-decoration: none;
+    cursor: default;
+  }
+  
+  .pagination-wrapper .pagination-prev-btn.disabled,
+  .pagination-wrapper .pagination-next-btn.disabled {
+    color: #9d9d9d;
+  }
+  
+  .pagination-wrapper .page-btn.selected {
+    background-color: #e5e5e5;
+    border-radius: 50%;
+  }
+`;
+
+export const partnerCardsDateFilterStyles = css`
+  .date-filter-tag {
+    background-color: transparent;
+    border: none;
+    padding: 0 6px;
+    height: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+  }
+  
+  .date-filter-tag-label {
+    width: calc(100% - 12px);
+    font-size: .875rem;
+    line-height: 1.3;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  
+  .date-filter-tag-checkmark {
+    color: ${blueColor};
+    width: 12px;
+    height: 12px;
+  }
+`;
+
 export const newsCardStyles = css`
   .news-card * {
     box-sizing: border-box;
@@ -1028,83 +1106,5 @@ export const newsCardStyles = css`
     word-break: break-word;
     max-height: 3.9375rem;
     padding: 0;
-  }
-`;
-
-export const loadMorePaginationStyles = css`
-  .pagination-wrapper {
-    justify-content: center;
-    flex-direction: column-reverse;
-  }
-  
-  .pagination-wrapper .load-more-btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: .875rem;
-    line-height: 1.063rem;
-    font-weight: 700;
-    min-width: 60px;
-    max-width: 100%;
-    height: 32px;
-    max-height: 32px;
-    padding-left: 14px;
-    padding-right: 14px;
-    color: #222222;
-    border: 2px solid #222222;
-    border-radius: 16px;
-    background-color: #ffffff00;
-    cursor: pointer;
-    transition: border-color .3s ease-in-out,background-color .3s ease-in-out;
-  }
-  
-  .pagination-wrapper .load-more-btn:hover {
-    text-decoration: none;
-    border-color: #222222;
-    background-color: #222222;
-    color: #ffffff;
-  }
-`;
-
-export const numericPaginationStyles = css`
-  .pagination-wrapper {
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-  
-  @media screen and (max-width: 1200px) {
-    .pagination-wrapper {
-      justify-content: center;
-    }
-  }
-`;
-
-export const dateFilterStyles = css`
-  .date-filter-tag {
-    background-color: transparent;
-    border: none;
-    padding: 0 6px;
-    height: 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    cursor: pointer;
-  }
-  
-  .date-filter-tag-label {
-    width: calc(100% - 12px);
-    font-size: .875rem;
-    line-height: 1.3;
-    text-align: left;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-  
-  .date-filter-tag-checkmark {
-    color: ${blueColor};
-    width: 12px;
-    height: 12px;
   }
 `;

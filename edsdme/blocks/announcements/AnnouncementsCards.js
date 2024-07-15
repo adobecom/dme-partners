@@ -1,15 +1,14 @@
 import { getLibs } from '../../scripts/utils.js';
-import { dateFilterStyles, loadMorePaginationStyles } from '../../components/PartnerCardsStyles.js';
+import { partnerCardsDateFilterStyles } from '../../components/PartnerCardsStyles.js';
 import PartnerCards from '../../components/PartnerCards.js';
 
 const miloLibs = getLibs();
-const { html, css, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
+const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
 export default class Announcements extends PartnerCards {
   static styles = [
     PartnerCards.styles,
-    css`${loadMorePaginationStyles}`,
-    css`${dateFilterStyles}`,
+    partnerCardsDateFilterStyles,
   ];
 
   static properties = {
@@ -43,13 +42,6 @@ export default class Announcements extends PartnerCards {
       const [firstDateFilter] = this.blockData.dateFilter.tags;
       this.selectedDateFilter = firstDateFilter;
     }
-  }
-
-  get pagination() {
-    if (this.cards.length === this.paginatedCards.length) {
-      return '';
-    }
-    return html`<button class="load-more-btn" @click="${this.handleLoadMore}" aria-label="${this.blockData.localizedText['{{load-more}}']}">${this.blockData.localizedText['{{load-more}}']}</button>`;
   }
 
   get dateFilter() {
@@ -170,22 +162,12 @@ export default class Announcements extends PartnerCards {
     )}`;
   }
 
-  handleActions() {
-    super.handleActions();
-    this.updatePaginatedCards();
-  }
-
   additionalActions() {
     this.handleDateFilterAction();
   }
 
   additionalResetActions() {
     this.initDateTags(this.blockData.dateFilter.tags);
-  }
-
-  updatePaginatedCards() {
-    const countPages = this.paginationCounter * this.cardsPerPage;
-    this.paginatedCards = this.cards.slice(0, countPages);
   }
 
   handleDateTag(tags, tag) {
@@ -250,10 +232,5 @@ export default class Announcements extends PartnerCards {
         return cardDate >= startDate && cardDate <= currentDate;
       });
     }
-  }
-
-  handleLoadMore() {
-    this.paginationCounter += 1;
-    this.handleActions();
   }
 }
