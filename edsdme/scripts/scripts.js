@@ -1,22 +1,11 @@
-import { setLibs, isNonMember, getLocale } from './utils.js';
+import { setLibs, getLocale } from './utils.js';
+import { applyPersonalization } from './personalization.js';
 
 const prodHosts = [
   'main--dme-partners--adobecom.hlx.page',
   'main--dme-partners--adobecom.hlx.live',
   'partners.adobe.com',
 ];
-
-async function personalization(locales) {
-  if (isNonMember()) return;
-  const { prefix: localePrefix } = getLocale(locales);
-  const personalizationImport = import('./personalization.js');
-  const gnavPlaceholderReq = fetch(`${localePrefix}/edsdme/partners-shared/gnav-placeholders.json`)
-    .then((req) => req.json())
-    .catch(() => null);
-  const [personalization, gnavPlaceholder ] = await Promise.all([personalizationImport, gnavPlaceholderReq]);
-  const { personalizeGnav } = personalization;
-  personalizeGnav(gnavPlaceholder, localePrefix);
-}
 
 const imsClientId = prodHosts.includes(window.location.host) ? 'MILO_PARTNERS_PROD' : 'MILO_PARTNERS_STAGE';
 
@@ -86,10 +75,9 @@ const miloLibs = setLibs(LIBS);
 }());
 
 (async function loadPage() {
-  const gnav = personalization(CONFIG.locales);
+  const { prefix: localePrefix } = getLocale(CONFIG.locales);
+  await applyPersonalization(localePrefix);
   const { loadArea, setConfig } = await import(`${miloLibs}/utils/utils.js`);
   setConfig({ ...CONFIG, miloLibs });
   await loadArea();
-  // applyPersonalization(PLACEHOLDERS_TO_REPLACE);
-  await gnav;
 }());

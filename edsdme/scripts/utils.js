@@ -64,7 +64,6 @@ export function populateLocalizedTextFromListItems(el, localizedText) {
     localizedText[`{{${liContent}}}`] = liContent;
   });
 }
-
 export function formatDate(cardDate) {
   if (!cardDate) return;
 
@@ -140,12 +139,12 @@ export function getPartnerDataCookieObject(programType) {
   const partnerDataCookie = getCookieValue('partner_data');
   if (!partnerDataCookie) return {};
   const partnerDataObj = JSON.parse(decodeURIComponent(partnerDataCookie));
-  const portalData = partnerDataObj?.[programType.toUpperCase()];
+  const portalData = partnerDataObj?.[programType.toUpperCase()] ?? {};
   return portalData;
 }
 
-export function isNonMember() {
+export function isMember() {
   const { status } = getPartnerDataCookieObject(getCurrentProgramType());
-  return status !== 'member';
+  return status === 'MEMBER';
 }
 
