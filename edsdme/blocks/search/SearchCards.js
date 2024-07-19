@@ -66,6 +66,11 @@ export default class Search extends PartnerCards {
     this.contentTypeCounter = counts;
   }
 
+  handleActions() {
+    this.fetchData();
+    super.handleActions();
+  }
+
   additionalActions() {
     this.setContentTypeCounts();
     this.handleContentTypeAction();
