@@ -839,12 +839,12 @@ export const partnerCardsStyles = css`
 `;
 
 export const partnerCardsLoadMoreStyles = css`
-  .pagination-wrapper {
+  .pagination-wrapper.pagination-wrapper-load-more {
     justify-content: center;
     flex-direction: column-reverse;
   }
   
-  .pagination-wrapper .load-more-btn {
+  .pagination-wrapper-load-more .load-more-btn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -865,7 +865,7 @@ export const partnerCardsLoadMoreStyles = css`
     transition: border-color .3s ease-in-out,background-color .3s ease-in-out;
   }
   
-  .pagination-wrapper .load-more-btn:hover {
+  .pagination-wrapper-load-more .load-more-btn:hover {
     text-decoration: none;
     border-color: #222222;
     background-color: #222222;
@@ -874,23 +874,23 @@ export const partnerCardsLoadMoreStyles = css`
 `;
 
 export const partnerCardsPaginationStyles = css`
-  .pagination-wrapper {
+  .pagination-wrapper.pagination-wrapper-default {
     flex-wrap: wrap;
     justify-content: space-between;
   }
   
   @media screen and (max-width: 1200px) {
-    .pagination-wrapper {
+    .pagination-wrapper.pagination-wrapper-default {
       justify-content: center;
     }
   }
   
-  .pagination-wrapper .pagination-pages-list button {
+  .pagination-wrapper-default .pagination-pages-list button {
     border: none;
     background-color: transparent;
   }
   
-  .pagination-wrapper .page-btn {
+  .pagination-wrapper-default .page-btn {
     position: relative;
     min-width: 32px;
     min-height: 32px;
@@ -907,39 +907,39 @@ export const partnerCardsPaginationStyles = css`
     overflow: hidden;
   }
   
-  .pagination-wrapper .pagination-prev-btn {
+  .pagination-wrapper-default .pagination-prev-btn {
     padding-right: 10px;
     font-weight: 700;
   }
   
-  .pagination-wrapper .pagination-next-btn {
+  .pagination-wrapper-default .pagination-next-btn {
     padding-left: 10px;
     font-weight: 700;
   }
   
-  .pagination-wrapper .pagination-prev-btn:hover,
-  .pagination-wrapper .pagination-next-btn:hover,
-  .pagination-wrapper .page-btn:hover {
+  .pagination-wrapper-default .pagination-prev-btn:hover,
+  .pagination-wrapper-default .pagination-next-btn:hover,
+  .pagination-wrapper-default .page-btn:hover {
     cursor: pointer;
     text-decoration: underline;
     transition: all .3s;
   }
   
-  .pagination-wrapper .pagination-prev-btn.disabled,
-  .pagination-wrapper .pagination-prev-btn.disabled:hover,
-  .pagination-wrapper .pagination-next-btn.disabled,
-  .pagination-wrapper .pagination-next-btn.disabled:hover,
-  .pagination-wrapper .page-btn.selected:hover {
+  .pagination-wrapper-default .pagination-prev-btn.disabled,
+  .pagination-wrapper-default .pagination-prev-btn.disabled:hover,
+  .pagination-wrapper-default .pagination-next-btn.disabled,
+  .pagination-wrapper-default .pagination-next-btn.disabled:hover,
+  .pagination-wrapper-default .page-btn.selected:hover {
     text-decoration: none;
     cursor: default;
   }
   
-  .pagination-wrapper .pagination-prev-btn.disabled,
-  .pagination-wrapper .pagination-next-btn.disabled {
+  .pagination-wrapper-default .pagination-prev-btn.disabled,
+  .pagination-wrapper-default .pagination-next-btn.disabled {
     color: #9d9d9d;
   }
   
-  .pagination-wrapper .page-btn.selected {
+  .pagination-wrapper-default .page-btn.selected {
     background-color: #e5e5e5;
     border-radius: 50%;
   }

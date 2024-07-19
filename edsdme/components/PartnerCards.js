@@ -137,6 +137,11 @@ export default class PartnerCards extends LitElement {
         const paginationType = paginationEl.innerText.trim();
         if (paginationType) this.blockData.pagination = paginationType.toLowerCase().replace(/ /g, '-');
       },
+      'background-color': (cols) => {
+        const [backgroundColorEl] = cols;
+        const backgroundColor = backgroundColorEl.innerText.trim();
+        if (backgroundColor) this.blockData.backgroundColor = backgroundColor;
+      },
     };
 
     const rows = Array.from(this.blockData.tableData);
@@ -367,7 +372,7 @@ export default class PartnerCards extends LitElement {
           <div class="filter">
             <button class="filter-header" @click=${(e) => this.toggleFilter(e.currentTarget.parentNode)} aria-label="${filter.value}">
               <span class="filter-label">${filter.value}</span>
-              <span class="filter-chevron-icon" />
+              <span class="filter-chevron-icon"></span>
             </button>
             <button class="filter-selected-tags-count-btn ${tagsCount ? '' : 'hidden'}" @click="${() => this.handleResetTags(filter.key)}" aria-label="${tagsCount}">
               <span class="filter-selected-tags-total-num">${tagsCount}</span>
@@ -411,7 +416,7 @@ export default class PartnerCards extends LitElement {
                     : ''
                   }
                 </div>
-                <span class="filter-header-chevron-icon" />
+                <span class="filter-header-chevron-icon"></span>
               </button>
               <ul class="filter-tags-mobile">
                 <sp-theme theme="spectrum" color="light" scale="medium">
@@ -495,9 +500,9 @@ export default class PartnerCards extends LitElement {
     if (this.blockData.sort.items.length) this.handleSortAction();
     if (this.blockData.filters.length) this.handleFilterAction();
     this.additionalActions();
-    this.updatePaginatedCards();
     // eslint-disable-next-line no-return-assign
     this.cards.forEach((card, index) => card.orderNum = index + 1);
+    this.updatePaginatedCards();
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -539,7 +544,10 @@ export default class PartnerCards extends LitElement {
       newest: (a, b) => new Date(b.cardDate) - new Date(a.cardDate),
       oldest: (a, b) => new Date(a.cardDate) - new Date(b.cardDate),
     };
-    this.cards.sort(sortFunctions[this.selectedSortOrder.key]);
+
+    let sortKey;
+    if (this.selectedSortOrder.key === 'most-recent') sortKey = 'newest';
+    this.cards.sort(sortFunctions[sortKey]);
   }
 
   handleSort(selectedItem) {
@@ -776,7 +784,7 @@ export default class PartnerCards extends LitElement {
                   <div class="sort-wrapper">
                     <button class="sort-btn" @click="${this.toggleSort}">
                       <span class="sort-btn-text">${this.selectedSortOrder.value}</span>
-                      <span class="filter-chevron-icon" />
+                      <span class="filter-chevron-icon"></span>
                     </button>
                     <div class="sort-list">
                       ${this.sortItems}
@@ -800,7 +808,7 @@ export default class PartnerCards extends LitElement {
           </div>
           ${this.cards.length
             ? html`
-              <div class="pagination-wrapper">
+              <div class="pagination-wrapper ${this.blockData?.pagination === 'load-more' ? 'pagination-wrapper-load-more' : 'pagination-wrapper-default'}">
                 ${this.pagination}
                 <span class="pagination-total-results">${this.cardsCounter} ${this.blockData.localizedText['{{of}}']} ${this.cards.length} ${this.blockData.localizedText['{{results}}']}</span>
               </div>
