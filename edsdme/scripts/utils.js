@@ -91,6 +91,15 @@ export function getProgramType(path) {
   }
 }
 
+export function getProgramHomePage(path) {
+  switch (true) {
+    case /solutionpartners/.test(path): return '/solutionpartners/';
+    case /technologypartners/.test(path): return '/technologypartners/';
+    case /channelpartners/.test(path): return '/channelpartners/';
+    default: return '';
+  }
+}
+
 export function getCurrentProgramType() {
   return getProgramType(window.location.pathname);
 }
@@ -114,4 +123,47 @@ export function getPartnerDataCookieValue(programType, key) {
     // eslint-disable-next-line consistent-return
     return '';
   }
+}
+
+export function getPartnerDataCookieObject(programType) {
+  const partnerDataCookie = getCookieValue('partner_data');
+  if (!partnerDataCookie) return {};
+  const partnerDataObj = JSON.parse(decodeURIComponent(partnerDataCookie));
+  const portalData = partnerDataObj?.[programType.toUpperCase()] ?? {};
+  return portalData;
+}
+
+export function isMember() {
+  const { status } = getPartnerDataCookieObject(getCurrentProgramType());
+  return status === 'MEMBER';
+}
+
+export function getMetadataContent(name) {
+  return document.querySelector(`meta[name="${name}"]`)?.content;
+}
+
+export function redirectLoggedinPartner() {
+  if (!isMember()) return;
+  const target = getMetadataContent('adobe-target-after-login');
+  if (!target) return;
+  document.body.style.display = 'none';
+  window.location.assign(target);
+}
+
+export function updateIMSConfig() {
+  const imsReady = setInterval(() => {
+    if (!window.adobeIMS) return;
+    clearInterval(imsReady);
+    let target;
+    if (!window.adobeIMS.isSignedInUser()) {
+      target = getMetadataContent('adobe-target-after-login');
+    } else {
+      target = getMetadataContent('adobe-target-after-logout') ?? getProgramHomePage(window.location.pathname);
+    }
+
+    if (!target) return;
+    const targetUrl = new URL(window.location);
+    targetUrl.pathname = target;
+    window.adobeIMS.adobeIdData.redirect_uri = targetUrl.toString();
+  }, 500);
 }
