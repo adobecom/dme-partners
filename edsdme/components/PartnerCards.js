@@ -219,26 +219,37 @@ export default class PartnerCards extends LitElement {
 
     const partnerLevelParams = this.getPartnerLevelParams(portal);
     const partnerRegionParams = this.getPartnerRegionParams(portal);
+    const collectionTagsStr = this.collectionTags.filter((e) => e.length).join('+AND+');
 
-    let collectionTagsStr = this.collectionTags.filter((e) => e.length).join('+AND+');
-    collectionTagsStr = partnerRegionParams ? `((${collectionTagsStr}+AND+${partnerRegionParams}))` : `((${collectionTagsStr}))`;
-
+    let resulStr = `(${collectionTagsStr})`;
+    if (partnerRegionParams) resulStr += `+AND+${partnerRegionParams}`;
+    if (partnerLevelParams) resulStr += `+AND+${partnerLevelParams}`;
     // eslint-disable-next-line consistent-return
-    return partnerLevelParams ? `${collectionTagsStr}+AND+${partnerLevelParams}` : collectionTagsStr;
+    return resulStr;
   }
 
   // eslint-disable-next-line class-methods-use-this
   getPartnerLevelParams(portal) {
     const partnerLevel = getPartnerDataCookieValue(portal, 'level');
-    const baseTag = `("caas:adobe-partners/${portal}/partner-level/`;
-    return partnerLevel ? `(${baseTag}${partnerLevel}")+OR+${baseTag}public"))` : `(${baseTag}public"))`;
+    const partnerTagBase = `"caas:adobe-partners/${portal}/partner-level/`;
+    return partnerLevel ? `(${partnerTagBase}${partnerLevel}"+OR+${partnerTagBase}public")` : `(${partnerTagBase}public")`;
   }
 
   // eslint-disable-next-line class-methods-use-this
   getPartnerRegionParams(portal) {
-    const permisionRegion = getPartnerDataCookieValue(portal, 'permissionregion');
-    const region = permisionRegion ? permisionRegion.trim().replaceAll(' ', '-') : 'worldwide';
-    return `"caas:adobe-partners/${portal}/region/${region}"`;
+    const permissionRegion = getPartnerDataCookieValue(portal, 'permissionregion');
+    const regionTagBase = `"caas:adobe-partners/${portal}/region/`;
+
+    if (!permissionRegion) return `(${regionTagBase}worldwide")`;
+
+    const regionTags = [];
+
+    permissionRegion.split(',').forEach((region) => {
+      const regionValue = region.trim().replaceAll(' ', '-');
+      if (regionValue) regionTags.push(`${regionTagBase}${regionValue}"`);
+    });
+
+    return regionTags.length ? `(${regionTags.join('+OR+')})` : `(${regionTagBase}worldwide")`;
   }
 
   initUrlSearchParams() {
