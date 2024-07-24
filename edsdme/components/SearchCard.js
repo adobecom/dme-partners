@@ -44,7 +44,7 @@ class SearchCard extends LitElement {
         <div class="card-header">
           <div class="card-title-wrapper">
             <span class="card-chevron-icon"></span>
-            <div class="file-icon" style="background-image: url('/edsdme/img/icons/${this.data.contentArea?.type}.png')"></div>
+            <div class="file-icon" style="background-image: url('/edsdme/img/icons/${this.data.contentArea?.type}.svg')"></div>
             <span class="card-title">${this.data.contentArea?.title !== 'card-metadata' ? this.data.contentArea?.title : ''}</span>
           </div>
           <div class="card-icons">

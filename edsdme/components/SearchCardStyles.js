@@ -38,9 +38,8 @@ export const searchCardStyles = css`
   }
   
   .card-title-wrapper .file-icon {
-    height: 28px;
-    max-width: auto;
-    width: 20px;
+    height: 40px;
+    width: 40px;
     background-repeat: no-repeat;
     background-position: 50% 50%;
     background-size: cover;
