@@ -522,11 +522,10 @@ export default class PartnerCards extends LitElement {
       filter.tags.forEach((tag) => tag.checked = false);
       this.urlSearchParams.delete(filter.key);
     });
-    this.urlSearchParams.delete('filters');
     this.additionalResetActions();
     this.paginationCounter = 1;
     this.handleActions();
-    this.handleUrlSearchParams();
+    if (this.blockData.filters.length) this.handleUrlSearchParams();
   }
 
   // eslint-disable-next-line class-methods-use-this
