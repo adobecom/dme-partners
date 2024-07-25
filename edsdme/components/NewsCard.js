@@ -32,7 +32,7 @@ class NewsCard extends LitElement {
     const img = new Image();
 
     const isProd = prodHosts.includes(window.location.host);
-    const defaultBackgroundImageOrigin = `https://solutionpartners.${isProd ? '' : 'stage2.'}adobe.com`;
+    const defaultBackgroundImageOrigin = `https://partners.${isProd ? '' : 'stage.'}adobe.com`;
     const defaultBackgroundImageUrl = `${defaultBackgroundImageOrigin}${DEFAULT_BACKGROUND_IMAGE_PATH}`;
 
     img.onerror = () => {
