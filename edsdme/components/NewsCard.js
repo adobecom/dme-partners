@@ -27,8 +27,7 @@ class NewsCard extends LitElement {
   }
 
   checkBackgroundImage(element) {
-    const style = window.getComputedStyle(element);
-    const url = style.backgroundImage.slice(5, -2);
+    const url = this.data.styles?.backgroundImage;
     const img = new Image();
 
     const isProd = prodHosts.includes(window.location.host);
