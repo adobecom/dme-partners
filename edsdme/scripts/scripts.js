@@ -1,4 +1,4 @@
-import { setLibs, redirectLoggedinPartner, updateIMSConfig } from './utils.js';
+import { setLibs, redirectLoggedinPartner, updateIMSConfig, preloadResources } from './utils.js';
 
 // Add project-wide style path here.
 const STYLES = '';
@@ -74,6 +74,7 @@ const miloLibs = setLibs(LIBS);
 (async function loadPage() {
   redirectLoggedinPartner();
   updateIMSConfig();
+  await preloadResources(CONFIG.locales, miloLibs);
   const { loadArea, setConfig } = await import(`${miloLibs}/utils/utils.js`);
 
   setConfig({ ...CONFIG, miloLibs });

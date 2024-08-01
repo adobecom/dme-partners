@@ -1,4 +1,5 @@
-import { getLibs, replaceText, getConfig, populateLocalizedTextFromListItems } from '../../scripts/utils.js';
+import { getLibs } from '../../scripts/utils.js';
+import { replaceText, getConfig, populateLocalizedTextFromListItems } from '../utils/utils.js';
 import Announcements from './AnnouncementsCards.js';
 
 function declareAnnouncements() {
@@ -77,7 +78,6 @@ export default async function init(el) {
     dateFilter,
     cardsPerPage: 12,
     ietf: config.locale.ietf,
-    collectionTags: '"caas:adobe-partners/collections/announcements"',
     pagination: 'load-more',
     isArchive,
   };

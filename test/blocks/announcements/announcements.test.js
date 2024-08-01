@@ -16,6 +16,7 @@ describe('announcements block', () => {
       this.cards = cards;
       this.paginatedCards = this.cards.slice(0, 1);
       this.hasResponseData = true;
+      this.fetchedData = true;
     });
 
     await import('../../../edsdme/scripts/scripts.js');

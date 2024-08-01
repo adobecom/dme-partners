@@ -1,6 +1,5 @@
 import {
   getLibs,
-  prodHosts,
   getPartnerDataCookieValue,
   getCurrentProgramType,
 } from '../scripts/utils.js';
@@ -15,6 +14,8 @@ const miloLibs = getLibs();
 const { html, LitElement, css, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
 export default class PartnerCards extends LitElement {
+  static caasUrl;
+
   static styles = [
     partnerCardsStyles,
     partnerCardsLoadMoreStyles,
@@ -35,7 +36,7 @@ export default class PartnerCards extends LitElement {
     selectedFilters: { type: Object },
     urlSearchParams: { type: Object },
     mobileView: { type: Boolean },
-    useStageCaasEndpoint: { type: Boolean },
+    fetchedData: { type: Boolean },
   };
 
   constructor() {
@@ -50,8 +51,9 @@ export default class PartnerCards extends LitElement {
     this.selectedSortOrder = {};
     this.selectedFilters = {};
     this.urlSearchParams = {};
-    this.collectionTags = [];
-    this.hasResponseData = false;
+    this.hasResponseData = true;
+    this.hasResults = true;
+    this.fetchedData = false;
     this.mobileView = window.innerWidth <= 1200;
     this.updateView = this.updateView.bind(this);
   }
@@ -74,8 +76,6 @@ export default class PartnerCards extends LitElement {
       language: '',
       country: '',
     };
-
-    this.collectionTags = [this.blockData.collectionTags];
 
     const blockDataActions = {
       title: (cols) => {
@@ -125,13 +125,6 @@ export default class PartnerCards extends LitElement {
         const cardsPerPageNum = parseInt(cardsPerPageStr, 10);
         if (cardsPerPageNum) this.blockData.cardsPerPage = cardsPerPageNum;
       },
-      'collection-tags': (cols) => {
-        const [collectionTagsEl] = cols;
-        const collectionTags = Array.from(collectionTagsEl.querySelectorAll('li'), (li) => `"${li.innerText.trim().toLowerCase()}"`);
-        if (collectionTags.length) {
-          this.collectionTags = [...this.collectionTags, ...collectionTags];
-        }
-      },
       pagination: (cols) => {
         const [paginationEl] = cols;
         const paginationType = paginationEl.innerText.trim();
@@ -171,14 +164,19 @@ export default class PartnerCards extends LitElement {
 
   async fetchData() {
     try {
-      const domain = `${(this.useStageCaasEndpoint && !prodHosts.includes(window.location.host)) ? 'https://14257-chimera-stage.adobeioruntime.net/api/v1/web/chimera-0.0.1' : 'https://www.adobe.com/chimera-api'}`;
-      const api = new URL(`${domain}/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true`);
-      const apiWithParams = this.setApiParams(api);
-      const response = await fetch(apiWithParams);
+      let apiData;
+
+      setTimeout(() => {
+        this.hasResponseData = !!apiData?.cards;
+        this.hasResults = !!apiData?.cards?.length;
+        this.fetchedData = true;
+      }, 5);
+
+      const response = await fetch(PartnerCards.caasUrl);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      const apiData = await response.json();
+      apiData = await response.json();
       if (apiData?.cards) {
         if (window.location.hostname === 'partners.adobe.com') {
           apiData.cards = apiData.cards.filter((card) => !card.contentArea.url?.includes('/drafts/'));
@@ -188,39 +186,65 @@ export default class PartnerCards extends LitElement {
         this.allCards = apiData.cards;
         this.cards = apiData.cards;
         this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
-        this.hasResponseData = true;
+        this.hasResponseData = !!apiData.cards;
       }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   }
 
-  setApiParams(api) {
-    const complexQueryParams = this.getComplexQueryParams();
+  static getCaasUrl(block) {
+    if (this.caasUrl) {
+      return this.caasUrl;
+    }
+    const domain = 'https://www.adobe.com/chimera-api';
+    const api = new URL(`${domain}/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true`);
+    const apiWithParams = PartnerCards.setApiParams(api, block);
+    this.caasUrl = apiWithParams;
+    return this.caasUrl;
+  }
+
+  static extractTableCollectionTags(el) {
+    let tableCollectionTags = [];
+    Array.from(el.children).forEach((row) => {
+      const cols = Array.from(row.children);
+      const rowTitle = cols[0].innerText.trim().toLowerCase().replace(/ /g, '-');
+      const colsContent = cols.slice(1);
+      if (rowTitle === 'collection-tags') {
+        const [collectionTagsEl] = colsContent;
+        const collectionTags = Array.from(collectionTagsEl.querySelectorAll('li'), (li) => `"${li.innerText.trim().toLowerCase()}"`);
+        tableCollectionTags = [...tableCollectionTags, ...collectionTags];
+      }
+    });
+
+    return tableCollectionTags;
+  }
+
+  static setApiParams(api, block) {
+    const { el, collectionTag, ietf } = block;
+    const complexQueryParams = PartnerCards.getComplexQueryParams(el, collectionTag);
     if (complexQueryParams) api.searchParams.set('complexQuery', complexQueryParams);
 
-    const { language, country } = this.blockData;
+    const [language, country] = ietf.split('-');
     if (language && country) {
       api.searchParams.set('language', language);
       api.searchParams.set('country', country);
     }
-
     return api.toString();
   }
 
-  getComplexQueryParams() {
+  static getComplexQueryParams(el, collectionTag) {
     const portal = getCurrentProgramType();
     if (!portal) return;
 
     const portalCollectionTag = `"caas:adobe-partners/${portal}"`;
-    if (!this.collectionTags.includes(portalCollectionTag)) {
-      this.collectionTags = [...this.collectionTags, portalCollectionTag];
-    }
+    const tableTags = PartnerCards.extractTableCollectionTags(el);
+    const collectionTags = [collectionTag, portalCollectionTag, ...tableTags];
 
-    const partnerLevelParams = this.getPartnerLevelParams(portal);
-    const partnerRegionParams = this.getPartnerRegionParams(portal);
-    const collectionTagsStr = this.collectionTags.filter((e) => e.length).join('+AND+');
+    const partnerLevelParams = PartnerCards.getPartnerLevelParams(portal);
+    const partnerRegionParams = PartnerCards.getPartnerRegionParams(portal);
 
+    const collectionTagsStr = collectionTags.filter((e) => e.length).join('+AND+');
     let resulStr = `(${collectionTagsStr})`;
     if (partnerRegionParams) resulStr += `+AND+${partnerRegionParams}`;
     if (partnerLevelParams) resulStr += `+AND+${partnerLevelParams}`;
@@ -228,15 +252,13 @@ export default class PartnerCards extends LitElement {
     return resulStr;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  getPartnerLevelParams(portal) {
+  static getPartnerLevelParams(portal) {
     const partnerLevel = getPartnerDataCookieValue(portal, 'level');
     const partnerTagBase = `"caas:adobe-partners/${portal}/partner-level/`;
     return partnerLevel ? `(${partnerTagBase}${partnerLevel}"+OR+${partnerTagBase}public")` : `(${partnerTagBase}public")`;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  getPartnerRegionParams(portal) {
+  static getPartnerRegionParams(portal) {
     const permissionRegion = getPartnerDataCookieValue(portal, 'permissionregion');
     const regionTagBase = `"caas:adobe-partners/${portal}/region/`;
 
@@ -286,10 +308,13 @@ export default class PartnerCards extends LitElement {
         (card) => html`<news-card class="card-wrapper" .data=${card}></news-card>`,
       )}`;
     }
-    return html`<div class="no-results">
-        <strong class="no-results-title">${this.blockData.localizedText['{{no-results-title}}']}</strong>
-        <p class="no-results-description">${this.blockData.localizedText['{{no-results-description}}']}</p>
-      </div>`;
+
+    if (!this.hasResults) {
+      return html`<div class="no-results">
+          <strong class="no-results-title">${this.blockData.localizedText['{{no-results-title}}']}</strong>
+          <p class="no-results-description">${this.blockData.localizedText['{{no-results-description}}']}</p>
+        </div>`;
+    }
   }
 
   get sortItems() {
@@ -738,6 +763,8 @@ export default class PartnerCards extends LitElement {
   /* eslint-disable indent */
   render() {
     return html`
+    ${this.fetchedData
+      ? html`
       <div class="partner-cards">
         <div class="partner-cards-sidebar-wrapper">
           <div class="partner-cards-sidebar">
@@ -818,9 +845,9 @@ export default class PartnerCards extends LitElement {
             : ''
           }
         </div>
-      </div>
+      </div>` : ''}
 
-      ${this.mobileView
+      ${this.mobileView && this.fetchData
         ? html`
           <div class="all-filters-wrapper-mobile">
             <div class="all-filters-header-mobile">
