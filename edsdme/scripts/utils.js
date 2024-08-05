@@ -50,7 +50,7 @@ export async function useMiloSample() {
 
 const miloLibs = setLibs('/libs');
 
-const { createTag, localizeLink, getConfig } = await import(`${miloLibs}/utils/utils.js`);
+const { createTag, localizeLink, getConfig, loadBlock } = await import(`${miloLibs}/utils/utils.js`);
 export { createTag, localizeLink, getConfig };
 
 const { replaceText } = await import(`${miloLibs}/features/placeholders.js`);
@@ -148,6 +148,73 @@ export function redirectLoggedinPartner() {
   if (!target) return;
   document.body.style.display = 'none';
   window.location.assign(target);
+}
+
+export async function getRenewBanner() {
+  const programType = getCurrentProgramType();
+  const accountExpiration = getPartnerDataCookieValue(programType, 'accountexpiration');
+  if (!accountExpiration) return;
+
+  const expirationDate = new Date(accountExpiration);
+  const now = new Date();
+
+  let metadataKey;
+  let daysNum;
+
+  const differenceInMilliseconds = expirationDate - now;
+  const differenceInDays = Math.abs(differenceInMilliseconds) / (1000 * 60 * 60 * 24);
+  const differenceInDaysRounded = Math.floor(differenceInDays);
+
+  if (differenceInMilliseconds > 0) {
+    if (differenceInDaysRounded === 0) {
+      metadataKey = 'banner-account-expires-today';
+    } else if (differenceInDays < 30) {
+      metadataKey = 'banner-account-expires';
+      daysNum = differenceInDaysRounded;
+    } else {
+      return;
+    }
+  } else if (differenceInMilliseconds < 0) {
+    if (differenceInDays < 90) {
+      metadataKey = 'banner-account-suspended';
+      daysNum = 90 - differenceInDaysRounded;
+    } else {
+      return;
+    }
+  }
+
+  const config = getConfig();
+  const [, locale] = config.locale.ietf.toLowerCase().split('-');
+  const defaultPath = locale === 'us' ? `/edsdme/partners-shared/fragments/${metadataKey}` : `/${locale}/edsdme/partners-shared/fragments/${metadataKey}`;
+  const path = getMetadataContent(metadataKey) ? getMetadataContent(metadataKey) : defaultPath;
+  const url = new URL(path, window.location.origin);
+
+  try {
+    const response = await fetch(`${url}.plain.html`);
+    if (!response.ok) throw new Error(`Network response was not ok ${response.statusText}`);
+
+    const data = await response.text();
+    const componentData = daysNum ? data.replace('$daysNum', daysNum) : data;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(componentData, 'text/html');
+    const aside = doc.querySelector('.aside');
+    aside.classList.add('renew-banner');
+
+    const div = document.createElement('div');
+    div.style.position = 'sticky';
+    div.style.top = '64px';
+    div.style.zIndex = 10;
+
+    await loadBlock(aside);
+    div.appendChild(aside);
+
+    const main = document.querySelector('main');
+    if (main) main.insertBefore(div, main.firstChild);
+  } catch (error) {
+    console.error('There has been a problem with your fetch operation:', error);
+    // eslint-disable-next-line consistent-return
+    return null;
+  }
 }
 
 export function updateIMSConfig() {
