@@ -555,8 +555,7 @@ export default class PartnerCards extends LitElement {
       oldest: (a, b) => new Date(a.cardDate) - new Date(b.cardDate),
     };
 
-    let sortKey;
-    if (this.selectedSortOrder.key === 'most-recent') sortKey = 'newest';
+    const sortKey = this.selectedSortOrder.key === 'most-recent' ? 'newest' : this.selectedSortOrder.key;
     this.cards.sort(sortFunctions[sortKey]);
   }
 
