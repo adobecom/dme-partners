@@ -1,7 +1,5 @@
 import {
   getLibs,
-  getPartnerDataCookieValue,
-  getCurrentProgramType,
 } from '../scripts/utils.js';
 import {
   partnerCardsStyles,
@@ -172,7 +170,7 @@ export default class PartnerCards extends LitElement {
         this.fetchedData = true;
       }, 5);
 
-      const response = await fetch(PartnerCards.caasUrl);
+      const response = await fetch(this.blockData.caasUrl);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -191,87 +189,6 @@ export default class PartnerCards extends LitElement {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-  }
-
-  static getCaasUrl(block) {
-    if (this.caasUrl) {
-      return this.caasUrl;
-    }
-    const domain = 'https://www.adobe.com/chimera-api';
-    const api = new URL(`${domain}/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true`);
-    const apiWithParams = PartnerCards.setApiParams(api, block);
-    this.caasUrl = apiWithParams;
-    return this.caasUrl;
-  }
-
-  static extractTableCollectionTags(el) {
-    let tableCollectionTags = [];
-    Array.from(el.children).forEach((row) => {
-      const cols = Array.from(row.children);
-      const rowTitle = cols[0].innerText.trim().toLowerCase().replace(/ /g, '-');
-      const colsContent = cols.slice(1);
-      if (rowTitle === 'collection-tags') {
-        const [collectionTagsEl] = colsContent;
-        const collectionTags = Array.from(collectionTagsEl.querySelectorAll('li'), (li) => `"${li.innerText.trim().toLowerCase()}"`);
-        tableCollectionTags = [...tableCollectionTags, ...collectionTags];
-      }
-    });
-
-    return tableCollectionTags;
-  }
-
-  static setApiParams(api, block) {
-    const { el, collectionTag, ietf } = block;
-    const complexQueryParams = PartnerCards.getComplexQueryParams(el, collectionTag);
-    if (complexQueryParams) api.searchParams.set('complexQuery', complexQueryParams);
-
-    const [language, country] = ietf.split('-');
-    if (language && country) {
-      api.searchParams.set('language', language);
-      api.searchParams.set('country', country);
-    }
-    return api.toString();
-  }
-
-  static getComplexQueryParams(el, collectionTag) {
-    const portal = getCurrentProgramType();
-    if (!portal) return;
-
-    const portalCollectionTag = `"caas:adobe-partners/${portal}"`;
-    const tableTags = PartnerCards.extractTableCollectionTags(el);
-    const collectionTags = [collectionTag, portalCollectionTag, ...tableTags];
-
-    const partnerLevelParams = PartnerCards.getPartnerLevelParams(portal);
-    const partnerRegionParams = PartnerCards.getPartnerRegionParams(portal);
-
-    const collectionTagsStr = collectionTags.filter((e) => e.length).join('+AND+');
-    let resulStr = `(${collectionTagsStr})`;
-    if (partnerRegionParams) resulStr += `+AND+${partnerRegionParams}`;
-    if (partnerLevelParams) resulStr += `+AND+${partnerLevelParams}`;
-    // eslint-disable-next-line consistent-return
-    return resulStr;
-  }
-
-  static getPartnerLevelParams(portal) {
-    const partnerLevel = getPartnerDataCookieValue(portal, 'level');
-    const partnerTagBase = `"caas:adobe-partners/${portal}/partner-level/`;
-    return partnerLevel ? `(${partnerTagBase}${partnerLevel}"+OR+${partnerTagBase}public")` : `(${partnerTagBase}public")`;
-  }
-
-  static getPartnerRegionParams(portal) {
-    const permissionRegion = getPartnerDataCookieValue(portal, 'permissionregion');
-    const regionTagBase = `"caas:adobe-partners/${portal}/region/`;
-
-    if (!permissionRegion) return `(${regionTagBase}worldwide")`;
-
-    const regionTags = [];
-
-    permissionRegion.split(',').forEach((region) => {
-      const regionValue = region.trim().replaceAll(' ', '-');
-      if (regionValue) regionTags.push(`${regionTagBase}${regionValue}"`);
-    });
-
-    return regionTags.length ? `(${regionTags.join('+OR+')})` : `(${regionTagBase}worldwide")`;
   }
 
   initUrlSearchParams() {

@@ -26,8 +26,12 @@ class NewsCard extends LitElement {
     return newUrl;
   }
 
+  get imageUrl() {
+    return `${new URL(this.data.styles?.backgroundImage).pathname}?width=400&format=webp&optimize=small`
+  }
+
   checkBackgroundImage(element) {
-    const url = this.data.styles?.backgroundImage;
+    const url = this.imageUrl;
     const img = new Image();
 
     const isProd = prodHosts.includes(window.location.host);
@@ -48,7 +52,7 @@ class NewsCard extends LitElement {
   render() {
     return html`
       <div class="news-card">
-        <div class="card-header" style="background-image: url('${this.data.styles?.backgroundImage}')" alt="${this.data.styles?.backgroundAltText}"></div>
+        <div class="card-header" style="background-image: url(${this.imageUrl})" alt="${this.data.styles?.backgroundAltText}"></div>
         <div class="card-content">
           <div class="card-text">
             <p class="card-title">${this.data.contentArea?.title !== 'card-metadata' ? this.data.contentArea?.title : ''}</p>

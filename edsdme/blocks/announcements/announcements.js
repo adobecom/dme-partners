@@ -1,4 +1,4 @@
-import { getLibs } from '../../scripts/utils.js';
+import { getLibs, getCaasUrl } from '../../scripts/utils.js';
 import { replaceText, getConfig, populateLocalizedTextFromListItems } from '../utils/utils.js';
 import Announcements from './AnnouncementsCards.js';
 
@@ -72,6 +72,12 @@ export default async function init(el) {
         { key: 'last-90-days', value: localizedText['{{last-90-days}}'], parentKey: 'date', checked: false }],
   };
 
+  const block = {
+    el,
+    collectionTag: '"caas:adobe-partners/collections/announcements"',
+    ietf: config.locale.ietf
+  }
+
   const blockData = {
     localizedText,
     tableData: el.children,
@@ -80,6 +86,7 @@ export default async function init(el) {
     ietf: config.locale.ietf,
     pagination: 'load-more',
     isArchive,
+    caasUrl: getCaasUrl(block),
   };
 
   const app = document.createElement('announcements-cards');
