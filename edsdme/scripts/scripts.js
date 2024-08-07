@@ -1,4 +1,5 @@
 import { setLibs, redirectLoggedinPartner, updateIMSConfig } from './utils.js';
+import { applyPagePersonalization } from './personalization.js';
 
 // Add project-wide style path here.
 const STYLES = '';
@@ -72,6 +73,7 @@ const miloLibs = setLibs(LIBS);
 }());
 
 (async function loadPage() {
+  applyPagePersonalization();
   redirectLoggedinPartner();
   updateIMSConfig();
   const { loadArea, setConfig } = await import(`${miloLibs}/utils/utils.js`);

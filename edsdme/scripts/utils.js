@@ -13,6 +13,17 @@
 /**
  * The decision engine for where to get Milo's libs from.
  */
+
+export const LEVELS = {
+  REGISTERED: 'registered',
+  CERTIFIED: 'certified',
+  GOLD: 'gold',
+  PLATINUM: 'platinum',
+  DISTRIBBUTOR: 'distributor'
+}
+
+export const RESSELER_LEVELS = [LEVELS.REGISTERED, LEVELS.CERTIFIED, LEVELS.GOLD, LEVELS.PLATINUM];
+
 export const [setLibs, getLibs] = (() => {
   let libs;
   return [
@@ -136,6 +147,18 @@ export function getPartnerDataCookieObject(programType) {
 export function isMember() {
   const { status } = getPartnerDataCookieObject(getCurrentProgramType());
   return status === 'MEMBER';
+}
+
+export function partnerIsSignedIn() {
+  return getCookieValue('partner_data');
+}
+
+export function signedInNonMember() {
+  return partnerIsSignedIn() && !isMember();
+}
+
+export function isResseler(level) {
+  return RESSELER_LEVELS.includes(level?.toLowerCase());
 }
 
 export function getMetadataContent(name) {
