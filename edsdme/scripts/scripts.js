@@ -74,9 +74,9 @@ const miloLibs = setLibs(LIBS);
 (async function loadPage() {
   redirectLoggedinPartner();
   updateIMSConfig();
-  const { loadArea, setConfig } = await import(`${miloLibs}/utils/utils.js`);
+  const { loadArea, setConfig, getConfig, loadBlock } = await import(`${miloLibs}/utils/utils.js`);
 
   setConfig({ ...CONFIG, miloLibs });
-  await getRenewBanner();
+  await getRenewBanner(getConfig, loadBlock);
   await loadArea();
 }());

@@ -50,7 +50,7 @@ export async function useMiloSample() {
 
 const miloLibs = setLibs('/libs');
 
-const { createTag, localizeLink, getConfig, loadBlock } = await import(`${miloLibs}/utils/utils.js`);
+const { createTag, localizeLink, getConfig } = await import(`${miloLibs}/utils/utils.js`);
 export { createTag, localizeLink, getConfig };
 
 const { replaceText } = await import(`${miloLibs}/features/placeholders.js`);
@@ -150,9 +150,9 @@ export function redirectLoggedinPartner() {
   window.location.assign(target);
 }
 
-export async function getRenewBanner() {
+export async function getRenewBanner(getConfig, loadBlock) {
   const programType = getCurrentProgramType();
-  const accountExpiration = getPartnerDataCookieValue(programType, 'accountexpiration');
+  const accountExpiration = getPartnerDataCookieValue(programType, 'accountanniversary');
   if (!accountExpiration) return;
 
   const expirationDate = new Date(accountExpiration);
@@ -184,9 +184,9 @@ export async function getRenewBanner() {
   }
 
   const config = getConfig();
-  const [, locale] = config.locale.ietf.toLowerCase().split('-');
-  const defaultPath = locale === 'us' ? `/edsdme/partners-shared/fragments/${metadataKey}` : `/${locale}/edsdme/partners-shared/fragments/${metadataKey}`;
-  const path = getMetadataContent(metadataKey) ? getMetadataContent(metadataKey) : defaultPath;
+  const { prefix } = config.locale;
+  const defaultPath = `${prefix}/edsdme/partners-shared/fragments/${metadataKey}`;
+  const path = getMetadataContent(metadataKey) ?? defaultPath;
   const url = new URL(path, window.location.origin);
 
   try {
