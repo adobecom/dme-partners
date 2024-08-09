@@ -1,10 +1,10 @@
-import { getLibs, getCaasUrl } from '../../scripts/utils.js';
+import { getLibs } from '../../scripts/utils.js';
 import { replaceText, getConfig, populateLocalizedTextFromListItems } from '../utils/utils.js';
-import Announcements from './AnnouncementsCards.js';
+import Search from './SearchCards.js';
 
-function declareAnnouncements() {
-  if (customElements.get('announcements-cards')) return;
-  customElements.define('announcements-cards', Announcements);
+function declareSearch() {
+  if (customElements.get('search-cards')) return;
+  customElements.define('search-cards', Search);
 }
 
 async function localizationPromises(localizedText, config) {
@@ -15,37 +15,41 @@ async function localizationPromises(localizedText, config) {
 }
 
 export default async function init(el) {
-  performance.mark('announcements-cards:start');
+  performance.mark('search-cards:start');
 
   const miloLibs = getLibs();
   const config = getConfig();
 
-  const isArchive = el.classList.contains('archive');
   const sectionIndex = el.parentNode.getAttribute('data-idx');
 
   const localizedText = {
+    '{{all}}': 'All',
     '{{apply}}': 'Apply',
+    '{{assets}}': 'Assets',
     '{{back}}': 'Back',
     '{{clear-all}}': 'Clear all',
-    '{{current-month}}': 'Current month',
-    '{{date}}': 'Date',
+    '{{download}}': 'Download',
     '{{filter}}': 'Filter',
     '{{filter-by}}': 'Filter by',
     '{{filters}}': 'Filters',
-    '{{last-90-days}}': 'Last 90 days',
+    '{{open-in}}': 'Open in',
+    '{{open-in-disabled}}': 'Open in disabled',
+    '{{last-modified}}': 'Last modified',
+    '{{load-more}}': 'Load more',
     '{{next}}': 'Next',
     '{{next-page}}': 'Next Page',
-    '{{load-more}}': 'Load more',
     '{{no-results-description}}': 'Try checking your spelling or broadening your search.',
     '{{no-results-title}}': 'No Results Found',
     '{{of}}': 'Of',
     '{{page}}': 'Page',
+    '{{pages}}': 'Pages',
     '{{prev}}': 'Prev',
-    '{{previous-month}}': 'Previous month',
     '{{previous-page}}': 'Previous Page',
     '{{results}}': 'Results',
-    '{{search}}': 'Search',
-    '{{show-all}}': 'Show all',
+    '{{search-topics-resources-files}}': 'Search for topics, resources or files',
+    '{{show}}': 'Show',
+    '{{showing-results-for}}': 'Showing results for:',
+    '{{size}}': 'Size',
   };
 
   populateLocalizedTextFromListItems(el, localizedText);
@@ -57,45 +61,28 @@ export default async function init(el) {
     import(`${miloLibs}/features/spectrum-web-components/dist/checkbox.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/button.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/progress-circle.js`),
+    import(`${miloLibs}/features/spectrum-web-components/dist/action-button.js`),
+    import(`${miloLibs}/features/spectrum-web-components/dist/icons-workflow.js`),
   ]);
 
-  declareAnnouncements();
-
-  const dateFilter = {
-    key: 'date',
-    value: localizedText['{{date}}'],
-    tags: isArchive
-      ? [{ key: 'show-all', value: localizedText['{{show-all}}'], parentKey: 'date', checked: true, default: true }]
-      : [{ key: 'show-all', value: localizedText['{{show-all}}'], parentKey: 'date', checked: true, default: true },
-        { key: 'current-month', value: localizedText['{{current-month}}'], parentKey: 'date', checked: false },
-        { key: 'previous-month', value: localizedText['{{previous-month}}'], parentKey: 'date', checked: false },
-        { key: 'last-90-days', value: localizedText['{{last-90-days}}'], parentKey: 'date', checked: false }],
-  };
-
-  const block = {
-    el,
-    collectionTag: '"caas:adobe-partners/collections/announcements"',
-    ietf: config.locale.ietf,
-  };
+  declareSearch();
 
   const blockData = {
     localizedText,
     tableData: el.children,
-    dateFilter,
     cardsPerPage: 12,
-    pagination: 'load-more',
-    isArchive,
-    caasUrl: getCaasUrl(block),
+    ietf: config.locale.ietf,
+    pagination: 'default',
   };
 
-  const app = document.createElement('announcements-cards');
-  app.className = 'content announcements-wrapper';
+  const app = document.createElement('search-cards');
+  app.className = 'search-cards-wrapper';
   app.blockData = blockData;
   app.setAttribute('data-idx', sectionIndex);
   el.replaceWith(app);
 
   await deps;
-  performance.mark('announcements-cards:end');
-  performance.measure('announcements-cards block', 'announcements-cards:start', 'announcements-cards:end');
+  performance.mark('search-cards:end');
+  performance.measure('search-cards block', 'search-cards:start', 'search-cards:end');
   return app;
 }

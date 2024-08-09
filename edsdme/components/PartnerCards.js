@@ -1,15 +1,12 @@
 import {
   getLibs,
-  prodHosts,
-  getPartnerDataCookieValue,
-  getCurrentProgramType,
 } from '../scripts/utils.js';
 import {
   partnerCardsStyles,
   partnerCardsLoadMoreStyles,
   partnerCardsPaginationStyles,
 } from './PartnerCardsStyles.js';
-import './NewsCard.js';
+import './SinglePartnerCard.js';
 
 const miloLibs = getLibs();
 const { html, LitElement, css, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
@@ -35,7 +32,7 @@ export default class PartnerCards extends LitElement {
     selectedFilters: { type: Object },
     urlSearchParams: { type: Object },
     mobileView: { type: Boolean },
-    useStageCaasEndpoint: { type: Boolean },
+    fetchedData: { type: Boolean },
   };
 
   constructor() {
@@ -50,8 +47,8 @@ export default class PartnerCards extends LitElement {
     this.selectedSortOrder = {};
     this.selectedFilters = {};
     this.urlSearchParams = {};
-    this.collectionTags = [];
-    this.hasResponseData = false;
+    this.hasResponseData = true;
+    this.fetchedData = false;
     this.mobileView = window.innerWidth <= 1200;
     this.updateView = this.updateView.bind(this);
   }
@@ -70,12 +67,8 @@ export default class PartnerCards extends LitElement {
       sort: {
         default: {},
         items: [],
-      },
-      language: '',
-      country: '',
+      }
     };
-
-    this.collectionTags = [this.blockData.collectionTags];
 
     const blockDataActions = {
       title: (cols) => {
@@ -85,7 +78,12 @@ export default class PartnerCards extends LitElement {
       filter: (cols) => {
         const [filterKeyEl, filterTagsKeysEl] = cols;
         const filterKey = filterKeyEl.innerText.trim().toLowerCase().replace(/ /g, '-');
-        const filterTagsKeys = Array.from(filterTagsKeysEl.querySelectorAll('li'), (li) => li.innerText.trim().toLowerCase().replace(/ /g, '-'));
+
+        const filterTagsKeys = [];
+        filterTagsKeysEl.querySelectorAll('li').forEach((li) => {
+          const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
+          if (key !== '') filterTagsKeys.push(key);
+        });
 
         if (!filterKey || !filterTagsKeys.length) return;
 
@@ -103,7 +101,12 @@ export default class PartnerCards extends LitElement {
       },
       sort: (cols) => {
         const [sortKeysEl] = cols;
-        const sortKeys = Array.from(sortKeysEl.querySelectorAll('li'), (li) => li.innerText.trim().toLowerCase().replace(/ /g, '-'));
+
+        const sortKeys = [];
+        sortKeysEl.querySelectorAll('li').forEach((li) => {
+          const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
+          if (key !== '') sortKeys.push(key);
+        });
 
         if (!sortKeys.length) return;
 
@@ -125,17 +128,15 @@ export default class PartnerCards extends LitElement {
         const cardsPerPageNum = parseInt(cardsPerPageStr, 10);
         if (cardsPerPageNum) this.blockData.cardsPerPage = cardsPerPageNum;
       },
-      'collection-tags': (cols) => {
-        const [collectionTagsEl] = cols;
-        const collectionTags = Array.from(collectionTagsEl.querySelectorAll('li'), (li) => `"${li.innerText.trim().toLowerCase()}"`);
-        if (collectionTags.length) {
-          this.collectionTags = [...this.collectionTags, ...collectionTags];
-        }
-      },
       pagination: (cols) => {
         const [paginationEl] = cols;
         const paginationType = paginationEl.innerText.trim();
         if (paginationType) this.blockData.pagination = paginationType.toLowerCase().replace(/ /g, '-');
+      },
+      'background-color': (cols) => {
+        const [backgroundColorEl] = cols;
+        const backgroundColor = backgroundColorEl.innerText.trim();
+        if (backgroundColor) this.blockData.backgroundColor = backgroundColor;
       },
     };
 
@@ -146,10 +147,6 @@ export default class PartnerCards extends LitElement {
       const colsContent = cols.slice(1);
       if (blockDataActions[rowTitle]) blockDataActions[rowTitle](colsContent);
     });
-
-    const [language, country] = this.blockData.ietf.split('-');
-    this.blockData.language = language;
-    this.blockData.country = country;
   }
 
   updateView() {
@@ -171,14 +168,20 @@ export default class PartnerCards extends LitElement {
 
   async fetchData() {
     try {
-      const domain = `${(this.useStageCaasEndpoint && !prodHosts.includes(window.location.host)) ? 'https://14257-chimera-stage.adobeioruntime.net/api/v1/web/chimera-0.0.1' : 'https://www.adobe.com/chimera-api'}`;
-      const api = new URL(`${domain}/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true`);
-      const apiWithParams = this.setApiParams(api);
-      const response = await fetch(apiWithParams);
+      let apiData;
+
+      setTimeout(() => {
+        this.hasResponseData = !!apiData?.cards;
+        this.fetchedData = true;
+      }, 5);
+
+      const response = await fetch(this.blockData.caasUrl);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      const apiData = await response.json();
+      apiData = await response.json();
+      const cardsEvent = new Event('partner-cards-loaded');
+      document.dispatchEvent(cardsEvent);
       if (apiData?.cards) {
         if (window.location.hostname === 'partners.adobe.com') {
           apiData.cards = apiData.cards.filter((card) => !card.contentArea.url?.includes('/drafts/'));
@@ -188,68 +191,11 @@ export default class PartnerCards extends LitElement {
         this.allCards = apiData.cards;
         this.cards = apiData.cards;
         this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
-        this.hasResponseData = true;
+        this.hasResponseData = !!apiData.cards;
       }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-  }
-
-  setApiParams(api) {
-    const complexQueryParams = this.getComplexQueryParams();
-    if (complexQueryParams) api.searchParams.set('complexQuery', complexQueryParams);
-
-    const { language, country } = this.blockData;
-    if (language && country) {
-      api.searchParams.set('language', language);
-      api.searchParams.set('country', country);
-    }
-
-    return api.toString();
-  }
-
-  getComplexQueryParams() {
-    const portal = getCurrentProgramType();
-    if (!portal) return;
-
-    const portalCollectionTag = `"caas:adobe-partners/${portal}"`;
-    if (!this.collectionTags.includes(portalCollectionTag)) {
-      this.collectionTags = [...this.collectionTags, portalCollectionTag];
-    }
-
-    const partnerLevelParams = this.getPartnerLevelParams(portal);
-    const partnerRegionParams = this.getPartnerRegionParams(portal);
-    const collectionTagsStr = this.collectionTags.filter((e) => e.length).join('+AND+');
-
-    let resulStr = `(${collectionTagsStr})`;
-    if (partnerRegionParams) resulStr += `+AND+${partnerRegionParams}`;
-    if (partnerLevelParams) resulStr += `+AND+${partnerLevelParams}`;
-    // eslint-disable-next-line consistent-return
-    return resulStr;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  getPartnerLevelParams(portal) {
-    const partnerLevel = getPartnerDataCookieValue(portal, 'level');
-    const partnerTagBase = `"caas:adobe-partners/${portal}/partner-level/`;
-    return partnerLevel ? `(${partnerTagBase}${partnerLevel}"+OR+${partnerTagBase}public")` : `(${partnerTagBase}public")`;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  getPartnerRegionParams(portal) {
-    const permissionRegion = getPartnerDataCookieValue(portal, 'permissionregion');
-    const regionTagBase = `"caas:adobe-partners/${portal}/region/`;
-
-    if (!permissionRegion) return `(${regionTagBase}worldwide")`;
-
-    const regionTags = [];
-
-    permissionRegion.split(',').forEach((region) => {
-      const regionValue = region.trim().replaceAll(' ', '-');
-      if (regionValue) regionTags.push(`${regionTagBase}${regionValue}"`);
-    });
-
-    return regionTags.length ? `(${regionTags.join('+OR+')})` : `(${regionTagBase}worldwide")`;
   }
 
   initUrlSearchParams() {
@@ -283,9 +229,10 @@ export default class PartnerCards extends LitElement {
       return html`${repeat(
         this.paginatedCards,
         (card) => card.id,
-        (card) => html`<news-card class="card-wrapper" .data=${card}></news-card>`,
+        (card) => html`<single-partner-card class="card-wrapper" .data=${card}></signle-partner-card>`,
       )}`;
     }
+
     return html`<div class="no-results">
         <strong class="no-results-title">${this.blockData.localizedText['{{no-results-title}}']}</strong>
         <p class="no-results-description">${this.blockData.localizedText['{{no-results-description}}']}</p>
@@ -378,7 +325,7 @@ export default class PartnerCards extends LitElement {
           <div class="filter">
             <button class="filter-header" @click=${(e) => this.toggleFilter(e.currentTarget.parentNode)} aria-label="${filter.value}">
               <span class="filter-label">${filter.value}</span>
-              <span class="filter-chevron-icon" />
+              <span class="filter-chevron-icon"></span>
             </button>
             <button class="filter-selected-tags-count-btn ${tagsCount ? '' : 'hidden'}" @click="${() => this.handleResetTags(filter.key)}" aria-label="${tagsCount}">
               <span class="filter-selected-tags-total-num">${tagsCount}</span>
@@ -422,7 +369,7 @@ export default class PartnerCards extends LitElement {
                     : ''
                   }
                 </div>
-                <span class="filter-header-chevron-icon" />
+                <span class="filter-header-chevron-icon"></span>
               </button>
               <ul class="filter-tags-mobile">
                 <sp-theme theme="spectrum" color="light" scale="medium">
@@ -506,9 +453,9 @@ export default class PartnerCards extends LitElement {
     if (this.blockData.sort.items.length) this.handleSortAction();
     if (this.blockData.filters.length) this.handleFilterAction();
     this.additionalActions();
-    this.updatePaginatedCards();
     // eslint-disable-next-line no-return-assign
     this.cards.forEach((card, index) => card.orderNum = index + 1);
+    this.updatePaginatedCards();
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -549,7 +496,9 @@ export default class PartnerCards extends LitElement {
       newest: (a, b) => new Date(b.cardDate) - new Date(a.cardDate),
       oldest: (a, b) => new Date(a.cardDate) - new Date(b.cardDate),
     };
-    this.cards.sort(sortFunctions[this.selectedSortOrder.key]);
+
+    const sortKey = this.selectedSortOrder.key === 'most-recent' ? 'newest' : this.selectedSortOrder.key;
+    this.cards.sort(sortFunctions[sortKey]);
   }
 
   handleSort(selectedItem) {
@@ -577,6 +526,7 @@ export default class PartnerCards extends LitElement {
         }
         // eslint-disable-next-line consistent-return
         return selectedFiltersKeys.every((key) => cardArbitraryArr.some((arbitraryTag) => {
+          if (!arbitraryTag.value || !arbitraryTag.key) return false;
           const arbitraryTagKeyStr = arbitraryTag.key.trim().toLowerCase().replaceAll(' ', '-');
           const arbitraryTagValueStr = arbitraryTag.value.trim().toLowerCase().replaceAll(' ', '-');
           if (key === arbitraryTagKeyStr) {
@@ -738,6 +688,8 @@ export default class PartnerCards extends LitElement {
   /* eslint-disable indent */
   render() {
     return html`
+    ${this.fetchedData
+      ? html`
       <div class="partner-cards">
         <div class="partner-cards-sidebar-wrapper">
           <div class="partner-cards-sidebar">
@@ -786,7 +738,7 @@ export default class PartnerCards extends LitElement {
                   <div class="sort-wrapper">
                     <button class="sort-btn" @click="${this.toggleSort}">
                       <span class="sort-btn-text">${this.selectedSortOrder.value}</span>
-                      <span class="filter-chevron-icon" />
+                      <span class="filter-chevron-icon"></span>
                     </button>
                     <div class="sort-list">
                       ${this.sortItems}
@@ -810,7 +762,7 @@ export default class PartnerCards extends LitElement {
           </div>
           ${this.cards.length
             ? html`
-              <div class="pagination-wrapper">
+              <div class="pagination-wrapper ${this.blockData?.pagination === 'load-more' ? 'pagination-wrapper-load-more' : 'pagination-wrapper-default'}">
                 ${this.pagination}
                 <span class="pagination-total-results">${this.cardsCounter} ${this.blockData.localizedText['{{of}}']} ${this.cards.length} ${this.blockData.localizedText['{{results}}']}</span>
               </div>
@@ -818,9 +770,9 @@ export default class PartnerCards extends LitElement {
             : ''
           }
         </div>
-      </div>
+      </div>` : ''}
 
-      ${this.mobileView
+      ${this.mobileView && this.fetchData
         ? html`
           <div class="all-filters-wrapper-mobile">
             <div class="all-filters-header-mobile">

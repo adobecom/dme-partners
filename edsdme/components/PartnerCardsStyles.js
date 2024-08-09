@@ -557,7 +557,7 @@ export const partnerCardsStyles = css`
   @media screen and (max-width: 1200px) {
     .all-filters-wrapper-mobile.open {
       position: fixed;
-      z-index: 10;
+      z-index: 10000000;
       display: flex;
       flex-direction: column;
       width: 100%;
@@ -839,12 +839,12 @@ export const partnerCardsStyles = css`
 `;
 
 export const partnerCardsLoadMoreStyles = css`
-  .pagination-wrapper {
+  .pagination-wrapper.pagination-wrapper-load-more {
     justify-content: center;
     flex-direction: column-reverse;
   }
   
-  .pagination-wrapper .load-more-btn {
+  .pagination-wrapper-load-more .load-more-btn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -865,7 +865,7 @@ export const partnerCardsLoadMoreStyles = css`
     transition: border-color .3s ease-in-out,background-color .3s ease-in-out;
   }
   
-  .pagination-wrapper .load-more-btn:hover {
+  .pagination-wrapper-load-more .load-more-btn:hover {
     text-decoration: none;
     border-color: #222222;
     background-color: #222222;
@@ -874,23 +874,23 @@ export const partnerCardsLoadMoreStyles = css`
 `;
 
 export const partnerCardsPaginationStyles = css`
-  .pagination-wrapper {
+  .pagination-wrapper.pagination-wrapper-default {
     flex-wrap: wrap;
     justify-content: space-between;
   }
   
   @media screen and (max-width: 1200px) {
-    .pagination-wrapper {
+    .pagination-wrapper.pagination-wrapper-default {
       justify-content: center;
     }
   }
   
-  .pagination-wrapper .pagination-pages-list button {
+  .pagination-wrapper-default .pagination-pages-list button {
     border: none;
     background-color: transparent;
   }
   
-  .pagination-wrapper .page-btn {
+  .pagination-wrapper-default .page-btn {
     position: relative;
     min-width: 32px;
     min-height: 32px;
@@ -907,39 +907,39 @@ export const partnerCardsPaginationStyles = css`
     overflow: hidden;
   }
   
-  .pagination-wrapper .pagination-prev-btn {
+  .pagination-wrapper-default .pagination-prev-btn {
     padding-right: 10px;
     font-weight: 700;
   }
   
-  .pagination-wrapper .pagination-next-btn {
+  .pagination-wrapper-default .pagination-next-btn {
     padding-left: 10px;
     font-weight: 700;
   }
   
-  .pagination-wrapper .pagination-prev-btn:hover,
-  .pagination-wrapper .pagination-next-btn:hover,
-  .pagination-wrapper .page-btn:hover {
+  .pagination-wrapper-default .pagination-prev-btn:hover,
+  .pagination-wrapper-default .pagination-next-btn:hover,
+  .pagination-wrapper-default .page-btn:hover {
     cursor: pointer;
     text-decoration: underline;
     transition: all .3s;
   }
   
-  .pagination-wrapper .pagination-prev-btn.disabled,
-  .pagination-wrapper .pagination-prev-btn.disabled:hover,
-  .pagination-wrapper .pagination-next-btn.disabled,
-  .pagination-wrapper .pagination-next-btn.disabled:hover,
-  .pagination-wrapper .page-btn.selected:hover {
+  .pagination-wrapper-default .pagination-prev-btn.disabled,
+  .pagination-wrapper-default .pagination-prev-btn.disabled:hover,
+  .pagination-wrapper-default .pagination-next-btn.disabled,
+  .pagination-wrapper-default .pagination-next-btn.disabled:hover,
+  .pagination-wrapper-default .page-btn.selected:hover {
     text-decoration: none;
     cursor: default;
   }
   
-  .pagination-wrapper .pagination-prev-btn.disabled,
-  .pagination-wrapper .pagination-next-btn.disabled {
+  .pagination-wrapper-default .pagination-prev-btn.disabled,
+  .pagination-wrapper-default .pagination-next-btn.disabled {
     color: #9d9d9d;
   }
   
-  .pagination-wrapper .page-btn.selected {
+  .pagination-wrapper-default .page-btn.selected {
     background-color: #e5e5e5;
     border-radius: 50%;
   }
@@ -975,12 +975,12 @@ export const partnerCardsDateFilterStyles = css`
   }
 `;
 
-export const newsCardStyles = css`
-  .news-card * {
+export const singlePartnerCardStyles = css`
+  .single-partner-card * {
     box-sizing: border-box;
   }
   
-  .news-card {
+  .single-partner-card {
     display: flex;
     flex-direction: column;
     background-color: #fff;
@@ -991,12 +991,12 @@ export const newsCardStyles = css`
     height: 400px;
   }
   
-  .news-card:hover {
+  .single-partner-card:hover {
     box-shadow: 0 3px 6px 0 rgba(0,0,0,.16);
     transition: box-shadow .3s ease-in-out;
   }
   
-  .news-card .card-header {
+  .single-partner-card .card-header {
     min-height: 192px;
     max-height: 192px;
     background-color: #323232;
@@ -1008,11 +1008,11 @@ export const newsCardStyles = css`
     position: relative;
   }
   
-  .news-card:hover .card-header:after {
+  .single-partner-card:hover .card-header:after {
     opacity: 1;
   }
   
-  .news-card .card-header:after {
+  .single-partner-card .card-header:after {
     position: absolute;
     content: "";
     top: 0;
@@ -1026,7 +1026,7 @@ export const newsCardStyles = css`
     transition: opacity .3s ease-in-out;
   }
   
-  .news-card .card-content {
+  .single-partner-card .card-content {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -1035,7 +1035,7 @@ export const newsCardStyles = css`
     height: 100%;
   }
   
-  .news-card .card-title {
+  .single-partner-card .card-title {
     color: #323232;
     font-size: 1.125rem;
     font-weight: 700;
@@ -1049,7 +1049,7 @@ export const newsCardStyles = css`
     -webkit-line-clamp: 2;
   }
   
-  .news-card .card-description {
+  .single-partner-card .card-description {
     color: #505050;
     font-size: .875rem;
     line-height: 1.3125rem;
@@ -1063,13 +1063,13 @@ export const newsCardStyles = css`
     -webkit-line-clamp: 3;
   }
   
-  .news-card .card-footer {
+  .single-partner-card .card-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
   
-  .news-card .card-btn {
+  .single-partner-card .card-btn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1092,14 +1092,14 @@ export const newsCardStyles = css`
     transition: border-color .3s ease-in-out,background-color .3s ease-in-out;
   }
   
-  .news-card .card-btn:hover {
+  .single-partner-card .card-btn:hover {
     text-decoration: none;
     border-color: #222222;
     background-color: #222222;
     color: #ffffff;
   }
   
-  .news-card .card-date {
+  .single-partner-card .card-date {
     color: #747474;
     font-size: .875rem;
     line-height: 1.3125rem;
