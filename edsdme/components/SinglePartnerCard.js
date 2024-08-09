@@ -1,4 +1,4 @@
-import { newsCardStyles } from './PartnerCardsStyles.js';
+import { singlePartnerCardStyles } from './PartnerCardsStyles.js';
 import { formatDate, getLibs, prodHosts } from '../scripts/utils.js';
 
 const miloLibs = getLibs();
@@ -6,10 +6,10 @@ const { html, LitElement } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
 const DEFAULT_BACKGROUND_IMAGE_PATH = '/content/dam/solution/en/images/card-collection/sample_default.png';
 
-class NewsCard extends LitElement {
+class SinglePartnerCard extends LitElement {
   static properties = { data: { type: Object } };
 
-  static styles = newsCardStyles;
+  static styles = singlePartnerCardStyles;
 
   // eslint-disable-next-line class-methods-use-this
   transformCardUrl(url) {
@@ -26,8 +26,12 @@ class NewsCard extends LitElement {
     return newUrl;
   }
 
+  get imageUrl() {
+    return `${new URL(this.data.styles?.backgroundImage).pathname}?width=400&format=webp&optimize=small`
+  }
+
   checkBackgroundImage(element) {
-    const url = this.data.styles?.backgroundImage;
+    const url = this.imageUrl;
     const img = new Image();
 
     const isProd = prodHosts.includes(window.location.host);
@@ -47,8 +51,8 @@ class NewsCard extends LitElement {
 
   render() {
     return html`
-      <div class="news-card">
-        <div class="card-header" style="background-image: url('${this.data.styles?.backgroundImage}')" alt="${this.data.styles?.backgroundAltText}"></div>
+      <div class="single-partner-card">
+        <div class="card-header" style="background-image: url(${this.imageUrl})" alt="${this.data.styles?.backgroundAltText}"></div>
         <div class="card-content">
           <div class="card-text">
             <p class="card-title">${this.data.contentArea?.title !== 'card-metadata' ? this.data.contentArea?.title : ''}</p>
@@ -63,4 +67,4 @@ class NewsCard extends LitElement {
     `;
   }
 }
-customElements.define('news-card', NewsCard);
+customElements.define('single-partner-card', SinglePartnerCard);

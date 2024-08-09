@@ -975,12 +975,12 @@ export const partnerCardsDateFilterStyles = css`
   }
 `;
 
-export const newsCardStyles = css`
-  .news-card * {
+export const singlePartnerCardStyles = css`
+  .single-partner-card * {
     box-sizing: border-box;
   }
   
-  .news-card {
+  .single-partner-card {
     display: flex;
     flex-direction: column;
     background-color: #fff;
@@ -991,12 +991,12 @@ export const newsCardStyles = css`
     height: 400px;
   }
   
-  .news-card:hover {
+  .single-partner-card:hover {
     box-shadow: 0 3px 6px 0 rgba(0,0,0,.16);
     transition: box-shadow .3s ease-in-out;
   }
   
-  .news-card .card-header {
+  .single-partner-card .card-header {
     min-height: 192px;
     max-height: 192px;
     background-color: #323232;
@@ -1008,11 +1008,11 @@ export const newsCardStyles = css`
     position: relative;
   }
   
-  .news-card:hover .card-header:after {
+  .single-partner-card:hover .card-header:after {
     opacity: 1;
   }
   
-  .news-card .card-header:after {
+  .single-partner-card .card-header:after {
     position: absolute;
     content: "";
     top: 0;
@@ -1026,7 +1026,7 @@ export const newsCardStyles = css`
     transition: opacity .3s ease-in-out;
   }
   
-  .news-card .card-content {
+  .single-partner-card .card-content {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -1035,7 +1035,7 @@ export const newsCardStyles = css`
     height: 100%;
   }
   
-  .news-card .card-title {
+  .single-partner-card .card-title {
     color: #323232;
     font-size: 1.125rem;
     font-weight: 700;
@@ -1049,7 +1049,7 @@ export const newsCardStyles = css`
     -webkit-line-clamp: 2;
   }
   
-  .news-card .card-description {
+  .single-partner-card .card-description {
     color: #505050;
     font-size: .875rem;
     line-height: 1.3125rem;
@@ -1063,13 +1063,13 @@ export const newsCardStyles = css`
     -webkit-line-clamp: 3;
   }
   
-  .news-card .card-footer {
+  .single-partner-card .card-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
   
-  .news-card .card-btn {
+  .single-partner-card .card-btn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1092,14 +1092,14 @@ export const newsCardStyles = css`
     transition: border-color .3s ease-in-out,background-color .3s ease-in-out;
   }
   
-  .news-card .card-btn:hover {
+  .single-partner-card .card-btn:hover {
     text-decoration: none;
     border-color: #222222;
     background-color: #222222;
     color: #ffffff;
   }
   
-  .news-card .card-date {
+  .single-partner-card .card-date {
     color: #747474;
     font-size: .875rem;
     line-height: 1.3125rem;
