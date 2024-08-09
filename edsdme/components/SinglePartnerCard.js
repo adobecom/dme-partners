@@ -1,4 +1,4 @@
-import { newsCardStyles } from './PartnerCardsStyles.js';
+import { singlePartnerCardStyles } from './PartnerCardsStyles.js';
 import { formatDate, getLibs, prodHosts } from '../scripts/utils.js';
 
 const miloLibs = getLibs();
@@ -6,10 +6,10 @@ const { html, LitElement } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
 const DEFAULT_BACKGROUND_IMAGE_PATH = '/content/dam/solution/en/images/card-collection/sample_default.png';
 
-class NewsCard extends LitElement {
+class SinglePartnerCard extends LitElement {
   static properties = { data: { type: Object } };
 
-  static styles = newsCardStyles;
+  static styles = singlePartnerCardStyles;
 
   // eslint-disable-next-line class-methods-use-this
   transformCardUrl(url) {
@@ -51,7 +51,7 @@ class NewsCard extends LitElement {
 
   render() {
     return html`
-      <div class="news-card">
+      <div class="single-partner-card">
         <div class="card-header" style="background-image: url(${this.imageUrl})" alt="${this.data.styles?.backgroundAltText}"></div>
         <div class="card-content">
           <div class="card-text">
@@ -67,4 +67,4 @@ class NewsCard extends LitElement {
     `;
   }
 }
-customElements.define('news-card', NewsCard);
+customElements.define('single-partner-card', SinglePartnerCard);

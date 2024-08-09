@@ -41,7 +41,7 @@ describe('announcements block', () => {
     expect(announcementsWrapper.shadowRoot).to.exist;
     const partnerCardsCollection = announcementsWrapper.shadowRoot.querySelector('.partner-cards-collection');
     expect(partnerCardsCollection).to.exist;
-    expect(partnerCardsCollection.innerHTML).to.include('news-card');
+    expect(partnerCardsCollection.innerHTML).to.include('single-partner-card');
     const firstCard = partnerCardsCollection.querySelector('.card-wrapper');
     expect(firstCard.shadowRoot).to.exist;
     const searchBarWrapper = announcementsWrapper.shadowRoot.querySelector('.partner-cards-sidebar .search-wrapper');

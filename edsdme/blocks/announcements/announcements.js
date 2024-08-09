@@ -83,7 +83,6 @@ export default async function init(el) {
     tableData: el.children,
     dateFilter,
     cardsPerPage: 12,
-    ietf: config.locale.ietf,
     pagination: 'load-more',
     isArchive,
     caasUrl: getCaasUrl(block),

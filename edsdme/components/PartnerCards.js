@@ -6,7 +6,7 @@ import {
   partnerCardsLoadMoreStyles,
   partnerCardsPaginationStyles,
 } from './PartnerCardsStyles.js';
-import './NewsCard.js';
+import './SinglePartnerCard.js';
 
 const miloLibs = getLibs();
 const { html, LitElement, css, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
@@ -48,7 +48,6 @@ export default class PartnerCards extends LitElement {
     this.selectedFilters = {};
     this.urlSearchParams = {};
     this.hasResponseData = true;
-    this.hasResults = true;
     this.fetchedData = false;
     this.mobileView = window.innerWidth <= 1200;
     this.updateView = this.updateView.bind(this);
@@ -68,9 +67,7 @@ export default class PartnerCards extends LitElement {
       sort: {
         default: {},
         items: [],
-      },
-      language: '',
-      country: '',
+      }
     };
 
     const blockDataActions = {
@@ -150,10 +147,6 @@ export default class PartnerCards extends LitElement {
       const colsContent = cols.slice(1);
       if (blockDataActions[rowTitle]) blockDataActions[rowTitle](colsContent);
     });
-
-    const [language, country] = this.blockData.ietf.split('-');
-    this.blockData.language = language;
-    this.blockData.country = country;
   }
 
   updateView() {
@@ -179,7 +172,6 @@ export default class PartnerCards extends LitElement {
 
       setTimeout(() => {
         this.hasResponseData = !!apiData?.cards;
-        this.hasResults = !!apiData?.cards?.length;
         this.fetchedData = true;
       }, 5);
 
@@ -235,16 +227,14 @@ export default class PartnerCards extends LitElement {
       return html`${repeat(
         this.paginatedCards,
         (card) => card.id,
-        (card) => html`<news-card class="card-wrapper" .data=${card}></news-card>`,
+        (card) => html`<single-partner-card class="card-wrapper" .data=${card}></signle-partner-card>`,
       )}`;
     }
 
-    if (!this.hasResults) {
-      return html`<div class="no-results">
-          <strong class="no-results-title">${this.blockData.localizedText['{{no-results-title}}']}</strong>
-          <p class="no-results-description">${this.blockData.localizedText['{{no-results-description}}']}</p>
-        </div>`;
-    }
+    return html`<div class="no-results">
+        <strong class="no-results-title">${this.blockData.localizedText['{{no-results-title}}']}</strong>
+        <p class="no-results-description">${this.blockData.localizedText['{{no-results-description}}']}</p>
+      </div>`;
   }
 
   get sortItems() {
