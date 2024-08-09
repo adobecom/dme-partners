@@ -352,3 +352,11 @@ export async function preloadResources(locales, miloLibs) {
     preload(caasUrl);
   });
 }
+
+export function updateNavigation() {
+  const gnavMeta = document.querySelector('meta[name="gnav-source"]');
+  if (!gnavMeta || !isMember()) return;
+
+  const gnavLoggedIn = document.querySelector('meta[name="gnav-loggedin-source"]');
+  gnavMeta.content = gnavLoggedIn?.content ?? `${localePrefix}/edsdme/partners-shared/loggedin-gnav`;
+}
