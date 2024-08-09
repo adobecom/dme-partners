@@ -75,8 +75,8 @@ export default async function init(el) {
   const block = {
     el,
     collectionTag: '"caas:adobe-partners/collections/announcements"',
-    ietf: config.locale.ietf
-  }
+    ietf: config.locale.ietf,
+  };
 
   const blockData = {
     localizedText,
