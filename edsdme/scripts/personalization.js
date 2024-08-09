@@ -75,7 +75,7 @@ function personalizePage(page) {
 }
 
 export function applyPagePersonalization() {
-  const main = document.querySelector('main');
+  const main = document.querySelector('main') ?? document;
   personalizePlaceholders(PAGE_PERSONALIZATION_PLACEHOLDERS, main);
   personalizePage(main);
 }
