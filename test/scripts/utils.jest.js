@@ -3,7 +3,7 @@
  */
 import path from 'path';
 import fs from 'fs';
-import { updateFooter } from '../../edsdme/scripts/utils.js';
+import { updateFooter, updateNavigation } from '../../edsdme/scripts/utils.js';
 describe('Test utils.js', () => {
   beforeEach(() => {
     window = Object.create(window);
@@ -74,6 +74,60 @@ describe('Test utils.js', () => {
       const footerPathModified = document.querySelector('meta[name="footer-source"]')?.content;
       expect(footerPath).not.toEqual(footerPathModified);
       expect(footerPathModified).toEqual('/de/edsdme/partners-shared/loggedin-footer');
+    });
+    it('Public navigation is shown for non member', async () => {
+      const cookieObject = {
+        SPP: {
+          status: 'MEMBER',
+        }
+      };
+      document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      const locales = {
+        '': { ietf: 'en-US', tk: 'hah7vzn.css' },
+        de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
+      };
+      const gnavPath =  document.querySelector('meta[name="gnav-source"]')?.content
+      updateNavigation(locales);
+      const gnavPathModified =  document.querySelector('meta[name="gnav-source"]')?.content
+      expect(gnavPath).toEqual(gnavPathModified);
+    });
+    it('Protected navigation is shown for members', async () => {
+      const cookieObject = {
+        CPP: {
+          status: 'MEMBER',
+        }
+      };
+      document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      const locales = {
+        '': { ietf: 'en-US', tk: 'hah7vzn.css' },
+        de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
+      };
+      const gnavPath = document.querySelector('meta[name="gnav-source"]')?.content;
+      updateNavigation(locales);
+      const gnavPathModified = document.querySelector('meta[name="gnav-source"]')?.content;
+      expect(gnavPath).not.toEqual(gnavPathModified);
+      const protectedGnavPath = document.querySelector('meta[name="gnav-loggedin-source"]')?.content;
+      expect(gnavPathModified).toEqual(protectedGnavPath);
+    });
+    it('Protected footer is fetched based on locale if gnav-loggeding-source metadata is not present', async () => {
+      const cookieObject = {
+        CPP: {
+          status: 'MEMBER',
+        }
+      };
+      document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      window.location.pathname = '/de/channelpartners/';
+      const locales = {
+        '': { ietf: 'en-US', tk: 'hah7vzn.css' },
+        de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
+      };
+      const gnavPath = document.querySelector('meta[name="gnav-source"]')?.content;
+      const protectedGnav = document.querySelector('meta[name="gnav-loggedin-source"]');
+      protectedGnav.remove();
+      updateNavigation(locales);
+      const gnavPathModified = document.querySelector('meta[name="gnav-source"]')?.content;
+      expect(gnavPath).not.toEqual(gnavPathModified);
+      expect(gnavPathModified).toEqual('/de/edsdme/partners-shared/loggedin-gnav');
     });
   });
 });
