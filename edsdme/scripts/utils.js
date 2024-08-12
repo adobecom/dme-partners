@@ -119,6 +119,10 @@ export function getMetadataContent(name) {
   return document.querySelector(`meta[name="${name}"]`)?.content;
 }
 
+export function getMetadata(name) {
+  return document.querySelector(`meta[name="${name}"]`);
+}
+
 export function redirectLoggedinPartner() {
   if (!isMember()) return;
   const target = getMetadataContent('adobe-target-after-login');
@@ -353,10 +357,11 @@ export async function preloadResources(locales, miloLibs) {
   });
 }
 
-export function updateNavigation() {
-  const gnavMeta = document.querySelector('meta[name="gnav-source"]');
+export function updateNavigation(locales) {
+  const { prefix } = getLocale(locales);
+  const gnavMeta = getMetadata('gnav-source');
   if (!gnavMeta || !isMember()) return;
 
-  const gnavLoggedIn = document.querySelector('meta[name="gnav-loggedin-source"]');
-  gnavMeta.content = gnavLoggedIn?.content ?? `${localePrefix}/edsdme/partners-shared/loggedin-gnav`;
+  const gnavLoggedIn = getMetadataContent('gnav-loggedin-source');
+  gnavMeta.content = gnavLoggedIn ?? `${prefix}/edsdme/partners-shared/loggedin-gnav`;
 }

@@ -72,7 +72,7 @@ const miloLibs = setLibs(LIBS);
 }());
 
 function setUpPage() {
-  updateNavigation();
+  updateNavigation(CONFIG.locales);
 }
 
 (async function loadPage() {
