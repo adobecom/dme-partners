@@ -1,4 +1,5 @@
 import { setLibs, redirectLoggedinPartner, updateIMSConfig, preloadResources, getRenewBanner, updateNavigation } from './utils.js';
+import { setLibs, redirectLoggedinPartner, updateIMSConfig, preloadResources, getRenewBanner, updateFooter } from './utils.js';
 
 // Add project-wide style path here.
 const STYLES = '/edsdme/styles/styles.css';
@@ -73,6 +74,7 @@ const miloLibs = setLibs(LIBS);
 
 function setUpPage() {
   updateNavigation(CONFIG.locales);
+  updateFooter(CONFIG.locales);
 }
 
 (async function loadPage() {
