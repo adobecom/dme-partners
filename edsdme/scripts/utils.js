@@ -364,6 +364,8 @@ export function updateNavigation(locales) {
 
   const gnavLoggedIn = getMetadataContent('gnav-loggedin-source');
   gnavMeta.content = gnavLoggedIn ?? `${prefix}/edsdme/partners-shared/loggedin-gnav`;
+}
+
 export function updateFooter(locales) {
   const { prefix } = getLocale(locales);
   const footerMeta = getMetadata('footer-source');
