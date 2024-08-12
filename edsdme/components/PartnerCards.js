@@ -181,6 +181,7 @@ export default class PartnerCards extends LitElement {
       }
       apiData = await response.json();
       const cardsEvent = new Event('partner-cards-loaded');
+      console.log('adding event');
       document.dispatchEvent(cardsEvent);
       if (apiData?.cards) {
         if (window.location.hostname === 'partners.adobe.com') {
