@@ -142,6 +142,10 @@ export function getMetadataContent(name) {
   return document.querySelector(`meta[name="${name}"]`)?.content;
 }
 
+export function getMetadata(name) {
+  return document.querySelector(`meta[name="${name}"]`);
+}
+
 export function redirectLoggedinPartner() {
   if (!isMember()) return;
   const target = getMetadataContent('adobe-target-after-login');
@@ -374,4 +378,22 @@ export async function preloadResources(locales, miloLibs) {
     const caasUrl = getCaasUrl(block);
     preload(caasUrl);
   });
+}
+
+export function updateNavigation(locales) {
+  const { prefix } = getLocale(locales);
+  const gnavMeta = getMetadata('gnav-source');
+  if (!gnavMeta || !isMember()) return;
+
+  const gnavLoggedIn = getMetadataContent('gnav-loggedin-source');
+  gnavMeta.content = gnavLoggedIn ?? `${prefix}/edsdme/partners-shared/loggedin-gnav`;
+}
+
+export function updateFooter(locales) {
+  const { prefix } = getLocale(locales);
+  const footerMeta = getMetadata('footer-source');
+  if (!footerMeta || !isMember()) return;
+
+  const footerLoggedIn = getMetadataContent('footer-loggedin-source');
+  footerMeta.content = footerLoggedIn ?? `${prefix}/edsdme/partners-shared/loggedin-footer`;
 }
