@@ -1,4 +1,3 @@
-import { setLibs, redirectLoggedinPartner, updateIMSConfig, preloadResources, getRenewBanner } from './utils.js';
 import { applyPagePersonalization } from './personalization.js';
 import { setLibs, redirectLoggedinPartner, updateIMSConfig, preloadResources, getRenewBanner, updateNavigation, updateFooter } from './utils.js';
 

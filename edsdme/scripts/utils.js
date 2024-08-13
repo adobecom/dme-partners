@@ -397,3 +397,14 @@ export function updateFooter(locales) {
   const footerLoggedIn = getMetadataContent('footer-loggedin-source');
   footerMeta.content = footerLoggedIn ?? `${prefix}/edsdme/partners-shared/loggedin-footer`;
 }
+
+export function getNodesByXPath(query, context = document) {
+  const nodes = [];
+  const xpathResult = document.evaluate(query, context);
+  let current = xpathResult?.iterateNext();
+  while (current) {
+    nodes.push(current);
+    current = xpathResult.iterateNext();
+  }
+  return nodes;
+}

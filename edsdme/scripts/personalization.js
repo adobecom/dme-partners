@@ -5,7 +5,8 @@ import {
   partnerIsSignedIn,
   getPartnerDataCookieObject,
   signedInNonMember,
-  isReseller ,
+  isReseller,
+  getNodesByXPath
 }
   from './utils.js';
 
@@ -16,6 +17,7 @@ const PERSONALIZATION_MARKER = 'partner-personalization';
 const PROGRAM = getCurrentProgramType();
 const PARTNER_LEVEL = getPartnerDataCookieValue(PROGRAM, 'level');
 const COOKIE_OBJECT = getPartnerDataCookieObject(PROGRAM);
+
 const PERSONALIZATION_CONDITIONS = {
   'partner-not-member': signedInNonMember(),
   'partner-not-signed-in': !partnerIsSignedIn(),
@@ -24,22 +26,15 @@ const PERSONALIZATION_CONDITIONS = {
   'partner-level': (level) => PARTNER_LEVEL === level,
 };
 
-export function getNodesByXPath(query, context = document) {
-  const nodes = [];
-  const xpathResult = document.evaluate(query, context);
-  let current = xpathResult?.iterateNext();
-  while (current) {
-    nodes.push(current);
-    current = xpathResult.iterateNext();
-  }
-  return nodes;
-}
 
 function personalizePlaceholders(placeholders, context = document) {
   Object.entries(placeholders).forEach(([key, value]) => {
     const placeholderValue = COOKIE_OBJECT[key];
     getNodesByXPath(value, context).forEach((el) => {
-      if (!placeholderValue) el.remove();
+      if (!placeholderValue) {
+        el.remove();
+        return;
+      }
       el.textContent = el.textContent.replace(`$${key}`, placeholderValue);
     });
   });
@@ -80,11 +75,11 @@ function hideSections(page) {
 
 function personalizePage(page) {
   const blocks = Array.from(page.getElementsByClassName(PERSONALIZATION_MARKER));
-  hideSections(page);
   blocks.forEach((el) => {
     const conditions = Object.values(el.classList);
     hideElement(el, conditions);
   });
+  hideSections(page);
 }
 
 export function applyPagePersonalization() {
