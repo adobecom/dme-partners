@@ -134,7 +134,7 @@ export function signedInNonMember() {
   return partnerIsSignedIn() && !isMember();
 }
 
-export function isResseler(level) {
+export function isReseller (level) {
   return RESSELER_LEVELS.includes(level?.toLowerCase());
 }
 

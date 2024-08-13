@@ -5,7 +5,7 @@ import {
   partnerIsSignedIn,
   getPartnerDataCookieObject,
   signedInNonMember,
-  isResseler,
+  isReseller ,
 }
   from './utils.js';
 
@@ -20,11 +20,11 @@ const PERSONALIZATION_CONDITIONS = {
   'partner-not-member': signedInNonMember(),
   'partner-not-signed-in': !partnerIsSignedIn(),
   'partner-all-levels': isMember(),
-  'partner-reseller': isResseler(PARTNER_LEVEL),
+  'partner-reseller': isReseller (PARTNER_LEVEL),
   'partner-level': (level) => PARTNER_LEVEL === level,
 };
 
-function getNodesByXPath(query, context = document) {
+export function getNodesByXPath(query, context = document) {
   const nodes = [];
   const xpathResult = document.evaluate(query, context);
   let current = xpathResult?.iterateNext();
@@ -45,32 +45,45 @@ function personalizePlaceholders(placeholders, context = document) {
   });
 }
 
-function removeElement(element, conditions) {
-  if (!element || !conditions?.length) return;
-  const remove = conditions.every((condition) => {
+function shouldHide(conditions) {
+  return conditions.every((condition) => {
     const conditionLevel = condition.startsWith(LEVEL_CONDITION) ? condition.split('-').pop() : '';
     return conditionLevel
       ? !PERSONALIZATION_CONDITIONS[LEVEL_CONDITION](conditionLevel) : !PERSONALIZATION_CONDITIONS[condition];
   });
-  if (remove) element.remove();
 }
+
+function hideElement(element, conditions) {
+  if (!element || !conditions?.length) return;
+  shouldHide(conditions) && element.classList.add('personalization-hide');
+}
+
+function hideSections(page) {
+  const sections = Array.from(page.getElementsByClassName('section-metadata'));
+  sections.forEach((section) => {
+    let hide = false;
+    Array.from(section.children).forEach((child) => {
+      const col1 = child.firstElementChild;
+      let col2 = child.lastElementChild;
+      if (col1?.textContent !== 'style' || !col2?.textContent.includes(PERSONALIZATION_MARKER)) return;
+      const conditions = col2?.textContent?.split(',').map((text) => text.trim());
+      hide = shouldHide(conditions);
+    });
+    if (!hide) return;
+    const parent = section.parentElement;
+    Array.from(parent.children).forEach((el) => {
+      el.classList.add('personalization-hide');
+    });
+  });
+}
+
 
 function personalizePage(page) {
   const blocks = Array.from(page.getElementsByClassName(PERSONALIZATION_MARKER));
-  const sections = Array.from(page.getElementsByClassName('section-metadata'));
-  [...blocks, ...sections].forEach((el) => {
-    let conditions = Object.values(el.classList);
-    let elementToRemove = el;
-    if (el.classList.contains('section-metadata')) {
-      elementToRemove = el.parentElement;
-      Array.from(el.children).forEach((child) => {
-        const col1 = child.firstElementChild;
-        const col2 = child.lastElementChild;
-        if (col1?.textContent !== 'style' || !col2?.textContent.includes(PERSONALIZATION_MARKER)) return;
-        conditions = col2?.textContent?.split(',').map((text) => text.trim());
-      });
-    }
-    removeElement(elementToRemove, conditions);
+  hideSections(page);
+  blocks.forEach((el) => {
+    const conditions = Object.values(el.classList);
+    hideElement(el, conditions);
   });
 }
 
