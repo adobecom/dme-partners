@@ -257,7 +257,7 @@ function preloadLit(miloLibs) {
 }
 
 export function getCaasUrl(block) {
-  const domain = 'https://www.adobe.com/chimera-api';
+  const domain = 'https://14257-chimera.adobeioruntime.net/api/v1/web/chimera-0.0.1';
   const api = new URL(`${domain}/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true`);
   return setApiParams(api, block);
 }
