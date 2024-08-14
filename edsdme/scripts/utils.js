@@ -133,6 +133,13 @@ export function redirectLoggedinPartner() {
 
 export async function getRenewBanner(getConfig, loadBlock) {
   const programType = getCurrentProgramType();
+
+  const primaryContact = getPartnerDataCookieValue(programType, 'primarycontact');
+  if (!primaryContact) return;
+
+  const partnerLevel = getPartnerDataCookieValue(programType, 'level');
+  if (partnerLevel !== 'gold' && partnerLevel !== 'registered' && partnerLevel !== 'certified') return;
+
   const accountExpiration = getPartnerDataCookieValue(programType, 'accountanniversary');
   if (!accountExpiration) return;
 
@@ -146,22 +153,14 @@ export async function getRenewBanner(getConfig, loadBlock) {
   const differenceInDays = Math.abs(differenceInMilliseconds) / (1000 * 60 * 60 * 24);
   const differenceInDaysRounded = Math.floor(differenceInDays);
 
-  if (differenceInMilliseconds > 0) {
-    if (differenceInDaysRounded === 0) {
-      metadataKey = 'banner-account-expires-today';
-    } else if (differenceInDays < 30) {
-      metadataKey = 'banner-account-expires';
-      daysNum = differenceInDaysRounded;
-    } else {
-      return;
-    }
-  } else if (differenceInMilliseconds < 0) {
-    if (differenceInDays < 90) {
-      metadataKey = 'banner-account-suspended';
-      daysNum = 90 - differenceInDaysRounded;
-    } else {
-      return;
-    }
+  if (differenceInMilliseconds > 0 && differenceInDays < 31) {
+    metadataKey = 'banner-account-expires';
+    daysNum = differenceInDaysRounded;
+  } else if (differenceInMilliseconds < 0 && differenceInDays <= 90) {
+    metadataKey = 'banner-account-suspended';
+    daysNum = 90 - differenceInDaysRounded;
+  } else {
+    return;
   }
 
   const config = getConfig();
@@ -175,7 +174,7 @@ export async function getRenewBanner(getConfig, loadBlock) {
     if (!response.ok) throw new Error(`Network response was not ok ${response.statusText}`);
 
     const data = await response.text();
-    const componentData = daysNum ? data.replace('$daysNum', daysNum) : data;
+    const componentData = data.replace('$daysNum', daysNum);
     const parser = new DOMParser();
     const doc = parser.parseFromString(componentData, 'text/html');
     const aside = doc.querySelector('.aside');
@@ -184,7 +183,7 @@ export async function getRenewBanner(getConfig, loadBlock) {
     const div = document.createElement('div');
     div.style.position = 'sticky';
     div.style.top = '64px';
-    div.style.zIndex = 10;
+    div.style.zIndex = 1;
 
     await loadBlock(aside);
     div.appendChild(aside);
@@ -338,7 +337,7 @@ function getPartnerRegionParams(portal) {
 
 export async function preloadResources(locales, miloLibs) {
   const locale = getLocale(locales);
-  const cardBlocks = { 'announcements': '"caas:adobe-partners/collections/announcements"' };
+  const cardBlocks = { announcements: '"caas:adobe-partners/collections/announcements"' };
 
   Object.entries(cardBlocks).forEach(async ([key, value]) => {
     const el = document.querySelector(`.${key}`);
