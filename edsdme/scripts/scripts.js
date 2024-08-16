@@ -1,3 +1,4 @@
+import { applyPagePersonalization } from './personalization.js';
 import { setLibs, redirectLoggedinPartner, updateIMSConfig, preloadResources, getRenewBanner, updateNavigation, updateFooter } from './utils.js';
 
 // Add project-wide style path here.
@@ -77,6 +78,7 @@ function setUpPage() {
 }
 
 (async function loadPage() {
+  applyPagePersonalization();
   setUpPage();
   redirectLoggedinPartner();
   updateIMSConfig();
