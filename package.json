@@ -51,6 +51,7 @@
     "testRegex": "\\.jest\\.(js|jsx)$"
   },
   "dependencies": {
-    "@playwright/test": "^1.46.0"
+    "@playwright/test": "^1.46.0",
+    "axios": "^1.7.4"
   }
 }
