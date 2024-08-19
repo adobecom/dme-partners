@@ -59,6 +59,7 @@ npm install
 npm install @playwright/test
 npx playwright install
 npx playwright install --with-deps
+sudo apt-get remove -y libsoup2.4
 
 # Loop through each apps  
 if [[ -n  "$APPS" ]];then
