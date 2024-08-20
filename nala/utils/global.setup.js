@@ -26,7 +26,7 @@ async function getGitHubPRBranchLiveUrl() {
   const prFromOrg = process.env.prOrg;
   const prFromRepoName = process.env.prRepo;
   
-  const prBranchLiveUrl = prBranchLiveUrl = `https://${prBranch}--${prFromRepoName}--${prFromOrg}.hlx.live`;
+  const prBranchLiveUrl = `https://${prBranch}--${prFromRepoName}--${prFromOrg}.hlx.live`;
 
   try {
     if (await isBranchURLValid(prBranchLiveUrl)) {
