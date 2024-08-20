@@ -57,7 +57,7 @@ cd "$GITHUB_ACTION_PATH" || exit
 npm ci
 npm install
 npx playwright install --with-deps
-sudo apt-get remove -y libsoup2.4
+apt-get remove -y libsoup2.4
 
 # Loop through each apps  
 if [[ -n  "$APPS" ]];then
