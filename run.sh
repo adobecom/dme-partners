@@ -55,6 +55,7 @@ echo "npx playwright test ${TAGS} ${EXCLUDE_TAGS} ${REPORTER}"
 
 cd "$GITHUB_ACTION_PATH" || exit
 npm ci
+npm install
 npm install @playwright/test
 npx playwright install --with-deps
 sudo apt-get remove -y libsoup2.4
