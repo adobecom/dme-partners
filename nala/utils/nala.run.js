@@ -97,6 +97,8 @@ function getLocalTestLiveUrl(env, milolibs) {
       return 'http://127.0.0.1:3000';
     } else if (env === 'libs') {
       return 'http://127.0.0.1:6456';
+    } else if (env === 'partners.stage') {
+      return 'https://partners.stage.adobe.com';
     } else {
       return `https://${env}--dme-partners--adobecom.hlx.live`;
     }
