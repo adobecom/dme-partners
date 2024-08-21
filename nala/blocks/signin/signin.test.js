@@ -8,9 +8,12 @@ const { features } = signin;
 const redirectionFeatures = features.slice(1, 3);
 
 test.describe('MAPC sign in flow', () => {
-  test.beforeEach(async ({ page, browserName }) => {
+  test.beforeEach(async ({ page, browserName, baseURL, context }) => {
     signInPage = new SignInPage(page);
-    if (browserName === 'chromium') {
+    if (!baseURL.includes('partners.stage.adobe.com')) {
+      await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
+    }
+    if (browserName === 'chromium' && !baseURL.includes('partners.stage.adobe.com')) {
       await page.route('https://www.adobe.com/chimera-api/**', async (route, request) => {
         const newUrl = request.url().replace(
           'https://www.adobe.com/chimera-api',

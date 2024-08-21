@@ -40,7 +40,6 @@ const config = {
 
     trace: 'on-first-retry',
     baseURL: process.env.PR_BRANCH_LIVE_URL || (process.env.LOCAL_TEST_LIVE_URL || 'https://main--dme-partners--adobecom.hlx.live'),
-    extraHTTPHeaders: { authorization: `token ${process.env.HLX_API_KEY}`},
 
   },
 

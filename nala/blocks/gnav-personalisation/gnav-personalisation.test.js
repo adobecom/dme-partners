@@ -9,10 +9,13 @@ import gnav from './gnav-personalisation.spec.js';
 const { features } = gnav;
 
 test.describe('Validate Public GNav', () => {
-  test.beforeEach(async ({ page, browserName }) => {
+  test.beforeEach(async ({ page, browserName, baseURL, context }) => {
     gnavPersonalisationPage = new GnavPersonalisationPage(page);
     singInPage = new SignInPage(page);
-    if (browserName === 'chromium') {
+    if (!baseURL.includes('partners.stage.adobe.com')) {
+      await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
+    }
+    if (browserName === 'chromium' && !baseURL.includes('partners.stage.adobe.com')) {
       await page.route('https://www.adobe.com/chimera-api/**', async (route, request) => {
         const newUrl = request.url().replace(
           'https://www.adobe.com/chimera-api',
