@@ -11,7 +11,7 @@ export default {
       tcid: '2',
       name: '@desc-loggedin-gnav-loaded-for-member-user',
       path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
-      tags: '@dme-gnav @anonymous @circleCi',
+      tags: '@dme-gnav @anonymous',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
