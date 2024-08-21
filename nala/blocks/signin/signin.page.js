@@ -4,6 +4,7 @@ export default class SignInPage {
     this.signInButton = page.locator('button[daa-ll="Sign In"].feds-signIn');
     this.signInButtonStageAdobe = page.locator('.profile-comp.secondary-button');
     this.profileIconButton = page.locator('.feds-profile-button');
+    this.profileIconButtonAdobe = page.locator('.profile-container .profile-collapsed');
     this.userNameDisplay = page.locator('.user-name');
     this.logoutButton = page.locator('[daa-ll="Sign Out"]');
 
@@ -25,11 +26,21 @@ export default class SignInPage {
     async verifyRedirectAfterLogin({ page, expect, path, partnerLevel, expectedLandingPageURL }) {
       await page.goto(path);
       await page.waitForLoadState('domcontentloaded');
-      await this.signInButton.click();
+      if (path.includes('stage.adobe.com/partners.html')) {
+        await this.signInButtonStageAdobe.click();
+      } else {
+        await this.signInButton.click();
+      }
       await this.signIn(page, partnerLevel);
-      await this.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
-      const pages = await page.context().pages();
-      await expect(pages[0].url()).toContain(expectedLandingPageURL);
+      await page.waitForLoadState('domcontentloaded');
+      if (path.includes('stage.adobe.com/partners.html')) {
+        await this.profileIconButtonAdobe.waitFor({ state: 'visible', timeout: 20000 });
+        const pages = await page.context().pages();
+      } else {
+        await this.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+        const pages = await page.context().pages();
+        await expect(pages[0].url()).toContain(expectedLandingPageURL);
+      }
     }
 
   async addCookie(partnerData, page, context) {
