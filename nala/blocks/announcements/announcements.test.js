@@ -29,19 +29,21 @@ test.describe('Validate announcements block', () => {
   });
 
   async function handleEvent(page) {
-    await page.evaluate(() => {
-      if (document.querySelector('.card-title')) {
-        window.cardsLoaded = true;
-      } else {
-        document.addEventListener('partner-cards-loaded', () => {
+    if (!page.url().includes('partners.stage.adobe.com')) {
+      await page.evaluate(() => {
+        if (document.querySelector('.card-title')) {
           window.cardsLoaded = true;
-        });
+        } else {
+          document.addEventListener('partner-cards-loaded', () => {
+            window.cardsLoaded = true;
+          });
+        }
+      });
+      try {
+        await page.waitForFunction(() => window.cardsLoaded);
+      } catch {
+        console.log('catch block');
       }
-    });
-    try {
-      await page.waitForFunction(() => window.cardsLoaded);
-    } catch {
-      console.log('catch block');
     }
   }
 

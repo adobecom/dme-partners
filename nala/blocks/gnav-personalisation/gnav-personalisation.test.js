@@ -34,6 +34,7 @@ test.describe('Validate Public GNav', () => {
     });
 
     await test.step('Verify public GNav is loaded in non-logged in scenarios', async () => {
+      console.log('current url', page.url());
       const publicGnav = await gnavPersonalisationPage.publicGnavHeader;
       await expect(publicGnav).toBeVisible();
       const joinNowButton = await gnavPersonalisationPage.joinNowButton;
