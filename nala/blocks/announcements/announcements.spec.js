@@ -5,7 +5,7 @@ export default {
       tcid: '1',
       name: '@desc-regression-announcements-page-search',
       path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous @login',
+      tags: '@dme-announcements @regression @anonymous @circleCi',
       data: {
         numberOfPublicCards: 7,
         numberOfMatchingDescCards: 6,
@@ -19,7 +19,7 @@ export default {
       tcid: '2',
       name: '@desc-regression-announcements-page-load-more-sort',
       path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression @anonymous @circleCi',
       data: {
         numberOfPublicCards: 7,
         numberOfMatchingDescCards: 6,
@@ -33,7 +33,7 @@ export default {
       tcid: '3',
       name: '@desc-regression-announcements-page-pagination',
       path: '/channelpartners/drafts/automation/regression/announcements-paginated?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression @anonymous @circleCi',
       data: {
         numberOfPublicCards: 7,
         numberOfMatchingDescCards: 6,
@@ -49,7 +49,7 @@ export default {
       tcid: '4',
       name: '@desc-regression-announcements-page-filters',
       path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression @anonymous @circleCi',
       data: {
         numberOfPublicCards: 7,
         filterDate: 'Date',
@@ -75,7 +75,7 @@ export default {
       tcid: '5',
       name: '@desc-regression-announcements-page-read-article',
       path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression @anonymous @circleCi',
       data: {
         searchCardTitle: 'Automation regression announcements card worldwide no1',
         numberOfMatchingTitleCards: 1,
@@ -86,7 +86,7 @@ export default {
       tcid: '6',
       name: '@desc-announcements-page-edge-cases',
       path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression @anonymous @circleCi',
       data: {
         numberOfPublicCards: 7,
         specialCharsTitleSearch: '? ! | <> * !@#$%^&*()_+~`<>?\\’|”{}][ уљађз',
@@ -107,7 +107,7 @@ export default {
       tcid: '7',
       name: '@desc-regression-announcements-distributor-north-america',
       path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression @anonymous @circleCi',
       data: {
         partnerData: {
           partnerPortal: 'CPP',

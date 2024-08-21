@@ -5,13 +5,13 @@ export default {
       tcid: '1',
       name: '@desc-public-gnav',
       path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
-      tags: '@dme-gnav @anonymous',
+      tags: '@dme-gnav @anonymous @circleCi',
     },
     {
       tcid: '2',
       name: '@desc-loggedin-gnav-loaded-for-member-user',
       path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
-      tags: '@dme-gnav @anonymous',
+      tags: '@dme-gnav @anonymous @circleCi',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -24,7 +24,7 @@ export default {
       tcid: '3',
       name: '@desc-loggedin-gnav-not-loaded-for-non-member-user',
       path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
-      tags: '@dme-gnav @anonymous',
+      tags: '@dme-gnav @anonymous @circleCi',
       data: {
         partnerData: {
           partnerPortal: 'SPP',

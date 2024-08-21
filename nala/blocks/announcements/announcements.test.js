@@ -11,10 +11,10 @@ const regionCases = features.slice(6, 18);
 const partnerLevelCases = features.slice(20, 23);
 
 test.describe('Validate announcements block', () => {
-  test.beforeEach(async ({ page, browserName }) => {
+  test.beforeEach(async ({ page, browserName, baseURL }) => {
     announcementsPage = new AnnouncementsPage(page);
     singInPage = new SignInPage(page);
-    if (browserName === 'chromium') {
+    if (browserName === 'chromium' && !baseURL.includes('partners.stage.adobe.com')) {
       await page.route('https://www.adobe.com/chimera-api/**', async (route, request) => {
         const newUrl = request.url().replace(
           'https://www.adobe.com/chimera-api',
