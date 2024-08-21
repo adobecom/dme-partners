@@ -4,7 +4,7 @@ import { isBranchURLValid } from '../libs/baseurl.js';
 import axios from 'axios';
 
 const MAIN_BRANCH_LIVE_URL = 'https://main--dme-partners--adobecom.hlx.live';
-const STAGE_BRANCH_URL = 'https://stage--dme-partners--adobecom.hlx.live';
+const STAGE_URL = 'https://partners.stage.adobe.com';
 const LOCALHOST_URL = 'http://localhost:3000';
 
 async function getGitHubPRBranchLiveUrl() {
@@ -72,15 +72,15 @@ async function getGitHubMiloLibsBranchLiveUrl() {
 }
 
 async function getCircleCIBranchLiveUrl() {
-  const stageBranchLiveUrl = STAGE_BRANCH_URL;
+  const stageUrl = STAGE_URL;
 
   try {
-    if (await isBranchURLValid(stageBranchLiveUrl)) {
-      process.env.PR_BRANCH_LIVE_URL = stageBranchLiveUrl;
+    if (await isBranchURLValid(stageUrl)) {
+      process.env.PR_BRANCH_LIVE_URL = stageUrl;
     }
-    console.info('Stage Branch Live URL : ', stageBranchLiveUrl);
+    console.info('Stage Branch Live URL : ', stageUrl);
   } catch (err) {
-    console.error('Error => Error in setting Stage Branch test URL : ', stageBranchLiveUrl);
+    console.error('Error => Error in setting Stage Branch test URL : ', stageUrl);
     console.info('Note: Stage branch test url is not valid, Exiting test execution.');
     process.exit(1);
   }
