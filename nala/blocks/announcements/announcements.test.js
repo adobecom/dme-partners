@@ -288,6 +288,12 @@ test.describe('Validate announcements block', () => {
         const result = await announcementsPage.resultNumber.textContent();
         await expect(parseInt(result.split(' ')[0], 10)).toBe(feature.data.numberOfMatchingTitleCards);
       });
+
+      await test.step(`Verify card different region titled ${feature.data.announcementCardTitle} is not present on page`, async () => {
+        await announcementsPage.searchField.fill(`${feature.data.announcementDiffRegionCardTitle}`);
+        const result = await announcementsPage.resultNumber.textContent();
+        await expect(parseInt(result.split(' ')[0], 10)).toBe(feature.data.zeroCards);
+      });
     });
   });
 

@@ -116,6 +116,8 @@ export default {
         },
         announcementCardTitle: 'CPP Distributor North America Announcement',
         numberOfMatchingTitleCards: 1,
+        announcementDiffRegionCardTitle: 'CPP Distributor Japan Announcement',
+        zeroCards: 0,
       },
     },
     {
@@ -131,6 +133,8 @@ export default {
         },
         announcementCardTitle: 'CPP Distributor Japan Announcement',
         numberOfMatchingTitleCards: 1,
+        announcementDiffRegionCardTitle: 'CPP Distributor India Announcement',
+        zeroCards: 0,
       },
     },
     {
@@ -146,6 +150,8 @@ export default {
         },
         announcementCardTitle: 'CPP Distributor India Announcement',
         numberOfMatchingTitleCards: 1,
+        announcementDiffRegionCardTitle: 'CPP Platinum Spain Announcement',
+        zeroCards: 0,
       },
     },
     {
@@ -161,6 +167,8 @@ export default {
         },
         announcementCardTitle: 'CPP Platinum Spain Announcement',
         numberOfMatchingTitleCards: 1,
+        announcementDiffRegionCardTitle: 'CPP Platinum Latin America-North America based Announcement',
+        zeroCards: 0,
       },
     },
     {
@@ -176,6 +184,8 @@ export default {
         },
         announcementCardTitle: 'CPP Platinum Latin America-North America based Announcement',
         numberOfMatchingTitleCards: 1,
+        announcementDiffRegionCardTitle: 'CPP Platinum EMEA Announcement',
+        zeroCards: 0,
       },
     },
     {
@@ -191,6 +201,8 @@ export default {
         },
         announcementCardTitle: 'CPP Platinum EMEA Announcement',
         numberOfMatchingTitleCards: 1,
+        announcementDiffRegionCardTitle: 'CPP Gold Latin America Announcement',
+        zeroCards: 0,
       },
     },
     {
@@ -206,6 +218,8 @@ export default {
         },
         announcementCardTitle: 'CPP Gold Latin America Announcement',
         numberOfMatchingTitleCards: 1,
+        announcementDiffRegionCardTitle: 'CPP Gold UK, Europe West Announcement',
+        zeroCards: 0,
       },
     },
     {
@@ -221,6 +235,8 @@ export default {
         },
         announcementCardTitle: 'CPP Gold UK, Europe West Announcement',
         numberOfMatchingTitleCards: 1,
+        announcementDiffRegionCardTitle: 'CPP Certified Europe East Announcement',
+        zeroCards: 0,
       },
     },
     {
@@ -236,6 +252,8 @@ export default {
         },
         announcementCardTitle: 'CPP Certified Europe East Announcement',
         numberOfMatchingTitleCards: 1,
+        announcementDiffRegionCardTitle: 'CPP Certified Pacific Announcement',
+        zeroCards: 0,
       },
     },
     {
@@ -251,6 +269,8 @@ export default {
         },
         announcementCardTitle: 'CPP Certified Pacific Announcement',
         numberOfMatchingTitleCards: 1,
+        announcementDiffRegionCardTitle: 'CPP Registered China Announcement',
+        zeroCards: 0,
       },
     },
     {
@@ -266,6 +286,8 @@ export default {
         },
         announcementCardTitle: 'CPP Registered China Announcement',
         numberOfMatchingTitleCards: 1,
+        announcementDiffRegionCardTitle: 'CPP Registered Middle East & Africa Announcement',
+        zeroCards: 0,
       },
     },
     {
@@ -281,6 +303,8 @@ export default {
         },
         announcementCardTitle: 'CPP Registered Middle East & Africa Announcement',
         numberOfMatchingTitleCards: 1,
+        announcementDiffRegionCardTitle: 'CPP Distributor North America Announcement',
+        zeroCards: 0,
       },
     },
     {
