@@ -7,14 +7,15 @@ import {
   signedInNonMember,
   isReseller,
   getNodesByXPath,
-  isRenew
+  isRenew,
 }
   from './utils.js';
+import { getConfig } from '../blocks/utils/utils.js';
 
 const PAGE_PERSONALIZATION_PLACEHOLDERS = { firstName: '//*[contains(text(), "$firstName")]' };
-const GNAV_PERSONALIZATION_PLACEHOLDERS = { 
+const GNAV_PERSONALIZATION_PLACEHOLDERS = {
   company: '//*[contains(text(), "$company")]',
-  level: '//*[contains(text(), "$level")]'
+  level: '//*[contains(text(), "$level")]',
 };
 
 const LEVEL_CONDITION = 'partner-level';
@@ -28,7 +29,7 @@ const PERSONALIZATION_CONDITIONS = {
   'partner-not-member': signedInNonMember(),
   'partner-not-signed-in': !partnerIsSignedIn(),
   'partner-all-levels': isMember(),
-  'partner-reseller': isReseller (PARTNER_LEVEL),
+  'partner-reseller': isReseller(PARTNER_LEVEL),
   'partner-level': (level) => PARTNER_LEVEL === level,
 };
 
@@ -124,9 +125,24 @@ function processSalesAccess(el) {
   if (!salesAccess) {
     element.classList.add(PERSONALIZATION_HIDE);
     return;
-  };
+  }
+  const { env } = getConfig();
+  if (env.name !== 'prod') {
+    const url = new URL(el.href);
+    url.hostname = 'adobe--sfstage.sandbox.my.site.com';
+    el.href = url;
+  }
   const divider = document.createElement('hr');
   element.insertBefore(divider, el);
+}
+
+function processAccountManagement(el) {
+  const { env } = getConfig();
+  if (env.name !== 'prod') {
+    const url = new URL(el.href);
+    url.hostname = 'channelpartners.stage2.adobe.com';
+    el.href = url;
+  }
 }
 
 function processGnavElements(elements) {
@@ -144,6 +160,7 @@ function processGnavElements(elements) {
 const PROFILE_PERSONALIZATION_ACTIONS = {
   'partner-primary': (el) => processPrimaryContact(el),
   'partner-sales-access': (el) => processSalesAccess(el),
+  'partner-account-management': (el) => processAccountManagement(el),
 };
 
 function personalizeDropdownElements(profile) {

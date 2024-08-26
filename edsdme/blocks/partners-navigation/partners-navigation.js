@@ -1,6 +1,7 @@
 /* eslint-disable no-async-promise-executor */
 import { getLibs } from '../../scripts/utils.js';
 import { applyGnavPersonalization } from '../../scripts/personalization.js';
+import ProfileDropdown from './features/profile/partners-dropdown.js';
 
 const miloLibs = getLibs();
 const {
@@ -9,6 +10,7 @@ const {
   loadIms,
   decorateLinks,
   loadScript,
+  loadStyle,
 } = await import(`${miloLibs}/utils/utils.js`);
 const {
   closeAllDropdowns,
@@ -420,10 +422,8 @@ class Gnav {
         }
 
         if (!this.useUniversalNav) {
-          const [ProfileDropdown] = await Promise.all([
-            loadBlock('../features/profile/dropdown.js'),
-            loadStyles(rootPath('features/profile/dropdown.css')),
-          ]);
+          // use this code when performing Milo code sync
+          loadStyle('/edsdme/blocks/partners-navigation/features/profile/partners-dropdown.css');
           this.ProfileDropdown = ProfileDropdown;
         }
 
