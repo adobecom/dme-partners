@@ -1,7 +1,8 @@
 import { searchCardStyles } from './SearchCardStyles.js';
-import { formatDate, getLibs } from '../scripts/utils.js';
+import { formatDate, getLibs, getLocale } from '../scripts/utils.js';
 
 const miloLibs = getLibs();
+const locale = getLocale();
 const { html, repeat, LitElement } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
 class SearchCard extends LitElement {
@@ -64,7 +65,7 @@ class SearchCard extends LitElement {
             : ''
           }
           <div class="card-text">
-            <span class="card-date">${this.localizedText['{{last-modified}}']}: ${formatDate(this.data.cardDate)}
+            <span class="card-date">${this.localizedText['{{last-modified}}']}: ${formatDate(this.data.cardDate, locale.ietf)}
               <span class="card-size">${this.localizedText['{{size}}']}: ${this.data.contentArea?.size}</span>
             </span>
             <p class="card-description">${this.data.contentArea?.description}</p>
