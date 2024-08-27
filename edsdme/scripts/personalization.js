@@ -107,6 +107,7 @@ function processPrimaryContact(el) {
 }
 
 function processRenew(profile) {
+  const { env } = getConfig();
   const renew = isRenew();
   const renewElements = Array.from(profile.querySelectorAll('.partner-renew'));
   renewElements.forEach((el) => {
@@ -115,6 +116,12 @@ function processRenew(profile) {
     const { accountStatus } = renew;
     if (el.classList.contains(`partner-${accountStatus}`)) {
       el.classList.remove(PERSONALIZATION_HIDE);
+    }
+    if (env.name !== 'prod') {
+      const anchor = el.querySelector('a');
+      const url = new URL(anchor.href);
+      url.hostname = 'channelpartners.stage2.adobe.com';
+      anchor.href = url;
     }
   });
 }
