@@ -19,9 +19,9 @@ export default async function init(el) {
   }
 
   const createdDate = new Date(createdDateValue);
-  const locale = getLocale();
 
   if (!isNaN(createdDate)) {
+    const locale = getLocale();
     el.innerHTML = '';
     el.className = `announcement-date-wrapper content ${el.className}`;
     el.classList.remove('announcement-date');
