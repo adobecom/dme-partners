@@ -40,3 +40,8 @@
 .personalization-hide {
   display: none;
 }
+
+/* announcement title section divider */
+.announcement-title.section.divider {
+  border-bottom: 1px solid rgb(109 109 109);
+}

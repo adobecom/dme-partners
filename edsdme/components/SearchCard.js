@@ -8,6 +8,7 @@ class SearchCard extends LitElement {
   static properties = {
     data: { type: Object },
     localizedText: { type: Object },
+    ietf: { type: String },
   };
 
   static styles = searchCardStyles;
@@ -64,7 +65,7 @@ class SearchCard extends LitElement {
             : ''
           }
           <div class="card-text">
-            <span class="card-date">${this.localizedText['{{last-modified}}']}: ${formatDate(this.data.cardDate)}
+            <span class="card-date">${this.localizedText['{{last-modified}}']}: ${formatDate(this.data.cardDate, this.ietf)}
               <span class="card-size">${this.localizedText['{{size}}']}: ${this.data.contentArea?.size}</span>
             </span>
             <p class="card-description">${this.data.contentArea?.description}</p>
