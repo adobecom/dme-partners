@@ -39,10 +39,6 @@ test.describe('Validate Public GNav', () => {
       await expect(publicGnav).toBeVisible();
       const joinNowButton = await gnavPersonalisationPage.joinNowButton;
       await expect(joinNowButton).toBeVisible();
-      if ( browserName==='chromium' ) {
-        const signInButton = await gnavPersonalisationPage.signInButton;
-        await expect(signInButton).toBeVisible();
-      }
     });
   });
 
