@@ -40,7 +40,7 @@ export default class Search extends PartnerCards {
       return html`${repeat(
         this.paginatedCards,
         (card) => card.id,
-        (card) => html`<search-card class="card-wrapper" .data=${card} .localizedText="${this.blockData.localizedText} .ietf=${this.blockData.ietf}></search-card>`,
+        (card) => html`<search-card class="card-wrapper" .data=${card} .localizedText=${this.blockData.localizedText} .ietf=${this.blockData.ietf}></search-card>`,
       )}`;
     }
     return html`<div class="no-results">
