@@ -25,7 +25,10 @@ export default async function init(el) {
     el.innerHTML = '';
     el.className = `announcement-date-wrapper content ${el.className}`;
     el.classList.remove('announcement-date');
-    const dateEl = createTag('time', { datetime: createdDate.toISOString(), class: 'announcement-date detail-m' }, formatDate(createdDateValue, locale.ietf));
+    const month = String(createdDate.getMonth() + 1).padStart(2, '0');
+    const day = String(createdDate.getDate()).padStart(2, '0');
+    const datetime = `${createdDate.getFullYear()}-${month}-${day}`;
+    const dateEl = createTag('time', { datetime, class: 'announcement-date detail-m' }, formatDate(createdDateValue, locale.ietf));
     el.append(dateEl);
   }
 

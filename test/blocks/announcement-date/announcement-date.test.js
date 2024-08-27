@@ -12,7 +12,7 @@ describe('announcement date block', () => {
   it('should display the expected date', async () => {
     const announcementDate = document.querySelector('time.announcement-date');
     expect(announcementDate).to.exist;
-    expect(announcementDate.getAttribute('datetime')).to.equal('2024-01-01T23:00:00.000Z');
+    expect(announcementDate.getAttribute('datetime')).to.equal('2024-01-02');
     expect(announcementDate.innerText).to.equal('Jan 2, 2024');
   });
 
