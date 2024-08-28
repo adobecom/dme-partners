@@ -45,11 +45,3 @@
 .announcement-title.section.divider {
   border-bottom: 1px solid var(--color-gray-600);
 }
-
-.announcement-back-button {
-  margin: var(--spacing-m) 0;
-}
-
-.announcement-back-button .action-area {
-  justify-content: flex-end;
-}
