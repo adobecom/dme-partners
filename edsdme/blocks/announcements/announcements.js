@@ -86,6 +86,7 @@ export default async function init(el) {
     pagination: 'load-more',
     isArchive,
     caasUrl: getCaasUrl(block),
+    ietf: config.locale.ietf,
   };
 
   const app = document.createElement('announcements-cards');

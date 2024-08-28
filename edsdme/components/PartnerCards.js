@@ -229,7 +229,7 @@ export default class PartnerCards extends LitElement {
       return html`${repeat(
         this.paginatedCards,
         (card) => card.id,
-        (card) => html`<single-partner-card class="card-wrapper" .data=${card}></signle-partner-card>`,
+        (card) => html`<single-partner-card class="card-wrapper" .data=${card} .ietf=${this.blockData.ietf}></single-partner-card>`,
       )}`;
     }
 

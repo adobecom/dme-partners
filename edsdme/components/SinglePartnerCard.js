@@ -7,7 +7,10 @@ const { html, LitElement } = await import(`${miloLibs}/deps/lit-all.min.js`);
 const DEFAULT_BACKGROUND_IMAGE_PATH = '/content/dam/solution/en/images/card-collection/sample_default.png';
 
 class SinglePartnerCard extends LitElement {
-  static properties = { data: { type: Object } };
+  static properties = {
+    data: { type: Object },
+    ietf: { type: String },
+  };
 
   static styles = singlePartnerCardStyles;
 
@@ -59,7 +62,7 @@ class SinglePartnerCard extends LitElement {
             <p class="card-description">${this.data.contentArea?.description}</p>
           </div>
           <div class="card-footer">
-            <span class="card-date">${formatDate(this.data.cardDate)}</span>
+            <span class="card-date">${formatDate(this.data.cardDate, this.ietf)}</span>
             <a class="card-btn" href="${this.transformCardUrl(this.data.contentArea?.url)}">${this.data.footer[0]?.right[0]?.text}</a>
           </div>
         </div>

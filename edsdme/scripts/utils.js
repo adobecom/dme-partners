@@ -55,7 +55,7 @@ export const prodHosts = [
  * ------------------------------------------------------------
  */
 
-export function formatDate(cardDate) {
+export function formatDate(cardDate, locale = 'en-US') {
   if (!cardDate) return;
 
   const dateObject = new Date(cardDate);
@@ -65,7 +65,7 @@ export function formatDate(cardDate) {
     day: 'numeric',
   };
 
-  const formattedDate = dateObject.toLocaleString('en-US', options);
+  const formattedDate = dateObject.toLocaleString(locale, options);
   // eslint-disable-next-line consistent-return
   return formattedDate;
 }
@@ -134,7 +134,7 @@ export function signedInNonMember() {
   return partnerIsSignedIn() && !isMember();
 }
 
-export function isReseller (level) {
+export function isReseller(level) {
   return RESSELER_LEVELS.includes(level?.toLowerCase());
 }
 
