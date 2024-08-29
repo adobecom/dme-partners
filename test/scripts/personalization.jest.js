@@ -11,6 +11,7 @@ function importModules() {
   const placeholderElement = document.querySelector('#welcome-firstname');
   jest.spyOn(utils, 'getNodesByXPath').mockImplementation(() => [placeholderElement]);
   const { applyPagePersonalization } = require('../../edsdme/scripts/personalization.js');
+  jest.mock('../../edsdme/blocks/utils/utils.js', () => ({ getConfig: jest.fn(() => ({ env: { name: 'prod' } })) }));
 
   return applyPagePersonalization;
 }
@@ -19,11 +20,11 @@ describe('Test utils.js', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     window = Object.create(window);
-    Object.defineProperty(window, 'location', {
-      value: {
-        pathname:'/channelpartners',
+    Object.defineProperties(window, {
+      location: {
+        value: { pathname: '/channelpartners', hostname: 'partners.adobe.com' },
+        writable: true,
       },
-      writable: true
     });
     document.body.innerHTML = fs.readFileSync(
       path.resolve(__dirname, './mocks/personalization.html'),

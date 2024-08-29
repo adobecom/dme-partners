@@ -154,7 +154,7 @@ export function redirectLoggedinPartner() {
   window.location.assign(target);
 }
 
-export async function getRenewBanner(getConfig, loadBlock) {
+export function isRenew() {
   const programType = getCurrentProgramType();
 
   const primaryContact = getPartnerDataCookieValue(programType, 'primarycontact');
@@ -169,7 +169,7 @@ export async function getRenewBanner(getConfig, loadBlock) {
   const expirationDate = new Date(accountExpiration);
   const now = new Date();
 
-  let metadataKey;
+  let accountStatus;
   let daysNum;
 
   const differenceInMilliseconds = expirationDate - now;
@@ -177,14 +177,27 @@ export async function getRenewBanner(getConfig, loadBlock) {
   const differenceInDaysRounded = Math.floor(differenceInDays);
 
   if (differenceInMilliseconds > 0 && differenceInDays < 31) {
-    metadataKey = 'banner-account-expires';
+    accountStatus = 'expired';
     daysNum = differenceInDaysRounded;
   } else if (differenceInMilliseconds < 0 && differenceInDays <= 90) {
-    metadataKey = 'banner-account-suspended';
+    accountStatus = 'suspended';
     daysNum = 90 - differenceInDaysRounded;
   } else {
     return;
   }
+
+  return { accountStatus, daysNum }
+}
+
+export async function getRenewBanner(getConfig, loadBlock) {
+  const renew = isRenew();
+  if (!renew) return;
+  const { accountStatus, daysNum } = renew;
+  const bannerFragments = {
+    'expired': 'banner-account-expires',
+    'suspended': 'banner-account-suspended'
+  }
+  const metadataKey = bannerFragments[accountStatus];
 
   const config = getConfig();
   const { prefix } = config.locale;
