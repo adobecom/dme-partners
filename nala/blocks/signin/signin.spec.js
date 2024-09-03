@@ -27,7 +27,7 @@ export default {
     {
       tcid: '3',
       name: '@login-accessing-restricted-home-page-with-member-user-logged-in-to-adobe',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/protected-home?akamaiLocale=na',
+      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/protected-home?akamaiLocale=na&martech=off',
       baseURL: 'https://www.stage.adobe.com/partners.html',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
