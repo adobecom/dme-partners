@@ -23,10 +23,11 @@ export default class SignInPage {
     await this.passwordPageContinueButton.click();
   }
 
-  async verifyRedirectAfterLogin({ page, expect, path, partnerLevel, expectedLandingPageURL }) {
+  async verifyRedirectAfterLogin({ page, expect, path, partnerLevel, expectedLandingPageURL, browserName, tcid, }) {
     await page.goto(path);
     await page.waitForLoadState('domcontentloaded');
     if (path.includes('stage.adobe.com/partners.html')) {
+      await page.screenshot({ path: `nala/screenshots/${browserName}-testId-${tcid}-screenshot.png` });
       await this.signInButtonStageAdobe.waitFor({ state: 'visible', timeout: 30000 });
       await this.signInButtonStageAdobe.click();
     } else {

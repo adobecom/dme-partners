@@ -57,7 +57,7 @@ test.describe('MAPC sign in flow', () => {
    });
 
    redirectionFeatures.forEach((feature) => {
-     test(`${feature.name},${feature.tags}`, async ({ page, context }) => {
+     test(`${feature.name},${feature.tags}`, async ({ page, context, browserName, }) => {
        const newTab = await context.newPage();
        const newTabPage = new SignInPage(newTab);
        await signInPage.verifyRedirectAfterLogin({
@@ -66,6 +66,8 @@ test.describe('MAPC sign in flow', () => {
          path: feature.baseURL,
          partnerLevel: feature.data.partnerLevel,
          expectedLandingPageURL: feature.data.expectedToSeeInURL,
+         browserName,
+         tcid: feature.tcid,
        });
      });
    });
