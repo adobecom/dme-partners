@@ -16,7 +16,7 @@ export default {
       tcid: '2',
       name: '@login-accessing-public-home-page-with-member-user-logged-in-to-adobe',
       path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na&martech=off',
-      baseURL: 'https://www.stage.adobe.com/partners.html',
+      baseURL: 'https://www.stage.adobe.com/partners.html?martech=off',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-spain-platinum:',
@@ -28,7 +28,7 @@ export default {
       tcid: '3',
       name: '@login-accessing-restricted-home-page-with-member-user-logged-in-to-adobe',
       path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/protected-home?akamaiLocale=na&martech=off',
-      baseURL: 'https://www.stage.adobe.com/partners.html',
+      baseURL: 'https://www.stage.adobe.com/partners.html?martech=off',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-spain-platinum:',
