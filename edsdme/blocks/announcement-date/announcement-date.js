@@ -1,5 +1,5 @@
-import { formatDate, getLocale } from '../../scripts/utils.js';
-import { createTag } from '../utils/utils.js';
+import { formatDate } from '../../scripts/utils.js';
+import { createTag, getConfig } from '../utils/utils.js';
 
 const CARD_METADATA_PROPERTY_CREATED = 'created';
 
@@ -21,14 +21,14 @@ export default async function init(el) {
   const createdDate = new Date(createdDateValue);
 
   if (!isNaN(createdDate)) {
-    const locale = getLocale();
+    const config = getConfig();
     el.innerHTML = '';
     el.className = `announcement-date-wrapper content ${el.className}`;
     el.classList.remove('announcement-date');
     const month = String(createdDate.getMonth() + 1).padStart(2, '0');
     const day = String(createdDate.getDate()).padStart(2, '0');
     const datetime = `${createdDate.getFullYear()}-${month}-${day}`;
-    const dateEl = createTag('time', { datetime, class: 'announcement-date detail-m' }, formatDate(createdDateValue, locale.ietf));
+    const dateEl = createTag('time', { datetime, class: 'announcement-date detail-m' }, formatDate(createdDateValue, config.locale.ietf));
     el.append(dateEl);
   }
 
