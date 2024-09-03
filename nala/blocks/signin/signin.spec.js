@@ -15,7 +15,7 @@ export default {
     {
       tcid: '2',
       name: '@login-accessing-public-home-page-with-member-user-logged-in-to-adobe',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na&martech=off',
       baseURL: 'https://www.stage.adobe.com/partners.html',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
