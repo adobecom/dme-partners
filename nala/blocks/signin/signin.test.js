@@ -13,12 +13,6 @@ test.describe('MAPC sign in flow', () => {
     page.on('console', (msg) => console.log(`${msg.text()}--${msg.type()}--`, msg.location(), msg.args()));
     if (!baseURL.includes('partners.stage.adobe.com')) {
       await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
-      if(browserName === 'webkit') {
-        await context.browser().newContext({ignoreHTTPSErrors: true});
-        console.log('set webkit to ignore https errors');
-      }else {
-        console.log('not webkit:', browserName);
-      }
     }
     if (browserName === 'chromium' && !baseURL.includes('partners.stage.adobe.com')) {
       await page.route('https://www.adobe.com/chimera-api/**', async (route, request) => {
@@ -66,6 +60,12 @@ test.describe('MAPC sign in flow', () => {
     test(`${feature.name},${feature.tags}`, async ({ page, context, browserName }) => {
       const newTab = await context.newPage();
       const newTabPage = new SignInPage(newTab);
+      if (browserName === 'webkit') {
+        await context.browser().newContext({ignoreHTTPSErrors: true});
+        console.log('set webkit to ignore https errors');
+      } else {
+        console.log('not webkit:', browserName);
+      }
       await signInPage.verifyRedirectAfterLogin({
         page,
         expect,
