@@ -10,7 +10,7 @@ const redirectionFeatures = features.slice(1, 3);
 test.describe('MAPC sign in flow', () => {
   test.beforeEach(async ({ page, browserName, baseURL, context }) => {
     signInPage = new SignInPage(page);
-    page.on('console', msg => console.log(msg.text()+'--'+msg.type()+'--'+msg.location(), msg.args()));
+    page.on('console', msg => console.log(msg.text()+'--'+msg.type()+'--', msg.page(), msg.location(), msg.args()));
     if (!baseURL.includes('partners.stage.adobe.com')) {
       await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
     }
