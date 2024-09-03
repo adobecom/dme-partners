@@ -40,7 +40,6 @@ const config = {
 
     trace: 'on-first-retry',
     baseURL: process.env.PR_BRANCH_LIVE_URL || (process.env.LOCAL_TEST_LIVE_URL || 'https://main--dme-partners--adobecom.hlx.live'),
-    ignoreHTTPSErrors: true,
   },
 
   /* Configure projects for major browsers */

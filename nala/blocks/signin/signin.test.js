@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 import SignInPage from './signin.page.js';
+import signin from './signin.spec.js';
 
 let signInPage;
-import signin from './signin.spec.js';
 
 const { features } = signin;
 const redirectionFeatures = features.slice(1, 3);
@@ -10,9 +10,15 @@ const redirectionFeatures = features.slice(1, 3);
 test.describe('MAPC sign in flow', () => {
   test.beforeEach(async ({ page, browserName, baseURL, context }) => {
     signInPage = new SignInPage(page);
-    page.on('console', msg => console.log(msg.text()+'--'+msg.type()+'--', msg.location(), msg.args()));
+    page.on('console', (msg) => console.log(`${msg.text()}--${msg.type()}--`, msg.location(), msg.args()));
     if (!baseURL.includes('partners.stage.adobe.com')) {
       await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
+      if(browserName === 'webkit') {
+        await context.browser().newContext({ignoreHTTPSErrors: true});
+        console.log('set webkit to ignore https errors');
+      }else {
+        console.log('not webkit:', browserName);
+      }
     }
     if (browserName === 'chromium' && !baseURL.includes('partners.stage.adobe.com')) {
       await page.route('https://www.adobe.com/chimera-api/**', async (route, request) => {
@@ -25,51 +31,50 @@ test.describe('MAPC sign in flow', () => {
     }
   });
 
- test(`${features[0].name},${features[0].tags}`, async ({ page }) => {
-     await test.step('Go to the home page', async () => {
-       await page.goto(`${features[0].path}`);
-       await page.waitForLoadState('domcontentloaded');
-       await signInPage.signInButton.click();
-     });
+  test(`${features[0].name},${features[0].tags}`, async ({ page }) => {
+    await test.step('Go to the home page', async () => {
+      await page.goto(`${features[0].path}`);
+      await page.waitForLoadState('domcontentloaded');
+      await signInPage.signInButton.click();
+    });
 
-     await test.step('Sign in', async () => {
-        console.log('ssss', features[0].data.partnerLevel);
-       await signInPage.signIn(page, `${features[0].data.partnerLevel}`);
-     });
+    await test.step('Sign in', async () => {
+      console.log('ssss', features[0].data.partnerLevel);
+      await signInPage.signIn(page, `${features[0].data.partnerLevel}`);
+    });
 
-     await test.step('Verify redirection to restricted home after successful login', async () => {
-       await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
-       const pages = await page.context().pages();
-       await expect(pages[0].url()).toContain(`${features[0].data.expectedProtectedHomeURL}`);
-     });
+    await test.step('Verify redirection to restricted home after successful login', async () => {
+      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+      const pages = await page.context().pages();
+      await expect(pages[0].url()).toContain(`${features[0].data.expectedProtectedHomeURL}`);
+    });
 
-     await test.step('Logout', async () => {
-       await signInPage.profileIconButton.click();
-       await signInPage.logoutButton.click();
-     });
+    await test.step('Logout', async () => {
+      await signInPage.profileIconButton.click();
+      await signInPage.logoutButton.click();
+    });
 
-     await test.step('Verify redirection to public page after logout', async () => {
-       await signInPage.signInButton.waitFor({ state: 'visible', timeout: 10000 });
-       const pages = await page.context().pages();
-       await expect(pages[0].url())
-         .toContain(`${features[0].data.expectedPublicPageURL}`);
-     });
-   });
+    await test.step('Verify redirection to public page after logout', async () => {
+      await signInPage.signInButton.waitFor({ state: 'visible', timeout: 10000 });
+      const pages = await page.context().pages();
+      await expect(pages[0].url())
+        .toContain(`${features[0].data.expectedPublicPageURL}`);
+    });
+  });
 
-   redirectionFeatures.forEach((feature) => {
-     test(`${feature.name},${feature.tags}`, async ({ page, context, browserName, }) => {
-       const newTab = await context.newPage();
-       const newTabPage = new SignInPage(newTab);
-       await signInPage.verifyRedirectAfterLogin({
-         page,
-         expect,
-         path: feature.baseURL,
-         partnerLevel: feature.data.partnerLevel,
-         expectedLandingPageURL: feature.data.expectedToSeeInURL,
-         browserName,
-         tcid: feature.tcid,
-       });
-     });
-   });
-
+  redirectionFeatures.forEach((feature) => {
+    test(`${feature.name},${feature.tags}`, async ({ page, context, browserName }) => {
+      const newTab = await context.newPage();
+      const newTabPage = new SignInPage(newTab);
+      await signInPage.verifyRedirectAfterLogin({
+        page,
+        expect,
+        path: feature.baseURL,
+        partnerLevel: feature.data.partnerLevel,
+        expectedLandingPageURL: feature.data.expectedToSeeInURL,
+        browserName,
+        tcid: feature.tcid,
+      });
+    });
+  });
 });
