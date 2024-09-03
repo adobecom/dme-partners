@@ -27,7 +27,9 @@ export default class SignInPage {
     await page.goto(path);
     await page.waitForLoadState('domcontentloaded');
     if (path.includes('stage.adobe.com/partners.html')) {
-      console.log('the h1 is visible: ',await page.locator('div.responsivegrid h1').toBeVisible())
+      const h1 = await page.locator('div.responsivegrid h1');
+      console.log('the h1 is: ',h1);
+      await expect(h1).toBeVisible();
       await page.screenshot({ path: `nala/screenshots/${browserName}-testId-${tcid}-screenshot.png` });
       await this.signInButtonStageAdobe.waitFor({ state: 'visible', timeout: 30000 });
       await this.signInButtonStageAdobe.click();
