@@ -66,10 +66,11 @@ test.describe('MAPC sign in flow', () => {
         console.log('not webkit:', browserName);
       }
       const newTab = await browserContext.newPage();
-      const newTabPage = new SignInPage(newTab);
 
+      const newTabPage = new SignInPage(newTab);
+      const newPage = await browserContext.newPage();
       await signInPage.verifyRedirectAfterLogin({
-        page,
+        newPage,
         expect,
         path: feature.baseURL,
         partnerLevel: feature.data.partnerLevel,
