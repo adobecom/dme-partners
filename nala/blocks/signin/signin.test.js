@@ -58,14 +58,16 @@ test.describe('MAPC sign in flow', () => {
 
   redirectionFeatures.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, context, browserName }) => {
-      const newTab = await context.newPage();
-      const newTabPage = new SignInPage(newTab);
+      let browserContext = context;
       if (browserName === 'webkit') {
-        await context.browser().newContext({ignoreHTTPSErrors: true});
+        browserContext = await context.browser().newContext({ ignoreHTTPSErrors: true });
         console.log('set webkit to ignore https errors');
       } else {
         console.log('not webkit:', browserName);
       }
+      const newTab = await browserContext.newPage();
+      const newTabPage = new SignInPage(newTab);
+
       await signInPage.verifyRedirectAfterLogin({
         page,
         expect,
