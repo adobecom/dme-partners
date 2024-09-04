@@ -189,7 +189,9 @@ function personalizeProfile(gnav) {
 }
 
 export function applyGnavPersonalization(gnav) {
-  if (!isMember()) return;
-  personalizeProfile(gnav);
+  if (!isMember()) return gnav;
+  const importedGnav = document.importNode(gnav, true);
+  personalizeProfile(importedGnav);
+  return importedGnav;
 }
 
