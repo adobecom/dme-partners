@@ -1021,10 +1021,10 @@ export default async function init(block) {
   try {
     const { mep } = getConfig();
     const url = await getSource();
-    const content = await fetchAndProcessPlainHtml({ url });
+    let content = await fetchAndProcessPlainHtml({ url });
     if (!content) return null;
     block.classList.add('global-navigation');
-    applyGnavPersonalization(content);
+    content = applyGnavPersonalization(content);
     const gnav = new Gnav({
       content,
       block,
