@@ -1,12 +1,5 @@
 /* eslint-disable no-async-promise-executor */
 import {
-  getConfig,
-  getMetadata,
-  loadIms,
-  decorateLinks,
-  loadScript,
-} from '../../utils/utils.js';
-import {
   closeAllDropdowns,
   decorateCta,
   fetchAndProcessPlainHtml,
@@ -38,7 +31,18 @@ import {
   darkIcons,
 } from './utilities/utilities.js';
 
-import { replaceKey, replaceKeyArray } from '../../features/placeholders.js';
+// Partners navigation
+import { getLibs } from '../../scripts/utils.js'; // Partners navigation
+const miloLibs = getLibs();
+const {
+  getConfig,
+  getMetadata,
+  loadIms,
+  decorateLinks,
+  loadScript,
+} = await import(`${miloLibs}/utils/utils.js`);
+const { replaceKey, replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
+// End
 
 export const CONFIG = {
   icons: isDarkMode() ? darkIcons : icons,
@@ -420,7 +424,7 @@ class Gnav {
         if (!this.useUniversalNav) {
           const [ProfileDropdown] = await Promise.all([
             loadBlock('../features/profile/dropdown.js'),
-            loadStyles(rootPath('features/profile/dropdown.css')),
+            loadStyles('/edsdme/blocks/partners-navigation/features/profile/dropdown.css') // Partners navigation
           ]);
           this.ProfileDropdown = ProfileDropdown;
         }
@@ -1029,6 +1033,7 @@ export default async function init(block) {
     const url = await getSource();
     const content = await fetchAndProcessPlainHtml({ url });
     if (!content) return null;
+    block.classList.add('global-navigation'); // Partners navigation
     const gnav = new Gnav({
       content,
       block,

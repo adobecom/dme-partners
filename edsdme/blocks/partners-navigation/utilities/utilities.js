@@ -1,9 +1,13 @@
-import {
+// Partners navigation
+import { getLibs } from '../../../scripts/utils.js';
+const miloLibs = getLibs();
+const {
   getConfig, getMetadata, loadStyle, loadLana, decorateLinks, localizeLink,
-} from '../../../utils/utils.js';
-import { getFederatedContentRoot, getFederatedUrl } from '../../../utils/federated.js';
-import { processTrackingLabels } from '../../../martech/attributes.js';
-import { replaceText } from '../../../features/placeholders.js';
+} = await import(`${miloLibs}/utils/utils.js`);
+const { getFederatedContentRoot, getFederatedUrl } = await import(`${miloLibs}/utils/federated.js`);
+const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
+const { replaceText } = await import(`${miloLibs}/features/placeholders.js`);
+// End
 
 loadLana();
 
@@ -333,7 +337,7 @@ export async function fetchAndProcessPlainHtml({ url, shouldDecorateLinks = true
   }
   const inlineFrags = [...body.querySelectorAll('a[href*="#_inline"]')];
   if (inlineFrags.length) {
-    const { default: loadInlineFrags } = await import('../../fragment/fragment.js');
+    const { default: loadInlineFrags } = await import(`${miloLibs}/blocks/fragment/fragment.js`); // Partners navigation
     const fragPromises = inlineFrags.map((link) => {
       link.href = getFederatedUrl(localizeLink(link.href));
       return loadInlineFrags(link);

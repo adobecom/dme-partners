@@ -1,6 +1,11 @@
-import { getConfig } from '../../../../utils/utils.js';
 import { toFragment, getFedsPlaceholderConfig, trigger, closeAllDropdowns, logErrorFor } from '../../utilities/utilities.js';
-import { replaceKeyArray } from '../../../../features/placeholders.js';
+
+// Partners navigation
+import { getLibs } from '../../../../scripts/utils.js'; // Partners navigation
+const miloLibs = getLibs();
+const { replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
+const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
+// End
 
 const getLanguage = (ietfLocale) => {
   if (!ietfLocale.length) return 'en';
