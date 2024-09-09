@@ -1,4 +1,5 @@
 /* eslint-disable no-async-promise-executor */
+import { applyGnavPersonalization } from '../../scripts/personalization.js';
 import {
   closeAllDropdowns,
   decorateCta,
@@ -1031,9 +1032,10 @@ export default async function init(block) {
   try {
     const { mep } = getConfig();
     const url = await getSource();
-    const content = await fetchAndProcessPlainHtml({ url });
+    let content = await fetchAndProcessPlainHtml({ url });
     if (!content) return null;
     block.classList.add('global-navigation'); // Partners navigation
+    content = applyGnavPersonalization(content); // Partners navigation
     const gnav = new Gnav({
       content,
       block,

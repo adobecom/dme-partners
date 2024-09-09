@@ -1,23 +1,31 @@
 import { toFragment, getFedsPlaceholderConfig, trigger, closeAllDropdowns, logErrorFor } from '../../utilities/utilities.js';
 
 // Partners navigation
-import { getLibs } from '../../../../scripts/utils.js'; // Partners navigation
+import { getLibs } from '../../../../scripts/utils.js';
 const miloLibs = getLibs();
 const { replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
 const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
-// End
 
-const getLanguage = (ietfLocale) => {
-  if (!ietfLocale.length) return 'en';
+// const getLanguage = (ietfLocale) => {
+//   if (!ietfLocale.length) return 'en';
 
-  const nonStandardLocaleMap = { 'no-NO': 'nb' };
+//   const nonStandardLocaleMap = { 'no-NO': 'nb' };
 
-  if (nonStandardLocaleMap[ietfLocale]) {
-    return nonStandardLocaleMap[ietfLocale];
+//   if (nonStandardLocaleMap[ietfLocale]) {
+//     return nonStandardLocaleMap[ietfLocale];
+//   }
+
+//   return ietfLocale.split('-')[0];
+// };
+
+const decorateEditProfileLink = () => {
+  const { env } = getConfig();
+  if (env.name === 'prod') {
+    return 'https://channelpartners.adobe.com/s/manageprofile/?appid=mp';
   }
-
-  return ietfLocale.split('-')[0];
+  return 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp';
 };
+// End
 
 const decorateProfileLink = (service, path = '') => {
   const defaultServiceUrls = {
@@ -83,12 +91,21 @@ class ProfileDropdown {
         this.placeholders.manageEnterprise,
         this.placeholders.profileAvatar,
       ],
+      [
+        this.placeholders.editProfile, // Partners navigation
+      ],
       { displayName: this.profileData.displayName, email: this.profileData.email },
     ] = await Promise.all([
       replaceKeyArray(
         ['profile-button', 'sign-out', 'view-account', 'manage-teams', 'manage-enterprise', 'profile-avatar'],
         getFedsPlaceholderConfig(),
       ),
+      // Partners navigation
+      replaceKeyArray(
+        ['edit-profile'],
+        getConfig(),
+      ),
+      // End
       window.adobeIMS.getProfile(),
     ]);
   }
@@ -98,8 +115,10 @@ class ProfileDropdown {
   }
 
   decorateDropdown() {
-    const { locale } = getConfig();
-    const lang = getLanguage(locale.ietf);
+    // Partners navigation
+    // const { locale } = getConfig();
+    // const lang = getLanguage(locale.ietf);
+    // End
 
     // TODO: the account name and email might need a bit of adaptive behavior;
     // historically we shrunk the font size and displayed the account name on two lines;
@@ -110,20 +129,21 @@ class ProfileDropdown {
       src="${this.avatar}"
       tabindex="0"
       alt="${this.placeholders.profileAvatar}"
-      data-url="${decorateProfileLink('account', `profile?lang=${lang}`)}"></img>`;
+      data-url="${decorateEditProfileLink()}"></img>`;
     return toFragment`
       <div id="feds-profile-menu" class="feds-profile-menu">
         <a
-          href="${decorateProfileLink('account', `?lang=${lang}`)}"
+          href="${decorateEditProfileLink()}"
+          target="_blank"
           class="feds-profile-header"
           daa-ll="${this.placeholders.viewAccount}"
-          aria-label="${this.placeholders.viewAccount}"
+          aria-label="${this.placeholders.editProfile}"
         >
           ${this.avatarElem}
           <div class="feds-profile-details">
             <p class="feds-profile-name">${this.profileData.displayName}</p>
             <p class="feds-profile-email">${this.decorateEmail(this.profileData.email)}</p>
-            <p class="feds-profile-account">${this.placeholders.viewAccount}</p>
+            <p class="feds-profile-account">${this.placeholders.editProfile}</p>
           </div>
         </a>
         ${this.localMenu ? this.decorateLocalMenu() : ''}
