@@ -1,12 +1,31 @@
+import { toFragment, getFedsPlaceholderConfig, trigger, closeAllDropdowns, logErrorFor } from '../../utilities/utilities.js';
+
+// Partners navigation
 import { getLibs } from '../../../../scripts/utils.js';
-
-import { getConfig } from '../../../utils/utils.js';
-
 const miloLibs = getLibs();
-
-const { toFragment, getFedsPlaceholderConfig, trigger, closeAllDropdowns, logErrorFor } = await import(`${miloLibs}/blocks/global-navigation/utilities/utilities.js`);
-
 const { replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
+const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
+
+// const getLanguage = (ietfLocale) => {
+//   if (!ietfLocale.length) return 'en';
+
+//   const nonStandardLocaleMap = { 'no-NO': 'nb' };
+
+//   if (nonStandardLocaleMap[ietfLocale]) {
+//     return nonStandardLocaleMap[ietfLocale];
+//   }
+
+//   return ietfLocale.split('-')[0];
+// };
+
+const decorateEditProfileLink = () => {
+  const { env } = getConfig();
+  if (env.name === 'prod') {
+    return 'https://channelpartners.adobe.com/s/manageprofile/?appid=mp';
+  }
+  return 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp';
+};
+// End
 
 const decorateProfileLink = (service, path = '') => {
   const defaultServiceUrls = {
@@ -27,14 +46,6 @@ const decorateProfileLink = (service, path = '') => {
   }
 
   return `${serviceUrl}${path}`;
-};
-
-const decorateEditProfileLink = () => {
-  const { env } = getConfig();
-  if (env.name === 'prod') {
-    return 'https://channelpartners.adobe.com/s/manageprofile/?appid=mp';
-  }
-  return 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp';
 };
 
 const decorateAction = (label, path) => toFragment`<li><a class="feds-profile-action" href="${decorateProfileLink('adminconsole', path)}">${label}</a></li>`;
@@ -81,7 +92,7 @@ class ProfileDropdown {
         this.placeholders.profileAvatar,
       ],
       [
-        this.placeholders.editProfile,
+        this.placeholders.editProfile, // Partners navigation
       ],
       { displayName: this.profileData.displayName, email: this.profileData.email },
     ] = await Promise.all([
@@ -89,10 +100,12 @@ class ProfileDropdown {
         ['profile-button', 'sign-out', 'view-account', 'manage-teams', 'manage-enterprise', 'profile-avatar'],
         getFedsPlaceholderConfig(),
       ),
+      // Partners navigation
       replaceKeyArray(
         ['edit-profile'],
         getConfig(),
       ),
+      // End
       window.adobeIMS.getProfile(),
     ]);
   }
@@ -102,6 +115,11 @@ class ProfileDropdown {
   }
 
   decorateDropdown() {
+    // Partners navigation
+    // const { locale } = getConfig();
+    // const lang = getLanguage(locale.ietf);
+    // End
+
     // TODO: the account name and email might need a bit of adaptive behavior;
     // historically we shrunk the font size and displayed the account name on two lines;
     // the email had some special logic as well;
@@ -118,7 +136,7 @@ class ProfileDropdown {
           href="${decorateEditProfileLink()}"
           target="_blank"
           class="feds-profile-header"
-          daa-ll="${this.placeholders.editProfile}"
+          daa-ll="${this.placeholders.viewAccount}"
           aria-label="${this.placeholders.editProfile}"
         >
           ${this.avatarElem}
