@@ -198,9 +198,25 @@ function personalizeDropdownElements(profile) {
 }
 
 function personalizeMainNavMenu(item) {
+  // section separators
+  const separatorSelector = 'h5';
+  const separators = item.querySelectorAll(separatorSelector);
+  let elements = Array.from(separators).filter(item => {
+    return item.textContent.includes(PERSONALIZATION_MARKER);
+  });
+  const processedSeparators = processGnavElements(elements);
+  processedSeparators.forEach(({ el, conditions }) => {
+    if (!el || !conditions) return;
+    const nextElementSibling = el.nextElementSibling;
+    if (nextElementSibling?.tagName !== separatorSelector && shouldHide(conditions)) {
+      nextElementSibling.remove();
+    }
+    hideElement(el, conditions, true);
+  });
+
   // links
   const links = item.querySelectorAll('a');
-  let elements = Array.from(links).filter(item => {
+  elements = Array.from(links).filter(item => {
     return item.textContent.includes(PERSONALIZATION_MARKER);
   });
   const processedLinks = processGnavElements(elements);
@@ -210,7 +226,7 @@ function personalizeMainNavMenu(item) {
     hideElement(listItem || el, conditions, true);
   });
 
-  // link group block
+  // link group blocks
   const linkGroups = item.querySelectorAll('.link-group');
   elements = Array.from(linkGroups).filter(item => {
     return item.className.includes(PERSONALIZATION_MARKER);
