@@ -11,6 +11,8 @@ import {
 }
   from './utils.js';
 import { getConfig } from '../blocks/utils/utils.js';
+import { CONFIG } from '../blocks/partners-navigation/partners-navigation.js';
+import { getMainNavItems } from '../blocks/partners-navigation/utilities/utilities.js';
 
 const PAGE_PERSONALIZATION_PLACEHOLDERS = { firstName: '//*[contains(text(), "$firstName")]' };
 const GNAV_PERSONALIZATION_PLACEHOLDERS = {
@@ -19,6 +21,7 @@ const GNAV_PERSONALIZATION_PLACEHOLDERS = {
 };
 
 const LEVEL_CONDITION = 'partner-level';
+const REGION_CONDITION = 'region';
 const PERSONALIZATION_MARKER = 'partner-personalization';
 const PERSONALIZATION_HIDE = 'personalization-hide';
 const PROGRAM = getCurrentProgramType();
@@ -31,6 +34,7 @@ const PERSONALIZATION_CONDITIONS = {
   'partner-all-levels': isMember(),
   'partner-reseller': isReseller(PARTNER_LEVEL),
   'partner-level': (level) => PARTNER_LEVEL === level,
+  'region': (region) => getConfig()?.locale?.region === region,
 };
 
 function personalizePlaceholders(placeholders, context = document) {
@@ -50,14 +54,22 @@ function personalizePlaceholders(placeholders, context = document) {
 function shouldHide(conditions) {
   return conditions.every((condition) => {
     const conditionLevel = condition.startsWith(LEVEL_CONDITION) ? condition.split('-').pop() : '';
-    return conditionLevel
-      ? !PERSONALIZATION_CONDITIONS[LEVEL_CONDITION](conditionLevel) : !PERSONALIZATION_CONDITIONS[condition];
+    if (conditionLevel) return !PERSONALIZATION_CONDITIONS[LEVEL_CONDITION](conditionLevel);
+    const region = condition.startsWith(REGION_CONDITION) ? condition.split('-').pop() : '';
+    if (region) return !PERSONALIZATION_CONDITIONS[REGION_CONDITION](region);
+    return !PERSONALIZATION_CONDITIONS[condition];
   });
 }
 
-function hideElement(element, conditions) {
+function hideElement(element, conditions, remove = false) {
   if (!element || !conditions?.length) return;
-  shouldHide(conditions) && element.classList.add(PERSONALIZATION_HIDE);
+  if (shouldHide(conditions)) {
+    if (remove) {
+      element.remove();
+    } else {
+      element.classList.add(PERSONALIZATION_HIDE)
+    }
+  }
 }
 
 function hideSections(page) {
@@ -157,7 +169,11 @@ function processGnavElements(elements) {
   return elements.map((el) => {
     const match = el.textContent.match(regex)[0];
     if (!match) return {};
-    el.textContent = el.textContent.replace(`(${match})`, '');
+    el.childNodes.forEach(node => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        node.nodeValue = node.nodeValue.replace(`(${match})`, '');
+      }
+    });
     const conditions = match.split(',').map((condition) => condition.trim());
     if (!conditions.length) return {};
     return { el, conditions }
@@ -181,6 +197,18 @@ function personalizeDropdownElements(profile) {
   });
 }
 
+function personalizeMainNav(gnav) {
+  const items = getMainNavItems(gnav, CONFIG.features);
+  const personalizedItems = Array.from(items).filter(item => {
+    return item.textContent.includes(PERSONALIZATION_MARKER);
+  });
+  const processedElements = processGnavElements(personalizedItems);
+  processedElements.forEach(({ el, conditions }) => {
+    if (!el || !conditions) return;
+    hideElement(el, conditions, true);
+  });
+}
+
 function personalizeProfile(gnav) {
   const profile = gnav.querySelector('.profile');
   personalizePlaceholders(GNAV_PERSONALIZATION_PLACEHOLDERS, profile);
@@ -191,6 +219,7 @@ function personalizeProfile(gnav) {
 export function applyGnavPersonalization(gnav) {
   if (!isMember()) return gnav;
   const importedGnav = document.importNode(gnav, true);
+  personalizeMainNav(importedGnav);
   personalizeProfile(importedGnav);
   return importedGnav;
 }
