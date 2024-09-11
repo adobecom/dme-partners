@@ -3,8 +3,10 @@
   list-style-type: none;
 }
 
+/* MWPW-157753 */
 .global-navigation a:hover {
-  text-decoration: none;
+  text-decoration: underline;
+  color: var(--link-color);
 }
 
 .global-navigation button {

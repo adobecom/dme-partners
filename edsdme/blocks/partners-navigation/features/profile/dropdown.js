@@ -2,6 +2,7 @@ import { toFragment, getFedsPlaceholderConfig, trigger, closeAllDropdowns, logEr
 
 // Partners navigation
 import { getLibs } from '../../../../scripts/utils.js';
+
 const miloLibs = getLibs();
 const { replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
 const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
@@ -130,22 +131,23 @@ class ProfileDropdown {
       tabindex="0"
       alt="${this.placeholders.profileAvatar}"
       data-url="${decorateEditProfileLink()}"></img>`;
+    // MWPW-157753 - only Edit user profile link should be clickable
     return toFragment`
       <div id="feds-profile-menu" class="feds-profile-menu">
-        <a
-          href="${decorateEditProfileLink()}"
-          target="_blank"
-          class="feds-profile-header"
-          daa-ll="${this.placeholders.viewAccount}"
-          aria-label="${this.placeholders.editProfile}"
-        >
+        <div class="feds-profile-header">
           ${this.avatarElem}
           <div class="feds-profile-details">
             <p class="feds-profile-name">${this.profileData.displayName}</p>
             <p class="feds-profile-email">${this.decorateEmail(this.profileData.email)}</p>
-            <p class="feds-profile-account">${this.placeholders.editProfile}</p>
+            <a href="${decorateEditProfileLink()}"
+                target="_blank" 
+                daa-ll="${this.placeholders.viewAccount}"
+                aria-label="${this.placeholders.editProfile}" 
+                class="feds-profile-account">
+                    ${this.placeholders.editProfile}
+            </a>
           </div>
-        </a>
+        </div>
         ${this.localMenu ? this.decorateLocalMenu() : ''}
         <ul class="feds-profile-actions">
           ${this.sections?.manage?.items?.team?.id ? decorateAction(this.placeholders.manageTeams, '/team') : ''}
