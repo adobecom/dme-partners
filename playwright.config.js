@@ -61,6 +61,7 @@ const config = {
       name: 'dme-partners-live-webkit',
       use: {
         ...devices['Desktop Safari'],
+        ignoreHTTPSErrors: true,
       },
       bypassCSP: true,
     },
