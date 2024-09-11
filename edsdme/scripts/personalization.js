@@ -198,8 +198,9 @@ function personalizeDropdownElements(profile) {
 }
 
 function personalizeMainNavMenu(item) {
+  // links
   const links = item.querySelectorAll('a');
-  const elements = Array.from(links).filter(item => {
+  let elements = Array.from(links).filter(item => {
     return item.textContent.includes(PERSONALIZATION_MARKER);
   });
   const processedLinks = processGnavElements(elements);
@@ -207,6 +208,16 @@ function personalizeMainNavMenu(item) {
     if (!el || !conditions) return;
     const listItem = el.closest('li');
     hideElement(listItem || el, conditions, true);
+  });
+
+  // link group block
+  const linkGroups = item.querySelectorAll('.link-group');
+  elements = Array.from(linkGroups).filter(item => {
+    return item.className.includes(PERSONALIZATION_MARKER);
+  });
+  elements.forEach((el) => {
+    const conditions = Object.values(el.classList);
+    hideElement(el, conditions, true);
   });
 }
 
