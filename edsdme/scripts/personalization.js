@@ -197,8 +197,31 @@ function personalizeDropdownElements(profile) {
   });
 }
 
+function personalizeMainNavMenu(item) {
+  const links = item.querySelectorAll('a');
+  const elements = Array.from(links).filter(item => {
+    return item.textContent.includes(PERSONALIZATION_MARKER);
+  });
+  const processedLinks = processGnavElements(elements);
+  processedLinks.forEach(({ el, conditions }) => {
+    if (!el || !conditions) return;
+    const listItem = el.closest('li');
+    hideElement(listItem || el, conditions, true);
+  });
+}
+
 function personalizeMainNav(gnav) {
   const items = getMainNavItems(gnav, CONFIG.features);
+
+  items.forEach((item) => {
+    const itemTopParent = item.closest('div');
+    const hasSyncDropdown = itemTopParent instanceof HTMLElement
+      && itemTopParent.childElementCount > 1;
+    if (hasSyncDropdown) {
+      personalizeMainNavMenu(itemTopParent);
+    }
+  });
+
   const personalizedItems = Array.from(items).filter(item => {
     return item.textContent.includes(PERSONALIZATION_MARKER);
   });
