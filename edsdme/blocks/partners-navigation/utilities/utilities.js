@@ -1,5 +1,6 @@
-// Partners navigation
+// MWPW-157751
 import { getLibs } from '../../../scripts/utils.js';
+
 const miloLibs = getLibs();
 const {
   getConfig, getMetadata, loadStyle, loadLana, decorateLinks, localizeLink,
@@ -337,7 +338,7 @@ export async function fetchAndProcessPlainHtml({ url, shouldDecorateLinks = true
   }
   const inlineFrags = [...body.querySelectorAll('a[href*="#_inline"]')];
   if (inlineFrags.length) {
-    const { default: loadInlineFrags } = await import(`${miloLibs}/blocks/fragment/fragment.js`); // Partners navigation
+    const { default: loadInlineFrags } = await import(`${miloLibs}/blocks/fragment/fragment.js`); // MWPW-157751
     const fragPromises = inlineFrags.map((link) => {
       link.href = getFederatedUrl(localizeLink(link.href));
       return loadInlineFrags(link);
