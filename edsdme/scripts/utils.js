@@ -13,7 +13,7 @@
 /**
  * The decision engine for where to get Milo's libs from.
  */
-
+export const PARTNER_LOGIN_QUERY = 'partnerLogin';
 export const LEVELS = {
   REGISTERED: 'registered',
   CERTIFIED: 'certified',
@@ -238,15 +238,18 @@ export function updateIMSConfig() {
     if (!window.adobeIMS) return;
     clearInterval(imsReady);
     let target;
-    if (!window.adobeIMS.isSignedInUser()) {
+    const partnerLogin = !window.adobeIMS.isSignedInUser();
+    if (partnerLogin) {
       target = getMetadataContent('adobe-target-after-login');
     } else {
       target = getMetadataContent('adobe-target-after-logout') ?? getProgramHomePage(window.location.pathname);
     }
 
-    if (!target) return;
     const targetUrl = new URL(window.location);
-    targetUrl.pathname = target;
+    partnerLogin && targetUrl.searchParams.set(PARTNER_LOGIN_QUERY, true);
+    if (target) {
+      targetUrl.pathname = target;
+    }
     window.adobeIMS.adobeIdData.redirect_uri = targetUrl.toString();
   }, 500);
 }

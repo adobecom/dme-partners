@@ -1,5 +1,5 @@
 import { applyPagePersonalization } from './personalization.js';
-import { setLibs, redirectLoggedinPartner, updateIMSConfig, preloadResources, getRenewBanner, updateNavigation, updateFooter } from './utils.js';
+import { setLibs, redirectLoggedinPartner, updateIMSConfig, preloadResources, getRenewBanner, updateNavigation, updateFooter, PARTNER_LOGIN_QUERY } from './utils.js';
 
 // Add project-wide style path here.
 const STYLES = '/edsdme/styles/styles.css';
@@ -44,6 +44,15 @@ const CONFIG = {
 (function removeAccessToken() {
   if (window.location.hash.startsWith('#access_token')) {
     window.location.hash = '';
+  }
+}());
+
+(function removePartnerLoginQuery() {
+  const url = new URL(window.location.href);
+  const { searchParams } = url;
+  if (searchParams.has(PARTNER_LOGIN_QUERY)) {
+    searchParams.delete(PARTNER_LOGIN_QUERY);
+    window.history.replaceState({}, '', url.toString());
   }
 }());
 
