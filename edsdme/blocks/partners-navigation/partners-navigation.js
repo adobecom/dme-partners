@@ -32,8 +32,9 @@ import {
   darkIcons,
 } from './utilities/utilities.js';
 
-// Partners navigation
-import { getLibs } from '../../scripts/utils.js'; // Partners navigation
+// MWPW-157751
+import { getLibs } from '../../scripts/utils.js'; // MWPW-157751
+
 const miloLibs = getLibs();
 const {
   getConfig,
@@ -425,7 +426,7 @@ class Gnav {
         if (!this.useUniversalNav) {
           const [ProfileDropdown] = await Promise.all([
             loadBlock('../features/profile/dropdown.js'),
-            loadStyles('/edsdme/blocks/partners-navigation/features/profile/dropdown.css') // Partners navigation
+            loadStyles('/edsdme/blocks/partners-navigation/features/profile/dropdown.css'), // MWPW-157751
           ]);
           this.ProfileDropdown = ProfileDropdown;
         }
@@ -1034,8 +1035,8 @@ export default async function init(block) {
     const url = await getSource();
     let content = await fetchAndProcessPlainHtml({ url });
     if (!content) return null;
-    block.classList.add('global-navigation'); // Partners navigation
-    content = applyGnavPersonalization(content); // Partners navigation
+    block.classList.add('global-navigation'); // MWPW-157751
+    content = applyGnavPersonalization(content); // MWPW-157751
     const gnav = new Gnav({
       content,
       block,

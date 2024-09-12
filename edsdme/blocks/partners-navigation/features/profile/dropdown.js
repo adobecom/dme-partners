@@ -1,6 +1,6 @@
 import { toFragment, getFedsPlaceholderConfig, trigger, closeAllDropdowns, logErrorFor } from '../../utilities/utilities.js';
 
-// Partners navigation
+// MWPW-157751
 import { getLibs } from '../../../../scripts/utils.js';
 
 const miloLibs = getLibs();
@@ -93,7 +93,7 @@ class ProfileDropdown {
         this.placeholders.profileAvatar,
       ],
       [
-        this.placeholders.editProfile, // Partners navigation
+        this.placeholders.editProfile, // MWPW-157751
       ],
       { displayName: this.profileData.displayName, email: this.profileData.email },
     ] = await Promise.all([
@@ -101,7 +101,7 @@ class ProfileDropdown {
         ['profile-button', 'sign-out', 'view-account', 'manage-teams', 'manage-enterprise', 'profile-avatar'],
         getFedsPlaceholderConfig(),
       ),
-      // Partners navigation
+      // MWPW-157751
       replaceKeyArray(
         ['edit-profile'],
         getConfig(),
@@ -116,7 +116,7 @@ class ProfileDropdown {
   }
 
   decorateDropdown() {
-    // Partners navigation
+    // MWPW-157751
     // const { locale } = getConfig();
     // const lang = getLanguage(locale.ietf);
     // End
