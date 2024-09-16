@@ -19,7 +19,6 @@ const GNAV_PERSONALIZATION_PLACEHOLDERS = {
 };
 
 const LEVEL_CONDITION = 'partner-level';
-const REGION_CONDITION = 'region';
 const PERSONALIZATION_MARKER = 'partner-personalization';
 const PERSONALIZATION_HIDE = 'personalization-hide';
 const PROGRAM = getCurrentProgramType();
@@ -32,7 +31,6 @@ const PERSONALIZATION_CONDITIONS = {
   'partner-all-levels': isMember(),
   'partner-reseller': isReseller(PARTNER_LEVEL),
   'partner-level': (level) => PARTNER_LEVEL === level,
-  'region': (region) => getConfig()?.locale?.region === region,
 };
 
 function personalizePlaceholders(placeholders, context = document) {
@@ -53,8 +51,6 @@ function shouldHide(conditions) {
   return conditions.every((condition) => {
     const conditionLevel = condition.startsWith(LEVEL_CONDITION) ? condition.split('-').pop() : '';
     if (conditionLevel) return !PERSONALIZATION_CONDITIONS[LEVEL_CONDITION](conditionLevel);
-    const region = condition.startsWith(REGION_CONDITION) ? condition.split('-').pop() : '';
-    if (region) return !PERSONALIZATION_CONDITIONS[REGION_CONDITION](region);
     return !PERSONALIZATION_CONDITIONS[condition];
   });
 }
@@ -196,6 +192,7 @@ function personalizeMainNav(gnav) {
   const elements = getNodesByXPath(personalizationXPath, gnav);
   const processedElements = processGnavElements(elements);
   const separatorSelector = 'h5';
+
   processedElements.forEach(({ el, conditions }) => {
     if (!el || !conditions) return;
 
