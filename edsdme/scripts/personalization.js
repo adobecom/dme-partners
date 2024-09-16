@@ -167,11 +167,7 @@ function processGnavElements(elements) {
   return elements.map((el) => {
     const match = el.textContent.match(regex)[0];
     if (!match) return {};
-    el.childNodes.forEach(node => {
-      if (node.nodeType === Node.TEXT_NODE) {
-        node.nodeValue = node.nodeValue.replace(`(${match})`, '');
-      }
-    });
+    el.textContent = el.textContent.replace(`(${match})`, '');
     const conditions = match.split(',').map((condition) => condition.trim());
     if (!conditions.length) return {};
     return { el, conditions }
