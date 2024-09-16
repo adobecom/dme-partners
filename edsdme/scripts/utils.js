@@ -245,7 +245,7 @@ export function updateIMSConfig() {
       target = getMetadataContent('adobe-target-after-logout') ?? getProgramHomePage(window.location.pathname);
     }
 
-    const targetUrl = new URL(window.location);
+    const targetUrl = new URL(window.location.href);
     partnerLogin && targetUrl.searchParams.set(PARTNER_LOGIN_QUERY, true);
     if (target) {
       targetUrl.pathname = target;
@@ -308,11 +308,11 @@ function extractTableCollectionTags(el) {
   let tableCollectionTags = [];
   Array.from(el.children).forEach((row) => {
     const cols = Array.from(row.children);
-    const rowTitle = cols[0].innerText.trim().toLowerCase().replace(/ /g, '-');
+    const rowTitle = cols[0].textContent.trim().toLowerCase().replace(/ /g, '-');
     const colsContent = cols.slice(1);
     if (rowTitle === 'collection-tags') {
       const [collectionTagsEl] = colsContent;
-      const collectionTags = Array.from(collectionTagsEl.querySelectorAll('li'), (li) => `"${li.innerText.trim().toLowerCase()}"`);
+      const collectionTags = Array.from(collectionTagsEl.querySelectorAll('li'), (li) => `"${li.textContent.trim().toLowerCase()}"`);
       tableCollectionTags = [...tableCollectionTags, ...collectionTags];
     }
   });
@@ -415,7 +415,7 @@ export function updateFooter(locales) {
 
 export function getNodesByXPath(query, context = document) {
   const nodes = [];
-  const xpathResult = document.evaluate(query, context);
+  const xpathResult = document.evaluate(query, context, null, XPathResult.ANY_TYPE);
   let current = xpathResult?.iterateNext();
   while (current) {
     nodes.push(current);
