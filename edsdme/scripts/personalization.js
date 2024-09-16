@@ -6,6 +6,7 @@ import {
   getPartnerDataCookieObject,
   signedInNonMember,
   isReseller,
+  hasSalesCenterAccess,
   getNodesByXPath,
   isRenew,
 }
@@ -47,21 +48,21 @@ function personalizePlaceholders(placeholders, context = document) {
   });
 }
 
-function shouldHide(conditions) {
+function shouldHide(conditions, conditionsConfig = PERSONALIZATION_CONDITIONS) {
   return conditions.every((condition) => {
     const conditionLevel = condition.startsWith(LEVEL_CONDITION) ? condition.split('-').pop() : '';
     return conditionLevel
-      ? !PERSONALIZATION_CONDITIONS[LEVEL_CONDITION](conditionLevel) : !PERSONALIZATION_CONDITIONS[condition];
+      ? !conditionsConfig[LEVEL_CONDITION](conditionLevel) : !conditionsConfig[condition];
   });
 }
 
-function hideElement(element, conditions, remove = false) {
+function hideElement(element, conditions, conditionsConfig = PERSONALIZATION_CONDITIONS, remove = false) {
   if (!element || !conditions?.length) return;
-  if (shouldHide(conditions)) {
+  if (shouldHide(conditions, conditionsConfig)) {
     if (remove) {
       element.remove();
     } else {
-      element.classList.add(PERSONALIZATION_HIDE)
+      element.classList.add(PERSONALIZATION_HIDE);
     }
   }
 }
@@ -132,19 +133,25 @@ function processRenew(profile) {
   });
 }
 
-function processSalesAccess(el) {
-  const salesAccess = COOKIE_OBJECT['salesCenterAccess'];
-  const element = el.parentElement;
-  if (!salesAccess) {
-    element.classList.add(PERSONALIZATION_HIDE);
-    return;
-  }
+function rewriteSalesCenterUrl(el) {
+  if (!el.hasAttribute('href')) return;
+
   const { env } = getConfig();
   if (env.name !== 'prod') {
     const url = new URL(el.href);
     url.hostname = 'adobe--sfstage.sandbox.my.site.com';
     el.href = url;
   }
+}
+
+function processSalesAccess(el) {
+  const salesAccess = hasSalesCenterAccess();
+  const element = el.parentElement;
+  if (!salesAccess) {
+    element.classList.add(PERSONALIZATION_HIDE);
+    return;
+  }
+  rewriteSalesCenterUrl(el);
   const divider = document.createElement('hr');
   element.insertBefore(divider, el);
 }
@@ -187,6 +194,11 @@ function personalizeDropdownElements(profile) {
   });
 }
 
+const MAIN_NAV_PERSONALIZATION_CONDITIONS = {
+  ...PERSONALIZATION_CONDITIONS,
+  'partner-sales-access': hasSalesCenterAccess(),
+};
+
 function personalizeMainNav(gnav) {
   const personalizationXPath = `//*[contains(text(), "${PERSONALIZATION_MARKER}") and not(ancestor::*[contains(@class, "profile")])]`;
   const elements = getNodesByXPath(personalizationXPath, gnav);
@@ -197,23 +209,27 @@ function personalizeMainNav(gnav) {
     if (!el || !conditions) return;
 
     if (el.tagName.toLowerCase() === separatorSelector) {
-      const { nextElementSibling } = el;
-      const hide = shouldHide(conditions);
       // main nav dropdown menu group separators
+      const { nextElementSibling } = el;
+      const hide = shouldHide(conditions, MAIN_NAV_PERSONALIZATION_CONDITIONS);
       if (nextElementSibling?.tagName.toLowerCase() !== separatorSelector && hide) {
         nextElementSibling.remove();
       }
     }
 
+    if (conditions.includes('partner-sales-access')) {
+      rewriteSalesCenterUrl(el);
+    }
+
     const wrapperEl = el.closest('h2, li');
-    hideElement(wrapperEl || el, conditions, true);
+    hideElement(wrapperEl || el, conditions, MAIN_NAV_PERSONALIZATION_CONDITIONS, true);
   });
 
   // link group blocks
   const linkGroups = gnav.querySelectorAll('.link-group.partner-personalization');
   Array.from(linkGroups).forEach((el) => {
     const conditions = Object.values(el.classList);
-    hideElement(el, conditions, true);
+    hideElement(el, conditions, MAIN_NAV_PERSONALIZATION_CONDITIONS, true);
   });
 }
 
