@@ -50,8 +50,8 @@ function personalizePlaceholders(placeholders, context = document) {
 function shouldHide(conditions) {
   return conditions.every((condition) => {
     const conditionLevel = condition.startsWith(LEVEL_CONDITION) ? condition.split('-').pop() : '';
-    if (conditionLevel) return !PERSONALIZATION_CONDITIONS[LEVEL_CONDITION](conditionLevel);
-    return !PERSONALIZATION_CONDITIONS[condition];
+    return conditionLevel
+      ? !PERSONALIZATION_CONDITIONS[LEVEL_CONDITION](conditionLevel) : !PERSONALIZATION_CONDITIONS[condition];
   });
 }
 
