@@ -92,6 +92,9 @@ test.describe('MAPC sign in flow', () => {
       });
 
       await test.step('Logout', async () => {
+        const currentUrl = page.url();
+        const newUrl = `${currentUrl}?akamaiLocale=na&martech=off`;
+        await page.goto(newUrl);
         await signInPage.profileIconButton.click();
         await signInPage.logoutButton.click();
       });
