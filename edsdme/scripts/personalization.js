@@ -11,8 +11,6 @@ import {
 }
   from './utils.js';
 import { getConfig } from '../blocks/utils/utils.js';
-import { CONFIG } from '../blocks/partners-navigation/partners-navigation.js';
-import { getMainNavItems } from '../blocks/partners-navigation/utilities/utilities.js';
 
 const PAGE_PERSONALIZATION_PLACEHOLDERS = { firstName: '//*[contains(text(), "$firstName")]' };
 const GNAV_PERSONALIZATION_PLACEHOLDERS = {
@@ -197,64 +195,31 @@ function personalizeDropdownElements(profile) {
   });
 }
 
-function personalizeMainNavMenu(item) {
-  // section separators
+function personalizeMainNav(gnav) {
+  const personalizationXPath = `//*[contains(text(), "${PERSONALIZATION_MARKER}") and not(ancestor::*[contains(@class, "profile")])]`;
+  const elements = getNodesByXPath(personalizationXPath, gnav);
+  const processedElements = processGnavElements(elements);
   const separatorSelector = 'h5';
-  const separators = item.querySelectorAll(separatorSelector);
-  let elements = Array.from(separators).filter(item => {
-    return item.textContent.includes(PERSONALIZATION_MARKER);
-  });
-  const processedSeparators = processGnavElements(elements);
-  processedSeparators.forEach(({ el, conditions }) => {
+  processedElements.forEach(({ el, conditions }) => {
     if (!el || !conditions) return;
-    const nextElementSibling = el.nextElementSibling;
-    if (nextElementSibling?.tagName !== separatorSelector && shouldHide(conditions)) {
-      nextElementSibling.remove();
-    }
-    hideElement(el, conditions, true);
-  });
 
-  // links
-  const links = item.querySelectorAll('a');
-  elements = Array.from(links).filter(item => {
-    return item.textContent.includes(PERSONALIZATION_MARKER);
-  });
-  const processedLinks = processGnavElements(elements);
-  processedLinks.forEach(({ el, conditions }) => {
-    if (!el || !conditions) return;
-    const listItem = el.closest('li');
-    hideElement(listItem || el, conditions, true);
+    if (el.tagName.toLowerCase() === separatorSelector) {
+      const { nextElementSibling } = el;
+      const hide = shouldHide(conditions);
+      // main nav dropdown menu group separators
+      if (nextElementSibling?.tagName.toLowerCase() !== separatorSelector && hide) {
+        nextElementSibling.remove();
+      }
+    }
+
+    const wrapperEl = el.closest('h2, li');
+    hideElement(wrapperEl || el, conditions, true);
   });
 
   // link group blocks
-  const linkGroups = item.querySelectorAll('.link-group');
-  elements = Array.from(linkGroups).filter(item => {
-    return item.className.includes(PERSONALIZATION_MARKER);
-  });
-  elements.forEach((el) => {
+  const linkGroups = gnav.querySelectorAll('.link-group.partner-personalization');
+  Array.from(linkGroups).forEach((el) => {
     const conditions = Object.values(el.classList);
-    hideElement(el, conditions, true);
-  });
-}
-
-function personalizeMainNav(gnav) {
-  const items = getMainNavItems(gnav, CONFIG.features);
-
-  items.forEach((item) => {
-    const itemTopParent = item.closest('div');
-    const hasSyncDropdown = itemTopParent instanceof HTMLElement
-      && itemTopParent.childElementCount > 1;
-    if (hasSyncDropdown) {
-      personalizeMainNavMenu(itemTopParent);
-    }
-  });
-
-  const personalizedItems = Array.from(items).filter(item => {
-    return item.textContent.includes(PERSONALIZATION_MARKER);
-  });
-  const processedElements = processGnavElements(personalizedItems);
-  processedElements.forEach(({ el, conditions }) => {
-    if (!el || !conditions) return;
     hideElement(el, conditions, true);
   });
 }
@@ -273,4 +238,3 @@ export function applyGnavPersonalization(gnav) {
   personalizeProfile(importedGnav);
   return importedGnav;
 }
-

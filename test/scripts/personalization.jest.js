@@ -12,12 +12,6 @@ function importModules() {
   jest.spyOn(utils, 'getNodesByXPath').mockImplementation(() => [placeholderElement]);
   const { applyPagePersonalization } = require('../../edsdme/scripts/personalization.js');
   jest.mock('../../edsdme/blocks/utils/utils.js', () => ({ getConfig: jest.fn(() => ({ env: { name: 'prod' } })) }));
-  jest.mock('../../edsdme/blocks/partners-navigation/partners-navigation.js', () => ({
-    CONFIG: {},
-  }));
-  jest.mock('../../edsdme/blocks/partners-navigation/utilities/utilities.js', () => ({
-    getMainNavItems: jest.fn(),
-  }));
 
   return applyPagePersonalization;
 }

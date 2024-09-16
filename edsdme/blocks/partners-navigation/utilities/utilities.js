@@ -393,8 +393,3 @@ export const [setUserProfile, getUserProfile] = (() => {
     () => profilePromise,
   ];
 })();
-
-export const getMainNavItems = (content, features) => {
-  return [...content.querySelectorAll('h2, p:only-child > strong > a, p:only-child > em > a')]
-    .filter((item) => features.every((feature) => !item.closest(`.${feature}`)));
-}

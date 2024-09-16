@@ -30,7 +30,6 @@ import {
   addMepHighlightAndTargetId,
   isDarkMode,
   darkIcons,
-  getMainNavItems,
 } from './utilities/utilities.js';
 
 // Partners navigation
@@ -832,7 +831,8 @@ class Gnav {
     `;
 
     // Get all main menu items, but exclude any that are nested inside other features
-    const items = getMainNavItems(this.content, CONFIG.features);
+    const items = [...this.content.querySelectorAll('h2, p:only-child > strong > a, p:only-child > em > a')]
+      .filter((item) => CONFIG.features.every((feature) => !item.closest(`.${feature}`)));
 
     // Save number of items to decide whether a hamburger menu is required
     this.mainNavItemCount = items.length;
