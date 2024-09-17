@@ -9,7 +9,7 @@ let signInPage;
 const { features } = profiles;
 const anniversaryDateCases = features.slice(1, 3);
 
-test.describe('MAPC sign in flow', () => {
+test.describe('Validate profile dropdown', () => {
   test.beforeEach(async ({ page, browserName, baseURL, context }) => {
     profileDropdownPage = new ProfileDropdownPage(page);
     signInPage = new SignInPage(page);
