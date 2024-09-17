@@ -13,7 +13,7 @@
 /**
  * The decision engine for where to get Milo's libs from.
  */
-
+export const PARTNER_LOGIN_QUERY = 'partnerLogin';
 export const LEVELS = {
   REGISTERED: 'registered',
   CERTIFIED: 'certified',
@@ -243,15 +243,18 @@ export function updateIMSConfig() {
     if (!window.adobeIMS) return;
     clearInterval(imsReady);
     let target;
-    if (!window.adobeIMS.isSignedInUser()) {
+    const partnerLogin = !window.adobeIMS.isSignedInUser();
+    if (partnerLogin) {
       target = getMetadataContent('adobe-target-after-login');
     } else {
       target = getMetadataContent('adobe-target-after-logout') ?? getProgramHomePage(window.location.pathname);
     }
 
-    if (!target) return;
-    const targetUrl = new URL(window.location);
-    targetUrl.pathname = target;
+    const targetUrl = new URL(window.location.href);
+    partnerLogin && targetUrl.searchParams.set(PARTNER_LOGIN_QUERY, true);
+    if (target) {
+      targetUrl.pathname = target;
+    }
     window.adobeIMS.adobeIdData.redirect_uri = targetUrl.toString();
   }, 500);
 }
@@ -310,11 +313,11 @@ function extractTableCollectionTags(el) {
   let tableCollectionTags = [];
   Array.from(el.children).forEach((row) => {
     const cols = Array.from(row.children);
-    const rowTitle = cols[0].innerText.trim().toLowerCase().replace(/ /g, '-');
+    const rowTitle = cols[0].textContent.trim().toLowerCase().replace(/ /g, '-');
     const colsContent = cols.slice(1);
     if (rowTitle === 'collection-tags') {
       const [collectionTagsEl] = colsContent;
-      const collectionTags = Array.from(collectionTagsEl.querySelectorAll('li'), (li) => `"${li.innerText.trim().toLowerCase()}"`);
+      const collectionTags = Array.from(collectionTagsEl.querySelectorAll('li'), (li) => `"${li.textContent.trim().toLowerCase()}"`);
       tableCollectionTags = [...tableCollectionTags, ...collectionTags];
     }
   });
@@ -417,7 +420,7 @@ export function updateFooter(locales) {
 
 export function getNodesByXPath(query, context = document) {
   const nodes = [];
-  const xpathResult = document.evaluate(query, context, null, XPathResult.ANY_TYPE, null);
+  const xpathResult = document.evaluate(query, context, null, XPathResult.ANY_TYPE);
   let current = xpathResult?.iterateNext();
   while (current) {
     nodes.push(current);

@@ -246,11 +246,11 @@ function rewriteSalesForceLinks(gnav) {
   }
 }
 
-export function applyGnavPersonalization(gnav, importGnav = true) {
+export function applyGnavPersonalization(gnav) {
   if (!isMember()) return gnav;
-  const globalNavigation = importGnav ? document.importNode(gnav, true) : gnav;
-  rewriteSalesForceLinks(globalNavigation);
-  personalizeMainNav(globalNavigation);
-  personalizeProfile(globalNavigation);
-  return globalNavigation;
+  const importedGnav = document.importNode(gnav, true);
+  rewriteSalesForceLinks(importedGnav);
+  personalizeMainNav(importedGnav);
+  personalizeProfile(importedGnav);
+  return importedGnav;
 }

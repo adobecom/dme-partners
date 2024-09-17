@@ -42,6 +42,9 @@
 .feds-profile-header .feds-profile-img {
   max-height: 64px;
   max-width: 64px;
+
+  /* MWPW-157753 - profile image should not be clickable */
+  pointer-events: none;
 }
 
 .feds-profile-details {
@@ -72,7 +75,9 @@
   margin: 0;
   font-size: 14px;
   text-decoration: underline;
-  color: var(--feds-color-profile);
+
+  /* MWPW-157753 - to meet requirements */
+  color: var(--link-color);
 }
 
 .feds-local-menu {
