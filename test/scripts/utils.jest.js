@@ -3,7 +3,7 @@
  */
 import path from 'path';
 import fs from 'fs';
-import { updateFooter, updateNavigation } from '../../edsdme/scripts/utils.js';
+import { updateFooter, updateNavigation, hasSalesCenterAccess } from '../../edsdme/scripts/utils.js';
 describe('Test utils.js', () => {
   beforeEach(() => {
     window = Object.create(window);
@@ -130,5 +130,16 @@ describe('Test utils.js', () => {
       expect(gnavPathModified).toEqual('/de/edsdme/partners-shared/loggedin-gnav');
     });
   });
+  describe('hasSalesCenterAccess()', () => {
+    it('Should have access if sales center is present in partner data cookie', async () => {
+      const cookieObject = { CPP: { salesCenterAccess: true } };
+      document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      expect(hasSalesCenterAccess()).toBe(true);
+    });
+    it('Should not have access if sales center is not present in partner data cookie', async () => {
+      const cookieObject = { CPP: { salesCenterAccess: false } };
+      document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      expect(hasSalesCenterAccess()).toBe(false);
+    });
+  });
 });
-

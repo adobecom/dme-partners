@@ -139,8 +139,8 @@ export function isReseller(level) {
 }
 
 export function hasSalesCenterAccess() {
-  const partnerDataCookieObject = getPartnerDataCookieObject(getCurrentProgramType());
-  return !!partnerDataCookieObject['salesCenterAccess'];
+  const { salesCenterAccess } = getPartnerDataCookieObject(getCurrentProgramType());
+  return !!salesCenterAccess;
 }
 
 export function getMetadataContent(name) {
@@ -417,7 +417,7 @@ export function updateFooter(locales) {
 
 export function getNodesByXPath(query, context = document) {
   const nodes = [];
-  const xpathResult = document.evaluate(query, context);
+  const xpathResult = document.evaluate(query, context, null, XPathResult.ANY_TYPE, null);
   let current = xpathResult?.iterateNext();
   while (current) {
     nodes.push(current);

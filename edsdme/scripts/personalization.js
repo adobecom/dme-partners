@@ -168,12 +168,13 @@ function processAccountManagement(el) {
 function processGnavElements(elements) {
   const regex = /(?<=\().*?(?=\))/g;
   return elements.map((el) => {
-    const match = el.textContent.match(regex)[0];
-    if (!match) return {};
+    const matches = el.textContent.match(regex);
+    if (!matches?.length) return {};
+    const match = matches[0];
     el.textContent = el.textContent.replace(`(${match})`, '');
     const conditions = match.split(',').map((condition) => condition.trim());
     if (!conditions.length) return {};
-    return { el, conditions }
+    return { el, conditions };
   });
 }
 
@@ -240,10 +241,10 @@ function personalizeProfile(gnav) {
   processRenew(profile);
 }
 
-export function applyGnavPersonalization(gnav) {
+export function applyGnavPersonalization(gnav, importGnav = true) {
   if (!isMember()) return gnav;
-  const importedGnav = document.importNode(gnav, true);
-  personalizeMainNav(importedGnav);
-  personalizeProfile(importedGnav);
-  return importedGnav;
+  const globalNavigation = importGnav ? document.importNode(gnav, true) : gnav;
+  personalizeMainNav(globalNavigation);
+  personalizeProfile(globalNavigation);
+  return globalNavigation;
 }
