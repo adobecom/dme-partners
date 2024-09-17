@@ -74,7 +74,10 @@ test.describe('MAPC sign in flow', () => {
   });
 
   nonMemberRedirects.forEach((feature) => {
-    test(`${feature.name},${feature.tags}`, async ({ page }) => {
+    test(`${feature.name},${feature.tags}`, async ({ page, browserName }) => {
+      if (browserName === 'firefox') {
+       test.slow();
+      }
       await test.step('Go to the home page', async () => {
         await page.goto(`${feature.path}`);
         await page.waitForLoadState('domcontentloaded');
@@ -93,7 +96,7 @@ test.describe('MAPC sign in flow', () => {
 
       await test.step('Logout', async () => {
         const currentUrl = page.url();
-        const newUrl = `${currentUrl}?akamaiLocale=na&martech=off`;
+        const newUrl = `${currentUrl.replace('#','')}?akamaiLocale=na&martech=off`;
         await page.goto(newUrl);
         await signInPage.profileIconButton.click();
         await signInPage.logoutButton.click();
@@ -109,7 +112,10 @@ test.describe('MAPC sign in flow', () => {
   });
 
   nonMemberLoggedInToAdobe.forEach((feature) => {
-    test(`${feature.name},${feature.tags}`, async ({ page, context }) => {
+    test(`${feature.name},${feature.tags}`, async ({ page, context, browserName }) => {
+      if (browserName === 'firefox') {
+       test.slow();
+      }
       await test.step('Go to the home page', async () => {
         const url = `${feature.baseURL}`;
         await page.evaluate((navigationUrl) => {
@@ -141,7 +147,10 @@ test.describe('MAPC sign in flow', () => {
     });
   });
 
-  test(`${features[7].name},${features[7].tags}`, async ({ page, context }) => {
+  test(`${features[7].name},${features[7].tags}`, async ({ page, context, browserName }) => {
+    if (browserName === 'firefox') {
+      test.slow();
+    }
     const { data, path, baseURL } = features[7];
     await test.step('Go to the home page', async () => {
       const url = `${baseURL}`;
