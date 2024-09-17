@@ -34,6 +34,11 @@ const PERSONALIZATION_CONDITIONS = {
   'partner-level': (level) => PARTNER_LEVEL === level,
 };
 
+const SALES_FORCE_DOMAINS = {
+  stage: 'adobe--sfstage.sandbox.my.site.com',
+  prod: 'adobe.force.com',
+};
+
 function personalizePlaceholders(placeholders, context = document) {
   Object.entries(placeholders).forEach(([key, value]) => {
     const placeholderValue = COOKIE_OBJECT[key];
@@ -133,17 +138,6 @@ function processRenew(profile) {
   });
 }
 
-function rewriteSalesCenterUrl(el) {
-  if (!el.hasAttribute('href')) return;
-
-  const { env } = getConfig();
-  if (env.name !== 'prod') {
-    const url = new URL(el.href);
-    url.hostname = 'adobe--sfstage.sandbox.my.site.com';
-    el.href = url;
-  }
-}
-
 function processSalesAccess(el) {
   const salesAccess = hasSalesCenterAccess();
   const element = el.parentElement;
@@ -151,7 +145,6 @@ function processSalesAccess(el) {
     element.classList.add(PERSONALIZATION_HIDE);
     return;
   }
-  rewriteSalesCenterUrl(el);
   const divider = document.createElement('hr');
   element.insertBefore(divider, el);
 }
@@ -188,7 +181,7 @@ function personalizeDropdownElements(profile) {
   const personalizationXPath = `//*[contains(text(), "${PERSONALIZATION_MARKER}")]`;
   const elements = getNodesByXPath(personalizationXPath, profile);
   const processedElements = processGnavElements(elements);
-  processedElements.forEach(({el, conditions}) => {
+  processedElements.forEach(({ el, conditions }) => {
     if (!el || !conditions) return;
     const action = conditions.pop();
     PROFILE_PERSONALIZATION_ACTIONS[action]?.(el);
@@ -218,10 +211,6 @@ function personalizeMainNav(gnav) {
       }
     }
 
-    if (conditions.includes('partner-sales-access')) {
-      rewriteSalesCenterUrl(el);
-    }
-
     const wrapperEl = el.closest('h2, li');
     hideElement(wrapperEl || el, conditions, MAIN_NAV_PERSONALIZATION_CONDITIONS, true);
   });
@@ -241,9 +230,26 @@ function personalizeProfile(gnav) {
   processRenew(profile);
 }
 
+function rewriteSalesForceLinks(gnav) {
+  const { env } = getConfig();
+
+  if (env.name !== 'prod') {
+    const links = gnav.querySelectorAll('a[href]');
+    links.forEach((link) => {
+      const href = link.getAttribute('href');
+
+      if (href.includes(SALES_FORCE_DOMAINS.prod)) {
+        const newHref = href.replace(SALES_FORCE_DOMAINS.prod, SALES_FORCE_DOMAINS.stage);
+        link.setAttribute('href', newHref);
+      }
+    });
+  }
+}
+
 export function applyGnavPersonalization(gnav, importGnav = true) {
   if (!isMember()) return gnav;
   const globalNavigation = importGnav ? document.importNode(gnav, true) : gnav;
+  rewriteSalesForceLinks(globalNavigation);
   personalizeMainNav(globalNavigation);
   personalizeProfile(globalNavigation);
   return globalNavigation;
