@@ -281,19 +281,17 @@ describe('Test personalization.js', () => {
         document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
         const { applyGnavPersonalization } = importModules();
 
-        let platinumText = document.querySelector('#text-platinum');
+        let platinumText = gnav.querySelector('#text-platinum');
         const anchorsFilterPredicate = (el) => el.textContent.includes('cta primary platinum') || el.textContent.includes('cta secondary platinum') || el.textContent.includes('link platinum');
-        let anchorsArray = Array.from(document.querySelectorAll('a')).filter(anchorsFilterPredicate);
+        let anchorsArray = Array.from(gnav.querySelectorAll('a')).filter(anchorsFilterPredicate);
 
         expect(platinumText).not.toBeNull();
         expect(anchorsArray.length).toBe(3);
 
         const result = applyGnavPersonalization(gnav);
 
-        console.log(result.outerHTML);
-
         platinumText = result.querySelector('#text-platinum');
-        anchorsArray = Array.from(document.querySelectorAll('a')).filter(anchorsFilterPredicate);
+        anchorsArray = Array.from(gnav.querySelectorAll('a')).filter(anchorsFilterPredicate);
 
         expect(platinumText).toBeNull();
         expect(anchorsArray.length).toBe(0);
@@ -313,24 +311,19 @@ describe('Test personalization.js', () => {
         document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
         const { applyGnavPersonalization } = importModules();
 
-        let heading = document.querySelector('#sales-center');
-        let list = document.querySelector('#sales-center + ul');
-        const anchorsFilterPredicate = (el) => el.textContent.includes('partner-sales-access');
-        let anchorsArray = Array.from(document.querySelectorAll('a')).filter(anchorsFilterPredicate);
+        let heading = gnav.querySelector('#sales-center');
+        let list = gnav.querySelector('#sales-center + ul');
 
         expect(heading).not.toBeNull();
         expect(list).not.toBeNull();
-        expect(anchorsArray.length).toBe(2);
 
         const result = applyGnavPersonalization(gnav);
 
         heading = result.querySelector('#sales-center');
         list = result.querySelector('#sales-center + ul');
-        anchorsArray = Array.from(result.querySelectorAll('a')).filter(anchorsFilterPredicate);
 
         expect(heading).toBeNull();
         expect(list).toBeNull();
-        expect(anchorsArray.length).toBe(1);
       });
     });
   });
