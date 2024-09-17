@@ -12,13 +12,13 @@ const config = {
   outputDir: './test-results',
   globalSetup: './nala/utils/global.setup.js',
   /* Maximum time one test can run for. */
-  timeout: 90 * 1000,
+  timeout: 30 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 10000,
+    timeout: 5000,
   },
   testMatch: '**/*.test.js',
   /* Run tests in files in parallel */
