@@ -122,7 +122,7 @@ test.describe('MAPC sign in flow', () => {
           window.location.href = navigationUrl;
         }, url);
 
-        await signInPage.signInButtonStageAdobe.click();
+        await signInPage.signInButton.click();
         await page.waitForLoadState('domcontentloaded');
       });
 
@@ -158,7 +158,7 @@ test.describe('MAPC sign in flow', () => {
         window.location.href = navigationUrl;
       }, url);
 
-      await signInPage.signInButtonStageAdobe.click();
+      await signInPage.signInButton.click();
       await page.waitForLoadState('domcontentloaded');
     });
 
