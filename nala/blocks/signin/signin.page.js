@@ -2,7 +2,7 @@ export default class SignInPage {
   constructor(page) {
     this.page = page;
     this.signInButton = page.locator('button[daa-ll="Sign In"].feds-signIn');
-    this.signInButtonStageAdobe = page.locator('.profile-comp.secondary-button');
+    this.signInButtonStageAdobe = page.getByRole('button', { name: 'Sign In' });
     this.profileIconButton = page.locator('.feds-profile-button');
     this.profileIconButtonAdobe = page.locator('.profile-container .profile-collapsed');
     this.userNameDisplay = page.locator('.user-name');
