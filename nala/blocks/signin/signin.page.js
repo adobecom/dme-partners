@@ -4,7 +4,7 @@ export default class SignInPage {
     this.signInButton = page.locator('button[daa-ll="Sign In"].feds-signIn');
     this.signInButtonStageAdobe = page.getByRole('button', { name: 'Sign In' });
     this.profileIconButton = page.locator('.feds-profile-button');
-    this.profileIconButtonAdobe = page.locator('.profile-container .profile-collapsed');
+    this.profileIconButtonAdobe = page.getByLabel('Profile button');
     this.userNameDisplay = page.locator('.user-name');
     this.logoutButton = page.locator('[daa-ll="Sign Out"]');
     this.joinNowButton = page.locator('#feds-nav-wrapper .feds-cta--primary:has-text("Join Now")');
@@ -36,6 +36,9 @@ export default class SignInPage {
     await this.signIn(page, partnerLevel);
     await page.waitForLoadState('domcontentloaded');
     if (path.includes('stage.adobe.com/partners.html')) {
+      await page.evaluate(() => {
+        console.log('anyText');
+      });
       await this.profileIconButtonAdobe.waitFor({ state: 'visible', timeout: 30000 });
       const pages = await page.context().pages();
     } else {
