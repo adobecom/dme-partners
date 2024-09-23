@@ -26,7 +26,8 @@ export default class SignInPage {
   async verifyRedirectAfterLogin({ page, expect, path, partnerLevel, expectedLandingPageURL }) {
     await page.goto(path);
     await page.waitForLoadState('domcontentloaded');
-    console.log('anyText1', page.url());
+    console.log('anyText1', page.url(), page.context());
+    await page.locator('#feds-nav-wrapper').waitFor({ state: 'visible', timeout: 30000 });
     await this.signInButton.waitFor({ state: 'visible', timeout: 30000 });
     await this.signInButton.click();
     await this.signIn(page, partnerLevel);
