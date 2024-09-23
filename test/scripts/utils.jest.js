@@ -3,7 +3,7 @@
  */
 import path from 'path';
 import fs from 'fs';
-import { 
+import {
   formatDate,
   getProgramType,
   updateFooter,
@@ -21,22 +21,21 @@ import {
   getMetadataContent,
   redirectLoggedinPartner,
   isRenew,
+  hasSalesCenterAccess,
   getRenewBanner,
   updateIMSConfig,
   getLocale,
   preloadResources,
   getCaasUrl,
   getNodesByXPath,
-  setLibs
+  setLibs,
 } from '../../edsdme/scripts/utils.js';
-
-
 describe('Test utils.js', () => {
   beforeEach(() => {
     window = Object.create(window);
     Object.defineProperty(window, 'location', {
       value: {
-        pathname:'/channelpartners',
+        pathname: '/channelpartners',
         assign: (path) => window.location.pathname = path,
         origin: 'https://partners.stage.adobe.com',
         href: 'https://partners.stage.adobe.com/channelpartners'
@@ -45,7 +44,7 @@ describe('Test utils.js', () => {
     });
   });
   afterEach(() => {
-    document.getElementsByTagName('html')[0].innerHTML = ''; 
+    document.getElementsByTagName('html')[0].innerHTML = '';
   });
   it('Milo libs', () => {
     window.location.hostname = 'partners.stage.adobe.com';
@@ -70,9 +69,9 @@ describe('Test utils.js', () => {
         '': { ietf: 'en-US', tk: 'hah7vzn.css' },
         de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
       };
-      const footerPath =  document.querySelector('meta[name="footer-source"]')?.content
+      const footerPath = document.querySelector('meta[name="footer-source"]')?.content
       updateFooter(locales);
-      const footerPathModified =  document.querySelector('meta[name="footer-source"]')?.content
+      const footerPathModified = document.querySelector('meta[name="footer-source"]')?.content
       expect(footerPath).toEqual(footerPathModified);
     });
     it('Protected footer is shown for members', async () => {
@@ -124,9 +123,9 @@ describe('Test utils.js', () => {
         '': { ietf: 'en-US', tk: 'hah7vzn.css' },
         de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
       };
-      const gnavPath =  document.querySelector('meta[name="gnav-source"]')?.content
+      const gnavPath = document.querySelector('meta[name="gnav-source"]')?.content
       updateNavigation(locales);
-      const gnavPathModified =  document.querySelector('meta[name="gnav-source"]')?.content
+      const gnavPathModified = document.querySelector('meta[name="gnav-source"]')?.content
       expect(gnavPath).toEqual(gnavPathModified);
     });
     it('Protected navigation is shown for members', async () => {
@@ -204,7 +203,7 @@ describe('Test utils.js', () => {
     document.cookie = 'partner_data={cpp: {test1:test test2:test}}';
     expect(getPartnerDataCookieValue('cpp', 'test_cookie')).toEqual('');
   });
-  it('Should return partner data cookie object',  () => {
+  it('Should return partner data cookie object', () => {
     const cookieObject = {
       CPP: {
         status: 'MEMBER',
@@ -248,15 +247,15 @@ describe('Test utils.js', () => {
   });
   it('Get meta tag content value', () => {
     const metaTag = document.createElement('meta');
-    metaTag.name='test';
-    metaTag.content='test-content';
+    metaTag.name = 'test';
+    metaTag.content = 'test-content';
     document.head.appendChild(metaTag);
     expect(getMetadataContent('test')).toEqual('test-content');
   });
   it('Get meta tag node', () => {
     const metaTag = document.createElement('meta');
-    metaTag.name='test';
-    metaTag.content='test-content';
+    metaTag.name = 'test';
+    metaTag.content = 'test-content';
     document.head.appendChild(metaTag);
     expect(getMetadata('test')).toStrictEqual(metaTag);
   });
@@ -287,8 +286,8 @@ describe('Test utils.js', () => {
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObjectNotMember)}`;
     const metaTag = document.createElement('meta');
-    metaTag.name='adobe-target-after-login';
-    metaTag.content='/channelpartners/home';
+    metaTag.name = 'adobe-target-after-login';
+    metaTag.content = '/channelpartners/home';
     document.head.appendChild(metaTag);
     redirectLoggedinPartner();
     expect(window.location.pathname).toEqual(metaTag.content);
@@ -325,7 +324,7 @@ describe('Test utils.js', () => {
     expect(accountStatus).toEqual('suspended');
     expect(daysNum).toBeLessThanOrEqual(60);;
   });
-  it('Don\'t show renew banner if partner has valid account', async() => {
+  it('Don\'t show renew banner if partner has valid account', async () => {
     const expiredDate = new Date();
     expiredDate.setDate(expiredDate.getDate() + 40);
     const cookieObject = {
@@ -339,7 +338,7 @@ describe('Test utils.js', () => {
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
     expect(await getRenewBanner()).toBeFalsy();
   });
-  it('Show renew banner', async() => {
+  it('Show renew banner', async () => {
     const expiredDate = new Date();
     expiredDate.setDate(expiredDate.getDate() + 30);
     const cookieObject = {
@@ -351,7 +350,7 @@ describe('Test utils.js', () => {
       }
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-    const getConfig = () => ({locale:''});
+    const getConfig = () => ({ locale: '' });
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
@@ -364,7 +363,7 @@ describe('Test utils.js', () => {
     const banner = document.querySelector('.renew-banner');
     expect(banner).toBeTruthy();
   });
-  it('Don\'t show renew banner', async() => {
+  it('Don\'t show renew banner', async () => {
     const expiredDate = new Date();
     expiredDate.setDate(expiredDate.getDate() + 80);
     const cookieObject = {
@@ -376,7 +375,7 @@ describe('Test utils.js', () => {
       }
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-    const getConfig = () => ({locale:''});
+    const getConfig = () => ({ locale: '' });
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
@@ -389,7 +388,7 @@ describe('Test utils.js', () => {
     const banner = document.querySelector('.renew-banner');
     expect(banner).toBeFalsy();
   });
-  it('Renew banner fetch error', async() => {
+  it('Renew banner fetch error', async () => {
     const expiredDate = new Date();
     expiredDate.setDate(expiredDate.getDate() + 30);
     const cookieObject = {
@@ -401,7 +400,7 @@ describe('Test utils.js', () => {
       }
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-    const getConfig = () => ({locale:''});
+    const getConfig = () => ({ locale: '' });
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: false,
@@ -417,8 +416,8 @@ describe('Test utils.js', () => {
       adobeIdData: {},
     }
     const metaTag = document.createElement('meta');
-    metaTag.name='adobe-target-after-login';
-    metaTag.content='/channelpartners/home';
+    metaTag.name = 'adobe-target-after-login';
+    metaTag.content = '/channelpartners/home';
     document.head.appendChild(metaTag);
     updateIMSConfig();
     jest.advanceTimersByTime(1000);
@@ -433,8 +432,8 @@ describe('Test utils.js', () => {
       adobeIdData: {},
     }
     const metaTag = document.createElement('meta');
-    metaTag.name='adobe-target-after-logout';
-    metaTag.content='/channelpartners/home';
+    metaTag.name = 'adobe-target-after-logout';
+    metaTag.content = '/channelpartners/home';
     document.head.appendChild(metaTag);
     updateIMSConfig();
     jest.advanceTimersByTime(1000);
@@ -474,7 +473,7 @@ describe('Test utils.js', () => {
     const caasUrl = getCaasUrl(block);
     expect(caasUrl).toEqual('https://www.adobe.com/chimera-api/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true&complexQuery=%28%22caas%3Aadobe-partners%2Fcollections%2Fannouncements%22%2BAND%2B%22caas%3Aadobe-partners%2Fcpp%22%2BAND%2B%22caas%3Aadobe-partners%2Fqa-content%22%29%2BAND%2B%28%22caas%3Aadobe-partners%2Fcpp%2Fregion%2Feurope-west%22%29%2BAND%2B%28%22caas%3Aadobe-partners%2Fcpp%2Fpartner-level%2Fplatinum%22%2BOR%2B%22caas%3Aadobe-partners%2Fcpp%2Fpartner-level%2Fpublic%22%29&language=en&country=US');
   });
-  it('Preload resources', async() => {
+  it('Preload resources', async () => {
     const locales = {
       '': { ietf: 'en-US', tk: 'hah7vzn.css' },
       de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
@@ -500,5 +499,14 @@ describe('Test utils.js', () => {
     expect(elements.length).toEqual(1);
     expect(elements[0].id).toEqual('test-id');
   });
+  it('Should have access if sales center is present in partner data cookie', async () => {
+    const cookieObject = { CPP: { salesCenterAccess: true } };
+    document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+    expect(hasSalesCenterAccess()).toBe(true);
+  });
+  it('Should not have access if sales center is not present in partner data cookie', async () => {
+    const cookieObject = { CPP: { salesCenterAccess: false } };
+    document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+    expect(hasSalesCenterAccess()).toBe(false);
+  });
 });
-

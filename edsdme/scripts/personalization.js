@@ -6,6 +6,7 @@ import {
   getPartnerDataCookieObject,
   signedInNonMember,
   isReseller,
+  hasSalesCenterAccess,
   getNodesByXPath,
   isRenew,
 }
@@ -33,6 +34,11 @@ const PERSONALIZATION_CONDITIONS = {
   'partner-level': (level) => PARTNER_LEVEL === level,
 };
 
+const SALES_FORCE_DOMAINS = {
+  stage: 'adobe--sfstage.sandbox.my.site.com',
+  prod: 'adobe.force.com',
+};
+
 function personalizePlaceholders(placeholders, context = document) {
   Object.entries(placeholders).forEach(([key, value]) => {
     const placeholderValue = COOKIE_OBJECT[key];
@@ -47,17 +53,23 @@ function personalizePlaceholders(placeholders, context = document) {
   });
 }
 
-function shouldHide(conditions) {
+function shouldHide(conditions, conditionsConfig = PERSONALIZATION_CONDITIONS) {
   return conditions.every((condition) => {
     const conditionLevel = condition.startsWith(LEVEL_CONDITION) ? condition.split('-').pop() : '';
     return conditionLevel
-      ? !PERSONALIZATION_CONDITIONS[LEVEL_CONDITION](conditionLevel) : !PERSONALIZATION_CONDITIONS[condition];
+      ? !conditionsConfig[LEVEL_CONDITION](conditionLevel) : !conditionsConfig[condition];
   });
 }
 
-function hideElement(element, conditions) {
+function hideElement(element, conditions, conditionsConfig = PERSONALIZATION_CONDITIONS, remove = false) {
   if (!element || !conditions?.length) return;
-  shouldHide(conditions) && element.classList.add(PERSONALIZATION_HIDE);
+  if (shouldHide(conditions, conditionsConfig)) {
+    if (remove) {
+      element.remove();
+    } else {
+      element.classList.add(PERSONALIZATION_HIDE);
+    }
+  }
 }
 
 function hideSections(page) {
@@ -127,17 +139,11 @@ function processRenew(profile) {
 }
 
 function processSalesAccess(el) {
-  const salesAccess = COOKIE_OBJECT['salesCenterAccess'];
+  const salesAccess = hasSalesCenterAccess();
   const element = el.parentElement;
   if (!salesAccess) {
     element.classList.add(PERSONALIZATION_HIDE);
     return;
-  }
-  const { env } = getConfig();
-  if (env.name !== 'prod') {
-    const url = new URL(el.href);
-    url.hostname = 'adobe--sfstage.sandbox.my.site.com';
-    el.href = url;
   }
   const divider = document.createElement('hr');
   element.insertBefore(divider, el);
@@ -155,12 +161,13 @@ function processAccountManagement(el) {
 function processGnavElements(elements) {
   const regex = /(?<=\().*?(?=\))/g;
   return elements.map((el) => {
-    const match = el.textContent.match(regex)[0];
-    if (!match) return {};
+    const matches = el.textContent.match(regex);
+    if (!matches?.length) return {};
+    const match = matches[0];
     el.textContent = el.textContent.replace(`(${match})`, '');
     const conditions = match.split(',').map((condition) => condition.trim());
     if (!conditions.length) return {};
-    return { el, conditions }
+    return { el, conditions };
   });
 }
 
@@ -174,10 +181,45 @@ function personalizeDropdownElements(profile) {
   const personalizationXPath = `//*[contains(text(), "${PERSONALIZATION_MARKER}")]`;
   const elements = getNodesByXPath(personalizationXPath, profile);
   const processedElements = processGnavElements(elements);
-  processedElements.forEach(({el, conditions}) => {
+  processedElements.forEach(({ el, conditions }) => {
     if (!el || !conditions) return;
     const action = conditions.pop();
     PROFILE_PERSONALIZATION_ACTIONS[action]?.(el);
+  });
+}
+
+const MAIN_NAV_PERSONALIZATION_CONDITIONS = {
+  ...PERSONALIZATION_CONDITIONS,
+  'partner-sales-access': hasSalesCenterAccess(),
+};
+
+function personalizeMainNav(gnav) {
+  const personalizationXPath = `//*[contains(text(), "${PERSONALIZATION_MARKER}") and not(ancestor::*[contains(@class, "profile")])]`;
+  const elements = getNodesByXPath(personalizationXPath, gnav);
+  const processedElements = processGnavElements(elements);
+  const separatorSelector = 'h5';
+
+  processedElements.forEach(({ el, conditions }) => {
+    if (!el || !conditions) return;
+
+    if (el.tagName.toLowerCase() === separatorSelector) {
+      // main nav dropdown menu group separators
+      const { nextElementSibling } = el;
+      const hide = shouldHide(conditions, MAIN_NAV_PERSONALIZATION_CONDITIONS);
+      if (nextElementSibling?.tagName.toLowerCase() !== separatorSelector && hide) {
+        nextElementSibling.remove();
+      }
+    }
+
+    const wrapperEl = el.closest('h2, li');
+    hideElement(wrapperEl || el, conditions, MAIN_NAV_PERSONALIZATION_CONDITIONS, true);
+  });
+
+  // link group blocks
+  const linkGroups = gnav.querySelectorAll('.link-group.partner-personalization');
+  Array.from(linkGroups).forEach((el) => {
+    const conditions = Object.values(el.classList);
+    hideElement(el, conditions, MAIN_NAV_PERSONALIZATION_CONDITIONS, true);
   });
 }
 
@@ -188,10 +230,27 @@ function personalizeProfile(gnav) {
   processRenew(profile);
 }
 
+function rewriteSalesForceLinks(gnav) {
+  const { env } = getConfig();
+
+  if (env.name !== 'prod') {
+    const links = gnav.querySelectorAll('a[href]');
+    links.forEach((link) => {
+      const href = link.getAttribute('href');
+
+      if (href.includes(SALES_FORCE_DOMAINS.prod)) {
+        const newHref = href.replace(SALES_FORCE_DOMAINS.prod, SALES_FORCE_DOMAINS.stage);
+        link.setAttribute('href', newHref);
+      }
+    });
+  }
+}
+
 export function applyGnavPersonalization(gnav) {
   if (!isMember()) return gnav;
   const importedGnav = document.importNode(gnav, true);
+  rewriteSalesForceLinks(importedGnav);
+  personalizeMainNav(importedGnav);
   personalizeProfile(importedGnav);
   return importedGnav;
 }
-

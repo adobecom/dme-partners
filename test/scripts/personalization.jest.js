@@ -269,6 +269,62 @@ describe('Test personalization.js', () => {
         expect(salesCenterLink.classList.contains(PERSONALIZATION_HIDE_CLASS)).toBeFalsy();
       });
     });
+    it('Should hide partner-level-platinum gnav items for non-platinum user', () => {
+      jest.isolateModules(() => {
+        const cookieObject = {
+          CPP: {
+            status: 'MEMBER',
+            firstName: 'Test user',
+            level: 'Silver',
+          },
+        };
+        document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+        const { applyGnavPersonalization } = importModules();
+
+        let platinumText = gnav.querySelector('#text-platinum');
+        const anchorsFilterPredicate = (el) => el.textContent.includes('cta primary platinum') || el.textContent.includes('cta secondary platinum') || el.textContent.includes('link platinum');
+        let anchorsArray = Array.from(gnav.querySelectorAll('a')).filter(anchorsFilterPredicate);
+
+        expect(platinumText).not.toBeNull();
+        expect(anchorsArray.length).toBe(3);
+
+        const result = applyGnavPersonalization(gnav);
+
+        platinumText = result.querySelector('#text-platinum');
+        anchorsArray = Array.from(gnav.querySelectorAll('a')).filter(anchorsFilterPredicate);
+
+        expect(platinumText).toBeNull();
+        expect(anchorsArray.length).toBe(0);
+      });
+    });
+
+    it('Should hide partner-sales-access gnav items for users without sales center access', () => {
+      jest.isolateModules(() => {
+        const cookieObject = {
+          CPP: {
+            status: 'MEMBER',
+            firstName: 'Test user',
+            level: 'Silver',
+            salesCenterAccess: false,
+          },
+        };
+        document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+        const { applyGnavPersonalization } = importModules();
+
+        let heading = gnav.querySelector('#sales-center');
+        let list = gnav.querySelector('#sales-center + ul');
+
+        expect(heading).not.toBeNull();
+        expect(list).not.toBeNull();
+
+        const result = applyGnavPersonalization(gnav);
+
+        heading = result.querySelector('#sales-center');
+        list = result.querySelector('#sales-center + ul');
+
+        expect(heading).toBeNull();
+        expect(list).toBeNull();
+      });
+    });
   });
 });
-

@@ -138,6 +138,11 @@ export function isReseller(level) {
   return RESSELER_LEVELS.includes(level?.toLowerCase());
 }
 
+export function hasSalesCenterAccess() {
+  const { salesCenterAccess } = getPartnerDataCookieObject(getCurrentProgramType());
+  return !!salesCenterAccess;
+}
+
 export function getMetadataContent(name) {
   return document.querySelector(`meta[name="${name}"]`)?.content;
 }
