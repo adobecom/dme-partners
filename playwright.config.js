@@ -66,16 +66,15 @@ const config = {
       bypassCSP: true,
     },
     /* Test Against Mobile View ports */
-//     {
-//       name: 'mobile-chrome-pixel5',
-//       use: { ...devices['Pixel 5'] },
-//     },
-//     {
-//       name: 'mobile-safari-iPhone12',
-//       use: { ...devices['iPhone 12'] },
-//     },
+    // {
+    //   name: 'mobile-chrome-pixel5',
+    //   use: { ...devices['Pixel 5'] },
+    // },
+    // {
+    //   name: 'mobile-safari-iPhone12',
+    //   use: { ...devices['iPhone 12'] },
+    // },
   ],
 };
 
 export default config;
-

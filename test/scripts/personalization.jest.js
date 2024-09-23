@@ -7,16 +7,14 @@ import fs from 'fs';
 const PERSONALIZATION_HIDE_CLASS = 'personalization-hide';
 
 function importModules() {
-  const utils = require('../../edsdme/scripts/utils.js');
-  const placeholderElement = document.querySelector('#welcome-firstname');
-  jest.spyOn(utils, 'getNodesByXPath').mockImplementation(() => [placeholderElement]);
-  const { applyPagePersonalization } = require('../../edsdme/scripts/personalization.js');
-  jest.mock('../../edsdme/blocks/utils/utils.js', () => ({ getConfig: jest.fn(() => ({ env: { name: 'prod' } })) }));
+  // const utils = require('../../edsdme/scripts/utils.js');
+  const { applyPagePersonalization, applyGnavPersonalization } = require('../../edsdme/scripts/personalization.js');
+  jest.mock('../../edsdme/blocks/utils/utils.js', () => ({ getConfig: jest.fn(() => ({ env: { name: 'stage' } })) }));
 
-  return applyPagePersonalization;
+  return { applyPagePersonalization, applyGnavPersonalization };
 }
 
-describe('Test utils.js', () => {
+describe('Test personalization.js', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     window = Object.create(window);
@@ -44,7 +42,7 @@ describe('Test utils.js', () => {
         }
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-      const applyPagePersonalization = importModules();
+      const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const placeholderElementAfter = document.querySelector('#welcome-firstname');
       expect(placeholderElementAfter.textContent.includes(cookieObject.CPP.firstName)).toBe(true);
@@ -59,7 +57,7 @@ describe('Test utils.js', () => {
         }
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-      const applyPagePersonalization = importModules();
+      const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const placeholderElementAfter = document.querySelector('#welcome-firstname');
       expect(placeholderElementAfter).toBe(null);
@@ -67,7 +65,7 @@ describe('Test utils.js', () => {
   });
   it('Show partner-not-signed-in block', () => {
     jest.isolateModules(() => {
-      const applyPagePersonalization = importModules();
+      const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const notSignedInBlock = document.querySelector('.partner-not-signed-in');
       expect(notSignedInBlock.classList.contains(PERSONALIZATION_HIDE_CLASS)).toBe(false);
@@ -83,7 +81,7 @@ describe('Test utils.js', () => {
         }
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-      const applyPagePersonalization = importModules();
+      const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const notMemberBlock = document.querySelector('.partner-not-member');
       expect(notMemberBlock.classList.contains(PERSONALIZATION_HIDE_CLASS)).toBe(false);
@@ -99,7 +97,7 @@ describe('Test utils.js', () => {
         }
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-      const applyPagePersonalization = importModules();
+      const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const allLevelsBlock = document.querySelector('.partner-all-levels');
       expect(allLevelsBlock.classList.contains(PERSONALIZATION_HIDE_CLASS)).toBe(false);
@@ -115,7 +113,7 @@ describe('Test utils.js', () => {
         }
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-      const applyPagePersonalization = importModules();
+      const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const goldBlock = document.querySelector('.partner-level-gold');
       expect(goldBlock.classList.contains(PERSONALIZATION_HIDE_CLASS)).toBe(false);
@@ -131,7 +129,7 @@ describe('Test utils.js', () => {
         }
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-      const applyPagePersonalization = importModules();
+      const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const goldBlock = document.querySelector('.partner-level-gold');
       const platinumBlock = document.querySelector('.partner-level-platinum');
@@ -149,10 +147,127 @@ describe('Test utils.js', () => {
         }
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-      const applyPagePersonalization = importModules();
+      const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const platinumBlock = document.querySelector('#platinum-section');
       expect(platinumBlock.classList.contains(PERSONALIZATION_HIDE_CLASS)).toBe(false);
+    });
+  });
+  describe('Gnav personalization', () => {
+    const parser = new DOMParser();
+    let gnav;
+    beforeEach(() => {
+      const gnavString = fs.readFileSync(
+        path.resolve(__dirname, './mocks/gnav-personalization.html'),
+        'utf8'
+      );
+      gnav = parser.parseFromString(gnavString, 'text/html');
+      document.importNode = (node) => node;
+    });
+    afterEach(() => {
+      gnav = null;
+    });
+    it('Replaces profile dropdown placeholders', () => {
+      jest.isolateModules(() => {
+        const cookieObject = {
+          CPP: {
+            status: 'MEMBER',
+            firstName: 'Test Name',
+            level: 'Platinum',
+            company: 'Test Company',
+          }
+        };
+        document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+        const companyPlaceholder = gnav.querySelector('#test-company-placeholder');
+        const levelPlaceholder = gnav.querySelector('#test-level-placeholder');
+        expect(companyPlaceholder.textContent).toEqual('$company');
+        expect(levelPlaceholder.textContent).toEqual('$level');
+        const { applyGnavPersonalization } = importModules();
+        const personalizedGnav = applyGnavPersonalization(gnav);
+        const companyPlaceholderUpdated = personalizedGnav.querySelector('#test-company-placeholder');
+        const levelPlaceholderUpdated = personalizedGnav.querySelector('#test-level-placeholder');
+        expect(companyPlaceholderUpdated.textContent).toEqual('Test Company');
+        expect(levelPlaceholderUpdated.textContent).toEqual('Platinum');
+      });
+    });
+    it('Show primary contact', () => {
+      jest.isolateModules(() => {
+        const cookieObject = {
+          CPP: {
+            status: 'MEMBER',
+            firstName: 'Test Name',
+            level: 'Platinum',
+            company: 'Test Company',
+            primaryContact: true
+          }
+        };
+        document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+        const { applyGnavPersonalization } = importModules();
+        const personalizedGnav = applyGnavPersonalization(gnav);
+        const primaryContact = personalizedGnav.querySelector('.primary-contact-wrapper');
+        expect(primaryContact).toBeTruthy();
+      });
+    });
+    it('Show renew expired', () => {
+      jest.isolateModules(() => {
+        const expiredDate = new Date();
+        expiredDate.setDate(expiredDate.getDate() + 30);
+        const cookieObject = {
+          CPP: {
+            status: 'MEMBER',
+            firstName: 'Test Name',
+            level: 'Gold',
+            company: 'Test Company',
+            primaryContact: true,
+            accountAnniversary: expiredDate,
+          }
+        };
+        document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+        const { applyGnavPersonalization } = importModules();
+        const personalizedGnav = applyGnavPersonalization(gnav);
+        const renewExpired = personalizedGnav.querySelector('.partner-expired');
+        expect(renewExpired.classList.contains(PERSONALIZATION_HIDE_CLASS)).toBeFalsy();
+      });
+    });
+    it('Show renew suspended', () => {
+      jest.isolateModules(() => {
+        const expiredDate = new Date();
+        expiredDate.setDate(expiredDate.getDate() - 30);
+        const cookieObject = {
+          CPP: {
+            status: 'MEMBER',
+            firstName: 'Test Name',
+            level: 'Gold',
+            company: 'Test Company',
+            primaryContact: true,
+            accountAnniversary: expiredDate,
+          }
+        };
+        document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+        const { applyGnavPersonalization } = importModules();
+        const personalizedGnav = applyGnavPersonalization(gnav);
+        const renewExpired = personalizedGnav.querySelector('.partner-suspended');
+        expect(renewExpired.classList.contains(PERSONALIZATION_HIDE_CLASS)).toBeFalsy();
+      });
+    });
+    it('Show sales center link', () => {
+      jest.isolateModules(() => {
+        const cookieObject = {
+          CPP: {
+            status: 'MEMBER',
+            firstName: 'Test Name',
+            level: 'Gold',
+            company: 'Test Company',
+            primaryContact: true,
+            salesCenterAccess: true,
+          }
+        };
+        document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+        const salesCenterLink = gnav.querySelector('#sales-link');
+        const { applyGnavPersonalization } = importModules();
+        const personalizedGnav = applyGnavPersonalization(gnav);
+        expect(salesCenterLink.classList.contains(PERSONALIZATION_HIDE_CLASS)).toBeFalsy();
+      });
     });
   });
 });

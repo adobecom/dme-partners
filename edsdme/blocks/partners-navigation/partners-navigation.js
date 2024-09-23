@@ -1,18 +1,6 @@
 /* eslint-disable no-async-promise-executor */
-import { getLibs } from '../../scripts/utils.js';
 import { applyGnavPersonalization } from '../../scripts/personalization.js';
-import ProfileDropdown from './features/profile/partners-dropdown.js';
-
-const miloLibs = getLibs();
-const {
-  getConfig,
-  getMetadata,
-  loadIms,
-  decorateLinks,
-  loadScript,
-  loadStyle,
-} = await import(`${miloLibs}/utils/utils.js`);
-const {
+import {
   closeAllDropdowns,
   decorateCta,
   fetchAndProcessPlainHtml,
@@ -40,12 +28,26 @@ const {
   trigger,
   yieldToMain,
   addMepHighlightAndTargetId,
-} = await import(`${miloLibs}/blocks/global-navigation/utilities/utilities.js`);
+  isDarkMode,
+  darkIcons,
+} from './utilities/utilities.js';
 
+// MWPW-157751
+import { getLibs } from '../../scripts/utils.js'; // MWPW-157751
+
+const miloLibs = getLibs();
+const {
+  getConfig,
+  getMetadata,
+  loadIms,
+  decorateLinks,
+  loadScript,
+} = await import(`${miloLibs}/utils/utils.js`);
 const { replaceKey, replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
+// End
 
 export const CONFIG = {
-  icons,
+  icons: isDarkMode() ? darkIcons : icons,
   delays: {
     mainNavDropdowns: 800,
     loadDelayed: 3000,
@@ -326,7 +328,7 @@ class Gnav {
     isDesktop.addEventListener('change', closeAllDropdowns);
   }, 'Error in global navigation init', 'errorType=error,module=gnav');
 
-  ims = async () => loadIms()
+  ims = async () => (window.adobeIMS?.initialized ? this.imsReady() : loadIms()
     .then(() => this.imsReady())
     .catch((e) => {
       if (e?.message === 'IMS timeout') {
@@ -334,7 +336,7 @@ class Gnav {
         return;
       }
       lanaLog({ message: 'GNAV: Error with IMS', e, tags: 'errorType=info,module=gnav' });
-    });
+    }));
 
   decorateTopNav = () => {
     this.elements.mobileToggle = this.decorateToggle();
@@ -422,8 +424,10 @@ class Gnav {
         }
 
         if (!this.useUniversalNav) {
-          // use this code when performing Milo code sync
-          loadStyle('/edsdme/blocks/partners-navigation/features/profile/partners-dropdown.css');
+          const [ProfileDropdown] = await Promise.all([
+            loadBlock('../features/profile/dropdown.js'),
+            loadStyles('/edsdme/blocks/partners-navigation/features/profile/dropdown.css'), // MWPW-157751
+          ]);
           this.ProfileDropdown = ProfileDropdown;
         }
 
@@ -609,7 +613,7 @@ class Gnav {
       env: environment,
       locale,
       imsClientId: window.adobeid?.client_id,
-      theme: 'light',
+      theme: isDarkMode() ? 'dark' : 'light',
       onReady: () => {
         this.decorateAppPrompt({ getAnchorState: () => window.UniversalNav.getComponent?.('app-switcher') });
       },
@@ -750,6 +754,14 @@ class Gnav {
 
     // Create image element
     const getImageEl = () => {
+      if (isDarkMode()) {
+        const allSvgImgs = rawBlock.querySelectorAll('picture img[src$=".svg"]');
+        if (allSvgImgs.length === 2) return allSvgImgs[1];
+
+        const images = blockLinks.filter((blockLink) => imgRegex.test(blockLink.href)
+        || imgRegex.test(blockLink.textContent));
+        if (images.length === 2) return getBrandImage(images[1]);
+      }
       const svgImg = rawBlock.querySelector('picture img[src$=".svg"]');
       if (svgImg) return svgImg;
 
@@ -1023,8 +1035,8 @@ export default async function init(block) {
     const url = await getSource();
     let content = await fetchAndProcessPlainHtml({ url });
     if (!content) return null;
-    block.classList.add('global-navigation');
-    content = applyGnavPersonalization(content);
+    block.classList.add('global-navigation'); // MWPW-157751
+    content = applyGnavPersonalization(content); // MWPW-157751
     const gnav = new Gnav({
       content,
       block,
@@ -1033,6 +1045,7 @@ export default async function init(block) {
     block.setAttribute('daa-im', 'true');
     const mepMartech = mep?.martech || '';
     block.setAttribute('daa-lh', `gnav|${getExperienceName()}${mepMartech}`);
+    if (isDarkMode()) block.classList.add('feds--dark');
     return gnav;
   } catch (e) {
     lanaLog({ message: 'Could not create global navigation.', e, tags: 'errorType=error,module=gnav' });

@@ -7,6 +7,7 @@ export default class SignInPage {
     this.profileIconButtonAdobe = page.locator('.profile-container .profile-collapsed');
     this.userNameDisplay = page.locator('.user-name');
     this.logoutButton = page.locator('[daa-ll="Sign Out"]');
+    this.joinNowButton = page.locator('#feds-nav-wrapper .feds-cta--primary:has-text("Join Now")');
 
     this.emailField = page.locator('#EmailPage-EmailField');
     this.emailPageContinueButton = page.locator('//button[@data-id="EmailPage-ContinueButton"]');
