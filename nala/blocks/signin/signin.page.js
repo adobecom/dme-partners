@@ -26,10 +26,11 @@ export default class SignInPage {
   async verifyRedirectAfterLogin({ page, expect, path, partnerLevel, expectedLandingPageURL }) {
     await page.goto(path);
     await page.waitForLoadState('domcontentloaded');
-    console.log('anyText1', page.url(), page.context());
+    console.log('anyText1', page.url(), await page.locator('#feds-nav-wrapper'));
+    await page.screenshot({ path: 'screenshot.png' });
+
     await page.locator('#feds-nav-wrapper').waitFor({ state: 'visible', timeout: 30000 });
     await page.locator('div').filter({ hasText: 'App switcher Sign in' }).nth(1).waitFor({ state: 'visible', timeout: 30000 });
-    await page.getByText('App switcher Sign in').waitFor({ state: 'visible', timeout: 30000 });
 
     await this.page.getByRole('button', { name: 'Sign In' }).waitFor({ state: 'visible', timeout: 30000 });
     await this.signInButton.click();
