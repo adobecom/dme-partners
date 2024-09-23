@@ -28,7 +28,7 @@ export default class SignInPage {
     await page.waitForLoadState('domcontentloaded');
     console.log('anyText1', page.url(), await page.locator('#feds-nav-wrapper'));
     await page.screenshot({ path: 'screenshot.png' });
-
+    console.log('Screenshot saved as screenshot.png');
     await page.locator('#feds-nav-wrapper').waitFor({ state: 'visible', timeout: 30000 });
     await page.locator('div').filter({ hasText: 'App switcher Sign in' }).nth(1).waitFor({ state: 'visible', timeout: 30000 });
 
