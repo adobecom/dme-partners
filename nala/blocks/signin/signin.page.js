@@ -26,6 +26,7 @@ export default class SignInPage {
   async verifyRedirectAfterLogin({ page, expect, path, partnerLevel, expectedLandingPageURL }) {
     await page.goto(path);
     await page.waitForLoadState('domcontentloaded');
+    console.log('anyText1', page.url());
     await this.signInButton.click();
     await this.signIn(page, partnerLevel);
     await page.waitForLoadState('domcontentloaded');
