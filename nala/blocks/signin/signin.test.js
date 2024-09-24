@@ -61,8 +61,6 @@ test.describe('MAPC sign in flow', () => {
 
   redirectionFeatures.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, context }) => {
-//       const newTab = await context.newPage();
-//       const newTabPage = new SignInPage(newTab);
       await signInPage.verifyRedirectAfterLogin({
         page,
         expect,
