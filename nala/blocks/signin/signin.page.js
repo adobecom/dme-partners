@@ -32,7 +32,7 @@ export default class SignInPage {
     await this.signIn(page, partnerLevel);
     await page.waitForLoadState('domcontentloaded');
     if (!path.includes('automation/regression')) {
-      const pages = await page.context().pages();
+      await page.context().pages();
     } else {
       await this.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
       const pages = await page.context().pages();

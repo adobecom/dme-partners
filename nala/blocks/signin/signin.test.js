@@ -60,7 +60,7 @@ test.describe('MAPC sign in flow', () => {
   });
 
   redirectionFeatures.forEach((feature) => {
-    test(`${feature.name},${feature.tags}`, async ({ page, context }) => {
+    test(`${feature.name},${feature.tags}`, async ({ page }) => {
       await signInPage.verifyRedirectAfterLogin({
         page,
         expect,
