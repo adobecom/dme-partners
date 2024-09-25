@@ -37,6 +37,7 @@ export default class SignInPage {
     await page.waitForLoadState('domcontentloaded');
     if (path.includes('stage.adobe.com/partners.html')) {
       await this.profileIconButtonAdobe.waitFor({ state: 'visible', timeout: 30000 });
+      // eslint-disable-next-line no-unused-vars
       const pages = await page.context().pages();
     } else {
       await this.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });

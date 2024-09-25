@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+/* eslint-disable */
 import { spawn } from 'child_process';
 import playwrightConfig from '../../playwright.config.js';
 

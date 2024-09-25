@@ -1,4 +1,4 @@
-import { searchCardStyles } from './SearchCardStyles.js';
+import searchCardStyles from './SearchCardStyles.js';
 import { formatDate, getLibs } from '../scripts/utils.js';
 
 const miloLibs = getLibs();

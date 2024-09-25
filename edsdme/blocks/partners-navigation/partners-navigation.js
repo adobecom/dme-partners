@@ -1,4 +1,5 @@
-/* eslint-disable no-async-promise-executor */
+// MWPW-159021
+/* eslint-disable */
 import { applyGnavPersonalization } from '../../scripts/personalization.js';
 import {
   closeAllDropdowns,

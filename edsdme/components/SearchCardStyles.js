@@ -3,7 +3,7 @@ import { getLibs } from '../scripts/utils.js';
 const miloLibs = getLibs();
 const { css } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
-export const searchCardStyles = css`
+const searchCardStyles = css`
   .search-card * {
     box-sizing: border-box;
   }
@@ -123,3 +123,5 @@ export const searchCardStyles = css`
     text-transform: uppercase;
   }
 `;
+
+export default searchCardStyles;

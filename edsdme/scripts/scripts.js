@@ -1,5 +1,14 @@
 import { applyPagePersonalization } from './personalization.js';
-import { setLibs, redirectLoggedinPartner, updateIMSConfig, preloadResources, getRenewBanner, updateNavigation, updateFooter, PARTNER_LOGIN_QUERY } from './utils.js';
+import {
+  setLibs,
+  redirectLoggedinPartner,
+  updateIMSConfig,
+  preloadResources,
+  getRenewBanner,
+  updateNavigation,
+  updateFooter,
+  PARTNER_LOGIN_QUERY,
+} from './utils.js';
 
 // Add project-wide style path here.
 const STYLES = '/edsdme/styles/styles.css';

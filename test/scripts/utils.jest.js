@@ -30,17 +30,19 @@ import {
   getNodesByXPath,
   setLibs,
 } from '../../edsdme/scripts/utils.js';
+
 describe('Test utils.js', () => {
   beforeEach(() => {
     window = Object.create(window);
     Object.defineProperty(window, 'location', {
       value: {
         pathname: '/channelpartners',
-        assign: (path) => window.location.pathname = path,
+        // eslint-disable-next-line no-return-assign
+        assign: (pathname) => window.location.pathname = pathname,
         origin: 'https://partners.stage.adobe.com',
-        href: 'https://partners.stage.adobe.com/channelpartners'
+        href: 'https://partners.stage.adobe.com/channelpartners',
       },
-      writable: true
+      writable: true,
     });
   });
   afterEach(() => {
@@ -55,31 +57,23 @@ describe('Test utils.js', () => {
     beforeEach(() => {
       document.head.innerHTML = fs.readFileSync(
         path.resolve(__dirname, './mocks/head.html'),
-        'utf8'
+        'utf8',
       );
     });
     it('Public footer is shown for non member', async () => {
-      const cookieObject = {
-        SPP: {
-          status: 'MEMBER',
-        }
-      };
+      const cookieObject = { SPP: { status: 'MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       const locales = {
         '': { ietf: 'en-US', tk: 'hah7vzn.css' },
         de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
       };
-      const footerPath = document.querySelector('meta[name="footer-source"]')?.content
+      const footerPath = document.querySelector('meta[name="footer-source"]')?.content;
       updateFooter(locales);
-      const footerPathModified = document.querySelector('meta[name="footer-source"]')?.content
+      const footerPathModified = document.querySelector('meta[name="footer-source"]')?.content;
       expect(footerPath).toEqual(footerPathModified);
     });
     it('Protected footer is shown for members', async () => {
-      const cookieObject = {
-        CPP: {
-          status: 'MEMBER',
-        }
-      };
+      const cookieObject = { CPP: { status: 'MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       const locales = {
         '': { ietf: 'en-US', tk: 'hah7vzn.css' },
@@ -93,11 +87,7 @@ describe('Test utils.js', () => {
       expect(footerPathModified).toEqual(protectedFooterPath);
     });
     it('Protected footer is fetched based on locale if footer-loggeding-source metadata is not present', async () => {
-      const cookieObject = {
-        CPP: {
-          status: 'MEMBER',
-        }
-      };
+      const cookieObject = { CPP: { status: 'MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       window.location.pathname = '/de/channelpartners/';
       const locales = {
@@ -113,27 +103,19 @@ describe('Test utils.js', () => {
       expect(footerPathModified).toEqual('/de/edsdme/partners-shared/loggedin-footer');
     });
     it('Public navigation is shown for non member', async () => {
-      const cookieObject = {
-        SPP: {
-          status: 'MEMBER',
-        }
-      };
+      const cookieObject = { SPP: { status: 'MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       const locales = {
         '': { ietf: 'en-US', tk: 'hah7vzn.css' },
         de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
       };
-      const gnavPath = document.querySelector('meta[name="gnav-source"]')?.content
+      const gnavPath = document.querySelector('meta[name="gnav-source"]')?.content;
       updateNavigation(locales);
-      const gnavPathModified = document.querySelector('meta[name="gnav-source"]')?.content
+      const gnavPathModified = document.querySelector('meta[name="gnav-source"]')?.content;
       expect(gnavPath).toEqual(gnavPathModified);
     });
     it('Protected navigation is shown for members', async () => {
-      const cookieObject = {
-        CPP: {
-          status: 'MEMBER',
-        }
-      };
+      const cookieObject = { CPP: { status: 'MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       const locales = {
         '': { ietf: 'en-US', tk: 'hah7vzn.css' },
@@ -147,11 +129,7 @@ describe('Test utils.js', () => {
       expect(gnavPathModified).toEqual(protectedGnavPath);
     });
     it('Protected footer is fetched based on locale if gnav-loggeding-source metadata is not present', async () => {
-      const cookieObject = {
-        CPP: {
-          status: 'MEMBER',
-        }
-      };
+      const cookieObject = { CPP: { status: 'MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       window.location.pathname = '/de/channelpartners/';
       const locales = {
@@ -204,27 +182,15 @@ describe('Test utils.js', () => {
     expect(getPartnerDataCookieValue('cpp', 'test_cookie')).toEqual('');
   });
   it('Should return partner data cookie object', () => {
-    const cookieObject = {
-      CPP: {
-        status: 'MEMBER',
-      }
-    };
+    const cookieObject = { CPP: { status: 'MEMBER' } };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-    expect(getPartnerDataCookieObject('cpp')).toStrictEqual(cookieObject['CPP']);
+    expect(getPartnerDataCookieObject('cpp')).toStrictEqual(cookieObject.CPP);
   });
   it('Check if user is a member', () => {
-    const cookieObjectMember = {
-      CPP: {
-        status: 'MEMBER',
-      }
-    };
+    const cookieObjectMember = { CPP: { status: 'MEMBER' } };
     document.cookie = `partner_data=${JSON.stringify(cookieObjectMember)}`;
     expect(isMember()).toEqual(true);
-    const cookieObjectNotMember = {
-      CPP: {
-        status: 'NOT_PARTNER',
-      }
-    };
+    const cookieObjectNotMember = { CPP: { status: 'NOT_PARTNER' } };
     document.cookie = `partner_data=${JSON.stringify(cookieObjectNotMember)}`;
     expect(isMember()).toEqual(false);
   });
@@ -233,11 +199,7 @@ describe('Test utils.js', () => {
     expect(partnerIsSignedIn()).toBeTruthy();
   });
   it('Check if signed in partner is non member', () => {
-    const cookieObjectNotMember = {
-      CPP: {
-        status: 'NOT_PARTNER',
-      }
-    };
+    const cookieObjectNotMember = { CPP: { status: 'NOT_PARTNER' } };
     document.cookie = `partner_data=${JSON.stringify(cookieObjectNotMember)}`;
     expect(signedInNonMember()).toBeTruthy();
   });
@@ -260,31 +222,19 @@ describe('Test utils.js', () => {
     expect(getMetadata('test')).toStrictEqual(metaTag);
   });
   it('Don\'t redirect logged in partner to protected home if he is not a member', () => {
-    const cookieObjectNotMember = {
-      CPP: {
-        status: 'NOT_MEMBER',
-      }
-    };
+    const cookieObjectNotMember = { CPP: { status: 'NOT_MEMBER' } };
     document.cookie = `partner_data=${JSON.stringify(cookieObjectNotMember)}`;
     expect(redirectLoggedinPartner()).toBeFalsy();
   });
   it('Don\'t redirect logged in partner to protected home if metadata is not set', () => {
-    const cookieObjectNotMember = {
-      CPP: {
-        status: 'MEMBER',
-      }
-    };
-    document.cookie = `partner_data=${JSON.stringify(cookieObjectNotMember)}`;
+    const cookieObjectMember = { CPP: { status: 'MEMBER' } };
+    document.cookie = `partner_data=${JSON.stringify(cookieObjectMember)}`;
     expect(redirectLoggedinPartner()).toBeFalsy();
   });
   it('Redirect logged in partner to protected home', () => {
     window.location.pathname = '/channelpartners/';
-    const cookieObjectNotMember = {
-      CPP: {
-        status: 'MEMBER',
-      }
-    };
-    document.cookie = `partner_data=${JSON.stringify(cookieObjectNotMember)}`;
+    const cookieObjectMember = { CPP: { status: 'MEMBER' } };
+    document.cookie = `partner_data=${JSON.stringify(cookieObjectMember)}`;
     const metaTag = document.createElement('meta');
     metaTag.name = 'adobe-target-after-login';
     metaTag.content = '/channelpartners/home';
@@ -301,12 +251,12 @@ describe('Test utils.js', () => {
         status: 'MEMBER',
         level: 'gold',
         accountAnniversary: expiredDate,
-      }
+      },
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
     const { accountStatus, daysNum } = isRenew();
     expect(accountStatus).toEqual('expired');
-    expect(daysNum).toBeLessThanOrEqual(30);;
+    expect(daysNum).toBeLessThanOrEqual(30);
   });
   it('Check if partners account is suspended', () => {
     const expiredDate = new Date();
@@ -317,12 +267,12 @@ describe('Test utils.js', () => {
         status: 'MEMBER',
         level: 'gold',
         accountAnniversary: expiredDate,
-      }
+      },
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
     const { accountStatus, daysNum } = isRenew();
     expect(accountStatus).toEqual('suspended');
-    expect(daysNum).toBeLessThanOrEqual(60);;
+    expect(daysNum).toBeLessThanOrEqual(60);
   });
   it('Don\'t show renew banner if partner has valid account', async () => {
     const expiredDate = new Date();
@@ -333,7 +283,7 @@ describe('Test utils.js', () => {
         status: 'MEMBER',
         level: 'gold',
         accountAnniversary: expiredDate,
-      }
+      },
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
     expect(await getRenewBanner()).toBeFalsy();
@@ -347,15 +297,14 @@ describe('Test utils.js', () => {
         status: 'MEMBER',
         level: 'gold',
         accountAnniversary: expiredDate,
-      }
+      },
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
     const getConfig = () => ({ locale: '' });
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        text: () => Promise.resolve('<div class="aside">Test</div>'),
-      }));
+    global.fetch = jest.fn(() => Promise.resolve({
+      ok: true,
+      text: () => Promise.resolve('<div class="aside">Test</div>'),
+    }));
 
     const main = document.createElement('main');
     document.body.appendChild(main);
@@ -372,15 +321,14 @@ describe('Test utils.js', () => {
         status: 'MEMBER',
         level: 'gold',
         accountAnniversary: expiredDate,
-      }
+      },
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
     const getConfig = () => ({ locale: '' });
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        text: () => Promise.resolve('<div class="aside">Test</div>'),
-      }));
+    global.fetch = jest.fn(() => Promise.resolve({
+      ok: true,
+      text: () => Promise.resolve('<div class="aside">Test</div>'),
+    }));
 
     const main = document.createElement('main');
     document.body.appendChild(main);
@@ -397,14 +345,11 @@ describe('Test utils.js', () => {
         status: 'MEMBER',
         level: 'gold',
         accountAnniversary: expiredDate,
-      }
+      },
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
     const getConfig = () => ({ locale: '' });
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: false,
-      }));
+    global.fetch = jest.fn(() => Promise.resolve({ ok: false }));
     const main = document.createElement('main');
     document.body.appendChild(main);
     expect(await getRenewBanner(getConfig, jest.fn())).toEqual(null);
@@ -414,7 +359,7 @@ describe('Test utils.js', () => {
     window.adobeIMS = {
       isSignedInUser: () => false,
       adobeIdData: {},
-    }
+    };
     const metaTag = document.createElement('meta');
     metaTag.name = 'adobe-target-after-login';
     metaTag.content = '/channelpartners/home';
@@ -430,7 +375,7 @@ describe('Test utils.js', () => {
     window.adobeIMS = {
       isSignedInUser: () => true,
       adobeIdData: {},
-    }
+    };
     const metaTag = document.createElement('meta');
     metaTag.name = 'adobe-target-after-logout';
     metaTag.content = '/channelpartners/home';
@@ -444,7 +389,7 @@ describe('Test utils.js', () => {
     const locales = {
       '': { ietf: 'en-US', tk: 'hah7vzn.css' },
       de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
-    }
+    };
     window.location.pathname = '/de/channelpartners';
     const locale = getLocale(locales);
     expect(locale).toStrictEqual({ ietf: 'de-DE', tk: 'hah7vzn.css', prefix: '/de', region: 'de' });
@@ -454,15 +399,15 @@ describe('Test utils.js', () => {
     expect(locale).toStrictEqual({ ietf: 'en-US', tk: 'hah7vzn.css', prefix: '' });
   });
   it('Get caas url', () => {
-    document.cookie = 'partner_data={"CPP":{"accountAnniversary":1890777600000%2C"company":"Yugo CPP Stage Platinum Spain"%2C"firstName":"CPP Stage"%2C"lastName":"Spain Platinum"%2C"level":"Platinum"%2C"permissionRegion":"Europe West"%2C"primaryContact":true%2C"salesCenterAccess":true%2C"status":"MEMBER"}}'
+    document.cookie = 'partner_data={"CPP":{"accountAnniversary":1890777600000%2C"company":"Yugo CPP Stage Platinum Spain"%2C"firstName":"CPP Stage"%2C"lastName":"Spain Platinum"%2C"level":"Platinum"%2C"permissionRegion":"Europe West"%2C"primaryContact":true%2C"salesCenterAccess":true%2C"status":"MEMBER"}}';
     const locales = {
       '': { ietf: 'en-US', tk: 'hah7vzn.css' },
       de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
-    }
+    };
     const locale = getLocale(locales);
     document.body.innerHTML = fs.readFileSync(
       path.resolve(__dirname, './mocks/announcements.html'),
-      'utf8'
+      'utf8',
     );
     const el = document.querySelector('.announcements');
     const block = {
@@ -477,10 +422,10 @@ describe('Test utils.js', () => {
     const locales = {
       '': { ietf: 'en-US', tk: 'hah7vzn.css' },
       de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
-    }
+    };
     document.body.innerHTML = fs.readFileSync(
       path.resolve(__dirname, './mocks/announcements.html'),
-      'utf8'
+      'utf8',
     );
     await preloadResources(locales, '/libs');
     const linkPreload = document.head.querySelectorAll('link[rel="preload"]');
@@ -494,7 +439,7 @@ describe('Test utils.js', () => {
     testDiv.textContent = 'Test123';
     testDiv.id = 'test-id';
     document.body.appendChild(testDiv);
-    const query = `//*[contains(text(), "Test123")]`;
+    const query = '//*[contains(text(), "Test123")]';
     const elements = getNodesByXPath(query, document.body);
     expect(elements.length).toEqual(1);
     expect(elements[0].id).toEqual('test-id');

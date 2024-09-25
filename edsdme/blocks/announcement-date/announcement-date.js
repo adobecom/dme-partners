@@ -12,7 +12,8 @@ export default async function init(el) {
   if (cardMetadataEl) {
     [...cardMetadataEl.children].forEach((row) => {
       const firstColumn = row.children[0];
-      if (firstColumn && firstColumn.innerText.trim().toLowerCase() === CARD_METADATA_PROPERTY_CREATED) {
+      if (firstColumn
+        && firstColumn.innerText.trim().toLowerCase() === CARD_METADATA_PROPERTY_CREATED) {
         createdDateValue = row.children[1]?.innerText.trim();
       }
     });
@@ -20,7 +21,7 @@ export default async function init(el) {
 
   const createdDate = new Date(createdDateValue);
 
-  if (!isNaN(createdDate)) {
+  if (!Number.isNaN(createdDate)) {
     const config = getConfig();
     el.innerHTML = '';
     el.className = `announcement-date-wrapper content ${el.className}`;
