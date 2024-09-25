@@ -61,9 +61,6 @@ test.describe('MAPC sign in flow', () => {
 
   redirectionFeatures.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, context }) => {
-      const newTab = await context.newPage();
-      // eslint-disable-next-line no-unused-vars
-      const newTabPage = new SignInPage(newTab);
       await signInPage.verifyRedirectAfterLogin({
         page,
         expect,
@@ -123,7 +120,7 @@ test.describe('MAPC sign in flow', () => {
           window.location.href = navigationUrl;
         }, url);
 
-        await signInPage.signInButtonStageAdobe.click();
+        await signInPage.signInButton.click();
         await page.waitForLoadState('domcontentloaded');
       });
 
@@ -159,7 +156,7 @@ test.describe('MAPC sign in flow', () => {
         window.location.href = navigationUrl;
       }, url);
 
-      await signInPage.signInButtonStageAdobe.click();
+      await signInPage.signInButton.click();
       await page.waitForLoadState('domcontentloaded');
     });
 

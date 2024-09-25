@@ -1,10 +1,9 @@
 export default class SignInPage {
   constructor(page) {
     this.page = page;
-    this.signInButton = page.locator('button[daa-ll="Sign In"].feds-signIn');
-    this.signInButtonStageAdobe = page.locator('.profile-comp.secondary-button');
+    this.signInButton = page.getByRole('button', { name: 'Sign In' });
     this.profileIconButton = page.locator('.feds-profile-button');
-    this.profileIconButtonAdobe = page.locator('.profile-container .profile-collapsed');
+    this.profileIconButtonAdobe = page.getByLabel('Profile button');
     this.userNameDisplay = page.locator('.user-name');
     this.logoutButton = page.locator('[daa-ll="Sign Out"]');
     this.joinNowButton = page.locator('#feds-nav-wrapper .feds-cta--primary:has-text("Join Now")');
@@ -27,17 +26,12 @@ export default class SignInPage {
   async verifyRedirectAfterLogin({ page, expect, path, partnerLevel, expectedLandingPageURL }) {
     await page.goto(path);
     await page.waitForLoadState('domcontentloaded');
-    if (path.includes('stage.adobe.com/partners.html')) {
-      await this.signInButtonStageAdobe.waitFor({ state: 'visible', timeout: 30000 });
-      await this.signInButtonStageAdobe.click();
-    } else {
-      await this.signInButton.click();
-    }
+
+    await this.page.getByRole('button', { name: 'Sign In' }).waitFor({ state: 'visible', timeout: 30000 });
+    await this.signInButton.click();
     await this.signIn(page, partnerLevel);
     await page.waitForLoadState('domcontentloaded');
-    if (path.includes('stage.adobe.com/partners.html')) {
-      await this.profileIconButtonAdobe.waitFor({ state: 'visible', timeout: 30000 });
-      // eslint-disable-next-line no-unused-vars
+    if (!path.includes('automation/regression')) {
       const pages = await page.context().pages();
     } else {
       await this.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
