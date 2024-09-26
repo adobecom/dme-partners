@@ -2,19 +2,21 @@ name: DME-Partners Nala Tests
 
 on:
   pull_request:
-    types: [ opened, synchronize, reopened ]
+    types: [ labeled, synchronize, reopened ]
 
 jobs:
   action:
     name: Running E2E & IT
-    if: contains(github.event.pull_request.labels.*.name, 'run-on-dme')
+    if: or(
+      equal(github.event.label.name, 'run-on-dme'),
+      and(equal(github.event.action, 'synchronize'), contains(join(github.event.pull_request.labels.*.name, ','), 'run-on-dme')),
+      and(equal(github.event.action, 'reopened'), contains(join(github.event.pull_request.labels.*.name, ','), 'run-on-dme'))
+      )
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
-      - name: Display run number
-        run: echo "This is run number $GITHUB_RUN_NUMBER"
       # - name: Run Nala
       #   uses: adobecom/dme-partners@stage # Change if doing dev work
       #   env:
