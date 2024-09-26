@@ -2,6 +2,7 @@ name: DME-Partners Nala Tests
 
 on:
   pull_request:
+    #test
     types: [ labeled, opened, synchronize, reopened ]
 
 jobs:
