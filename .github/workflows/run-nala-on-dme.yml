@@ -7,10 +7,9 @@ on:
 jobs:
   action:
     name: Running E2E & IT
-    if: or(
-      equal(github.event.label.name, 'run-on-dme'),
-      and(equal(github.event.action, 'synchronize'), contains(join(github.event.pull_request.labels.*.name, ','), 'run-on-dme')),
-      and(equal(github.event.action, 'reopened'), contains(join(github.event.pull_request.labels.*.name, ','), 'run-on-dme'))
+    if: github.event.label.name == 'run-on-dme'
+      || (github.event.action == 'synchronize' && contains(join(github.event.pull_request.labels.*.name, ','), 'run-on-dme'))
+      || (github.event.action =='reopened' && contains(join(github.event.pull_request.labels.*.name, ','), 'run-on-dme'))
       )
     runs-on: ubuntu-latest
 
