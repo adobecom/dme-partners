@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   extends: 'airbnb-base',
-  env: { browser: true, mocha: true },
+  env: { browser: true, mocha: true, jest:true },
   parser: '@babel/eslint-parser',
   parserOptions: {
     allowImportExportEverywhere: true,
@@ -21,11 +21,17 @@ module.exports = {
     'no-return-assign': ['error', 'except-parens'],
     'no-unused-expressions': 0,
     'chai-friendly/no-unused-expressions': 2,
+    'import/prefer-default-export': 'off',
   },
   overrides: [
     {
-      files: ['test/**/*.js'],
-      rules: { 'no-console': 'off' },
+      files: ['test/**/*.js', 'nala/**'],
+      rules: { 
+        'no-console': 'off',
+        'max-len': 'off',
+        'func-names': 'off',
+        'no-global-assign': 'off',
+      },
     },
   ],
   plugins: [

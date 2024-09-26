@@ -13,7 +13,7 @@ test.describe('MAPC sign in flow', () => {
   test.beforeEach(async ({ page, browserName, baseURL, context }) => {
     signInPage = new SignInPage(page);
     page.on('console', (msg) => {
-      console.log(`${msg.type()}: ${msg.text()}`, msg.type() === 'error' ? msg.location().url : null)
+      console.log(`${msg.type()}: ${msg.text()}`, msg.type() === 'error' ? msg.location().url : null);
     });
     if (!baseURL.includes('partners.stage.adobe.com')) {
       await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
@@ -60,7 +60,7 @@ test.describe('MAPC sign in flow', () => {
   });
 
   redirectionFeatures.forEach((feature) => {
-    test(`${feature.name},${feature.tags}`, async ({ page, context }) => {
+    test(`${feature.name},${feature.tags}`, async ({ page }) => {
       await signInPage.verifyRedirectAfterLogin({
         page,
         expect,
@@ -74,7 +74,7 @@ test.describe('MAPC sign in flow', () => {
   nonMemberRedirects.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, browserName }) => {
       if (browserName === 'firefox') {
-       test.slow();
+        test.slow();
       }
       await test.step('Go to the home page', async () => {
         await page.goto(`${feature.path}`);
@@ -94,7 +94,7 @@ test.describe('MAPC sign in flow', () => {
 
       await test.step('Logout', async () => {
         const currentUrl = page.url();
-        const newUrl = `${currentUrl.replace('#','')}?akamaiLocale=na&martech=off`;
+        const newUrl = `${currentUrl.replace('#', '')}?akamaiLocale=na&martech=off`;
         await page.goto(newUrl);
         await signInPage.profileIconButton.click();
         await signInPage.logoutButton.click();
@@ -112,7 +112,7 @@ test.describe('MAPC sign in flow', () => {
   nonMemberLoggedInToAdobe.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, context, browserName }) => {
       if (browserName === 'firefox') {
-       test.slow();
+        test.slow();
       }
       await test.step('Go to the home page', async () => {
         const url = `${feature.baseURL}`;

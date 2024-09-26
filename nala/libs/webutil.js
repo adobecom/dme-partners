@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { expect } from '@playwright/test';
 
 const fs = require('fs');

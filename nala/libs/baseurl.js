@@ -1,4 +1,6 @@
+/* eslint-disable */
 import pkg from 'axios';
+
 const { head } = pkg;
 export async function isBranchURLValid(url) {
   try {
@@ -12,6 +14,6 @@ export async function isBranchURLValid(url) {
     }
   } catch (error) {
     console.info(`\nError checking URL (${url}): returned a non-200 status code (${response.status})`);
-    return false; 
+    return false;
   }
 }

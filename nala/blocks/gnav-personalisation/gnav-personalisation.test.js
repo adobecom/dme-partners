@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
 import GnavPersonalisationPage from './gnav-personalisation.page.js';
 import SignInPage from '../signin/signin.page.js';
+import gnav from './gnav-personalisation.spec.js';
 
 let gnavPersonalisationPage;
 let singInPage;
-import gnav from './gnav-personalisation.spec.js';
 
 const { features } = gnav;
 
@@ -26,7 +26,7 @@ test.describe('Validate Public GNav', () => {
     }
   });
 
-  test(`${features[0].name},${features[0].tags}`, async ({ page, baseURL, browserName }) => {
+  test(`${features[0].name},${features[0].tags}`, async ({ page, baseURL }) => {
     const { path } = features[0];
     await test.step('Go to CPP page', async () => {
       await page.goto(`${baseURL}${path}`);

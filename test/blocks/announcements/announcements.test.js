@@ -11,6 +11,7 @@ describe('announcements block', () => {
   beforeEach(async () => {
     sinon.stub(PartnerCards.prototype, 'fetchData').resolves({ cards });
 
+    // eslint-disable-next-line no-underscore-dangle
     sinon.stub(PartnerCards.prototype, 'firstUpdated').callsFake(async function () {
       this.allCards = cards;
       this.cards = cards;
