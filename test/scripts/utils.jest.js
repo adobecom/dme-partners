@@ -87,11 +87,7 @@ describe('Test utils.js', () => {
       expect(footerPathModified).toEqual(protectedFooterPath);
     });
     it('Public footer is fetched based on locale', async () => {
-      const cookieObject = {
-        CPP: {
-          status: 'NOT_MEMBER',
-        }
-      };
+      const cookieObject = { CPP: { status: 'NOT_MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       window.location.pathname = '/de/channelpartners/';
       const locales = {
@@ -147,11 +143,7 @@ describe('Test utils.js', () => {
       expect(gnavPathModified).toEqual(protectedGnavPath);
     });
     it('Public gnav is fetched based on locale', async () => {
-      const cookieObject = {
-        CPP: {
-          status: 'NOT_MEMBER',
-        }
-      };
+      const cookieObject = { CPP: { status: 'NOT_MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       window.location.pathname = '/de/channelpartners/';
       const locales = {
@@ -165,11 +157,7 @@ describe('Test utils.js', () => {
       expect(gnavPathModified).toEqual('/de/edsdme/partners-shared/public-gnav');
     });
     it('Protected gnav is fetched based on locale if gnav-loggeding-source metadata is not present', async () => {
-      const cookieObject = {
-        CPP: {
-          status: 'MEMBER',
-        }
-      };
+      const cookieObject = { CPP: { status: 'MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       window.location.pathname = '/de/channelpartners/';
       const locales = {

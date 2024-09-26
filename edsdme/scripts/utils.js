@@ -409,7 +409,7 @@ export function updateNavigation(locales) {
   const { prefix } = getLocale(locales);
   let { content } = gnavMeta;
   if (isMember()) {
-    content = getMetadataContent('gnav-loggedin-source') ?? `${prefix}/edsdme/partners-shared/loggedin-gnav`
+    content = getMetadataContent('gnav-loggedin-source') ?? `${prefix}/edsdme/partners-shared/loggedin-gnav`;
   }
   gnavMeta.content = content.startsWith('/edsdme') ? prefix + content : content;
 }
@@ -420,7 +420,7 @@ export function updateFooter(locales) {
   const { prefix } = getLocale(locales);
   let { content } = footerMeta;
   if (isMember()) {
-    content = getMetadataContent('footer-loggedin-source') ??  `${prefix}/edsdme/partners-shared/loggedin-footer`;
+    content = getMetadataContent('footer-loggedin-source') ?? `${prefix}/edsdme/partners-shared/loggedin-footer`;
   }
   footerMeta.content = content.startsWith('/edsdme') ? prefix + content : content;
 }
