@@ -5,7 +5,7 @@ export default {
       tcid: '1',
       name: '@desc-accessing-protected-content-with-non-logged-in-user',
       path: '/channelpartners/drafts/automation/regression/Cards/cpp-gold-spain?akamaiLocale=na&martech=off',
-      tags: '@dme-protected-content @regression @anonymous',
+      tags: '@dme-protected-content @regression @login @circleCi',
       expectedToSeeInURL: 'https://auth-stg1.services.adobe.com/',
     },
     {

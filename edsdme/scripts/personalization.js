@@ -61,6 +61,7 @@ function shouldHide(conditions, conditionsConfig = PERSONALIZATION_CONDITIONS) {
   });
 }
 
+// eslint-disable-next-line max-len
 function hideElement(element, conditions, conditionsConfig = PERSONALIZATION_CONDITIONS, remove = false) {
   if (!element || !conditions?.length) return;
   if (shouldHide(conditions, conditionsConfig)) {
@@ -78,7 +79,7 @@ function hideSections(page) {
     let hide = false;
     Array.from(section.children).forEach((child) => {
       const col1 = child.firstElementChild;
-      let col2 = child.lastElementChild;
+      const col2 = child.lastElementChild;
       if (col1?.textContent !== 'style' || !col2?.textContent.includes(PERSONALIZATION_MARKER)) return;
       const conditions = col2?.textContent?.split(',').map((text) => text.trim());
       hide = shouldHide(conditions);
@@ -107,7 +108,7 @@ export function applyPagePersonalization() {
 }
 
 function processPrimaryContact(el) {
-  const isPrimary = COOKIE_OBJECT['primaryContact'];
+  const isPrimary = COOKIE_OBJECT.primaryContact;
   el.classList.add(PERSONALIZATION_HIDE);
   if (!isPrimary) return;
   const primaryContactWrapper = document.createElement('div');

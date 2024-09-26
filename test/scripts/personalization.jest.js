@@ -7,7 +7,7 @@ import fs from 'fs';
 const PERSONALIZATION_HIDE_CLASS = 'personalization-hide';
 
 function importModules() {
-  // const utils = require('../../edsdme/scripts/utils.js');
+  // eslint-disable-next-line global-require
   const { applyPagePersonalization, applyGnavPersonalization } = require('../../edsdme/scripts/personalization.js');
   jest.mock('../../edsdme/blocks/utils/utils.js', () => ({ getConfig: jest.fn(() => ({ env: { name: 'stage' } })) }));
 
@@ -26,7 +26,7 @@ describe('Test personalization.js', () => {
     });
     document.body.innerHTML = fs.readFileSync(
       path.resolve(__dirname, './mocks/personalization.html'),
-      'utf8'
+      'utf8',
     );
     document.cookie = 'partner_data=';
   });
@@ -38,8 +38,8 @@ describe('Test personalization.js', () => {
       const cookieObject = {
         CPP: {
           status: 'MEMBER',
-          firstName: 'Test user'
-        }
+          firstName: 'Test user',
+        },
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       const { applyPagePersonalization } = importModules();
@@ -53,8 +53,8 @@ describe('Test personalization.js', () => {
       const cookieObject = {
         SPP: {
           status: 'MEMBER',
-          firstName: 'Test use'
-        }
+          firstName: 'Test use',
+        },
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       const { applyPagePersonalization } = importModules();
@@ -77,8 +77,8 @@ describe('Test personalization.js', () => {
       const cookieObject = {
         SPP: {
           status: 'MEMBER',
-          firstName: 'Test use'
-        }
+          firstName: 'Test use',
+        },
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       const { applyPagePersonalization } = importModules();
@@ -93,8 +93,8 @@ describe('Test personalization.js', () => {
         CPP: {
           status: 'MEMBER',
           firstName: 'Test use',
-          level: 'Gold'
-        }
+          level: 'Gold',
+        },
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       const { applyPagePersonalization } = importModules();
@@ -109,8 +109,8 @@ describe('Test personalization.js', () => {
         CPP: {
           status: 'MEMBER',
           firstName: 'Test use',
-          level: 'Gold'
-        }
+          level: 'Gold',
+        },
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       const { applyPagePersonalization } = importModules();
@@ -125,8 +125,8 @@ describe('Test personalization.js', () => {
         CPP: {
           status: 'MEMBER',
           firstName: 'Test use',
-          level: 'Platinum'
-        }
+          level: 'Platinum',
+        },
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       const { applyPagePersonalization } = importModules();
@@ -143,8 +143,8 @@ describe('Test personalization.js', () => {
         CPP: {
           status: 'MEMBER',
           firstName: 'Test use',
-          level: 'Platinum'
-        }
+          level: 'Platinum',
+        },
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       const { applyPagePersonalization } = importModules();
@@ -159,7 +159,7 @@ describe('Test personalization.js', () => {
     beforeEach(() => {
       const gnavString = fs.readFileSync(
         path.resolve(__dirname, './mocks/gnav-personalization.html'),
-        'utf8'
+        'utf8',
       );
       gnav = parser.parseFromString(gnavString, 'text/html');
       document.importNode = (node) => node;
@@ -175,7 +175,7 @@ describe('Test personalization.js', () => {
             firstName: 'Test Name',
             level: 'Platinum',
             company: 'Test Company',
-          }
+          },
         };
         document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
         const companyPlaceholder = gnav.querySelector('#test-company-placeholder');
@@ -198,8 +198,8 @@ describe('Test personalization.js', () => {
             firstName: 'Test Name',
             level: 'Platinum',
             company: 'Test Company',
-            primaryContact: true
-          }
+            primaryContact: true,
+          },
         };
         document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
         const { applyGnavPersonalization } = importModules();
@@ -220,7 +220,7 @@ describe('Test personalization.js', () => {
             company: 'Test Company',
             primaryContact: true,
             accountAnniversary: expiredDate,
-          }
+          },
         };
         document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
         const { applyGnavPersonalization } = importModules();
@@ -241,7 +241,7 @@ describe('Test personalization.js', () => {
             company: 'Test Company',
             primaryContact: true,
             accountAnniversary: expiredDate,
-          }
+          },
         };
         document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
         const { applyGnavPersonalization } = importModules();
@@ -260,12 +260,12 @@ describe('Test personalization.js', () => {
             company: 'Test Company',
             primaryContact: true,
             salesCenterAccess: true,
-          }
+          },
         };
         document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
         const salesCenterLink = gnav.querySelector('#sales-link');
         const { applyGnavPersonalization } = importModules();
-        const personalizedGnav = applyGnavPersonalization(gnav);
+        applyGnavPersonalization(gnav);
         expect(salesCenterLink.classList.contains(PERSONALIZATION_HIDE_CLASS)).toBeFalsy();
       });
     });

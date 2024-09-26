@@ -17,6 +17,7 @@ class SinglePartnerCard extends LitElement {
   // eslint-disable-next-line class-methods-use-this
   transformCardUrl(url) {
     if (!url) {
+      // eslint-disable-next-line no-console
       console.error('URL is null or undefined');
       return '';
     }
@@ -30,7 +31,7 @@ class SinglePartnerCard extends LitElement {
   }
 
   get imageUrl() {
-    return `${new URL(this.data.styles?.backgroundImage).pathname}?width=400&format=webp&optimize=small`
+    return `${new URL(this.data.styles?.backgroundImage).pathname}?width=400&format=webp&optimize=small`;
   }
 
   checkBackgroundImage(element) {

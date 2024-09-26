@@ -1,4 +1,5 @@
-/* eslint-disable no-promise-executor-return, no-async-promise-executor */
+// MWPW-159021
+/* eslint-disable */
 import { getConfig } from '../../../utils/utils.js';
 
 let userEventHistory;
