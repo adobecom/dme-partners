@@ -401,21 +401,25 @@ export async function preloadResources(locales, miloLibs) {
 }
 
 export function updateNavigation(locales) {
-  const { prefix } = getLocale(locales);
   const gnavMeta = getMetadata('gnav-source');
-  if (!gnavMeta || !isMember()) return;
-
-  const gnavLoggedIn = getMetadataContent('gnav-loggedin-source');
-  gnavMeta.content = gnavLoggedIn ?? `${prefix}/edsdme/partners-shared/loggedin-gnav`;
+  if (!gnavMeta) return;
+  const { prefix } = getLocale(locales);
+  let { content } = gnavMeta;
+  if (isMember()) {
+    content = getMetadataContent('gnav-loggedin-source') ?? `${prefix}/edsdme/partners-shared/loggedin-gnav`
+  }
+  gnavMeta.content = content.startsWith('/edsdme') ? prefix + content : content;
 }
 
 export function updateFooter(locales) {
-  const { prefix } = getLocale(locales);
   const footerMeta = getMetadata('footer-source');
-  if (!footerMeta || !isMember()) return;
-
-  const footerLoggedIn = getMetadataContent('footer-loggedin-source');
-  footerMeta.content = footerLoggedIn ?? `${prefix}/edsdme/partners-shared/loggedin-footer`;
+  if (!footerMeta) return;
+  const { prefix } = getLocale(locales);
+  let { content } = footerMeta;
+  if (isMember()) {
+    content = getMetadataContent('footer-loggedin-source') ??  `${prefix}/edsdme/partners-shared/loggedin-footer`;
+  }
+  footerMeta.content = content.startsWith('/edsdme') ? prefix + content : content;
 }
 
 export function getNodesByXPath(query, context = document) {

@@ -92,6 +92,24 @@ describe('Test utils.js', () => {
       const protectedFooterPath = document.querySelector('meta[name="footer-loggedin-source"]')?.content;
       expect(footerPathModified).toEqual(protectedFooterPath);
     });
+    it('Public footer is fetched based on locale', async () => {
+      const cookieObject = {
+        CPP: {
+          status: 'NOT_MEMBER',
+        }
+      };
+      document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      window.location.pathname = '/de/channelpartners/';
+      const locales = {
+        '': { ietf: 'en-US', tk: 'hah7vzn.css' },
+        de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
+      };
+      const footerPath = document.querySelector('meta[name="footer-source"]')?.content;
+      updateFooter(locales);
+      const footerPathModified = document.querySelector('meta[name="footer-source"]')?.content;
+      expect(footerPath).not.toEqual(footerPathModified);
+      expect(footerPathModified).toEqual('/de/edsdme/partners-shared/footer');
+    });
     it('Protected footer is fetched based on locale if footer-loggeding-source metadata is not present', async () => {
       const cookieObject = {
         CPP: {
@@ -146,7 +164,25 @@ describe('Test utils.js', () => {
       const protectedGnavPath = document.querySelector('meta[name="gnav-loggedin-source"]')?.content;
       expect(gnavPathModified).toEqual(protectedGnavPath);
     });
-    it('Protected footer is fetched based on locale if gnav-loggeding-source metadata is not present', async () => {
+    it('Public gnav is fetched based on locale', async () => {
+      const cookieObject = {
+        CPP: {
+          status: 'NOT_MEMBER',
+        }
+      };
+      document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      window.location.pathname = '/de/channelpartners/';
+      const locales = {
+        '': { ietf: 'en-US', tk: 'hah7vzn.css' },
+        de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
+      };
+      const gnavPath = document.querySelector('meta[name="gnav-source"]')?.content;
+      updateNavigation(locales);
+      const gnavPathModified = document.querySelector('meta[name="gnav-source"]')?.content;
+      expect(gnavPath).not.toEqual(gnavPathModified);
+      expect(gnavPathModified).toEqual('/de/edsdme/partners-shared/public-gnav');
+    });
+    it('Protected gnav is fetched based on locale if gnav-loggeding-source metadata is not present', async () => {
       const cookieObject = {
         CPP: {
           status: 'MEMBER',
