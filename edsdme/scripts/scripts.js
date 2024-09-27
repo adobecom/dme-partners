@@ -97,6 +97,7 @@ function setUpPage() {
 
 (async function loadPage() {
   //
+  //
   applyPagePersonalization();
   setUpPage();
   redirectLoggedinPartner();
