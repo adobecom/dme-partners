@@ -99,6 +99,7 @@ function setUpPage() {
   //
   //
     //
+    ////
   applyPagePersonalization();
   setUpPage();
   redirectLoggedinPartner();
