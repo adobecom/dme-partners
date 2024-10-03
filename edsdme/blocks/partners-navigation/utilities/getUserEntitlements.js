@@ -1,4 +1,5 @@
-/* eslint-disable camelcase */
+// MWPW-159021
+/* eslint-disable */
 import { getConfig } from '../../../utils/utils.js';
 
 const API_WAIT_TIMEOUT = 10000;

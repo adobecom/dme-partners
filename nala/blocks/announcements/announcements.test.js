@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
 import AnnouncementsPage from './announcements.page.js';
 import SignInPage from '../signin/signin.page.js';
+import Announcements from './announcements.spec.js';
 
 let announcementsPage;
 let singInPage;
-import Announcements from './announcements.spec.js';
 
 const { features } = Announcements;
 const regionCases = features.slice(6, 18);

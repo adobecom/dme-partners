@@ -1,5 +1,14 @@
 import { applyPagePersonalization } from './personalization.js';
-import { setLibs, redirectLoggedinPartner, updateIMSConfig, preloadResources, getRenewBanner, updateNavigation, updateFooter, PARTNER_LOGIN_QUERY } from './utils.js';
+import {
+  setLibs,
+  redirectLoggedinPartner,
+  updateIMSConfig,
+  preloadResources,
+  getRenewBanner,
+  updateNavigation,
+  updateFooter,
+  PARTNER_LOGIN_QUERY,
+} from './utils.js';
 
 // Add project-wide style path here.
 const STYLES = '/edsdme/styles/styles.css';
@@ -24,7 +33,7 @@ const CONFIG = {
   // fallbackRouting: 'off',
   locales: {
     '': { ietf: 'en-US', tk: 'hah7vzn.css' },
-    northamerica: { ietf: 'en', tk: 'hah7vzn.css' },
+    na: { ietf: 'en', tk: 'hah7vzn.css' },
     emea: { ietf: 'en', tk: 'hah7vzn.css' },
     apac: { ietf: 'en', tk: 'hah7vzn.css' },
     de: { ietf: 'de-DE', tk: 'hah7vzn.css' },

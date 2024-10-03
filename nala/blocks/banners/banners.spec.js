@@ -279,9 +279,7 @@ export default {
       name: '@desc-regression-banners-sign-in-gold-user-anniversary-date-out-of-range',
       path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
       tags: '@dme-banners @regression @circleCi',
-      data: {
-        partnerLevel: 'cpp-us-gold:',
-      },
+      data: { partnerLevel: 'cpp-us-gold:' },
     },
   ],
 };

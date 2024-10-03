@@ -1,11 +1,5 @@
-import {
-  getLibs,
-} from '../scripts/utils.js';
-import {
-  partnerCardsStyles,
-  partnerCardsLoadMoreStyles,
-  partnerCardsPaginationStyles,
-} from './PartnerCardsStyles.js';
+import { getLibs } from '../scripts/utils.js';
+import { partnerCardsStyles, partnerCardsLoadMoreStyles, partnerCardsPaginationStyles } from './PartnerCardsStyles.js';
 import './SinglePartnerCard.js';
 
 const miloLibs = getLibs();
@@ -67,7 +61,7 @@ export default class PartnerCards extends LitElement {
       sort: {
         default: {},
         items: [],
-      }
+      },
     };
 
     const blockDataActions = {
@@ -194,6 +188,7 @@ export default class PartnerCards extends LitElement {
         this.hasResponseData = !!apiData.cards;
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error fetching data:', error);
     }
   }

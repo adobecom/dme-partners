@@ -22,26 +22,26 @@ export default class AnnouncementsPage {
   }
 
   async clickPageNumButton(pageNum) {
-      await this.page.locator(`button[aria-label="Page ${pageNum}"]`).click();
-    }
+    await this.page.locator(`button[aria-label="Page ${pageNum}"]`).click();
+  }
 
-    async expandFilterOptions(filterSection) {
-      await this.page.locator(`[aria-label="${filterSection}"]`).click();
-    }
+  async expandFilterOptions(filterSection) {
+    await this.page.locator(`[aria-label="${filterSection}"]`).click();
+  }
 
-    async clickFilterOptions(filterOption) {
-      await this.page.locator(`sp-checkbox:text-is("${filterOption}")`).click();
-    }
+  async clickFilterOptions(filterOption) {
+    await this.page.locator(`sp-checkbox:text-is("${filterOption}")`).click();
+  }
 
-    async clickDateFilterOptions(dateFilterOption) {
-      await this.page.locator(`button[aria-label="${dateFilterOption}"]`).click();
-    }
+  async clickDateFilterOptions(dateFilterOption) {
+    await this.page.locator(`button[aria-label="${dateFilterOption}"]`).click();
+  }
 
-    async clearSideBarFilterButton(filterButton) {
-      await this.page.locator(`[aria-label="${filterButton}"]`).click();
-    }
+  async clearSideBarFilterButton(filterButton) {
+    await this.page.locator(`[aria-label="${filterButton}"]`).click();
+  }
 
-    async clearFilter(filter, number) {
-      await this.page.locator(`[aria-label="${filter}"] + [aria-label="${number}"]`).click();
-    }
+  async clearFilter(filter, number) {
+    await this.page.locator(`[aria-label="${filter}"] + [aria-label="${number}"]`).click();
+  }
 }
