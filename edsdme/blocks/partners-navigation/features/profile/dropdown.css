@@ -26,8 +26,7 @@
 
 /*MWPW-158926*/
 .feds-profile-menu {
-  .company-placeholder,
-  .feds-profile-name {
+  .company-placeholder {
     white-space: normal;
   }
 }
