@@ -79,7 +79,7 @@ export default {
       data: {
         searchCardTitle: 'Automation regression announcements card worldwide no1',
         numberOfMatchingTitleCards: 1,
-        expectedToSeeInURL: '/channelpartners/drafts/automation/regression/Cards/cpp-worldwide-no1',
+        expectedToSeeInURL: '/channelpartners/drafts/automation/regression/cards/cpp-worldwide-no1',
       },
     },
     {

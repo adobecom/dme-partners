@@ -92,7 +92,7 @@ export default {
         partnerLevel: 'tpp-platinum:',
         expectedPublicURL: 'https://partners.stage.adobe.com/channelpartners/',
         restrictedHomePath: 'https://partners.stage.adobe.com/channelpartners/home/?akamaiLocale=na&martech=off',
-        expectedToSeeInURL: 'https://partners.stage.adobe.com/channelpartners/404-content-not-found',
+        expectedToSeeInURL: 'https://partners.stage.adobe.com/channelpartners/error/404',
       },
     },
     {
