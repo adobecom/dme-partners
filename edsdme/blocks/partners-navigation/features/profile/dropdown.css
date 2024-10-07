@@ -25,10 +25,8 @@
 }
 
 /*MWPW-158926*/
-.feds-profile-menu {
-  .company-placeholder {
-    white-space: normal;
-  }
+.feds-profile-menu .company-placeholder {
+  white-space: normal;
 }
 
 [dir = "rtl"] .feds-profile-menu {
