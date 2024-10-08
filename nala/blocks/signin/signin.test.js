@@ -8,6 +8,7 @@ const { features } = signin;
 const redirectionFeatures = features.slice(1, 3);
 const nonMemberRedirects = features.slice(3, 5);
 const nonMemberLoggedInToAdobe = features.slice(5, 7);
+const resellerMembersLogin = features.slice(9, 13);
 
 test.describe('MAPC sign in flow', () => {
   test.beforeEach(async ({ page, browserName, baseURL, context }) => {
@@ -197,6 +198,70 @@ test.describe('MAPC sign in flow', () => {
       const pages = await page.context().pages();
       await expect(pages[0].url())
         .toContain(`${expectedToSeeInURL}`);
+    });
+  });
+
+  resellerMembersLogin.forEach((feature) => {
+    test(`${feature.name},${feature.tags}`, async ({ page }) => {
+      await test.step('Go to the public page', async () => {
+        await page.goto(`${feature.path}`);
+        await page.waitForLoadState('domcontentloaded');
+        await signInPage.signInButton.click();
+      });
+
+      await test.step('Sign in', async () => {
+        await signInPage.signIn(page, `${feature.data.partnerLevel}`);
+      });
+
+      await test.step('Verify successful login', async () => {
+        await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+      });
+    });
+  });
+
+  test(`${features[13].name},${features[13].tags}`, async ({ page }) => {
+    const { data, path } = features[13];
+    await test.step('Go to public program page', async () => {
+      await page.goto(`${path}`);
+      await page.waitForLoadState('domcontentloaded');
+      const joinNowButton = await signInPage.joinNowButton;
+      await expect(joinNowButton).toBeVisible();
+      const signInButton = await signInPage.signInButton;
+      await expect(signInButton).toBeVisible();
+      await signInPage.signInButton.click();
+    });
+
+    await test.step('Sign in', async () => {
+      await signInPage.signIn(page, `${data.partnerLevel}`);
+    });
+
+    await test.step('After login user is redirected to protected program page', async () => {
+      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+      const pages = await page.context().pages();
+      await expect(pages[0].url()).toContain(`${data.landingPageAfterLoginURL}`);
+      const joinNowButton = await signInPage.joinNowButton;
+      await expect(joinNowButton).toBeHidden();
+      const signInButton = await signInPage.signInButton;
+      await expect(signInButton).toBeHidden();
+    });
+
+    await test.step('Logout', async () => {
+      const currentUrl = page.url();
+      const newUrl = `${currentUrl.replace('#', '')}?akamaiLocale=na&martech=off`;
+      await page.goto(newUrl);
+      await signInPage.profileIconButton.click();
+      await signInPage.logoutButton.click();
+    });
+
+    await test.step('Verify redirection to public program page after logout', async () => {
+      await signInPage.signInButton.waitFor({ state: 'visible', timeout: 10000 });
+      const pages = await page.context().pages();
+      await expect(pages[0].url())
+        .toContain(`${data.landingPageAfterLogoutURL}`);
+      const joinNowButton = await signInPage.joinNowButton;
+      await expect(joinNowButton).toBeVisible();
+      const signInButton = await signInPage.signInButton;
+      await expect(signInButton).toBeVisible();
     });
   });
 });
