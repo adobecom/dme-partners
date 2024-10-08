@@ -24,6 +24,11 @@
   transform: translate3d(0,0,0); /* Fix Safari issues w/ position: sticky */
 }
 
+/*MWPW-158926*/
+.feds-profile-menu .company-placeholder {
+  white-space: normal;
+}
+
 [dir = "rtl"] .feds-profile-menu {
   right: initial;
   left: 0;
