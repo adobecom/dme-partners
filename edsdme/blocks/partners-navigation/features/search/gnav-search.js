@@ -9,9 +9,14 @@ import {
   closeAllDropdowns,
   logErrorFor,
 } from '../../utilities/utilities.js';
-import { replaceKeyArray } from '../../../../features/placeholders.js';
-import { getConfig } from '../../../../utils/utils.js';
-import { debounce } from '../../../../utils/action.js';
+// MWPW-159510
+import { getLibs } from '../../../../scripts/utils.js';
+
+const miloLibs = getLibs();
+const { replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
+const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
+const { debounce } = await import(`${miloLibs}/utils/action.js`);
+// End
 
 const CONFIG = {
   suggestions: {

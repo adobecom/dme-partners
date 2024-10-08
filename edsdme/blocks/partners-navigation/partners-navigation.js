@@ -419,7 +419,7 @@ class Gnav {
             Search,
           ] = await Promise.all([
             loadBlock('../features/search/gnav-search.js'),
-            loadStyles(rootPath('features/search/gnav-search.css')),
+            loadStyles('/edsdme/blocks/partners-navigation/features/search/gnav-search.css'), // MWPW-159510
           ]);
           this.Search = Search;
         }
