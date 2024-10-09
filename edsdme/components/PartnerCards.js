@@ -521,12 +521,12 @@ export default class PartnerCards extends LitElement {
         }
         // eslint-disable-next-line consistent-return
         return selectedFiltersKeys.every((key) => cardArbitraryArr.some((arbitraryTag) => {
+          // eslint-disable-next-line consistent-return
           const arbitraryTagKey = Object.keys(arbitraryTag)[0] && Object.keys(arbitraryTag)[0].replaceAll(' ', '-');
           if (arbitraryTagKey !== key) return false;
 
           const arbitraryTagValue = arbitraryTag[key].replaceAll(' ', '-');
           if (arbitraryTagValue) {
-            // eslint-disable-next-line consistent-return
             return this.selectedFilters[key].some((selectedTag) => selectedTag.key === arbitraryTagValue);
           }
           return false;
