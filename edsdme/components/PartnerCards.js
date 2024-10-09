@@ -526,6 +526,7 @@ export default class PartnerCards extends LitElement {
 
           const arbitraryTagValue = arbitraryTag[key].replaceAll(' ', '-');
           if (arbitraryTagValue) {
+            // eslint-disable-next-line consistent-return
             return this.selectedFilters[key].some((selectedTag) => selectedTag.key === arbitraryTagValue);
           }
           return false;
