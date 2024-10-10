@@ -51,6 +51,7 @@ const CONFIG = {
 };
 
 (function removeAccessToken() {
+  window.location.hash = decodeURIComponent(window.location.hash);
   if (window.location.hash.startsWith('#access_token')) {
     window.location.hash = '';
   }
