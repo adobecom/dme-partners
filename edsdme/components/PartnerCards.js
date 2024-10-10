@@ -17,6 +17,7 @@ export default class PartnerCards extends LitElement {
 
   static properties = {
     blockData: { type: Object },
+    //  i guess we will not need only one property for cards , pagination will be done on back
     cards: { type: Array },
     paginatedCards: { type: Array },
     searchTerm: { type: String },
@@ -218,7 +219,7 @@ export default class PartnerCards extends LitElement {
       });
     }
   }
-
+//because of this i guess we should store in paginatedcards
   get partnerCards() {
     if (this.paginatedCards.length) {
       return html`${repeat(
@@ -273,14 +274,50 @@ export default class PartnerCards extends LitElement {
     `;
   }
 
-  get paginationList() {
-    if (!this.cards.length) return;
 
+  // todo override this or separate logic from html and override just logic
+//   get paginationList() {
+//     //todo this check is not valid for search since we will have only paginated cards(or we will place them in cards?)
+//     if (!this.cards.length) return;
+//
+// //todo this would need to be overriden (set in searhc comp since we will got this from response
+//     const min = 1;
+//     this.totalPages = Math.ceil(this.cards.length / this.cardsPerPage);
+//
+//     const pagesNumArray = Array.from({ length: this.totalPages }, (_, i) => i + min);
+//     // eslint-disable-next-line consistent-return
+//     return html`${repeat(
+//       pagesNumArray,
+//       (pageNum) => pageNum,
+//       (pageNum) => html`<button
+//         class="page-btn ${this.paginationCounter === pageNum ? 'selected' : ''}"
+//         @click="${() => this.handlePageNum(pageNum)}"
+//         aria-label="${this.blockData.localizedText['{{page}}']} ${pageNum}">
+//         ${pageNum}
+//       </button>`,
+//     )}`;
+//   }
+  get paginationList() {
+    const pagesNumArray = this.getPageNumArray();
+    return html`${repeat(
+      pagesNumArray,
+      (pageNum) => pageNum,
+      (pageNum) => html`<button
+        class="page-btn ${this.paginationCounter === pageNum ? 'selected' : ''}"
+        @click="${() => this.handlePageNum(pageNum)}"
+        aria-label="${this.blockData.localizedText['{{page}}']} ${pageNum}">
+        ${pageNum}
+      </button>`,
+    )}`;
+  }
+ //todo override this in search compnent to generate page num array based on response
+  getPageNumArray() {
     const min = 1;
     this.totalPages = Math.ceil(this.cards.length / this.cardsPerPage);
 
-    const pagesNumArray = Array.from({ length: this.totalPages }, (_, i) => i + min);
-    // eslint-disable-next-line consistent-return
+    return Array.from({ length: this.totalPages }, (_, i) => i + min);
+  }
+  getPaginationListHtml(pageNumArray) {
     return html`${repeat(
       pagesNumArray,
       (pageNum) => pageNum,
@@ -293,6 +330,7 @@ export default class PartnerCards extends LitElement {
     )}`;
   }
 
+//todo: guess we will override this in search card to calculate based on response and set it
   get cardsCounter() {
     const { length } = this.paginatedCards;
     if (!length) return 0;
@@ -300,7 +338,7 @@ export default class PartnerCards extends LitElement {
     const { orderNum: lastElOrderNum } = this.paginatedCards[length - 1];
 
     if (this.blockData.pagination === 'load-more') return lastElOrderNum;
-
+//why we need ordernum in cards?
     const { orderNum: firstElOrderNum } = this.paginatedCards[0];
     return `${firstElOrderNum} - ${lastElOrderNum}`;
   }
@@ -442,8 +480,9 @@ export default class PartnerCards extends LitElement {
     const element = this.shadowRoot.querySelector('.all-filters-wrapper-mobile');
     element.classList.remove('open');
   }
-
+//this we will not need, since on any action req would be sent (in override) and than we set card and pagination
   handleActions() {
+    console.log('in pc handle actions');
     this.handleSearchAction();
     if (this.blockData.sort.items.length) this.handleSortAction();
     if (this.blockData.filters.length) this.handleFilterAction();
@@ -455,8 +494,9 @@ export default class PartnerCards extends LitElement {
 
   // eslint-disable-next-line class-methods-use-this
   additionalActions() {}
-
+//this should be good since we are overriding handle actions
   handleResetActions() {
+    console.log('in handle reset action in pc, we should call our handle actions after this')
     this.searchTerm = '';
     this.selectedFilters = {};
     this.blockData.filters.forEach((filter) => {
@@ -472,7 +512,7 @@ export default class PartnerCards extends LitElement {
 
   // eslint-disable-next-line class-methods-use-this
   additionalResetActions() {}
-
+//called only in handle action and we will not call it in search
   handleSearchAction() {
     // eslint-disable-next-line max-len
     this.cards = this.allCards.filter((card) => card.contentArea?.title.toLowerCase().includes(this.searchTerm)
@@ -483,9 +523,9 @@ export default class PartnerCards extends LitElement {
     this.searchTerm = event.target.value.toLowerCase();
 
     this.paginationCounter = 1;
+    //this should be removed or overriden
     this.handleActions();
   }
-
   handleSortAction() {
     const sortFunctions = {
       newest: (a, b) => new Date(b.cardDate) - new Date(a.cardDate),
@@ -508,6 +548,7 @@ export default class PartnerCards extends LitElement {
   }
 
   handleFilterAction() {
+    console.log('should not be called in search, handleFilterAction()');
     const selectedFiltersKeys = Object.keys(this.selectedFilters);
 
     if (selectedFiltersKeys.length) {

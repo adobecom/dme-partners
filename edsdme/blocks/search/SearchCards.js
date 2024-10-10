@@ -24,7 +24,7 @@ export default class Search extends PartnerCards {
     this.contentType = 'all';
     this.contentTypeCounter = { countAll: 0, countAssets: 0, countPages: 0 };
   }
-
+// todo: update to use real fetch, check with dragana for what we need card.orderNum,can we delete it,and why we need this.allcards
   async fetchData() {
     const apiData = cardsData;
     // eslint-disable-next-line no-return-assign
@@ -48,8 +48,10 @@ export default class Search extends PartnerCards {
         <p class="no-results-description">${this.blockData.localizedText['{{no-results-description}}']}</p>
       </div>`;
   }
-
+// todo : this should also be done in back and  just set counts based on  response in handle actions method
+  // todo check with dragana why we are setting this.cards = filteredcards since we didn't change any card here
   setContentTypeCounts() {
+    console.log('in setContentTypeCounts(), should be moved to back')
     const counts = { countAll: 0, countAssets: 0, countPages: 0 };
     const filteredCards = [];
 
@@ -65,17 +67,32 @@ export default class Search extends PartnerCards {
     this.cards = filteredCards;
     this.contentTypeCounter = counts;
   }
-
+//todo update to fetch and populate data (this and fetch data should be one method (dont se why would we need 2 methods?)
   handleActions() {
+    console.log('in search card handle actions');
+    console.log('search input changed, we should fetch');
     this.fetchData();
+    //this should be skipped
     super.handleActions();
-  }
+    //and instead of it collect :
+    //  this.searchTerm ,
+    //   this.selectedSortOrder.key,
+    //    this.selectedFilters,
+    // this.contentType
+    //    and set:
+    //    this.paginationCounter (page num),this.cardsPerPage (page size),
+    //    this.paginatedCards,
+    // this.cards
+    //  this.contentTypeCounter (as in setContentTypeCounts())
+    //if filters : this.selectedFilters -  are empty she deleted url params also: this.urlSearchParams.delete('filters');
 
+  }
+// todo remove this since it will be covered
   additionalActions() {
     this.setContentTypeCounts();
     this.handleContentTypeAction();
   }
-
+//todo: this should be good also since we overrride handle actions where we call fetch
   handleContentType(contentType) {
     if (this.contentType === contentType) return;
     this.contentType = contentType;
@@ -83,12 +100,15 @@ export default class Search extends PartnerCards {
     this.paginationCounter = 1;
     this.handleActions();
   }
-
+//todo : remove this - should be filtered on back
   handleContentTypeAction() {
+    console.log('in handleContentTypeAction(), should be skip since back will filter by this also')
     if (this.contentType === 'all') return;
     this.cards = this.cards.filter((card) => card.contentArea?.contentType === this.contentType);
   }
 
+  //todo override getPageNumArray() from superclass
+  //todo overrride get cardsCounter() from superclass
   /* eslint-disable indent */
   render() {
     return html`
