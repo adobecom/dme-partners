@@ -78,7 +78,8 @@ export default class Search extends PartnerCards {
     //  this.searchTerm ,
     //   this.selectedSortOrder.key,
     //    this.selectedFilters,
-    // this.contentType
+    // this.contentType,
+    // this.paginationCounter (// check which value should be sent to backedn (0 or 1)see line 101)
     //    and set:
     //    this.paginationCounter (page num),this.cardsPerPage (page size),
     //    this.paginatedCards,
@@ -96,7 +97,7 @@ export default class Search extends PartnerCards {
   handleContentType(contentType) {
     if (this.contentType === contentType) return;
     this.contentType = contentType;
-
+// check which value should be sent to backedn (0 or 1)
     this.paginationCounter = 1;
     this.handleActions();
   }
@@ -108,7 +109,7 @@ export default class Search extends PartnerCards {
   }
 
   //todo override getPageNumArray() from superclass
-  //todo overrride get cardsCounter() from superclass
+  //todo overrride get cardsCounter() from superclass,or use some new property instead
   /* eslint-disable indent */
   render() {
     return html`
@@ -204,6 +205,7 @@ export default class Search extends PartnerCards {
             ? html`
               <div class="pagination-wrapper ${this.blockData?.pagination === 'load-more' ? 'pagination-wrapper-load-more' : 'pagination-wrapper-default'}">
                 ${this.pagination}
+<!--                this.card.lenght should be replaced with total size value that we got from backend -->
                 <span class="pagination-total-results">${this.cardsCounter} ${this.blockData.localizedText['{{of}}']} ${this.cards.length} ${this.blockData.localizedText['{{results}}']}</span>
               </div>
             `
