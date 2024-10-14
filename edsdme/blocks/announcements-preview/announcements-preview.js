@@ -15,9 +15,9 @@ export default async function init(el) {
   const blockData = {
     caasUrl: getCaasUrl(block),
     ietf: config.locale.ietf,
-    title: 'Partner Announcements',
-    buttonText: 'View all announcements',
-    link: '/channelpartners/document',
+    title: '',
+    buttonText: '',
+    link: '',
     empty: 'Currently, there a no partner announcements'
   };
 
@@ -105,23 +105,27 @@ export default async function init(el) {
 
   await fetchData();
 
-  const componentTitle = document.createElement('div');
-  componentTitle.className = 'text announcement-preview-title';
-  const titleText = document.createElement('h3');
-  titleText.textContent = blockData.title;
-  componentTitle.appendChild(titleText);
-  app.appendChild(componentTitle);
+  if (blockData.title != '') {
+    const componentTitle = document.createElement('div');
+    componentTitle.className = 'text announcement-preview-title';
+    const titleText = document.createElement('h3');
+    titleText.textContent = blockData.title;
+    componentTitle.appendChild(titleText);
+    app.appendChild(componentTitle);
+  }
 
   if (newestCards.length != 0) {
     newestCards.forEach(card => {
       addAnnouncement(card);
     });
 
-    const announcementButton = document.createElement('a');
-    announcementButton.className = 'con-button blue';
-    announcementButton.setAttribute('href', blockData.link);
-    announcementButton.innerText = blockData.buttonText;
-    app.appendChild(announcementButton);
+    if (blockData.link != '' && blockData.buttonText != '') {
+      const announcementButton = document.createElement('a');
+      announcementButton.className = 'con-button blue';
+      announcementButton.setAttribute('href', blockData.link);
+      announcementButton.innerText = blockData.buttonText;
+      app.appendChild(announcementButton);
+    }
   } else {
     const emptyAnnouncements = document.createElement('p');
     emptyAnnouncements.className = 'empty-massage';
