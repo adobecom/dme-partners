@@ -25,15 +25,7 @@ export default class Search extends PartnerCards {
     this.contentTypeCounter = { countAll: 0, countAssets: 0, countPages: 0 };
   }
 
-  async fetchData() {
-    const apiData = cardsData;
-    // eslint-disable-next-line no-return-assign
-    apiData.cards.forEach((card, index) => card.orderNum = index + 1);
-    this.allCards = apiData.cards;
-    this.cards = apiData.cards;
-    this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
-    this.hasResponseData = true;
-  }
+  async fetchData() {}
 
   get partnerCards() {
     if (this.paginatedCards.length) {
@@ -66,27 +58,89 @@ export default class Search extends PartnerCards {
     this.contentTypeCounter = counts;
   }
 
-  handleActions() {
-    this.fetchData();
-    super.handleActions();
+  async handleActions() {
+    console.log('1 chandleActions from search')
+    //   // searchTerm
+    //   // sortItem
+    //   // filters
+    //   // paginationType
+    //   // paginationNum
+    //   console.log('fetch from search')
+    try {
+      const api = `https://www.adobe.com/chimera-api/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true&complexQuery=%28%22caas%3Aadobe-partners%2Fcollections%2Fannouncements%22%2BAND%2B%22caas%3Aadobe-partners%2Fcpp%22%29%2BAND%2B%28%22caas%3Aadobe-partners%2Fcpp%2Fregion%2Fworldwide%22%29%2BAND%2B%28%22caas%3Aadobe-partners%2Fcpp%2Fpartner-level%2Fpublic%22%29&language=en&country=US`;
+      const response = await fetch(api);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const apiData = await response.json();
+      console.log('2 apiData from search', apiData)
+      if (apiData?.cards) {
+        apiData.cards.forEach((card, index) => card.orderNum = index + 1);
+        this.allCards = this.cards = apiData.cards;
+        this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
+        this.hasResponseData = true;
+        console.log('3 fetch from search')
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+    // this.additionalActions();
+    // // // eslint-disable-next-line no-return-assign
+    // this.cards.forEach((card, index) => card.orderNum = index + 1);
+    // this.updatePaginatedCards();
   }
 
   additionalActions() {
     this.setContentTypeCounts();
-    this.handleContentTypeAction();
   }
 
-  handleContentType(contentType) {
+  async handleResetActions() {
+    console.log('async reset')
+    this.searchTerm = '';
+    this.selectedFilters = {};
+    this.blockData.filters.forEach((filter) => {
+      // eslint-disable-next-line no-return-assign
+      filter.tags.forEach((tag) => tag.checked = false);
+      this.urlSearchParams.delete(filter.key);
+    });
+    this.additionalResetActions();
+    this.paginationCounter = 1;
+    await this.handleActions();
+    if (this.blockData.filters.length) this.handleUrlSearchParams();
+  }
+
+  async handleContentType(contentType) {
     if (this.contentType === contentType) return;
     this.contentType = contentType;
 
     this.paginationCounter = 1;
-    this.handleActions();
+    await this.handleActions();
   }
 
-  handleContentTypeAction() {
-    if (this.contentType === 'all') return;
-    this.cards = this.cards.filter((card) => card.contentArea?.contentType === this.contentType);
+  async handleLoadMore() {
+    this.paginationCounter += 1;
+    await this.handleActions();
+  }
+
+  async handlePageNum(pageNum) {
+    if (this.paginationCounter !== pageNum) {
+      this.paginationCounter = pageNum;
+      await this.handleActions();
+    }
+  }
+
+  async handlePrevPage() {
+    if (this.paginationCounter > 1) {
+      this.paginationCounter -= 1;
+      await this.handleActions();
+    }
+  }
+
+  async handleNextPage() {
+    if (this.paginationCounter < this.totalPages) {
+      this.paginationCounter += 1;
+      await this.handleActions();
+    }
   }
 
   /* eslint-disable indent */
