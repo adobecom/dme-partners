@@ -24,6 +24,45 @@ export default class Search extends PartnerCards {
     this.contentType = 'all';
     this.contentTypeCounter = { countAll: 0, countAssets: 0, countPages: 0 };
   }
+  async getCards() {
+    try {
+
+      const url = 'https://14257-dxpartners-stage.adobeioruntime.net/api/v1/web/dx-partners-runtime/search-apc/search-apc';
+      const api = 'https://14257-dxpartners-richarddev.adobeioruntime.net/api/v1/web/dx-partners-runtime/search-apc?partnerLevel=gold&regions=worldwide, pacific&type=all&term=&specializations=education, government&geo=es&language=es-ES&from=0&size=200&sort=relevant';
+      const params = '?partnerLevel=gold&regions=worldwide, pacific&type=all&term=&specializations=education, government&geo=es&language=es-ES&from=0&size=200&sort=relevant';
+      const headers = new Headers();
+      const username = '4073e0e8-13e0-4f6c-b9e3-f0afd0ac4d33';
+      const password = '2J2v587gGwmUxhB3Q6R6422vRMP60D6AbrmK4iE2k00fvR5Tc1EsQloUsgAa3MIH';
+
+      headers.append("X-OW-EXTRA-LOGGING", "ON");
+const basicAuth = 'Basic NDA3M2UwZTgtMTNlMC00ZjZjLWI5ZTMtZjBhZmQwYWM0ZDMzOjJKMnY1ODdnR3dtVXhoQjNRNlI2NDIydlJNUDYwRDZBYnJtSzRpRTJrMDBmdlI1VGMxRXNRbG9Vc2dBYTNNSUg=';
+      // headers.append("Authorization", 'Basic NDA3M2UwZTgtMTNlMC00ZjZjLWI5ZTMtZjBhZmQwYWM0ZDMzOjJKMnY1ODdnR3dtVXhoQjNRNlI2NDIydlJNUDYwRDZBYnJtSzRpRTJrMDBmdlI1VGMxRXNRbG9Vc2dBYTNNSUg=');
+      // headers.append('Authorization', basicAuth);
+// headers.append('Authorization', 'Basic ' +  btoa('4073e0e8-13e0-4f6c-b9e3-f0afd0ac4d33:2J2v587gGwmUxhB3Q6R6422vRMP60D6AbrmK4iE2k00fvR5Tc1EsQloUsgAa3MIH'));
+headers.append('Authorization', 'Basic NDA3M2UwZTgtMTNlMC00ZjZjLWI5ZTMtZjBhZmQwYWM0ZDMzOjJKMnY1ODdnR3dtVXhoQjNRNlI2NDIydlJNUDYwRDZBYnJtSzRpRTJrMDBmdlI1VGMxRXNRbG9Vc2dBYTNNSUg=');
+// headers.append('Authorization', 'Basic 4073e0e8-13e0-4f6c-b9e3-f0afd0ac4d33:2J2v587gGwmUxhB3Q6R6422vRMP60D6AbrmK4iE2k00fvR5Tc1EsQloUsgAa3MIH');
+      headers.append("Content-Type", "application/json");
+      const body = {
+        "filters": {
+          "type": [],
+          "product": [],
+          "language": [],
+          "topic": []
+        }
+      };
+      const options = {
+        headers: headers,
+        method: 'POST',
+        body: body
+      };
+      const response = await fetch(url + params, options);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const apiData = await response.json();
+      console.log('2 apiData from search', apiData);} catch (error) { console.error('Error fetching data:', error);}
+
+  }
 // todo: update to use real fetch, check with dragana for what we need card.orderNum,can we delete it,and why we need this.allcards
   async fetchData() {
     const apiData = cardsData;
@@ -33,6 +72,7 @@ export default class Search extends PartnerCards {
     this.cards = apiData.cards;
     this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
     this.hasResponseData = true;
+    await this.getCards();
   }
 
   get partnerCards() {
