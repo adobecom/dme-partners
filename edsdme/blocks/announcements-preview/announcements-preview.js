@@ -2,9 +2,8 @@ import { getCaasUrl } from '../../scripts/utils.js';
 import { getConfig } from '../utils/utils.js';
 
 export default async function init(el) {
-
   const config = getConfig();
-  let newestCards = [];
+  const newestCards = [];
 
   const block = {
     el,
@@ -18,13 +17,15 @@ export default async function init(el) {
     title: '',
     buttonText: '',
     link: '',
-    empty: 'Currently, there a no partner announcements'
+    empty: 'Currently, there a no partner announcements',
   };
+
+  const app = document.createElement('announcements-preview');
 
   Array.from(el.children).forEach((row) => {
     const cols = Array.from(row.children);
     const rowTitle = cols[0].innerText.trim().toLowerCase().replace(/ /g, '-');
-    console.log('cols', rowTitle, cols[1].innerText);
+
     if (rowTitle && rowTitle === 'title') {
       blockData.title = cols[1].innerText;
     }
@@ -36,7 +37,7 @@ export default async function init(el) {
     }
   });
 
-  function addAnnouncement(cardData){
+  function addAnnouncement(cardData) {
     const announcementItem = document.createElement('div');
     announcementItem.className = 'announcement-item';
 
@@ -74,38 +75,36 @@ export default async function init(el) {
   }
 
   async function fetchData() {
-      try {
-        let apiData;
+    try {
+      let apiData;
 
-        const response = await fetch(blockData.caasUrl);
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        apiData = await response.json();
-        console.log('data321:', apiData);
-
-        if (apiData?.cards) {
-            apiData.cards.forEach(card => {
-              const cardDate = new Date(card.cardDate);
-              if (newestCards.length < 3) {
-                newestCards.push(card);
-                newestCards.sort((a, b) => new Date(b.cardDate) - new Date(a.cardDate));
-              } else if (cardDate > new Date(newestCards[2].cardDate)) {
-                newestCards[2] = card;
-                newestCards.sort((a, b) => new Date(b.cardDate) - new Date(a.cardDate));
-              }
-            });
-        }
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Error fetching data:', error);
+      const response = await fetch(blockData.caasUrl);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
+      apiData = await response.json();
+
+      if (apiData?.cards) {
+        apiData.cards.forEach((card) => {
+          const cardDate = new Date(card.cardDate);
+          if (newestCards.length < 3) {
+            newestCards.push(card);
+            newestCards.sort((a, b) => new Date(b.cardDate) - new Date(a.cardDate));
+          } else if (cardDate > new Date(newestCards[2].cardDate)) {
+            newestCards[2] = card;
+            newestCards.sort((a, b) => new Date(b.cardDate) - new Date(a.cardDate));
+          }
+        });
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error fetching data:', error);
     }
-  const app = document.createElement('announcements-preview');
+  }
 
   await fetchData();
 
-  if (blockData.title != '') {
+  if (blockData.title !== '') {
     const componentTitle = document.createElement('div');
     componentTitle.className = 'text announcement-preview-title';
     const titleText = document.createElement('h3');
@@ -114,12 +113,12 @@ export default async function init(el) {
     app.appendChild(componentTitle);
   }
 
-  if (newestCards.length != 0) {
+  if (newestCards.length !== 0) {
     newestCards.forEach(card => {
       addAnnouncement(card);
     });
 
-    if (blockData.link != '' && blockData.buttonText != '') {
+    if (blockData.link !== '' && blockData.buttonText != '') {
       const announcementButton = document.createElement('a');
       announcementButton.className = 'con-button blue';
       announcementButton.setAttribute('href', blockData.link);
@@ -134,5 +133,4 @@ export default async function init(el) {
   }
 
   el.replaceWith(app);
-
 }
