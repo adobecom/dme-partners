@@ -94,5 +94,6 @@ announcements-preview {
 
   .announcement-item .card-content {
     width: 100%;
+    padding: 10px;
   }
 }
