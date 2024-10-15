@@ -259,7 +259,7 @@ test.describe('Validate announcements block', () => {
       await expect(parseInt(resultWithoutCollectionTagCard.split(' ')[0], 10)).toBe(data.cardsWithoutCollectionTag);
       await announcementsPage.clearAllSelector.click();
       const firstCardTitle = await announcementsPage.firstCardTitle;
-      await expect(firstCardTitle).toBeEmpty();
+      await expect(firstCardTitle).toContainText(data.defaultCardTitle);
       await announcementsPage.searchField.fill(data.noTitleSearch);
       const resultWithoutTitleCard = await announcementsPage.resultNumber.textContent();
       await expect(parseInt(resultWithoutTitleCard.split(' ')[0], 10)).toBe(data.cardsWithoutTitle);

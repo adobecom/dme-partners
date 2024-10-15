@@ -101,6 +101,7 @@ export default {
         cardsWithoutCollectionTag: 0,
         noTitleSearch: 'Without card title',
         cardsWithoutTitle: 0,
+        defaultCardTitle: 'Adobe Partner Connection',
       },
     },
     {
