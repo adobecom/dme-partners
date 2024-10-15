@@ -43,10 +43,12 @@ export default async function init(el) {
 
     const contentWrapper = document.createElement('div');
     contentWrapper.className = 'card-content';
-    const titleElement = document.createElement('h4');
+    const titleElement = document.createElement('h3');
+    titleElement.className = 'card-title';
     titleElement.textContent = cardData.contentArea.title;
 
     const descriptionElement = document.createElement('p');
+    descriptionElement.className = 'card-description';
     descriptionElement.textContent = cardData.contentArea.description;
 
     const imageWrapper = document.createElement('div');
@@ -55,11 +57,11 @@ export default async function init(el) {
     const picture = document.createElement('picture');
 
     const source = document.createElement('source');
-    source.srcset = `${new URL(cardData.styles?.backgroundImage).pathname}?width=100&format=webp&optimize=small`;
+    source.srcset = `${new URL(cardData.styles?.backgroundImage).pathname}?width=240&format=webp&optimize=small`;
     source.type = 'image/webp';
 
     const img = document.createElement('img');
-    img.src = `${new URL(cardData.styles?.backgroundImage).pathname}??width=100&format=webp&optimize=small`;
+    img.src = `${new URL(cardData.styles?.backgroundImage).pathname}??width=240&format=webp&optimize=small`;
     img.alt = 'Image description';
     img.loading = 'lazy';
 
