@@ -114,11 +114,11 @@ export default async function init(el) {
   }
 
   if (newestCards.length !== 0) {
-    newestCards.forEach(card => {
+    newestCards.forEach((card) => {
       addAnnouncement(card);
     });
 
-    if (blockData.link !== '' && blockData.buttonText != '') {
+    if (blockData.link !== '' && blockData.buttonText !== '') {
       const announcementButton = document.createElement('a');
       announcementButton.className = 'con-button blue';
       announcementButton.setAttribute('href', blockData.link);
