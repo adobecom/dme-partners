@@ -77,7 +77,7 @@ class ProfileDropdown {
     this.dropdown = this.decorateDropdown();
     this.addEventListeners();
 
-    if (this.openOnInit) trigger({ element: this.buttonElem });
+    if (this.openOnInit) trigger({ element: this.buttonElem, type: 'profile' }); // MWPW-157752
 
     this.decoratedElem.append(this.dropdown);
   }
@@ -197,7 +197,7 @@ class ProfileDropdown {
   }
 
   addEventListeners() {
-    this.buttonElem.addEventListener('click', (e) => trigger({ element: this.buttonElem, event: e }));
+    this.buttonElem.addEventListener('click', (e) => trigger({ element: this.buttonElem, event: e, type: 'profile' })); // MWPW-157752
     this.buttonElem.addEventListener('keydown', (e) => e.code === 'Escape' && closeAllDropdowns());
     this.dropdown.addEventListener('keydown', (e) => e.code === 'Escape' && closeAllDropdowns());
     this.avatarElem.addEventListener('click', (e) => {

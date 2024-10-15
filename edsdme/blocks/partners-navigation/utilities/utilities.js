@@ -302,11 +302,26 @@ export function closeAllDropdowns({ type } = {}) {
   if (isDesktop.matches) setCurtainState(false);
 }
 
+// MWPW-157752
+function closeProfileDropdownOutside(event) {
+  const isTargetProfileDropdown = event.target.closest('.feds-profile');
+  if (!isTargetProfileDropdown) {
+    closeAllDropdowns();
+    document.removeEventListener('click', closeProfileDropdownOutside);
+  }
+}
+
 export function trigger({ element, event, type } = {}) {
   if (event) event.preventDefault();
   const isOpen = element?.getAttribute('aria-expanded') === 'true';
   closeAllDropdowns({ type });
   if (isOpen) return false;
+
+  // MWPW-157752
+  if (type === 'profile') {
+    document.addEventListener('click', closeProfileDropdownOutside);
+  }
+
   element.setAttribute('aria-expanded', 'true');
   return true;
 }
