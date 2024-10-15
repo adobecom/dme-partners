@@ -76,7 +76,7 @@ export default async function init(el) {
 
   async function fetchData() {
     try {
-      let apiData;
+      let apiData = [];
 
       const response = await fetch(blockData.caasUrl);
       if (!response.ok) {
