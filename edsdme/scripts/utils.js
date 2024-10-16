@@ -435,3 +435,11 @@ export function getNodesByXPath(query, context = document) {
   }
   return nodes;
 }
+
+export function enableGeoPopup() {
+  const { hostname } = window.location;
+  if (hostname.endsWith('.adobe.com') && !partnerIsSignedIn()) {
+    return 'on';
+  }
+  return 'off';
+}
