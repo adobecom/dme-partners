@@ -150,7 +150,7 @@ export default class PartnerCards extends LitElement {
   async firstUpdated() {
     await super.firstUpdated();
     await this.fetchData();
-    if (this.blockData.filters.length) this.initUrlSearchParams();
+    this.initUrlSearchParams();
     if (this.blockData.sort.items.length) this.selectedSortOrder = this.blockData.sort.default;
     if (this.blockData.cardsPerPage) this.cardsPerPage = this.blockData.cardsPerPage;
     this.additionalFirstUpdated();
@@ -198,7 +198,12 @@ export default class PartnerCards extends LitElement {
     const { search } = location || window.location;
     this.urlSearchParams = new URLSearchParams(search);
 
-    if (this.urlSearchParams.has('filters', 'yes')) {
+    const term = this.urlSearchParams.get('term');
+    if (term) {
+      this.searchTerm = term;
+    }
+
+    if (this.blockData.filters.length && this.urlSearchParams.has('filters', 'yes')) {
       this.blockData.filters = this.blockData.filters.map((filter) => {
         if (this.urlSearchParams.has(filter.key)) {
           const filtersSearchTags = this.urlSearchParams.get(filter.key).split(',');
