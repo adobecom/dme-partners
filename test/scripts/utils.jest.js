@@ -29,6 +29,7 @@ import {
   getCaasUrl,
   getNodesByXPath,
   setLibs,
+  enableGeoPopup,
 } from '../../edsdme/scripts/utils.js';
 
 describe('Test utils.js', () => {
@@ -481,5 +482,18 @@ describe('Test utils.js', () => {
     const cookieObject = { CPP: { salesCenterAccess: false } };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
     expect(hasSalesCenterAccess()).toBe(false);
+  });
+  it('Disable geo popup for milo urls', () => {
+    window.location.hostname = 'main--dme-partners--adobecom.hlx.live';
+    expect(enableGeoPopup()).toEqual('off');
+  });
+  it('Disable geo popup for non milo urls if the user is signed in', () => {
+    window.location.hostname = 'partners.stage.adobe.com';
+    expect(enableGeoPopup()).toEqual('off');
+  });
+  it('Enables geo popup for non milo urls if the user is not signed in', () => {
+    window.location.hostname = 'partners.stage.adobe.com';
+    document.cookie = 'partner_data=';
+    expect(enableGeoPopup()).toEqual('on');
   });
 });

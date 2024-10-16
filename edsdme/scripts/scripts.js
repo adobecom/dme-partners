@@ -7,6 +7,7 @@ import {
   getRenewBanner,
   updateNavigation,
   updateFooter,
+  enableGeoPopup,
   PARTNER_LOGIN_QUERY,
 } from './utils.js';
 
@@ -29,7 +30,7 @@ const CONFIG = {
   codeRoot: '/edsdme',
   contentRoot: '/edsdme/partners-shared',
   imsClientId,
-  geoRouting: 'on',
+  geoRouting: enableGeoPopup(),
   // fallbackRouting: 'off',
   locales: {
     '': { ietf: 'en-US', tk: 'hah7vzn.css' },
