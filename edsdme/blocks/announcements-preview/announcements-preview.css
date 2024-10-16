@@ -33,6 +33,7 @@ announcements-preview .con-button {
   height: 100%;
   width: 80%;
   overflow: hidden;
+  margin-right: 10px;
 }
 
 .card-content .card-title {
@@ -55,7 +56,7 @@ announcements-preview .con-button {
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  color: #666;
+  color: var(--color-gray-600);
   -webkit-line-clamp: 2;
   text-overflow: ellipsis;
 }
