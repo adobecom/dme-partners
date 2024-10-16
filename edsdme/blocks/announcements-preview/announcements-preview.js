@@ -17,7 +17,7 @@ export default async function init(el) {
     title: '',
     buttonText: '',
     link: '',
-    empty: 'Currently, there a no partner announcements',
+    empty: 'Currently, there are no partner announcements',
   };
 
   const app = document.createElement('announcements-preview');
@@ -38,6 +38,13 @@ export default async function init(el) {
   });
 
   function addAnnouncement(cardData) {
+    const linkWrapper = document.createElement('a');
+    linkWrapper.className = 'link-wrapper';
+    linkWrapper.href = cardData.contentArea.url;
+    linkWrapper.target = '_blank';
+
+    linkWrapper.style.display = 'block';
+
     const announcementItem = document.createElement('div');
     announcementItem.className = 'announcement-item';
 
@@ -73,7 +80,9 @@ export default async function init(el) {
     contentWrapper.appendChild(titleElement);
     contentWrapper.appendChild(descriptionElement);
     announcementItem.appendChild(contentWrapper);
-    app.appendChild(announcementItem);
+
+    linkWrapper.appendChild(announcementItem);
+    app.appendChild(linkWrapper);
   }
 
   async function fetchData() {

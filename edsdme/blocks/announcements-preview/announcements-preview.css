@@ -1,5 +1,6 @@
 /* stylelint-disable */
-.announcement-item {
+.announcement-item,
+.link-wrapper {
   display: flex;
   align-items: center;
   margin: 26px 0px;
@@ -28,11 +29,6 @@ announcements-preview .con-button {
   object-fit: cover;
 }
 
-.card-description {
-  margin: 10px 0 0 0;
-  color: #666;
-}
-
 .card-content {
   height: 100%;
   width: 80%;
@@ -48,22 +44,31 @@ announcements-preview .con-button {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
   text-overflow: ellipsis;
+  color: black;
+  text-decoration: none;
 }
 
 .card-description {
-  margin: 10px 0px 10px 0px;
+  margin: 10px 0px;
   padding: 0;
   line-height: 1.2;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-}
-
-.card-description {
+  color: #666;
   -webkit-line-clamp: 2;
   text-overflow: ellipsis;
 }
 
 announcements-preview {
   width: 100%;
+}
+
+.announcement-item:hover {
+  box-shadow: 0px 2px 4px #00000029;
+}
+
+.link-wrapper:hover {
+  text-decoration: none;
+
 }
