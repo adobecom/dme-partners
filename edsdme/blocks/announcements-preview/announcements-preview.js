@@ -1,6 +1,81 @@
 import { getCaasUrl } from '../../scripts/utils.js';
 import { getConfig } from '../utils/utils.js';
 
+function addAnnouncement(cardData) {
+  const linkWrapper = document.createElement('a');
+  linkWrapper.className = 'link-wrapper';
+  linkWrapper.href = cardData.contentArea.url;
+  linkWrapper.target = '_blank';
+
+  linkWrapper.style.display = 'block';
+
+  const announcementItem = document.createElement('div');
+  announcementItem.className = 'announcement-item';
+
+  const contentWrapper = document.createElement('div');
+  contentWrapper.className = 'card-content';
+  const titleElement = document.createElement('h3');
+  titleElement.className = 'card-title';
+  titleElement.textContent = cardData.contentArea.title;
+
+  const descriptionElement = document.createElement('p');
+  descriptionElement.className = 'card-description';
+  descriptionElement.textContent = cardData.contentArea.description;
+
+  const imageWrapper = document.createElement('div');
+  imageWrapper.className = 'card-image';
+
+  const picture = document.createElement('picture');
+
+  const source = document.createElement('source');
+  source.srcset = `${new URL(cardData.styles?.backgroundImage).pathname}?width=240&format=webp&optimize=small`;
+  source.type = 'image/webp';
+
+  const img = document.createElement('img');
+  img.src = `${new URL(cardData.styles?.backgroundImage).pathname}??width=240&format=webp&optimize=small`;
+  img.alt = 'Image description';
+  img.loading = 'lazy';
+
+  picture.appendChild(source);
+  picture.appendChild(img);
+
+  imageWrapper.appendChild(picture);
+  announcementItem.appendChild(imageWrapper);
+  contentWrapper.appendChild(titleElement);
+  contentWrapper.appendChild(descriptionElement);
+  announcementItem.appendChild(contentWrapper);
+
+  linkWrapper.appendChild(announcementItem);
+  return linkWrapper;
+}
+
+async function fetchData(blockData, newestCards) {
+  try {
+    let apiData = [];
+    const response = await fetch(blockData.caasUrl);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    apiData = await response.json();
+
+    if (apiData?.cards) {
+      apiData.cards.forEach((card) => {
+        const cardDate = new Date(card.cardDate);
+        if (newestCards.length < 3) {
+          newestCards.push(card);
+          newestCards.sort((a, b) => new Date(b.cardDate) - new Date(a.cardDate));
+        } else if (cardDate > new Date(newestCards[2].cardDate)) {
+          newestCards[2] = card;
+          newestCards.sort((a, b) => new Date(b.cardDate) - new Date(a.cardDate));
+        }
+      });
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching data:', error);
+  }
+}
+
 export default async function init(el) {
   const config = getConfig();
   const newestCards = [];
@@ -20,7 +95,8 @@ export default async function init(el) {
     empty: 'Currently, there are no partner announcements',
   };
 
-  const app = document.createElement('announcements-preview');
+  const app = document.createElement('div');
+  app.className = 'announcements-preview';
 
   Array.from(el.children).forEach((row) => {
     const cols = Array.from(row.children);
@@ -37,83 +113,7 @@ export default async function init(el) {
     }
   });
 
-  function addAnnouncement(cardData) {
-    const linkWrapper = document.createElement('a');
-    linkWrapper.className = 'link-wrapper';
-    linkWrapper.href = cardData.contentArea.url;
-    linkWrapper.target = '_blank';
-
-    linkWrapper.style.display = 'block';
-
-    const announcementItem = document.createElement('div');
-    announcementItem.className = 'announcement-item';
-
-    const contentWrapper = document.createElement('div');
-    contentWrapper.className = 'card-content';
-    const titleElement = document.createElement('h3');
-    titleElement.className = 'card-title';
-    titleElement.textContent = cardData.contentArea.title;
-
-    const descriptionElement = document.createElement('p');
-    descriptionElement.className = 'card-description';
-    descriptionElement.textContent = cardData.contentArea.description;
-
-    const imageWrapper = document.createElement('div');
-    imageWrapper.className = 'card-image';
-
-    const picture = document.createElement('picture');
-
-    const source = document.createElement('source');
-    source.srcset = `${new URL(cardData.styles?.backgroundImage).pathname}?width=240&format=webp&optimize=small`;
-    source.type = 'image/webp';
-
-    const img = document.createElement('img');
-    img.src = `${new URL(cardData.styles?.backgroundImage).pathname}??width=240&format=webp&optimize=small`;
-    img.alt = 'Image description';
-    img.loading = 'lazy';
-
-    picture.appendChild(source);
-    picture.appendChild(img);
-
-    imageWrapper.appendChild(picture);
-    announcementItem.appendChild(imageWrapper);
-    contentWrapper.appendChild(titleElement);
-    contentWrapper.appendChild(descriptionElement);
-    announcementItem.appendChild(contentWrapper);
-
-    linkWrapper.appendChild(announcementItem);
-    app.appendChild(linkWrapper);
-  }
-
-  async function fetchData() {
-    try {
-      let apiData = [];
-
-      const response = await fetch(blockData.caasUrl);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      apiData = await response.json();
-
-      if (apiData?.cards) {
-        apiData.cards.forEach((card) => {
-          const cardDate = new Date(card.cardDate);
-          if (newestCards.length < 3) {
-            newestCards.push(card);
-            newestCards.sort((a, b) => new Date(b.cardDate) - new Date(a.cardDate));
-          } else if (cardDate > new Date(newestCards[2].cardDate)) {
-            newestCards[2] = card;
-            newestCards.sort((a, b) => new Date(b.cardDate) - new Date(a.cardDate));
-          }
-        });
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error fetching data:', error);
-    }
-  }
-
-  await fetchData();
+  await fetchData(blockData, newestCards);
 
   if (blockData.title !== '') {
     const componentTitle = document.createElement('div');
@@ -124,12 +124,13 @@ export default async function init(el) {
     app.appendChild(componentTitle);
   }
 
-  if (newestCards.length !== 0) {
+  if (newestCards.length) {
     newestCards.forEach((card) => {
-      addAnnouncement(card);
+      const linkWrapper = addAnnouncement(card);
+      app.appendChild(linkWrapper);
     });
 
-    if (blockData.link !== '' && blockData.buttonText !== '') {
+    if (blockData.link && blockData.buttonText) {
       const announcementButton = document.createElement('a');
       announcementButton.className = 'con-button blue';
       announcementButton.setAttribute('href', blockData.link);

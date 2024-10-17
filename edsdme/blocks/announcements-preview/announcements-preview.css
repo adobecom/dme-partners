@@ -10,7 +10,7 @@
   max-width: 600px;
 }
 
-announcements-preview .con-button {
+.announcements-preview .con-button {
   margin: 5px 0px;
 }
 
@@ -61,7 +61,7 @@ announcements-preview .con-button {
   text-overflow: ellipsis;
 }
 
-announcements-preview {
+.announcements-preview {
   width: 100%;
 }
 
