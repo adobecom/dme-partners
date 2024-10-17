@@ -33,7 +33,7 @@ function addAnnouncement(cardData) {
 
   const img = document.createElement('img');
   img.src = `${new URL(cardData.styles?.backgroundImage).pathname}??width=240&format=webp&optimize=small`;
-  img.alt = 'Image description';
+  img.alt = cardData.styles ? cardData.styles.backgroundAltText : '';
   img.loading = 'lazy';
 
   picture.appendChild(source);
@@ -115,7 +115,7 @@ export default async function init(el) {
 
   await fetchData(blockData, newestCards);
 
-  if (blockData.title !== '') {
+  if (blockData.title) {
     const componentTitle = document.createElement('div');
     componentTitle.className = 'text announcement-preview-title';
     const titleText = document.createElement('h3');
