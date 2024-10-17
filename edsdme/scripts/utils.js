@@ -394,8 +394,8 @@ export async function preloadResources(locales, miloLibs) {
     if (!el) return;
 
     if (key !== 'announcements-preview') {
-        preloadPlaceholders(locale);
-        preloadLit(miloLibs);
+      preloadPlaceholders(locale);
+      preloadLit(miloLibs);
     }
 
     const block = {
