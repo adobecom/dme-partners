@@ -252,9 +252,9 @@ class Search {
     return resultsTemplate;
   }
 
-  getViewAllResultsTemplate() {
+  getViewAllResultsTemplate(query = this.query) {
     return toFragment`<li>
-      <a href="${Search.getSearchLink('')}" class="feds-search-view-all-results"><span>${this.labels.viewAllResults}</span></a>
+      <a href="${Search.getSearchLink(query)}" class="feds-search-view-all-results"><span>${this.labels.viewAllResults}</span></a>
     </li>`;
   }
 
