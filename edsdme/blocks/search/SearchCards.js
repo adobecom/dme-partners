@@ -65,7 +65,7 @@ export default class Search extends PartnerCards {
         queryParams.append('regions',  regions);
         queryParams.append('type',this.contentType);
         queryParams.append('term', this.searchTerm);
-        queryParams.append('geo', localesData.region);
+        queryParams.append('geo', localesData.prefix && localesData.region);
         queryParams.append('language', localesData.ietf);
         queryParams.append('from', startCardIndex.toString());
         queryParams.append('size',this.cardsPerPage);
