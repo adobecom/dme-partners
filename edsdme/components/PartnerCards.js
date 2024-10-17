@@ -275,11 +275,7 @@ export default class PartnerCards extends LitElement {
 
   get paginationList() {
     if (!this.cards.length) return;
-
-    const min = 1;
-    this.totalPages = Math.ceil(this.cards.length / this.cardsPerPage);
-
-    const pagesNumArray = Array.from({ length: this.totalPages }, (_, i) => i + min);
+    const pagesNumArray = this.getPageNumArray();
     // eslint-disable-next-line consistent-return
     return html`${repeat(
       pagesNumArray,
@@ -291,6 +287,15 @@ export default class PartnerCards extends LitElement {
         ${pageNum}
       </button>`,
     )}`;
+  }
+
+  getPageNumArray() {
+    const min = 1;
+    this.totalPages = Math.ceil(this.cards.length / this.cardsPerPage);
+
+    const pagesNumArray = Array.from({ length: this.totalPages }, (_, i) => i + min);
+    // eslint-disable-next-line consistent-return
+    return Array.from({ length: this.totalPages }, (_, i) => i + min);
   }
 
   get cardsCounter() {

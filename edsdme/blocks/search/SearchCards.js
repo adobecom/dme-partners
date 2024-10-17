@@ -1,11 +1,14 @@
-import { getLibs } from '../../scripts/utils.js';
+import {
+  getCurrentProgramType,
+  getLibs, getLocale, getPartnerDataCookieObject,
+} from '../../scripts/utils.js';
 import PartnerCards from '../../components/PartnerCards.js';
 import { searchCardsStyles } from './SearchCardsStyles.js';
 import '../../components/SearchCard.js';
-import cardsData from './cards.js';
 
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
+const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
 
 export default class Search extends PartnerCards {
   static styles = [
@@ -26,13 +29,7 @@ export default class Search extends PartnerCards {
   }
 
   async fetchData() {
-    const apiData = cardsData;
-    // eslint-disable-next-line no-return-assign
-    apiData.cards.forEach((card, index) => card.orderNum = index + 1);
-    this.allCards = apiData.cards;
-    this.cards = apiData.cards;
-    this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
-    this.hasResponseData = true;
+    // override in order to do nothing since we will fetch data in handleActions which is called on each user action
   }
 
   get partnerCards() {
@@ -49,32 +46,78 @@ export default class Search extends PartnerCards {
       </div>`;
   }
 
-  setContentTypeCounts() {
-    const counts = { countAll: 0, countAssets: 0, countPages: 0 };
-    const filteredCards = [];
+  async getCards() {
+    const url = new URL(
+      "https://14257-dxpartners-stage.adobeioruntime.net/api/v1/web/dx-partners-runtime/search-apc/search-apc?",
+    );
 
-    this.cards.forEach((card) => {
-      if (card.contentArea?.contentType === 'asset' || card.contentArea?.contentType === 'page') {
-        counts.countAll += 1;
-        if (card.contentArea.contentType === 'asset') counts.countAssets += 1;
-        if (card.contentArea.contentType === 'page') counts.countPages += 1;
-        filteredCards.push(card);
+    const startCardIndex = (this.paginationCounter - 1) * this.cardsPerPage;
+
+    const partnerDataCookie = getPartnerDataCookieObject(getCurrentProgramType());
+    const partnerLevel = partnerDataCookie?.level || 'public';
+    const regions = partnerDataCookie?.level || 'worldwide';
+
+    const { locales } = getConfig();
+    const localesData = getLocale(locales);
+
+    const queryParams = new URLSearchParams(url.search);
+        queryParams.append('partnerLevel', partnerLevel);
+        queryParams.append('regions',  regions);
+        queryParams.append('type',this.contentType);
+        queryParams.append('term', this.searchTerm);
+        queryParams.append('geo', localesData.region);
+        queryParams.append('language', localesData.ietf);
+        queryParams.append('from', startCardIndex.toString());
+        queryParams.append('size',this.cardsPerPage);
+        const sortMap = {'most-recent': 'recent', 'most-relevant': 'relevant'}
+        queryParams.append('sort', sortMap[this.selectedSortOrder.key]);
+
+    const postData = {
+      filters: {
+        type: this.selectedFilters?.type?.map((filter) =>filter.key) || [],
+        product: this.selectedFilters?.product?.map((filter) => filter.key) || [],
+        language: this.selectedFilters?.language?.map((filter) => filter.key) || [],
+        topic: this.selectedFilters?.topic?.map((filter) => filter.key) || []
+      }};
+
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("Authorization", "Basic NDA3M2UwZTgtMTNlMC00ZjZjLWI5ZTMtZjBhZmQwYWM0ZDMzOjJKMnY1ODdnR3dtVXhoQjNRNlI2NDIydlJNUDYwRDZBYnJtSzRpRTJrMDBmdlI1VGMxRXNRbG9Vc2dBYTNNSUg=")
+
+    let apiData;
+    try {
+      setTimeout(() => {
+        this.hasResponseData = !!apiData?.cards;
+        this.fetchedData = true;
+      }, 5);
+
+
+      const response = await fetch(url + queryParams, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(postData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error message: ${response.statusText}`);
       }
-    });
 
-    this.cards = filteredCards;
-    this.contentTypeCounter = counts;
+      apiData = await response.json();
+      this.hasResponseData = !!apiData.cards;
+      return apiData;
+    } catch (error) {
+      console.error('There was a problem with your fetch operation:', error);
+    }
   }
-
-  handleActions() {
-    this.fetchData();
-    super.handleActions();
-  }
-
-  additionalActions() {
-    this.setContentTypeCounts();
-    this.handleContentTypeAction();
-  }
+  async handleActions() {
+    const cardsData = await this.getCards();
+    const cards = cardsData.cards;
+    const count = cardsData.count;
+    this.cards = cards;
+    this.paginatedCards = cards;
+    this.countAll =  count.all;
+    this.contentTypeCounter = { countAll: count.all, countAssets: count.assets, countPages: count.pages };
+    }
 
   handleContentType(contentType) {
     if (this.contentType === contentType) return;
@@ -84,9 +127,21 @@ export default class Search extends PartnerCards {
     this.handleActions();
   }
 
-  handleContentTypeAction() {
-    if (this.contentType === 'all') return;
-    this.cards = this.cards.filter((card) => card.contentArea?.contentType === this.contentType);
+  getPageNumArray() {
+    let numberOfPages = Math.ceil(this.contentTypeCounter.countAll / this.cardsPerPage);
+    this.totalPages = numberOfPages;
+    // eslint-disable-next-line consistent-return
+    return Array.from({length: numberOfPages}, (value, index) => index + 1);
+  }
+
+  get cardsCounter() {
+    const startIndex = (this.paginationCounter - 1) * this.cardsPerPage;
+
+    const endIndex = startIndex + this.cardsPerPage;
+    const lastCardIndex = this.contentTypeCounter.countAll < endIndex ? this.contentTypeCounter.countAll : endIndex;
+    if (this.blockData.pagination === 'load-more') return lastCardIndex;
+
+    return `${startIndex + 1} - ${lastCardIndex}`;
   }
 
   /* eslint-disable indent */
@@ -184,7 +239,7 @@ export default class Search extends PartnerCards {
             ? html`
               <div class="pagination-wrapper ${this.blockData?.pagination === 'load-more' ? 'pagination-wrapper-load-more' : 'pagination-wrapper-default'}">
                 ${this.pagination}
-                <span class="pagination-total-results">${this.cardsCounter} ${this.blockData.localizedText['{{of}}']} ${this.cards.length} ${this.blockData.localizedText['{{results}}']}</span>
+                <span class="pagination-total-results">${this.cardsCounter} ${this.blockData.localizedText['{{of}}']} ${this.contentTypeCounter.countAll} ${this.blockData.localizedText['{{results}}']}</span>
               </div>
             `
             : ''
