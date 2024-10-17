@@ -28,8 +28,10 @@ export default class Search extends PartnerCards {
     this.contentTypeCounter = { countAll: 0, countAssets: 0, countPages: 0 };
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async fetchData() {
-    // override in order to do nothing since we will fetch data in handleActions which is called on each user action
+    // override in order to do nothing since
+    // we will fetch data in handleActions which is called on each user action
   }
 
   get partnerCards() {
@@ -46,9 +48,10 @@ export default class Search extends PartnerCards {
       </div>`;
   }
 
+  // eslint-disable-next-line consistent-return
   async getCards() {
     const url = new URL(
-      "https://14257-dxpartners-stage.adobeioruntime.net/api/v1/web/dx-partners-runtime/search-apc/search-apc?",
+      'https://14257-dxpartners-stage.adobeioruntime.net/api/v1/web/dx-partners-runtime/search-apc/search-apc?',
     );
 
     const startCardIndex = (this.paginationCounter - 1) * this.cardsPerPage;
@@ -61,40 +64,35 @@ export default class Search extends PartnerCards {
     const localesData = getLocale(locales);
 
     const queryParams = new URLSearchParams(url.search);
-        queryParams.append('partnerLevel', partnerLevel);
-        queryParams.append('regions',  regions);
-        queryParams.append('type',this.contentType);
-        queryParams.append('term', this.searchTerm);
-        queryParams.append('geo', localesData.prefix && localesData.region);
-        queryParams.append('language', localesData.ietf);
-        queryParams.append('from', startCardIndex.toString());
-        queryParams.append('size',this.cardsPerPage);
-        const sortMap = {'most-recent': 'recent', 'most-relevant': 'relevant'}
-        queryParams.append('sort', sortMap[this.selectedSortOrder.key]);
+    queryParams.append('partnerLevel', partnerLevel);
+    queryParams.append('regions', regions);
+    queryParams.append('type', this.contentType);
+    queryParams.append('term', this.searchTerm);
+    queryParams.append('geo', localesData.prefix && localesData.region);
+    queryParams.append('language', localesData.ietf);
+    queryParams.append('from', startCardIndex.toString());
+    queryParams.append('size', this.cardsPerPage);
+    const sortMap = { 'most-recent': 'recent', 'most-relevant': 'relevant' };
+    queryParams.append('sort', sortMap[this.selectedSortOrder.key]);
 
     const postData = {
       filters: {
-        type: this.selectedFilters?.type?.map((filter) =>filter.key) || [],
+        type: this.selectedFilters?.type?.map((filter) => filter.key) || [],
         product: this.selectedFilters?.product?.map((filter) => filter.key) || [],
         language: this.selectedFilters?.language?.map((filter) => filter.key) || [],
-        topic: this.selectedFilters?.topic?.map((filter) => filter.key) || []
-      }};
+        topic: this.selectedFilters?.topic?.map((filter) => filter.key) || [],
+      },
+    };
 
     const headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    headers.append("Authorization", "Basic NDA3M2UwZTgtMTNlMC00ZjZjLWI5ZTMtZjBhZmQwYWM0ZDMzOjJKMnY1ODdnR3dtVXhoQjNRNlI2NDIydlJNUDYwRDZBYnJtSzRpRTJrMDBmdlI1VGMxRXNRbG9Vc2dBYTNNSUg=")
+    headers.append('Content-Type', 'application/json');
+    headers.append('Authorization', 'Basic NDA3M2UwZTgtMTNlMC00ZjZjLWI5ZTMtZjBhZmQwYWM0ZDMzOjJKMnY1ODdnR3dtVXhoQjNRNlI2NDIydlJNUDYwRDZBYnJtSzRpRTJrMDBmdlI1VGMxRXNRbG9Vc2dBYTNNSUg=');
 
     let apiData;
     try {
-      setTimeout(() => {
-        this.hasResponseData = !!apiData?.cards;
-        this.fetchedData = true;
-      }, 5);
-
-
       const response = await fetch(url + queryParams, {
         method: 'POST',
-        headers: headers,
+        headers,
         body: JSON.stringify(postData),
       });
 
@@ -106,18 +104,24 @@ export default class Search extends PartnerCards {
       this.hasResponseData = !!apiData.cards;
       return apiData;
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('There was a problem with your fetch operation:', error);
     }
   }
+
   async handleActions() {
+    this.hasResponseData = false;
     const cardsData = await this.getCards();
-    const cards = cardsData.cards;
-    const count = cardsData.count;
+    const { cards, count } = cardsData;
     this.cards = cards;
     this.paginatedCards = cards;
-    this.countAll =  count.all;
-    this.contentTypeCounter = { countAll: count.all, countAssets: count.assets, countPages: count.pages };
-    }
+    this.countAll = count.all;
+    this.contentTypeCounter = {
+      countAll: count.all,
+      countAssets: count.assets,
+      countPages: count.pages,
+    };
+  }
 
   handleContentType(contentType) {
     if (this.contentType === contentType) return;
@@ -128,17 +132,18 @@ export default class Search extends PartnerCards {
   }
 
   getPageNumArray() {
-    let numberOfPages = Math.ceil(this.contentTypeCounter.countAll / this.cardsPerPage);
+    const numberOfPages = Math.ceil(this.contentTypeCounter.countAll / this.cardsPerPage);
     this.totalPages = numberOfPages;
     // eslint-disable-next-line consistent-return
-    return Array.from({length: numberOfPages}, (value, index) => index + 1);
+    return Array.from({ length: numberOfPages }, (value, index) => index + 1);
   }
 
   get cardsCounter() {
     const startIndex = (this.paginationCounter - 1) * this.cardsPerPage;
 
     const endIndex = startIndex + this.cardsPerPage;
-    const lastCardIndex = this.contentTypeCounter.countAll < endIndex ? this.contentTypeCounter.countAll : endIndex;
+    const lastCardIndex = this.contentTypeCounter.countAll < endIndex
+      ? this.contentTypeCounter.countAll : endIndex;
     if (this.blockData.pagination === 'load-more') return lastCardIndex;
 
     return `${startIndex + 1} - ${lastCardIndex}`;
