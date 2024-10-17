@@ -106,7 +106,8 @@
   border-radius: 0 0 3px 3px;
 }
 
-.feds-search-result {
+.feds-search-result,
+.feds-search-view-all-results {
   display: block;
   padding: 5px 10px;
   font-size: 13px;
@@ -122,6 +123,10 @@
 
 .feds-search-result span {
   font-weight: 400;
+}
+
+.feds-search-view-all-results {
+  color: var(--link-color);
 }
 
 @media screen and (min-width: 900px) {
