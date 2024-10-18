@@ -50,8 +50,13 @@ export default class Search extends PartnerCards {
 
   // eslint-disable-next-line consistent-return
   async getCards() {
+    const { env } = getConfig();
+    let domain = 'https://io-partners-dx.stage.adobe.com';
+    if (env.name === 'prod') {
+      domain = 'https://io-partners-dx.adobe.com';
+    }
     const url = new URL(
-      'https://14257-dxpartners-stage.adobeioruntime.net/api/v1/web/dx-partners-runtime/search-apc/search-apc?',
+      `${domain}/api/v1/web/dx-partners-runtime/search-apc/search-apc?`,
     );
 
     const startCardIndex = (this.paginationCounter - 1) * this.cardsPerPage;
@@ -75,14 +80,13 @@ export default class Search extends PartnerCards {
     const sortMap = { 'most-recent': 'recent', 'most-relevant': 'relevant' };
     queryParams.append('sort', sortMap[this.selectedSortOrder.key]);
 
-    const postData = {
-      filters: {
-        type: this.selectedFilters?.type?.map((filter) => filter.key) || [],
-        product: this.selectedFilters?.product?.map((filter) => filter.key) || [],
-        language: this.selectedFilters?.language?.map((filter) => filter.key) || [],
-        topic: this.selectedFilters?.topic?.map((filter) => filter.key) || [],
-      },
-    };
+    const filters = Object.fromEntries(
+      Object.entries(this.selectedFilters).map(([key, arr]) => [
+        key,
+        arr.map((item) => item.value),
+      ]),
+    );
+    const postData = { filters };
 
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
