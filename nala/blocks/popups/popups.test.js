@@ -9,14 +9,8 @@ const differentLocaleCases = features.slice(0, 7);
 const switchLocaleCases = features.slice(7, 9);
 
 test.describe('Validate popups', () => {
-  test.beforeEach(async ({ page, baseURL, browserName, context }) => {
+  test.beforeEach(async ({ page, baseURL, browserName }) => {
     popupsPage = new PopupsPage(page);
-    page.on('console', (msg) => {
-      console.log(`${msg.type()}: ${msg.text()}`, msg.type() === 'error' ? msg.location().url : null);
-    });
-    if (!baseURL.includes('partners.stage.adobe.com')) {
-      await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
-    }
     if (browserName === 'chromium' && !baseURL.includes('partners.stage.adobe.com')) {
       await page.route('https://www.adobe.com/chimera-api/**', async (route, request) => {
         const newUrl = request.url().replace(
@@ -41,21 +35,8 @@ test.describe('Validate popups', () => {
       });
 
       await test.step('Verify geo pop-up appeared', async () => {
-        const modal = page.locator('div.dialog-modal.locale-modal-v2');
-        const isModalVisible = await modal.isVisible();
-        console.log(`Dialog modal is visible: ${isModalVisible}`);
-        const startTime = Date.now();
-
         const geoPopUpSelector = await getGeoPopUpSelector(feature.data.geoPopUpText);
-        await page.waitForSelector(geoPopUpSelector, { timeout: 20000 });
-
-        const endTime = Date.now();
-        const duration = endTime - startTime;
-        console.log(`Dialog modal took ${duration} to load`);
-
-        const modalAfter = page.locator('div.dialog-modal.locale-modal-v2');
-        const isModalAfterVisible = await modalAfter.isVisible();
-        console.log(`Dialog modal is visible: ${isModalAfterVisible}`);
+        await page.waitForSelector(geoPopUpSelector, { timeout: 4000 });
 
         const switchLocaleButton = await popupsPage.getGeoLocaleButton(feature.data.buttonType);
         await expect(switchLocaleButton).toBeVisible();
