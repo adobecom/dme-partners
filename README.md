@@ -1,5 +1,6 @@
 # Milo goes to college
 Use this project template to create a Milo site.
+This should be updated
 
 ## Steps
 
