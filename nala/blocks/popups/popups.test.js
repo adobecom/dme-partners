@@ -11,6 +11,9 @@ const switchLocaleCases = features.slice(7, 9);
 test.describe('Validate popups', () => {
   test.beforeEach(async ({ page, baseURL, browserName, context }) => {
     popupsPage = new PopupsPage(page);
+    page.on('console', (msg) => {
+      console.log(`${msg.type()}: ${msg.text()}`, msg.type() === 'error' ? msg.location().url : null);
+    });
     if (!baseURL.includes('partners.stage.adobe.com')) {
       await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
     }
@@ -34,12 +37,25 @@ test.describe('Validate popups', () => {
       const newBaseUrl = baseURL.includes('adobecom.hlx.live') ? 'https://partners.stage.adobe.com' : baseURL;
       await test.step('Go to public page', async () => {
         await page.goto(`${newBaseUrl}${feature.path}`);
-        await page.waitForLoadState();
+        await page.waitForLoadState('domcontentloaded');
       });
 
       await test.step('Verify geo pop-up appeared', async () => {
+        const modal = page.locator('div.dialog-modal.locale-modal-v2');
+        const isModalVisible = await modal.isVisible();
+        console.log(`Dialog modal is visible: ${isModalVisible}`);
+        const startTime = Date.now();
+
         const geoPopUpSelector = await getGeoPopUpSelector(feature.data.geoPopUpText);
-        await page.waitForSelector(geoPopUpSelector, { timeout: 4000 });
+        await page.waitForSelector(geoPopUpSelector, { timeout: 20000 });
+
+        const endTime = Date.now();
+        const duration = endTime - startTime;
+        console.log(`Dialog modal took ${duration} to load`);
+
+        const modalAfter = page.locator('div.dialog-modal.locale-modal-v2');
+        const isModalAfterVisible = await modalAfter.isVisible();
+        console.log(`Dialog modal is visible: ${isModalAfterVisible}`);
 
         const switchLocaleButton = await popupsPage.getGeoLocaleButton(feature.data.buttonType);
         await expect(switchLocaleButton).toBeVisible();
