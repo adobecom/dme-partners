@@ -9,7 +9,7 @@ const differentLocaleCases = features.slice(0, 7);
 const switchLocaleCases = features.slice(7, 9);
 
 test.describe('Validate popups', () => {
-  test.beforeEach(async ({ page, baseURL, browserName }) => {
+  test.beforeEach(async ({ page, baseURL, browserName, context }) => {
     popupsPage = new PopupsPage(page);
     page.on('console', (msg) => {
       console.log(`${msg.type()}: ${msg.text()}`, msg.type() === 'error' ? msg.location().url : null);
