@@ -5,7 +5,7 @@ export default {
       tcid: '1',
       name: '@desc-regression-geo-pop-up-german-locale',
       path: '/channelpartners/?akamaiLocale=de',
-      tags: '@dme-popups @geo-popups @regression @anonymous',
+      tags: '@dme-popups @geo-popups @regression',
       data: {
         geoPopUpText: 'Diese Adobe-Site passt nicht zu Ihrem Standort',
         buttonType: 'Switch:de-us|Geo_Routing_Modal',
@@ -16,7 +16,7 @@ export default {
       tcid: '2',
       name: '@desc-regression-geo-pop-up-spanish-locale',
       path: '/channelpartners/?akamaiLocale=es',
-      tags: '@dme-popups @geo-popups @regression @anonymous',
+      tags: '@dme-popups @geo-popups @regression',
       data: {
         geoPopUpText: 'Este sitio de Adobe no coincide con tu ubicación',
         buttonType: 'Switch:es-us|Geo_Routing_Modal',
@@ -27,7 +27,7 @@ export default {
       tcid: '3',
       name: '@desc-regression-geo-pop-up-french-locale',
       path: '/channelpartners/?akamaiLocale=fr',
-      tags: '@dme-popups @geo-popups @regression @anonymous',
+      tags: '@dme-popups @geo-popups @regression',
       data: {
         geoPopUpText: 'Ce site Adobe ne correspond pas à votre zone géographique',
         buttonType: 'Switch:fr-us|Geo_Routing_Modal',
@@ -38,7 +38,7 @@ export default {
       tcid: '4',
       name: '@desc-regression-geo-pop-up-italian-locale',
       path: '/channelpartners/?akamaiLocale=it',
-      tags: '@dme-popups @geo-popups @regression @anonymous',
+      tags: '@dme-popups @geo-popups @regression',
       data: {
         geoPopUpText: 'Questo sito Adobe non corrisponde alla tua posizione geografica',
         buttonType: 'Switch:it-us|Geo_Routing_Modal',
@@ -49,7 +49,7 @@ export default {
       tcid: '5',
       name: '@desc-regression-geo-pop-up-japanese-locale',
       path: '/channelpartners/?akamaiLocale=jp',
-      tags: '@dme-popups @geo-popups @regression @anonymous',
+      tags: '@dme-popups @geo-popups @regression',
       data: {
         geoPopUpText: 'アドビwebサイトの地域設定がお客様の位置情報と一致しません',
         buttonType: 'Switch:jp-us|Geo_Routing_Modal',
@@ -60,7 +60,7 @@ export default {
       tcid: '6',
       name: '@desc-regression-geo-pop-up-chinese-locale',
       path: '/channelpartners/?akamaiLocale=cn',
-      tags: '@dme-popups @geo-popups @regression @anonymous',
+      tags: '@dme-popups @geo-popups @regression',
       data: {
         geoPopUpText: '此 Adobe 网站与您的位置不匹配',
         buttonType: 'Switch:cn-us|Geo_Routing_Modal',
@@ -71,7 +71,7 @@ export default {
       tcid: '7',
       name: '@desc-regression-geo-pop-up-brazilian-locale',
       path: '/channelpartners/?akamaiLocale=br',
-      tags: '@dme-popups @geo-popups @regression @anonymous',
+      tags: '@dme-popups @geo-popups @regression',
       data: {
         geoPopUpText: 'Este sitio de Adobe no coincide con tu ubicación',
         buttonType: 'Switch:la-us|Geo_Routing_Modal',
@@ -82,7 +82,7 @@ export default {
       tcid: '8',
       name: '@desc-regression-accessing-german-public-page-switch-to-spanish-locale',
       path: '/de/channelpartners/?akamaiLocale=es',
-      tags: '@dme-popups @geo-popups @regression @anonymous',
+      tags: '@dme-popups @geo-popups @regression',
       data: {
         geoPopUpText: 'Este sitio de Adobe no coincide con tu ubicación',
         switchLocaleButton: 'Switch:es-de|Geo_Routing_Modal',
@@ -97,7 +97,7 @@ export default {
       tcid: '9',
       name: '@desc-regression-accessing-german-public-page-stay-on-german-locale',
       path: '/de/channelpartners/?akamaiLocale=es',
-      tags: '@dme-popups @geo-popups @regression @anonymous',
+      tags: '@dme-popups @geo-popups @regression',
       data: {
         geoPopUpText: 'Este sitio de Adobe no coincide con tu ubicación',
         switchLocaleButton: 'Switch:es-de|Geo_Routing_Modal',
