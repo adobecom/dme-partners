@@ -9,9 +9,12 @@ import {
   closeAllDropdowns,
   logErrorFor,
 } from '../../utilities/utilities.js';
-import { replaceKeyArray } from '../../../../features/placeholders.js';
-import { getConfig } from '../../../../utils/utils.js';
-import { debounce } from '../../../../utils/action.js';
+import { getLibs } from '../../../../scripts/utils.js';
+
+const miloLibs = getLibs();
+const { replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
+const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
+const { debounce } = await import(`${miloLibs}/utils/action.js`);
 
 const CONFIG = {
   suggestions: {
@@ -25,7 +28,6 @@ const CONFIG = {
 };
 
 const { locale } = getConfig();
-const [, country = 'US'] = locale.ietf.split('-');
 
 class Search {
   constructor(config) {
@@ -48,7 +50,8 @@ class Search {
 
   async getLabels() {
     this.labels = {};
-    [this.labels.search, this.labels.clearResults, this.labels.tryAdvancedSearch] = await replaceKeyArray(['search', 'clear-results', 'try-advanced-search'], getFedsPlaceholderConfig());
+    [this.labels.clearResults] = await replaceKeyArray(['clear-results'], getFedsPlaceholderConfig());
+    [this.labels.search, this.labels.viewAllResults] = await replaceKeyArray(['search-topics-resources-files', 'view-all-results'], getConfig());
   }
 
   decorate() {
@@ -100,7 +103,7 @@ class Search {
 
       if (e.code === 'Enter') {
         if (!this.query) return;
-        window.location.href = Search.getHelpxLink(this.query);
+        window.location.href = Search.getSearchLink(this.query);
       }
     });
 
@@ -155,23 +158,14 @@ class Search {
     this.getSuggestions()
       .then((data) => {
         const suggestions = data?.suggested_completions;
-
-        if (!Array.isArray(suggestions)
-          || !suggestions.length) {
-          this.resultsList.replaceChildren(this.getNoResultsTemplate());
-          if (this.parent instanceof HTMLElement) {
-            this.parent.classList.remove(CONFIG.selectors.hasResults);
-          }
-          return;
-        }
-
         this.resultsList.replaceChildren(this.getResultsTemplate(suggestions));
+        this.resultsList.appendChild(this.getViewAllResultsTemplate());
         if (this.parent instanceof HTMLElement) {
           this.parent.classList.add(CONFIG.selectors.hasResults);
         }
       })
       .catch(() => {
-        this.resultsList.replaceChildren(this.getNoResultsTemplate());
+        this.resultsList.replaceChildren(this.getViewAllResultsTemplate());
         if (this.parent instanceof HTMLElement) {
           this.parent.classList.remove(CONFIG.selectors.hasResults);
         }
@@ -247,7 +241,7 @@ class Search {
       });
 
       const resultTemplate = toFragment`<li>
-          <a href="${Search.getHelpxLink(resultLabel)}" class="feds-search-result" aria-label="${resultLabel}">
+          <a href="${Search.getSearchLink(resultLabel)}" class="feds-search-result" aria-label="${resultLabel}">
             <span>${suggestionPrefix}</span>${suggestionWithoutPrefix}
           </a>
         </li>`;
@@ -258,9 +252,9 @@ class Search {
     return resultsTemplate;
   }
 
-  getNoResultsTemplate(query = this.query) {
+  getViewAllResultsTemplate(query = this.query) {
     return toFragment`<li>
-      <a href="${Search.getHelpxLink(query)}" class="feds-search-result"><span>${this.labels.tryAdvancedSearch}</span></a>
+      <a href="${Search.getSearchLink(query)}" class="feds-search-view-all-results"><span>${this.labels.viewAllResults}</span></a>
     </li>`;
   }
 
@@ -282,8 +276,9 @@ class Search {
     }
   }
 
-  static getHelpxLink(query) {
-    return `https://helpx.adobe.com${locale.prefix}/globalsearch.html?q=${encodeURIComponent((query || '').trim())}&start_index=0&country=${country}`;
+  static getSearchLink(query) {
+    const queryString = query ? `?term=${encodeURIComponent((query || '').trim())}` : '';
+    return `${locale?.prefix}/channelpartners/home/search/${queryString}`;
   }
 }
 
