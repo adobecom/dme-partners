@@ -8,8 +8,8 @@ jobs:
   action:
     name: Running E2E & IT
     if: github.event.label.name == 'testing-nala-tests'
-      || (github.event.action == 'synchronize' && contains(join(github.event.pull_request.labels.*.name, ','), 'run-on-dme'))
-      || (github.event.action =='reopened' && contains(join(github.event.pull_request.labels.*.name, ','), 'run-on-dme'))
+      || (github.event.action == 'synchronize' && contains(join(github.event.pull_request.labels.*.name, ','), 'testing-nala-tests'))
+      || (github.event.action =='reopened' && contains(join(github.event.pull_request.labels.*.name, ','), 'testing-nala-tests'))
     runs-on: ubuntu-latest
 
     steps:
