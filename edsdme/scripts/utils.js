@@ -384,14 +384,19 @@ export function getCaasUrl(block) {
 
 export async function preloadResources(locales, miloLibs) {
   const locale = getLocale(locales);
-  const cardBlocks = { announcements: '"caas:adobe-partners/collections/announcements"' };
+  const cardBlocks = {
+    announcements: '"caas:adobe-partners/collections/announcements"',
+    'announcements-preview': '"caas:adobe-partners/collections/announcements"',
+  };
 
   Object.entries(cardBlocks).forEach(async ([key, value]) => {
     const el = document.querySelector(`.${key}`);
     if (!el) return;
 
-    preloadPlaceholders(locale);
-    preloadLit(miloLibs);
+    if (key !== 'announcements-preview') {
+      preloadPlaceholders(locale);
+      preloadLit(miloLibs);
+    }
 
     const block = {
       el,
