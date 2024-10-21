@@ -463,6 +463,7 @@ export default class PartnerCards extends LitElement {
 
   handleResetActions() {
     this.searchTerm = '';
+    this.urlSearchParams.delete('term');
     this.selectedFilters = {};
     this.blockData.filters.forEach((filter) => {
       // eslint-disable-next-line no-return-assign
