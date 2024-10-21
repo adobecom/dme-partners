@@ -34,11 +34,9 @@ test.describe('Validate popups', () => {
 
   differentLocaleCases.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, baseURL }) => {
-      // const newBaseUrl = baseURL.includes('adobecom.hlx.live') ? 'https://partners.stage.adobe.com' : baseURL;
+      const newBaseUrl = baseURL.includes('adobecom.hlx.live') ? 'https://partners.stage.adobe.com' : baseURL;
       await test.step('Go to public page', async () => {
-        // await page.goto(`${newBaseUrl}${feature.path}`);
-        console.log(`Target URL: ${baseURL}${feature.path}`);
-        await page.goto(`${baseURL}${feature.path}`);
+        await page.goto(`${newBaseUrl}${feature.path}`);
         await page.waitForLoadState('domcontentloaded');
       });
 
