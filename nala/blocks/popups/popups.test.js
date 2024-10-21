@@ -11,6 +11,9 @@ const switchLocaleCases = features.slice(7, 9);
 test.describe('Validate popups', () => {
   test.beforeEach(async ({ page, baseURL, browserName, context }) => {
     popupsPage = new PopupsPage(page);
+    page.on('console', (msg) => {
+      console.log(`${msg.type()}: ${msg.text()}`, msg.type() === 'error' ? msg.location().url : null);
+    });
     if (!baseURL.includes('partners.stage.adobe.com')) {
       await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
     }
@@ -25,17 +28,21 @@ test.describe('Validate popups', () => {
     }
   });
 
+  async function getGeoPopUpSelector(popUpText) {
+    return `div.georouting-wrapper:has-text("${popUpText}")`;
+  }
+
   differentLocaleCases.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, baseURL }) => {
       const newBaseUrl = baseURL.includes('adobecom.hlx.live') ? 'https://partners.stage.adobe.com' : baseURL;
       await test.step('Go to public page', async () => {
         await page.goto(`${newBaseUrl}${feature.path}`);
-        await page.waitForLoadState();
+        await page.waitForLoadState('domcontentloaded');
       });
 
       await test.step('Verify geo pop-up appeared', async () => {
-        const geoPopUp = await popupsPage.getGeoPopUpElement(feature.data.geoPopUpText);
-        await expect(geoPopUp).toBeVisible();
+        const geoPopUpSelector = await getGeoPopUpSelector(feature.data.geoPopUpText);
+        await page.waitForSelector(geoPopUpSelector, { timeout: 4000 });
         const switchLocaleButton = await popupsPage.getGeoLocaleButton(feature.data.buttonType);
         await expect(switchLocaleButton).toBeVisible();
         const href = await switchLocaleButton.getAttribute('href');
@@ -49,12 +56,12 @@ test.describe('Validate popups', () => {
       const newBaseUrl = baseURL.includes('adobecom.hlx.live') ? 'https://partners.stage.adobe.com' : baseURL;
       await test.step('Go to public page', async () => {
         await page.goto(`${newBaseUrl}${feature.path}`);
-        await page.waitForLoadState();
+        await page.waitForLoadState('domcontentloaded');
       });
 
       await test.step('Verify geo pop-up appeared', async () => {
-        const geoPopUp = await popupsPage.getGeoPopUpElement(feature.data.geoPopUpText);
-        await expect(geoPopUp).toBeVisible();
+        const geoPopUpSelector = await getGeoPopUpSelector(feature.data.geoPopUpText);
+        await page.waitForSelector(geoPopUpSelector, { timeout: 4000 });
         const switchLocaleButton = await popupsPage.getGeoLocaleButton(feature.data.switchLocaleButton);
         await expect(switchLocaleButton).toBeVisible();
         const hrefSwitch = await switchLocaleButton.getAttribute('href');
