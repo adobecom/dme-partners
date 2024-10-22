@@ -116,7 +116,7 @@ export default class Search extends PartnerCards {
   async handleActions() {
     this.hasResponseData = false;
     const cardsData = await this.getCards();
-    const { cards, count } = cardsData;
+    const { cards, count } = cardsData || { cards: [], count: { all: 0, assets: 0, pages: 0}};
     this.cards = cards;
     this.paginatedCards = cards;
     this.countAll = count.all;
@@ -125,6 +125,7 @@ export default class Search extends PartnerCards {
       countAssets: count.assets,
       countPages: count.pages,
     };
+    this.hasResponseData = true;
   }
 
   handleContentType(contentType) {
