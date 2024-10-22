@@ -9,7 +9,7 @@ import {
   closeAllDropdowns,
   logErrorFor,
 } from '../../utilities/utilities.js';
-import { getLibs } from '../../../../scripts/utils.js';
+import { getCurrentProgramType, getLibs, getLocale, getPartnerDataCookieObject } from '../../../../scripts/utils.js';
 
 const miloLibs = getLibs();
 const { replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
@@ -26,6 +26,7 @@ const CONFIG = {
     inputIsPopulated: 'feds-search-input--isPopulated',
   },
 };
+const SUGGESTIONS_SIZE = 10;
 
 const { locale } = getConfig();
 
@@ -129,10 +130,34 @@ class Search {
 
   getSuggestions(query = this.query) {
     const { env } = getConfig();
-    const subdomain = env === 'prod' ? 'adobesearch' : 'adobesearch-stage';
-    const api = `https://${subdomain}.adobe.io/autocomplete/completions?q[locale]=${locale.ietf}&scope=${CONFIG.suggestions.scope}&q[text]=${encodeURIComponent(query)}`;
+    const partnerDataCookie = getPartnerDataCookieObject(getCurrentProgramType());
+    const partnerLevel = partnerDataCookie?.level?.toLowerCase() || 'public';
+    const regions = partnerDataCookie?.permissionRegion?.toLowerCase() || 'worldwide';
+    const specializations = partnerDataCookie?.permissionSpecializations?.toLowerCase();
+    const { locales } = getConfig();
+    const localesData = getLocale(locales);
+    let domain = 'https://io-partners-dx.stage.adobe.com';
+    if (env.name === 'prod') {
+      domain = 'https://io-partners-dx.adobe.com';
+    }
+    const url = new URL(
+      `${domain}/api/v1/web/dx-partners-runtime/search-apc/search-apc?`,
+    );
+    const queryParams = new URLSearchParams();
+    queryParams.append('suggestions', true);
+    queryParams.append('partnerLevel', partnerLevel);
+    queryParams.append('regions', regions);
+    queryParams.append('specializations', specializations);
+    queryParams.append('term', query);
+    queryParams.append('geo', localesData.prefix && localesData.region);
+    queryParams.append('language', localesData.ietf);
+    queryParams.append('size', SUGGESTIONS_SIZE);
+    url.search = queryParams.toString();
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Authorization', 'Basic NDA3M2UwZTgtMTNlMC00ZjZjLWI5ZTMtZjBhZmQwYWM0ZDMzOjJKMnY1ODdnR3dtVXhoQjNRNlI2NDIydlJNUDYwRDZBYnJtSzRpRTJrMDBmdlI1VGMxRXNRbG9Vc2dBYTNNSUg=');
 
-    return fetch(api, { headers: { 'x-api-key': CONFIG.suggestions.apiKey } })
+    return fetch(url.toString(), { headers })
       .then((data) => data.json())
       .catch(() => {
         // do nothing
