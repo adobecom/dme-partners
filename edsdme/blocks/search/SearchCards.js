@@ -48,6 +48,11 @@ export default class Search extends PartnerCards {
     return this.renderRoot.querySelector('#search');
   }
 
+  // eslint-disable-next-line no-underscore-dangle
+  get _dialog() {
+    return this.renderRoot.querySelector('.suggestion-dialog.content');
+  }
+
   async onSearchInput(event) {
     this.suggestionTerm = event.target.value;
 
@@ -261,10 +266,33 @@ export default class Search extends PartnerCards {
     return `${startIndex + 1} - ${lastCardIndex}`;
   }
 
+  handleEnter(event) {
+    if (event.key === 'Enter') {
+      this.closeTypeahead(SEE_ALL);
+    }
+  }
+
+  handleClickOutside(event) {
+    // eslint-disable-next-line no-underscore-dangle
+    const rect = this._dialog.getBoundingClientRect();
+      const isInDialog = (
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom
+      );
+
+      if (!isInDialog) {
+        // eslint-disable-next-line no-underscore-dangle
+        this.closeTypeahead(SEE_ALL);
+      }
+
+  }
+
   /* eslint-disable indent */
   render() {
     return html`
-      <div class="search-box-wrapper" style="${this.blockData.backgroundColor ? `background: ${this.blockData.backgroundColor}` : ''}">
+      <div @click="${this.handleClickOutside}" class="search-box-wrapper" style="${this.blockData.backgroundColor ? `background: ${this.blockData.backgroundColor}` : ''}">
         <div class="search-box content">
           <h3 class="partner-cards-title">
             ${this.searchTerm
@@ -273,7 +301,7 @@ export default class Search extends PartnerCards {
             }
           </h3>
           <sp-theme class="search-wrapper" theme="spectrum" color="light" scale="medium">
-            <sp-search id="search" size="m" value="${this.searchTerm}" @input="${this.onSearchInput}" @submit="${(event) => event.preventDefault()}" placeholder="${this.blockData.localizedText['{{search-topics-resources-files}}']}"></sp-search>
+            <sp-search @keydown="${this.handleEnter}" id="search" size="m" value="${this.searchTerm}" @input="${this.onSearchInput}" @submit="${(event) => event.preventDefault()}" placeholder="${this.blockData.localizedText['{{search-topics-resources-files}}']}"></sp-search>
           </sp-theme>
         </div>
         <dialog class="suggestion-dialog-wrapper" @close="${this.dialogClosed}" id="typeahead">
@@ -283,7 +311,7 @@ export default class Search extends PartnerCards {
           </div>
         </dialog>
       </div>
-      <div class="content">
+      <div @click="${this.handleClickOutside}" class="content">
         <div class="partner-cards">
         <div class="partner-cards-sidebar-wrapper">
           <div class="partner-cards-sidebar">
