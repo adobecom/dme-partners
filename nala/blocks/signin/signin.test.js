@@ -30,6 +30,7 @@ test.describe('MAPC sign in flow', () => {
     }
   });
 
+  // TESTING
   test(`${features[0].name},${features[0].tags}`, async ({ page }) => {
     await test.step('Go to the home page', async () => {
       await page.goto(`${features[0].path}`);
