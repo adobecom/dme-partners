@@ -1,4 +1,4 @@
-import { setLibs } from '../../scripts/utils.js';
+import { getCurrentProgramType, getLocale, getPartnerDataCookieObject, setLibs } from '../../scripts/utils.js';
 
 const miloLibs = setLibs('/libs');
 
@@ -16,5 +16,53 @@ export function populateLocalizedTextFromListItems(el, localizedText) {
     let liContent = liInnerText.trim().toLowerCase().replace(/ /g, '-');
     if (liContent.endsWith('_default')) liContent = liContent.slice(0, -8);
     localizedText[`{{${liContent}}}`] = liContent;
+  });
+}
+
+export const searchAPIRequestTypes = {
+  SEARCH: 'SEARCH',
+  SUGGESTIONS: 'SUGGESTIONS',
+};
+
+export function generateRequestForSearchAPI(requestType, pageOptions) {
+  const { env, locales } = getConfig();
+  let domain = 'https://io-partners-dx.stage.adobe.com';
+  if (env.name === 'prod') {
+    domain = 'https://io-partners-dx.adobe.com';
+  }
+  const url = new URL(
+    `${domain}/api/v1/web/dx-partners-runtime/search-apc/search-apc?`,
+  );
+  const partnerDataCookie = getPartnerDataCookieObject(getCurrentProgramType());
+  const partnerLevel = partnerDataCookie?.level?.toLowerCase() || 'public';
+  const regions = partnerDataCookie?.permissionRegion?.toLowerCase() || 'worldwide';
+  const specializations = partnerDataCookie?.permissionSpecializations?.toLowerCase();
+  const localesData = getLocale(locales);
+  const queryParams = new URLSearchParams(url.search);
+  queryParams.append('partnerLevel', partnerLevel);
+  queryParams.append('regions', regions);
+  queryParams.append('term', pageOptions.searchTerm);
+  queryParams.append('geo', localesData.prefix && localesData.region);
+  queryParams.append('language', localesData.ietf);
+  queryParams.append('size', pageOptions.size);
+  queryParams.append('specializations', specializations);
+
+  if (requestType === searchAPIRequestTypes.SEARCH) {
+    queryParams.append('type', pageOptions.contentType);
+    queryParams.append('from', pageOptions.from);
+    queryParams.append('sort', pageOptions.sort);
+  }
+
+  if (requestType === searchAPIRequestTypes.SUGGESTIONS) {
+    queryParams.append('suggestions', true);
+  }
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  headers.append('Authorization', 'Basic NDA3M2UwZTgtMTNlMC00ZjZjLWI5ZTMtZjBhZmQwYWM0ZDMzOjJKMnY1ODdnR3dtVXhoQjNRNlI2NDIydlJNUDYwRDZBYnJtSzRpRTJrMDBmdlI1VGMxRXNRbG9Vc2dBYTNNSUg=');
+
+  return fetch(url + queryParams, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(pageOptions.body),
   });
 }

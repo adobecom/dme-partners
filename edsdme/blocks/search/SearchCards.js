@@ -1,14 +1,11 @@
-import {
-  getCurrentProgramType,
-  getLibs, getLocale, getPartnerDataCookieObject,
-} from '../../scripts/utils.js';
+import { getLibs } from '../../scripts/utils.js';
 import PartnerCards from '../../components/PartnerCards.js';
 import { searchCardsStyles } from './SearchCardsStyles.js';
 import '../../components/SearchCard.js';
+import { generateRequestForSearchAPI, searchAPIRequestTypes } from '../utils/utils.js';
 
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
-const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
 const SEE_ALL = 'SEE_ALL';
 
 export default class Search extends PartnerCards {
@@ -168,55 +165,27 @@ export default class Search extends PartnerCards {
 
   // eslint-disable-next-line consistent-return
   async getCards() {
-    const { env } = getConfig();
-    let domain = 'https://io-partners-dx.stage.adobe.com';
-    if (env.name === 'prod') {
-      domain = 'https://io-partners-dx.adobe.com';
-    }
-    const url = new URL(
-      `${domain}/api/v1/web/dx-partners-runtime/search-apc/search-apc?`,
-    );
-
     const startCardIndex = (this.paginationCounter - 1) * this.cardsPerPage;
-
-    const partnerDataCookie = getPartnerDataCookieObject(getCurrentProgramType());
-    const partnerLevel = partnerDataCookie?.level || 'public';
-    const regions = partnerDataCookie?.level || 'worldwide';
-
-    const { locales } = getConfig();
-    const localesData = getLocale(locales);
-
-    const queryParams = new URLSearchParams(url.search);
-    queryParams.append('partnerLevel', partnerLevel);
-    queryParams.append('regions', regions);
-    queryParams.append('type', this.contentType);
-    queryParams.append('term', this.searchTerm);
-    queryParams.append('geo', localesData.prefix && localesData.region);
-    queryParams.append('language', localesData.ietf);
-    queryParams.append('from', startCardIndex.toString());
-    queryParams.append('size', this.cardsPerPage);
     const sortMap = { 'most-recent': 'recent', 'most-relevant': 'relevant' };
-    queryParams.append('sort', sortMap[this.selectedSortOrder.key]);
-
     const filters = Object.fromEntries(
       Object.entries(this.selectedFilters).map(([key, arr]) => [
         key,
         arr.map((item) => item.value),
       ]),
     );
-    const postData = { filters };
-
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    headers.append('Authorization', 'Basic NDA3M2UwZTgtMTNlMC00ZjZjLWI5ZTMtZjBhZmQwYWM0ZDMzOjJKMnY1ODdnR3dtVXhoQjNRNlI2NDIydlJNUDYwRDZBYnJtSzRpRTJrMDBmdlI1VGMxRXNRbG9Vc2dBYTNNSUg=');
-
     let apiData;
     try {
-      const response = await fetch(url + queryParams, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(postData),
-      });
+      const response = await generateRequestForSearchAPI(
+        searchAPIRequestTypes.SEARCH,
+        {
+          size: this.cardsPerPage,
+          sort: sortMap[this.selectedSortOrder.key],
+          from: startCardIndex.toString(),
+          contentType: this.contentType,
+          searchTerm: this.searchTerm,
+          body: { filters },
+        },
+      );
 
       if (!response.ok) {
         throw new Error(`Error message: ${response.statusText}`);
