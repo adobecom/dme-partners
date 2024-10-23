@@ -53,18 +53,12 @@ export default class Search extends PartnerCards {
 
     // Handle empty input
     if (!this.suggestionTerm) {
-      this.closeTypeaheadIfOpen();
+      this.closeTypeahead(SEE_ALL);
       return;
     }
 
     // Handle non-empty input
     await this.handleSearchInput(event.target.value);
-  }
-
-  closeTypeaheadIfOpen() {
-    if (this.isTypeaheadOpen) {
-      this.closeTypeahead(SEE_ALL);
-    }
   }
 
   async handleSearchInput(inputValue) {
@@ -87,17 +81,12 @@ export default class Search extends PartnerCards {
     this.isTypeaheadOpen = false;
     // eslint-disable-next-line no-underscore-dangle
     this._typeaheadDialog.close(value);
-  }
-
-  dialogClosed() {
     // eslint-disable-next-line no-underscore-dangle
-    if (this._typeaheadDialog.returnValue === SEE_ALL) {
-      this.handleSearch();
-    } else {
+    if (this._typeaheadDialog.returnValue !== SEE_ALL) {
       // eslint-disable-next-line no-underscore-dangle
       this.suggestionTerm = this._typeaheadDialog.returnValue;
-      this.handleSearch();
     }
+    this.handleSearch();
   }
 
   handleSearch() {
