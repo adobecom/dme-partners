@@ -239,12 +239,7 @@ export default class Search extends PartnerCards {
   }
 
   getPageNumArray() {
-    let countAll;
-    switch (this.contentType) {
-      case 'page': countAll = this.contentTypeCounter.countPages; break;
-      case 'asset': countAll = this.contentTypeCounter.countAssets; break;
-      default: countAll = this.contentTypeCounter.countAll;
-    }
+    const countAll = this.selectedTypeCount();
     const numberOfPages = Math.ceil(countAll / this.cardsPerPage);
     this.totalPages = numberOfPages;
     // eslint-disable-next-line consistent-return
@@ -253,13 +248,28 @@ export default class Search extends PartnerCards {
 
   get cardsCounter() {
     const startIndex = (this.paginationCounter - 1) * this.cardsPerPage;
-
+    const countAll = this.selectedTypeCount();
     const endIndex = startIndex + this.cardsPerPage;
-    const lastCardIndex = this.contentTypeCounter.countAll < endIndex
-      ? this.contentTypeCounter.countAll : endIndex;
+    const lastCardIndex = countAll < endIndex
+      ? countAll : endIndex;
     if (this.blockData.pagination === 'load-more') return lastCardIndex;
 
     return `${startIndex + 1} - ${lastCardIndex}`;
+  }
+
+  selectedTypeCount() {
+    let countAll;
+    switch (this.contentType) {
+      case 'page':
+        countAll = this.contentTypeCounter.countPages;
+        break;
+      case 'asset':
+        countAll = this.contentTypeCounter.countAssets;
+        break;
+      default:
+        countAll = this.contentTypeCounter.countAll;
+    }
+    return countAll;
   }
 
   handleEnter(event) {
@@ -394,7 +404,7 @@ export default class Search extends PartnerCards {
             ? html`
               <div class="pagination-wrapper ${this.blockData?.pagination === 'load-more' ? 'pagination-wrapper-load-more' : 'pagination-wrapper-default'}">
                 ${this.pagination}
-                <span class="pagination-total-results">${this.cardsCounter} ${this.blockData.localizedText['{{of}}']} ${this.contentTypeCounter.countAll} ${this.blockData.localizedText['{{results}}']}</span>
+                <span class="pagination-total-results">${this.cardsCounter} ${this.blockData.localizedText['{{of}}']} ${this.selectedTypeCount()} ${this.blockData.localizedText['{{results}}']}</span>
               </div>
             `
             : ''
