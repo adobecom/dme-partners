@@ -9,6 +9,7 @@ import '../../components/SearchCard.js';
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
+const SEE_ALL = 'SEE_ALL';
 
 export default class Search extends PartnerCards {
   static styles = [
@@ -20,18 +21,135 @@ export default class Search extends PartnerCards {
     ...PartnerCards.properties,
     contentType: { type: String },
     contentTypeCounter: { type: Object },
+    typeaheadOptions: { type: Array },
+    suggestionTerm: { type: String },
+    isTypeaheadOpen: { type: Boolean },
   };
 
   constructor() {
     super();
     this.contentType = 'all';
     this.contentTypeCounter = { countAll: 0, countAssets: 0, countPages: 0 };
+    this.typeaheadOptions = [];
+    this.suggestionTerm = '';
+    this.isTypeaheadOpen = false;
   }
 
   // eslint-disable-next-line class-methods-use-this
   async fetchData() {
     // override in order to do nothing since
     // we will fetch data in handleActions which is called on each user action
+  }
+
+  // eslint-disable-next-line no-underscore-dangle
+  get _typeaheadDialog() {
+    return this.renderRoot.querySelector('dialog#typeahead');
+  }
+
+  // eslint-disable-next-line no-underscore-dangle
+  get _searchInput() {
+    return this.renderRoot.querySelector('#search');
+  }
+
+  async onSearchInput(event) {
+    this.suggestionTerm = event.target.value;
+
+    // Handle empty input
+    if (!this.suggestionTerm) {
+      this.closeTypeaheadIfOpen();
+      return;
+    }
+
+    // Handle non-empty input
+    await this.handleSearchInput(event.target.value);
+  }
+
+  closeTypeaheadIfOpen() {
+    if (this.isTypeaheadOpen) {
+      this.closeTypeahead(SEE_ALL);
+    }
+  }
+
+  async handleSearchInput(inputValue) {
+    try {
+      if (!this.isTypeaheadOpen) {
+        this.isTypeaheadOpen = true;
+        // eslint-disable-next-line no-underscore-dangle
+        this._typeaheadDialog.show();
+        // eslint-disable-next-line no-underscore-dangle
+        this._searchInput?.focus();
+        this.typeaheadOptions = await this.getSuggestions(inputValue);
+      }
+    } catch (error) {
+      console.error('Error fetching suggestions:', error);
+    }
+  }
+
+  closeTypeahead(value) {
+    this.isTypeaheadOpen = false;
+    // eslint-disable-next-line no-underscore-dangle
+    this._typeaheadDialog.close(value);
+  }
+
+  dialogClosed() {
+    // eslint-disable-next-line no-underscore-dangle
+    if (this._typeaheadDialog.returnValue === SEE_ALL) {
+      this.handleSearch();
+    } else {
+      this.urlSearchParams.set('term', this.suggestionTerm);
+      this.handleUrlSearchParams();
+      // eslint-disable-next-line no-underscore-dangle
+      window.location.href = this._typeaheadDialog.returnValue;
+    }
+  }
+
+  handleSearch() {
+    this.searchTerm = this.suggestionTerm;
+    if (this.searchTerm) {
+      this.urlSearchParams.set('term', this.searchTerm);
+    } else {
+      this.urlSearchParams.delete('term');
+    }
+    this.handleUrlSearchParams();
+    this.paginationCounter = 1;
+    this.handleActions();
+  }
+
+  get typeaheadOptionsHTML() {
+    function highlightFirstOccurrence(text, searchText) {
+      if (!text || !searchText) return html`<p></p>`;
+      const firstOccurrenceIndex = text.toLocaleLowerCase().indexOf(searchText.toLocaleLowerCase());
+      if (firstOccurrenceIndex === -1) {
+        return html`<p class="option">${text}</p>`;
+      }
+      const beforeText = text.slice(0, firstOccurrenceIndex);
+      const highlightedText = text.slice(
+        firstOccurrenceIndex,
+        firstOccurrenceIndex + searchText.length,
+      );
+      const afterText = text.slice(firstOccurrenceIndex + searchText.length);
+      return html`<p class="option">${beforeText}<span class="bold">${highlightedText}</span>${afterText}</p>`;
+    }
+
+    const optionItems = [];
+    for (const o of this.typeaheadOptions) {
+      const decoratedOption = highlightFirstOccurrence(o.value, this.suggestionTerm);
+      optionItems.push(html`<p @click="${() => this.closeTypeahead(o.url)}">${decoratedOption}<p>`);
+    }
+    return html`${optionItems}`;
+  }
+
+  async getSuggestions(searchTerm) {
+    return new Promise((resolve) => {
+      // Simulate an asynchronous operation
+      setTimeout(() => {
+        resolve([
+          { value: 'Option 1', url: 'option1.com' },
+          { value: 'Option 2', url: 'option2.com' },
+          { value: 'Option 3', url: 'option3.com' },
+        ]);
+      }, 1000);
+    });
   }
 
   get partnerCards() {
@@ -166,9 +284,15 @@ export default class Search extends PartnerCards {
             }
           </h3>
           <sp-theme class="search-wrapper" theme="spectrum" color="light" scale="medium">
-            <sp-search id="search" size="m" value="${this.searchTerm}" @input="${this.handleSearch}" @submit="${(event) => event.preventDefault()}" placeholder="${this.blockData.localizedText['{{search-topics-resources-files}}']}"></sp-search>
+            <sp-search id="search" size="m" value="${this.searchTerm}" @input="${this.onSearchInput}" @submit="${(event) => event.preventDefault()}" placeholder="${this.blockData.localizedText['{{search-topics-resources-files}}']}"></sp-search>
           </sp-theme>
         </div>
+        <dialog class="suggestion-dialog-wrapper" @close="${this.dialogClosed}" id="typeahead">
+          <div class="suggestion-dialog content">
+            ${this.typeaheadOptionsHTML}
+            ${html`<p class="option footer" @click="${() => this.closeTypeahead(SEE_ALL)}">See all</p>`}
+          </div>
+        </dialog>
       </div>
       <div class="content">
         <div class="partner-cards">
