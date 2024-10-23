@@ -75,10 +75,11 @@ export default class Search extends PartnerCards {
         this._typeaheadDialog.show();
         // eslint-disable-next-line no-underscore-dangle
         this._searchInput?.focus();
-        this.typeaheadOptions = await this.getSuggestions(inputValue);
       }
+      this.typeaheadOptions = await this.getSuggestions(inputValue);
     } catch (error) {
-      console.error('Error fetching suggestions:', error);
+      // eslint-disable-next-line no-console
+      console.error('There was a problem with your fetch operation:', error);
     }
   }
 
@@ -93,10 +94,9 @@ export default class Search extends PartnerCards {
     if (this._typeaheadDialog.returnValue === SEE_ALL) {
       this.handleSearch();
     } else {
-      this.urlSearchParams.set('term', this.suggestionTerm);
-      this.handleUrlSearchParams();
       // eslint-disable-next-line no-underscore-dangle
-      window.location.href = this._typeaheadDialog.returnValue;
+      this.suggestionTerm = this._typeaheadDialog.returnValue;
+      this.handleSearch();
     }
   }
 
@@ -130,23 +130,39 @@ export default class Search extends PartnerCards {
 
     const optionItems = [];
     for (const o of this.typeaheadOptions) {
-      const decoratedOption = highlightFirstOccurrence(o.value, this.suggestionTerm);
-      optionItems.push(html`<p @click="${() => this.closeTypeahead(o.url)}">${decoratedOption}<p>`);
+      const decoratedOption = highlightFirstOccurrence(o.name, this.suggestionTerm);
+      optionItems.push(html`<p @click="${() => this.closeTypeahead(o.name)}">${decoratedOption}<p>`);
     }
     return html`${optionItems}`;
   }
 
+  // eslint-disable-next-line consistent-return
   async getSuggestions(searchTerm) {
-    return new Promise((resolve) => {
-      // Simulate an asynchronous operation
-      setTimeout(() => {
-        resolve([
-          { value: 'Option 1', url: 'option1.com' },
-          { value: 'Option 2', url: 'option2.com' },
-          { value: 'Option 3', url: 'option3.com' },
-        ]);
-      }, 1000);
-    });
+    let data;
+    try {
+      const SUGGESTIONS_SIZE = 10;
+      const response = await generateRequestForSearchAPI(
+        searchAPIRequestTypes.SUGGESTIONS,
+        {
+          size: SUGGESTIONS_SIZE,
+          sort: this.getSortValue(this.selectedSortOrder.key),
+          from: 0,
+          type: this.contentType,
+          searchTerm,
+        },
+        this.generateFilters(),
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error message: ${response.statusText}`);
+      }
+
+      data = await response.json();
+      return data.suggested_completions;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('There was a problem with your fetch operation:', error);
+    }
   }
 
   get partnerCards() {
@@ -163,28 +179,26 @@ export default class Search extends PartnerCards {
       </div>`;
   }
 
+  getSortValue(sortKey) {
+    const sortMap = { 'most-recent': 'recent', 'most-relevant': 'relevant' };
+    return sortMap[sortKey];
+  }
+
   // eslint-disable-next-line consistent-return
   async getCards() {
     const startCardIndex = (this.paginationCounter - 1) * this.cardsPerPage;
-    const sortMap = { 'most-recent': 'recent', 'most-relevant': 'relevant' };
-    const filters = Object.fromEntries(
-      Object.entries(this.selectedFilters).map(([key, arr]) => [
-        key,
-        arr.map((item) => item.value),
-      ]),
-    );
     let apiData;
     try {
       const response = await generateRequestForSearchAPI(
         searchAPIRequestTypes.SEARCH,
         {
           size: this.cardsPerPage,
-          sort: sortMap[this.selectedSortOrder.key],
+          sort: this.getSortValue(this.selectedSortOrder.key),
           from: startCardIndex.toString(),
-          contentType: this.contentType,
-          searchTerm: this.searchTerm,
-          body: { filters },
+          type: this.contentType,
+          term: this.searchTerm,
         },
+        this.generateFilters(),
       );
 
       if (!response.ok) {
@@ -198,6 +212,16 @@ export default class Search extends PartnerCards {
       // eslint-disable-next-line no-console
       console.error('There was a problem with your fetch operation:', error);
     }
+  }
+
+  generateFilters() {
+    const filters = Object.fromEntries(
+      Object.entries(this.selectedFilters).map(([key, arr]) => [
+        key,
+        arr.map((item) => item.value),
+      ]),
+    );
+    return { filters };
   }
 
   async handleActions() {

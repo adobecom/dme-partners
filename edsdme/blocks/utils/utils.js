@@ -24,7 +24,7 @@ export const searchAPIRequestTypes = {
   SUGGESTIONS: 'SUGGESTIONS',
 };
 
-export function generateRequestForSearchAPI(requestType, pageOptions) {
+export function generateRequestForSearchAPI(requestType, pageOptions, body) {
   const { env, locales } = getConfig();
   let domain = 'https://io-partners-dx.stage.adobe.com';
   if (env.name === 'prod') {
@@ -41,20 +41,17 @@ export function generateRequestForSearchAPI(requestType, pageOptions) {
   const queryParams = new URLSearchParams(url.search);
   queryParams.append('partnerLevel', partnerLevel);
   queryParams.append('regions', regions);
-  queryParams.append('term', pageOptions.searchTerm);
   queryParams.append('geo', localesData.prefix && localesData.region);
   queryParams.append('language', localesData.ietf);
-  queryParams.append('size', pageOptions.size);
   queryParams.append('specializations', specializations);
 
-  if (requestType === searchAPIRequestTypes.SEARCH) {
-    queryParams.append('type', pageOptions.contentType);
-    queryParams.append('from', pageOptions.from);
-    queryParams.append('sort', pageOptions.sort);
-  }
+  // eslint-disable-next-line array-callback-return
+  Object.keys(pageOptions).map((option) => {
+    queryParams.append(option, pageOptions[option]);
+  });
 
   if (requestType === searchAPIRequestTypes.SUGGESTIONS) {
-    queryParams.append('suggestions', true);
+    queryParams.append('suggestions', 'true');
   }
   const headers = new Headers();
   headers.append('Content-Type', 'application/json');
@@ -63,6 +60,6 @@ export function generateRequestForSearchAPI(requestType, pageOptions) {
   return fetch(url + queryParams, {
     method: 'POST',
     headers,
-    body: JSON.stringify(pageOptions.body),
+    body: JSON.stringify(body),
   });
 }

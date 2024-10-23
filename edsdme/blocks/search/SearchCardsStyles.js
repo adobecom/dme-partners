@@ -98,6 +98,9 @@ export const searchCardsStyles = css`
     cursor: pointer;
     font-size: 14px;
   }
+  .suggestion-dialog .option:hover {
+   color: blue;
+  }
   .option span.bold {
     font-weight: bold;
   }
