@@ -58,10 +58,10 @@ export default class Search extends PartnerCards {
     }
 
     // Handle non-empty input
-    await this.handleSearchInput(event.target.value);
+    await this.updateTypeaheadDialog();
   }
 
-  async handleSearchInput(inputValue) {
+  async updateTypeaheadDialog() {
     try {
       if (!this.isTypeaheadOpen) {
         this.isTypeaheadOpen = true;
@@ -70,7 +70,7 @@ export default class Search extends PartnerCards {
         // eslint-disable-next-line no-underscore-dangle
         this._searchInput?.focus();
       }
-      this.typeaheadOptions = await this.getSuggestions(inputValue);
+      this.typeaheadOptions = await this.getSuggestions();
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('There was a problem with your fetch operation:', error);
@@ -82,7 +82,7 @@ export default class Search extends PartnerCards {
     // eslint-disable-next-line no-underscore-dangle
     this._typeaheadDialog.close(value);
     // eslint-disable-next-line no-underscore-dangle
-    if (this._typeaheadDialog.returnValue !== SEE_ALL) {
+    if (value !== SEE_ALL) {
       // eslint-disable-next-line no-underscore-dangle
       this.suggestionTerm = this._typeaheadDialog.returnValue;
     }
@@ -126,7 +126,7 @@ export default class Search extends PartnerCards {
   }
 
   // eslint-disable-next-line consistent-return
-  async getSuggestions(searchTerm) {
+  async getSuggestions() {
     let data;
     try {
       const SUGGESTIONS_SIZE = 10;
@@ -137,7 +137,7 @@ export default class Search extends PartnerCards {
           sort: this.getSortValue(this.selectedSortOrder.key),
           from: 0,
           type: this.contentType,
-          term: searchTerm,
+          term: this.suggestionTerm,
         },
         this.generateFilters(),
       );
