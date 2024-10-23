@@ -122,11 +122,7 @@ export default class Search extends PartnerCards {
       return html`<p class="option">${beforeText}<span class="bold">${highlightedText}</span>${afterText}</p>`;
     }
 
-    const optionItems = [];
-    for (const o of this.typeaheadOptions) {
-      const decoratedOption = highlightFirstOccurrence(o.name, this.suggestionTerm);
-      optionItems.push(html`<p @click="${() => this.closeTypeahead(o.name)}">${decoratedOption}<p>`);
-    }
+    const optionItems = this.typeaheadOptions.map((o) => html`<p @click="${() => this.closeTypeahead(o.name)}">${highlightFirstOccurrence(o.name, this.suggestionTerm)}<p>`);
     return html`${optionItems}`;
   }
 
@@ -273,20 +269,28 @@ export default class Search extends PartnerCards {
   }
 
   handleClickOutside(event) {
+    if (!this.isTypeaheadOpen) return;
     // eslint-disable-next-line no-underscore-dangle
-    const rect = this._dialog.getBoundingClientRect();
-      const isInDialog = (
-        event.clientX >= rect.left &&
-        event.clientX <= rect.right &&
-        event.clientY >= rect.top &&
-        event.clientY <= rect.bottom
-      );
+    const dialog = this._dialog.getBoundingClientRect();
+    // eslint-disable-next-line no-underscore-dangle
+    const searchInput = this._searchInput.getBoundingClientRect();
+    const isInDialog = (
+      event.clientX >= dialog.left
+        && event.clientX <= dialog.right
+        && event.clientY >= dialog.top
+        && event.clientY <= dialog.bottom
+    );
+    const isInSearch = (
+      event.clientX >= searchInput.left
+      && event.clientX <= searchInput.right
+      && event.clientY >= searchInput.top
+      && event.clientY <= searchInput.bottom
+    );
 
-      if (!isInDialog) {
-        // eslint-disable-next-line no-underscore-dangle
-        this.closeTypeahead(SEE_ALL);
-      }
-
+    if (!isInDialog && !isInSearch) {
+      // eslint-disable-next-line no-underscore-dangle
+      this.closeTypeahead(SEE_ALL);
+    }
   }
 
   /* eslint-disable indent */
