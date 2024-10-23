@@ -137,7 +137,7 @@ export default class Search extends PartnerCards {
           sort: this.getSortValue(this.selectedSortOrder.key),
           from: 0,
           type: this.contentType,
-          searchTerm,
+          term: searchTerm,
         },
         this.generateFilters(),
       );
@@ -168,6 +168,7 @@ export default class Search extends PartnerCards {
       </div>`;
   }
 
+  // eslint-disable-next-line  class-methods-use-this
   getSortValue(sortKey) {
     const sortMap = { 'most-recent': 'recent', 'most-relevant': 'relevant' };
     return sortMap[sortKey];
@@ -237,7 +238,13 @@ export default class Search extends PartnerCards {
   }
 
   getPageNumArray() {
-    const numberOfPages = Math.ceil(this.contentTypeCounter.countAll / this.cardsPerPage);
+    let countAll;
+    switch (this.contentType) {
+      case 'page': countAll = this.contentTypeCounter.countPages; break;
+      case 'asset': countAll = this.contentTypeCounter.countAssets; break;
+      default: countAll = this.contentTypeCounter.countAll;
+    }
+    const numberOfPages = Math.ceil(countAll / this.cardsPerPage);
     this.totalPages = numberOfPages;
     // eslint-disable-next-line consistent-return
     return Array.from({ length: numberOfPages }, (value, index) => index + 1);
