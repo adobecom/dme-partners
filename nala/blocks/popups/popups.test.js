@@ -43,7 +43,6 @@ test.describe('Validate popups', () => {
       await test.step('Verify geo pop-up appeared', async () => {
         const geoPopUpSelector = await getGeoPopUpSelector(feature.data.geoPopUpText);
         await page.waitForSelector(geoPopUpSelector, { timeout: 4000 });
-
         const switchLocaleButton = await popupsPage.getGeoLocaleButton(feature.data.buttonType);
         await expect(switchLocaleButton).toBeVisible();
         const href = await switchLocaleButton.getAttribute('href');
@@ -57,13 +56,12 @@ test.describe('Validate popups', () => {
       const newBaseUrl = baseURL.includes('adobecom.hlx.live') ? 'https://partners.stage.adobe.com' : baseURL;
       await test.step('Go to public page', async () => {
         await page.goto(`${newBaseUrl}${feature.path}`);
-        await page.waitForLoadState();
+        await page.waitForLoadState('domcontentloaded');
       });
 
       await test.step('Verify geo pop-up appeared', async () => {
         const geoPopUpSelector = await getGeoPopUpSelector(feature.data.geoPopUpText);
         await page.waitForSelector(geoPopUpSelector, { timeout: 4000 });
-
         const switchLocaleButton = await popupsPage.getGeoLocaleButton(feature.data.switchLocaleButton);
         await expect(switchLocaleButton).toBeVisible();
         const hrefSwitch = await switchLocaleButton.getAttribute('href');
