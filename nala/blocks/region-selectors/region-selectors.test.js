@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import RegionSelectorsPage from './region-selectors.page.js';
 import RegionSelectors from './region-selectors.spec.js';
-import SignInPage from '../blocks/signin/signin.page.js';
+import SignInPage from '../signin/signin.page.js';
 
 let regionSelectorsPage;
 let signInPage;
