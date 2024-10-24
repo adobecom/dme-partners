@@ -157,7 +157,7 @@ class Search {
     headers.append('Content-Type', 'application/json');
     headers.append('Authorization', 'Basic NDA3M2UwZTgtMTNlMC00ZjZjLWI5ZTMtZjBhZmQwYWM0ZDMzOjJKMnY1ODdnR3dtVXhoQjNRNlI2NDIydlJNUDYwRDZBYnJtSzRpRTJrMDBmdlI1VGMxRXNRbG9Vc2dBYTNNSUg=');
 
-    return fetch(url.toString(), { headers })
+    return fetch(url.toString(), { headers, credentials: 'include' })
       .then((data) => data.json())
       .catch(() => {
         // do nothing
