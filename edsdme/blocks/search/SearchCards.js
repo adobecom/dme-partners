@@ -97,6 +97,7 @@ export default class Search extends PartnerCards {
       const response = await fetch(url + queryParams, {
         method: 'POST',
         headers,
+        credentials: 'include',
         body: JSON.stringify(postData),
       });
 
