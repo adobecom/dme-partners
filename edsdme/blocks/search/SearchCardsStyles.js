@@ -73,4 +73,40 @@ export const searchCardsStyles = css`
     box-shadow: 0px 2px 4px #00000029;
     border-color: #D3D3D3;
   }
+  .suggestion-dialog-wrapper * {
+    box-sizing: border-box;
+  }
+  .suggestion-dialog-wrapper {
+    width: 100%;
+    z-index: 10;
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+  .suggestion-dialog-wrapper:focus-visible {
+    outline: none
+  }
+  .suggestion-dialog-wrapper .suggestion-dialog {
+    background-color: #fff;
+    box-shadow: 0px 3px 6px #00000029;
+    border: 1px solid #BCBCBC;
+    border-radius: 12px;
+    width: 100%;
+  }
+  .suggestion-dialog .option {
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px 20px;
+  }
+  .suggestion-dialog .option:hover {
+   color: blue;
+  }
+  .option span.bold {
+    font-weight: bold;
+  }
+  .option.footer {
+    border-top: 1px solid #BCBCBC;
+    color: blue;
+    margin-top: 5px;
+  }
 `;
