@@ -2,7 +2,7 @@ import { getLibs } from '../../scripts/utils.js';
 import PartnerCards from '../../components/PartnerCards.js';
 import { searchCardsStyles } from './SearchCardsStyles.js';
 import '../../components/SearchCard.js';
-import { generateRequestForSearchAPI, searchAPIRequestTypes } from '../utils/utils.js';
+import { generateRequestForSearchAPI } from '../utils/utils.js';
 
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
@@ -132,13 +132,13 @@ export default class Search extends PartnerCards {
     try {
       const SUGGESTIONS_SIZE = 10;
       const response = await generateRequestForSearchAPI(
-        searchAPIRequestTypes.SUGGESTIONS,
         {
           size: SUGGESTIONS_SIZE,
           sort: this.getSortValue(this.selectedSortOrder.key),
           from: 0,
           type: this.contentType,
           term: this.suggestionTerm,
+          suggestions: 'true',
         },
         this.generateFilters(),
       );
@@ -181,7 +181,6 @@ export default class Search extends PartnerCards {
     let apiData;
     try {
       const response = await generateRequestForSearchAPI(
-        searchAPIRequestTypes.SEARCH,
         {
           size: this.cardsPerPage,
           sort: this.getSortValue(this.selectedSortOrder.key),

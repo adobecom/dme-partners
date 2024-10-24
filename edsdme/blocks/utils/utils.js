@@ -19,12 +19,7 @@ export function populateLocalizedTextFromListItems(el, localizedText) {
   });
 }
 
-export const searchAPIRequestTypes = {
-  SEARCH: 'SEARCH',
-  SUGGESTIONS: 'SUGGESTIONS',
-};
-
-export function generateRequestForSearchAPI(requestType, pageOptions, body) {
+export function generateRequestForSearchAPI(pageOptions, body) {
   const { env, locales } = getConfig();
   let domain = 'https://io-partners-dx.stage.adobe.com';
   if (env.name === 'prod') {
@@ -50,9 +45,6 @@ export function generateRequestForSearchAPI(requestType, pageOptions, body) {
     queryParams.append(option, pageOptions[option]);
   });
 
-  if (requestType === searchAPIRequestTypes.SUGGESTIONS) {
-    queryParams.append('suggestions', 'true');
-  }
   const headers = new Headers();
   headers.append('Content-Type', 'application/json');
   headers.append('Authorization', 'Basic NDA3M2UwZTgtMTNlMC00ZjZjLWI5ZTMtZjBhZmQwYWM0ZDMzOjJKMnY1ODdnR3dtVXhoQjNRNlI2NDIydlJNUDYwRDZBYnJtSzRpRTJrMDBmdlI1VGMxRXNRbG9Vc2dBYTNNSUg=');
