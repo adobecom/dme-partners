@@ -88,7 +88,6 @@ export const searchCardsStyles = css`
   }
   .suggestion-dialog-wrapper .suggestion-dialog {
     background-color: #fff;
-    padding: 20px;
     box-shadow: 0px 3px 6px #00000029;
     border: 1px solid #BCBCBC;
     border-radius: 12px;
@@ -97,6 +96,7 @@ export const searchCardsStyles = css`
   .suggestion-dialog .option {
     cursor: pointer;
     font-size: 14px;
+    padding: 5px 20px;
   }
   .suggestion-dialog .option:hover {
    color: blue;
@@ -107,5 +107,6 @@ export const searchCardsStyles = css`
   .option.footer {
     border-top: 1px solid #BCBCBC;
     color: blue;
+    margin-top: 5px;
   }
 `;

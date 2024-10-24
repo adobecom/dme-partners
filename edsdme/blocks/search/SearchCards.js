@@ -111,7 +111,7 @@ export default class Search extends PartnerCards {
       if (!text || !searchText) return html`<p></p>`;
       const firstOccurrenceIndex = text.toLocaleLowerCase().indexOf(searchText.toLocaleLowerCase());
       if (firstOccurrenceIndex === -1) {
-        return html`<p class="option">${text}</p>`;
+        return html`${text}`;
       }
       const beforeText = text.slice(0, firstOccurrenceIndex);
       const highlightedText = text.slice(
@@ -119,10 +119,10 @@ export default class Search extends PartnerCards {
         firstOccurrenceIndex + searchText.length,
       );
       const afterText = text.slice(firstOccurrenceIndex + searchText.length);
-      return html`<p class="option">${beforeText}<span class="bold">${highlightedText}</span>${afterText}</p>`;
+      return html`${beforeText}<span class="bold">${highlightedText}</span>${afterText}`;
     }
 
-    const optionItems = this.typeaheadOptions.map((o) => html`<p @click="${() => this.closeTypeahead(o.name)}">${highlightFirstOccurrence(o.name, this.suggestionTerm)}<p>`);
+    const optionItems = this.typeaheadOptions.map((o) => html`<p class="option" @click="${() => this.closeTypeahead(o.name)}">${highlightFirstOccurrence(o.name, this.suggestionTerm)}<p>`);
     return html`${optionItems}`;
   }
 
@@ -321,7 +321,9 @@ export default class Search extends PartnerCards {
         <dialog class="suggestion-dialog-wrapper" @close="${this.dialogClosed}" id="typeahead">
           <div class="suggestion-dialog content">
             ${this.typeaheadOptionsHTML}
-            ${html`<p class="option footer" @click="${() => this.closeTypeahead(SEE_ALL)}">See all</p>`}
+            <div class="option footer">
+              ${html`<p @click="${() => this.closeTypeahead(SEE_ALL)}">See all</p>`}
+            </div>
           </div>
         </dialog>
       </div>
