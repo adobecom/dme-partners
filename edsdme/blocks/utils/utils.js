@@ -1,4 +1,4 @@
-import { setLibs } from '../../scripts/utils.js';
+import { getCurrentProgramType, getLocale, getPartnerDataCookieObject, setLibs } from '../../scripts/utils.js';
 
 const miloLibs = setLibs('/libs');
 
@@ -16,5 +16,42 @@ export function populateLocalizedTextFromListItems(el, localizedText) {
     let liContent = liInnerText.trim().toLowerCase().replace(/ /g, '-');
     if (liContent.endsWith('_default')) liContent = liContent.slice(0, -8);
     localizedText[`{{${liContent}}}`] = liContent;
+  });
+}
+
+export function generateRequestForSearchAPI(pageOptions, body) {
+  const { env, locales } = getConfig();
+  let domain = 'https://io-partners-dx.stage.adobe.com';
+  if (env.name === 'prod') {
+    domain = 'https://io-partners-dx.adobe.com';
+  }
+  const url = new URL(
+    `${domain}/api/v1/web/dx-partners-runtime/search-apc/search-apc?`,
+  );
+  const partnerDataCookie = getPartnerDataCookieObject(getCurrentProgramType());
+  const partnerLevel = partnerDataCookie?.level?.toLowerCase() || 'public';
+  const regions = partnerDataCookie?.permissionRegion?.toLowerCase() || 'worldwide';
+  const specializations = partnerDataCookie?.permissionSpecializations?.toLowerCase();
+  const localesData = getLocale(locales);
+  const queryParams = new URLSearchParams(url.search);
+  queryParams.append('partnerLevel', partnerLevel);
+  queryParams.append('regions', regions);
+  queryParams.append('geo', localesData.prefix && localesData.region);
+  queryParams.append('language', localesData.ietf);
+  queryParams.append('specializations', specializations);
+
+  // eslint-disable-next-line array-callback-return
+  Object.keys(pageOptions).map((option) => {
+    queryParams.append(option, pageOptions[option]);
+  });
+
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+
+  return fetch(url + queryParams, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+    credentials: 'include',
   });
 }

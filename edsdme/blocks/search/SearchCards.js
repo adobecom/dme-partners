@@ -1,14 +1,12 @@
-import {
-  getCurrentProgramType,
-  getLibs, getLocale, getPartnerDataCookieObject,
-} from '../../scripts/utils.js';
+import { getLibs } from '../../scripts/utils.js';
 import PartnerCards from '../../components/PartnerCards.js';
 import { searchCardsStyles } from './SearchCardsStyles.js';
 import '../../components/SearchCard.js';
+import { generateRequestForSearchAPI } from '../utils/utils.js';
 
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
-const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
+const SEE_ALL = 'SEE_ALL';
 
 export default class Search extends PartnerCards {
   static styles = [
@@ -20,18 +18,141 @@ export default class Search extends PartnerCards {
     ...PartnerCards.properties,
     contentType: { type: String },
     contentTypeCounter: { type: Object },
+    typeaheadOptions: { type: Array },
+    suggestionTerm: { type: String },
+    isTypeaheadOpen: { type: Boolean },
   };
 
   constructor() {
     super();
     this.contentType = 'all';
     this.contentTypeCounter = { countAll: 0, countAssets: 0, countPages: 0 };
+    this.typeaheadOptions = [];
+    this.suggestionTerm = '';
+    this.isTypeaheadOpen = false;
   }
 
   // eslint-disable-next-line class-methods-use-this
   async fetchData() {
     // override in order to do nothing since
     // we will fetch data in handleActions which is called on each user action
+  }
+
+  // eslint-disable-next-line no-underscore-dangle
+  get _typeaheadDialog() {
+    return this.renderRoot.querySelector('dialog#typeahead');
+  }
+
+  // eslint-disable-next-line no-underscore-dangle
+  get _searchInput() {
+    return this.renderRoot.querySelector('#search');
+  }
+
+  // eslint-disable-next-line no-underscore-dangle
+  get _dialog() {
+    return this.renderRoot.querySelector('.suggestion-dialog.content');
+  }
+
+  async onSearchInput(event) {
+    this.suggestionTerm = event.target.value;
+
+    // Handle empty input
+    if (!this.suggestionTerm) {
+      this.closeTypeahead(SEE_ALL);
+      return;
+    }
+
+    // Handle non-empty input
+    await this.updateTypeaheadDialog();
+  }
+
+  async updateTypeaheadDialog() {
+    try {
+      if (!this.isTypeaheadOpen) {
+        this.isTypeaheadOpen = true;
+        // eslint-disable-next-line no-underscore-dangle
+        this._typeaheadDialog.show();
+        // eslint-disable-next-line no-underscore-dangle
+        this._searchInput?.focus();
+      }
+      this.typeaheadOptions = await this.getSuggestions();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('There was a problem with your fetch operation:', error);
+    }
+  }
+
+  closeTypeahead(value) {
+    this.isTypeaheadOpen = false;
+    // eslint-disable-next-line no-underscore-dangle
+    this._typeaheadDialog.close(value);
+    // eslint-disable-next-line no-underscore-dangle
+    if (value !== SEE_ALL) {
+      // eslint-disable-next-line no-underscore-dangle
+      this.suggestionTerm = this._typeaheadDialog.returnValue;
+    }
+    this.handleSearch();
+  }
+
+  handleSearch() {
+    this.searchTerm = this.suggestionTerm;
+    if (this.searchTerm) {
+      this.urlSearchParams.set('term', this.searchTerm);
+    } else {
+      this.urlSearchParams.delete('term');
+    }
+    this.handleUrlSearchParams();
+    this.paginationCounter = 1;
+    this.handleActions();
+  }
+
+  get typeaheadOptionsHTML() {
+    function highlightFirstOccurrence(text, searchText) {
+      if (!text || !searchText) return html`<p></p>`;
+      const firstOccurrenceIndex = text.toLocaleLowerCase().indexOf(searchText.toLocaleLowerCase());
+      if (firstOccurrenceIndex === -1) {
+        return html`${text}`;
+      }
+      const beforeText = text.slice(0, firstOccurrenceIndex);
+      const highlightedText = text.slice(
+        firstOccurrenceIndex,
+        firstOccurrenceIndex + searchText.length,
+      );
+      const afterText = text.slice(firstOccurrenceIndex + searchText.length);
+      return html`${beforeText}<span class="bold">${highlightedText}</span>${afterText}`;
+    }
+
+    const optionItems = this.typeaheadOptions.map((o) => html`<p class="option" @click="${() => this.closeTypeahead(o.name)}">${highlightFirstOccurrence(o.name, this.suggestionTerm)}<p>`);
+    return html`${optionItems}`;
+  }
+
+  // eslint-disable-next-line consistent-return
+  async getSuggestions() {
+    let data;
+    try {
+      const SUGGESTIONS_SIZE = 10;
+      const response = await generateRequestForSearchAPI(
+        {
+          size: SUGGESTIONS_SIZE,
+          sort: this.getSortValue(this.selectedSortOrder.key),
+          from: 0,
+          type: this.contentType,
+          term: this.suggestionTerm,
+          suggestions: 'true',
+        },
+        this.generateFilters(),
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error message: ${response.statusText}`);
+      }
+
+      data = await response.json();
+      return data.suggested_completions;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('There was a problem with your fetch operation:', error);
+    }
   }
 
   get partnerCards() {
@@ -48,57 +169,27 @@ export default class Search extends PartnerCards {
       </div>`;
   }
 
+  // eslint-disable-next-line  class-methods-use-this
+  getSortValue(sortKey) {
+    const sortMap = { 'most-recent': 'recent', 'most-relevant': 'relevant' };
+    return sortMap[sortKey];
+  }
+
   // eslint-disable-next-line consistent-return
   async getCards() {
-    const { env } = getConfig();
-    let domain = 'https://io-partners-dx.stage.adobe.com';
-    if (env.name === 'prod') {
-      domain = 'https://io-partners-dx.adobe.com';
-    }
-    const url = new URL(
-      `${domain}/api/v1/web/dx-partners-runtime/search-apc/search-apc?`,
-    );
-
     const startCardIndex = (this.paginationCounter - 1) * this.cardsPerPage;
-
-    const partnerDataCookie = getPartnerDataCookieObject(getCurrentProgramType());
-    const partnerLevel = partnerDataCookie?.level || 'public';
-    const regions = partnerDataCookie?.level || 'worldwide';
-
-    const { locales } = getConfig();
-    const localesData = getLocale(locales);
-
-    const queryParams = new URLSearchParams(url.search);
-    queryParams.append('partnerLevel', partnerLevel);
-    queryParams.append('regions', regions);
-    queryParams.append('type', this.contentType);
-    queryParams.append('term', this.searchTerm);
-    queryParams.append('geo', localesData.prefix && localesData.region);
-    queryParams.append('language', localesData.ietf);
-    queryParams.append('from', startCardIndex.toString());
-    queryParams.append('size', this.cardsPerPage);
-    const sortMap = { 'most-recent': 'recent', 'most-relevant': 'relevant' };
-    queryParams.append('sort', sortMap[this.selectedSortOrder.key]);
-
-    const filters = Object.fromEntries(
-      Object.entries(this.selectedFilters).map(([key, arr]) => [
-        key,
-        arr.map((item) => item.value),
-      ]),
-    );
-    const postData = { filters };
-
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
     let apiData;
     try {
-      const response = await fetch(url + queryParams, {
-        method: 'POST',
-        headers,
-        credentials: 'include',
-        body: JSON.stringify(postData),
-      });
+      const response = await generateRequestForSearchAPI(
+        {
+          size: this.cardsPerPage,
+          sort: this.getSortValue(this.selectedSortOrder.key),
+          from: startCardIndex.toString(),
+          type: this.contentType,
+          term: this.searchTerm,
+        },
+        this.generateFilters(),
+      );
 
       if (!response.ok) {
         throw new Error(`Error message: ${response.statusText}`);
@@ -111,6 +202,16 @@ export default class Search extends PartnerCards {
       // eslint-disable-next-line no-console
       console.error('There was a problem with your fetch operation:', error);
     }
+  }
+
+  generateFilters() {
+    const filters = Object.fromEntries(
+      Object.entries(this.selectedFilters).map(([key, arr]) => [
+        key,
+        arr.map((item) => item.value),
+      ]),
+    );
+    return { filters };
   }
 
   async handleActions() {
@@ -137,7 +238,8 @@ export default class Search extends PartnerCards {
   }
 
   getPageNumArray() {
-    const numberOfPages = Math.ceil(this.contentTypeCounter.countAll / this.cardsPerPage);
+    const countAll = this.selectedTypeCount();
+    const numberOfPages = Math.ceil(countAll / this.cardsPerPage);
     this.totalPages = numberOfPages;
     // eslint-disable-next-line consistent-return
     return Array.from({ length: numberOfPages }, (value, index) => index + 1);
@@ -145,19 +247,65 @@ export default class Search extends PartnerCards {
 
   get cardsCounter() {
     const startIndex = (this.paginationCounter - 1) * this.cardsPerPage;
-
+    const countAll = this.selectedTypeCount();
     const endIndex = startIndex + this.cardsPerPage;
-    const lastCardIndex = this.contentTypeCounter.countAll < endIndex
-      ? this.contentTypeCounter.countAll : endIndex;
+    const lastCardIndex = countAll < endIndex
+      ? countAll : endIndex;
     if (this.blockData.pagination === 'load-more') return lastCardIndex;
 
     return `${startIndex + 1} - ${lastCardIndex}`;
   }
 
+  selectedTypeCount() {
+    let countAll;
+    switch (this.contentType) {
+      case 'page':
+        countAll = this.contentTypeCounter.countPages;
+        break;
+      case 'asset':
+        countAll = this.contentTypeCounter.countAssets;
+        break;
+      default:
+        countAll = this.contentTypeCounter.countAll;
+    }
+    return countAll;
+  }
+
+  handleEnter(event) {
+    if (event.key === 'Enter') {
+      this.closeTypeahead(SEE_ALL);
+    }
+  }
+
+  handleClickOutside(event) {
+    if (!this.isTypeaheadOpen) return;
+    // eslint-disable-next-line no-underscore-dangle
+    const dialog = this._dialog.getBoundingClientRect();
+    // eslint-disable-next-line no-underscore-dangle
+    const searchInput = this._searchInput.getBoundingClientRect();
+    const isInDialog = (
+      event.clientX >= dialog.left
+        && event.clientX <= dialog.right
+        && event.clientY >= dialog.top
+        && event.clientY <= dialog.bottom
+    );
+    const isInSearch = (
+      event.clientX >= searchInput.left
+      && event.clientX <= searchInput.right
+      && event.clientY >= searchInput.top
+      && event.clientY <= searchInput.bottom
+    );
+
+    if (!isInDialog && !isInSearch) {
+      // eslint-disable-next-line no-underscore-dangle
+      this.closeTypeahead(SEE_ALL);
+    }
+  }
+
   /* eslint-disable indent */
   render() {
     return html`
-      <div class="search-box-wrapper" style="${this.blockData.backgroundColor ? `background: ${this.blockData.backgroundColor}` : ''}">
+      <div @click="${this.handleClickOutside}" class="search-box-wrapper" style="${this.blockData.backgroundColor ? `background: ${this.blockData.backgroundColor}` : ''}">
         <div class="search-box content">
           <h3 class="partner-cards-title">
             ${this.searchTerm
@@ -166,11 +314,19 @@ export default class Search extends PartnerCards {
             }
           </h3>
           <sp-theme class="search-wrapper" theme="spectrum" color="light" scale="medium">
-            <sp-search id="search" size="m" value="${this.searchTerm}" @input="${this.handleSearch}" @submit="${(event) => event.preventDefault()}" placeholder="${this.blockData.localizedText['{{search-topics-resources-files}}']}"></sp-search>
+            <sp-search @keydown="${this.handleEnter}" id="search" size="m" value="${this.searchTerm}" @input="${this.onSearchInput}" @submit="${(event) => event.preventDefault()}" placeholder="${this.blockData.localizedText['{{search-topics-resources-files}}']}"></sp-search>
           </sp-theme>
         </div>
+        <dialog class="suggestion-dialog-wrapper" @close="${this.dialogClosed}" id="typeahead">
+          <div class="suggestion-dialog content">
+            ${this.typeaheadOptionsHTML}
+            <div class="option footer">
+              ${html`<p @click="${() => this.closeTypeahead(SEE_ALL)}">See all</p>`}
+            </div>
+          </div>
+        </dialog>
       </div>
-      <div class="content">
+      <div @click="${this.handleClickOutside}" class="content">
         <div class="partner-cards">
         <div class="partner-cards-sidebar-wrapper">
           <div class="partner-cards-sidebar">
@@ -249,7 +405,7 @@ export default class Search extends PartnerCards {
             ? html`
               <div class="pagination-wrapper ${this.blockData?.pagination === 'load-more' ? 'pagination-wrapper-load-more' : 'pagination-wrapper-default'}">
                 ${this.pagination}
-                <span class="pagination-total-results">${this.cardsCounter} ${this.blockData.localizedText['{{of}}']} ${this.contentTypeCounter.countAll} ${this.blockData.localizedText['{{results}}']}</span>
+                <span class="pagination-total-results">${this.cardsCounter} ${this.blockData.localizedText['{{of}}']} ${this.selectedTypeCount()} ${this.blockData.localizedText['{{results}}']}</span>
               </div>
             `
             : ''
