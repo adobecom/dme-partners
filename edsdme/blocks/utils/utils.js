@@ -28,17 +28,10 @@ export function generateRequestForSearchAPI(pageOptions, body) {
   const url = new URL(
     `${domain}/api/v1/web/dx-partners-runtime/search-apc/search-apc?`,
   );
-  const partnerDataCookie = getPartnerDataCookieObject(getCurrentProgramType());
-  const partnerLevel = partnerDataCookie?.level?.toLowerCase() || 'public';
-  const regions = partnerDataCookie?.permissionRegion?.toLowerCase() || 'worldwide';
-  const specializations = partnerDataCookie?.permissionSpecializations?.toLowerCase();
   const localesData = getLocale(locales);
   const queryParams = new URLSearchParams(url.search);
-  queryParams.append('partnerLevel', partnerLevel);
-  queryParams.append('regions', regions);
   queryParams.append('geo', localesData.prefix && localesData.region);
   queryParams.append('language', localesData.ietf);
-  queryParams.append('specializations', specializations);
 
   // eslint-disable-next-line array-callback-return
   Object.keys(pageOptions).map((option) => {
