@@ -29,11 +29,15 @@ export const [setLibs, getLibs] = (() => {
   return [
     (prodLibs, location) => {
       libs = (() => {
-        const { hostname, search } = location || window.location;
-        // TODO: check if better ways are possible for partners.stage.adobe.com
-        if (!(hostname.includes('.hlx.') || hostname.includes('local') || hostname === 'partners.stage.adobe.com' || hostname === 'partners.adobe.com')) return prodLibs;
-        const branch = new URLSearchParams(search).get('milolibs') || 'main';
-        if (branch === 'local') return 'http://localhost:6456/libs';
+        const { hostname, search, origin } = location || window.location;
+        if (origin.endsWith('adobe.com')) {
+          return origin.replace('partners', 'milo') + prodLibs;
+        }
+        const partnerBranch = hostname.startsWith('main') ? 'main' : 'stage';
+        const branch = new URLSearchParams(search).get('milolibs') || partnerBranch;
+        if (branch === 'local') {
+          return 'http://localhost:6456/libs';
+        }
         return branch.includes('--') ? `https://${branch}.hlx.live/libs` : `https://${branch}--milo--adobecom.hlx.live/libs`;
       })();
       return libs;
