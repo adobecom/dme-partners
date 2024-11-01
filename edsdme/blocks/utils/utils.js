@@ -1,4 +1,4 @@
-import { getCurrentProgramType, getLocale, getPartnerDataCookieObject, setLibs } from '../../scripts/utils.js';
+import { getLocale, setLibs } from '../../scripts/utils.js';
 
 const miloLibs = setLibs('/libs');
 
