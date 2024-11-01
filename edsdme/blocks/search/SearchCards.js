@@ -208,7 +208,7 @@ export default class Search extends PartnerCards {
     const filters = Object.fromEntries(
       Object.entries(this.selectedFilters).map(([key, arr]) => [
         key,
-        arr.map((item) => item.value),
+        arr.map((item) => item.key),
       ]),
     );
     return { filters };
