@@ -4,7 +4,8 @@ import { getConfig } from '../utils/utils.js';
 function addAnnouncement(cardData) {
   const linkWrapper = document.createElement('a');
   linkWrapper.className = 'link-wrapper';
-  linkWrapper.href = cardData.contentArea.url;
+  const cardUrl = new URL(cardData.contentArea.url);
+  linkWrapper.href = cardUrl.pathname;
   linkWrapper.target = '_blank';
 
   linkWrapper.style.display = 'block';
