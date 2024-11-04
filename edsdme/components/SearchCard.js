@@ -38,6 +38,12 @@ class SearchCard extends LitElement {
     searchCard.classList.toggle('expanded');
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  isDownloadDisabled(fileType) {
+    const disabledTypes = ['html'];
+    return disabledTypes.includes(fileType);
+  }
+
   /* eslint-disable indent */
   render() {
     return html`
@@ -50,7 +56,7 @@ class SearchCard extends LitElement {
           </div>
           <div class="card-icons">
             <sp-theme theme="spectrum" color="light" scale="medium">
-              <sp-action-button href="${this.setDownloadParam(this.data.contentArea?.url)}" download="${this.data.contentArea?.title}" aria-label="${this.localizedText['{{download}}']}"><sp-icon-download /></sp-action-button>
+              <sp-action-button ?disabled=${this.isDownloadDisabled(this.data.contentArea?.type)} href="${this.setDownloadParam(this.data.contentArea?.url)}" download="${this.data.contentArea?.title}" aria-label="${this.localizedText['{{download}}']}"><sp-icon-download /></sp-action-button>
               ${this.data.contentArea?.type === 'pdf'
                 ? html`<sp-action-button href="${this.data.contentArea?.url}" target="_blank" aria-label="${this.localizedText['{{open-in}}']}"><sp-icon-open-in /></sp-action-button>`
                 : html`<sp-action-button disabled selected aria-label="${this.localizedText['{{open-in-disabled}}']}"><sp-icon-open-in /></sp-action-button>`
