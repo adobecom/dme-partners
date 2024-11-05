@@ -4,8 +4,10 @@ import { getConfig } from '../utils/utils.js';
 function addAnnouncement(cardData) {
   const linkWrapper = document.createElement('a');
   linkWrapper.className = 'link-wrapper';
-  const cardUrl = new URL(cardData.contentArea.url);
-  linkWrapper.href = cardUrl.pathname;
+  const { hostname, pathname } = new URL(cardData.contentArea.url);
+  const isMiloUrl = hostname.endsWith('hlx.live') || hostname.endsWith('hlx.page');
+
+  linkWrapper.href = isMiloUrl ? pathname : cardData.contentArea.url;
   linkWrapper.target = '_blank';
 
   linkWrapper.style.display = 'block';
