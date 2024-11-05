@@ -25,7 +25,10 @@ export default class Logos extends PartnerCards {
     let apiData;
     try {
       const response = await generateRequestForSearchAPI(
-        { sort: 'recent' },
+        {
+          sort: 'recent',
+          type: 'asset',
+        },
         assetType,
       );
 
