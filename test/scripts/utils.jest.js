@@ -52,7 +52,7 @@ describe('Test utils.js', () => {
   it('Milo libs', () => {
     window.location.hostname = 'partners.stage.adobe.com';
     const libs = setLibs('/libs');
-    expect(libs).toEqual('https://main--milo--adobecom.hlx.live/libs');
+    expect(libs).toEqual('https://milo.stage.adobe.com/libs');
   });
   describe('Test update footer and gnav', () => {
     beforeEach(() => {
