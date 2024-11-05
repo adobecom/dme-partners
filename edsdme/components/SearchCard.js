@@ -72,7 +72,7 @@ class SearchCard extends LitElement {
           }
           <div class="card-text">
             <span class="card-date">${this.localizedText['{{last-modified}}']}: ${formatDate(this.data.cardDate, this.ietf)}
-              ${this.data.contentArea?.type !== 'html' 
+          ${this.data.contentArea?.type !== 'html'
     ? html`<span class="card-size">${this.localizedText['{{size}}']}: ${this.data.contentArea?.size}</span>`
                 : ''
     }
