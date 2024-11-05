@@ -19,8 +19,8 @@ class SearchCard extends LitElement {
     // eslint-disable-next-line consistent-return
     return html`${repeat(
       tags,
-      (tag) => tag,
-      (tag) => html`<span class="card-tag">${this.localizedText[`{{${tag.value}}}`]}</span>`,
+      (tag) => tag.key,
+      (tag) => html`<span class="card-tag">${this.localizedText[`{{${Object.values(tag)[0]}}}`]}</span>`,
     )}`;
   }
 
