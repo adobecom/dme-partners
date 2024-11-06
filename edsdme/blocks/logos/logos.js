@@ -53,14 +53,6 @@ export default async function init(el) {
   app.setAttribute('data-idx', sectionIndex);
   el.replaceWith(app);
 
-  document.querySelectorAll('.section').forEach((section) => {
-    const mainWrapper = section.querySelector('.logos-cards-wrapper.main');
-
-    if (mainWrapper && window.matchMedia('(min-width: 900px)').matches) {
-      section.style.gridTemplateColumns = '1fr 3fr';
-    }
-  });
-
   await deps;
   return app;
 }
