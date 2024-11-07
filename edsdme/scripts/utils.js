@@ -105,7 +105,7 @@ export function getCookieValue(key) {
 export function getPartnerDataCookieValue(programType, key) {
   try {
     const partnerDataCookie = getCookieValue('partner_data');
-    if (!partnerDataCookie) return;
+    if (!partnerDataCookie) return '';
     const partnerDataObj = JSON.parse(decodeURIComponent(partnerDataCookie.toLowerCase()));
     const portalData = partnerDataObj?.[programType];
     // eslint-disable-next-line consistent-return
