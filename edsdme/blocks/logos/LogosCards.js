@@ -42,6 +42,7 @@ export default class Logos extends PartnerCards {
       this.cards = apiData.cards;
       this.hasResponseData = !!apiData.cards;
     } catch (error) {
+      this.hasResponseData = true;
       // eslint-disable-next-line no-console
       console.error('There was a problem with your fetch operation:', error);
     }
