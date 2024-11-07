@@ -109,7 +109,7 @@ export function getPartnerDataCookieValue(programType, key) {
     const partnerDataObj = JSON.parse(decodeURIComponent(partnerDataCookie.toLowerCase()));
     const portalData = partnerDataObj?.[programType];
     // eslint-disable-next-line consistent-return
-    return portalData?.[key];
+    return portalData?.[key] || '';
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error parsing partner data object:', error);
@@ -318,18 +318,16 @@ function getPartnerLevelParams(portal) {
 
 function getPartnerRegionParams(portal) {
   const permissionRegion = getPartnerDataCookieValue(portal, 'permissionregion');
-  const regionTagBase = `"caas:adobe-partners/${portal}/region/`;
+  const regionTagBase = `caas:adobe-partners/${portal}/region/`;
 
-  if (!permissionRegion) return `(${regionTagBase}worldwide")`;
-
-  const regionTags = [];
+  const regionTags = [`"${regionTagBase}worldwide"`];
 
   permissionRegion.split(',').forEach((region) => {
     const regionValue = region.trim().replaceAll(' ', '-');
-    if (regionValue) regionTags.push(`${regionTagBase}${regionValue}"`);
+    if (regionValue) regionTags.push(`"${regionTagBase}${regionValue}"`);
   });
 
-  return regionTags.length ? `(${regionTags.join('+OR+')})` : `(${regionTagBase}worldwide")`;
+  return `(${regionTags.join('+OR+')})`;
 }
 
 function extractTableCollectionTags(el) {
