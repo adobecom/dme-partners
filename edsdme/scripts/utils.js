@@ -29,11 +29,15 @@ export const [setLibs, getLibs] = (() => {
   return [
     (prodLibs, location) => {
       libs = (() => {
-        const { hostname, search } = location || window.location;
-        // TODO: check if better ways are possible for partners.stage.adobe.com
-        if (!(hostname.includes('.hlx.') || hostname.includes('local') || hostname === 'partners.stage.adobe.com' || hostname === 'partners.adobe.com')) return prodLibs;
-        const branch = new URLSearchParams(search).get('milolibs') || 'main';
-        if (branch === 'local') return 'http://localhost:6456/libs';
+        const { hostname, search, origin } = location || window.location;
+        if (origin.endsWith('adobe.com')) {
+          return origin.replace('partners', 'milo') + prodLibs;
+        }
+        const partnerBranch = hostname.startsWith('main') ? 'main' : 'stage';
+        const branch = new URLSearchParams(search).get('milolibs') || partnerBranch;
+        if (branch === 'local') {
+          return 'http://localhost:6456/libs';
+        }
         return branch.includes('--') ? `https://${branch}.hlx.live/libs` : `https://${branch}--milo--adobecom.hlx.live/libs`;
       })();
       return libs;
@@ -101,11 +105,11 @@ export function getCookieValue(key) {
 export function getPartnerDataCookieValue(programType, key) {
   try {
     const partnerDataCookie = getCookieValue('partner_data');
-    if (!partnerDataCookie) return;
+    if (!partnerDataCookie) return '';
     const partnerDataObj = JSON.parse(decodeURIComponent(partnerDataCookie.toLowerCase()));
     const portalData = partnerDataObj?.[programType];
     // eslint-disable-next-line consistent-return
-    return portalData?.[key];
+    return portalData?.[key] || '';
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error parsing partner data object:', error);
@@ -314,18 +318,16 @@ function getPartnerLevelParams(portal) {
 
 function getPartnerRegionParams(portal) {
   const permissionRegion = getPartnerDataCookieValue(portal, 'permissionregion');
-  const regionTagBase = `"caas:adobe-partners/${portal}/region/`;
+  const regionTagBase = `caas:adobe-partners/${portal}/region/`;
 
-  if (!permissionRegion) return `(${regionTagBase}worldwide")`;
-
-  const regionTags = [];
+  const regionTags = [`"${regionTagBase}worldwide"`];
 
   permissionRegion.split(',').forEach((region) => {
     const regionValue = region.trim().replaceAll(' ', '-');
-    if (regionValue) regionTags.push(`${regionTagBase}${regionValue}"`);
+    if (regionValue) regionTags.push(`"${regionTagBase}${regionValue}"`);
   });
 
-  return regionTags.length ? `(${regionTags.join('+OR+')})` : `(${regionTagBase}worldwide")`;
+  return `(${regionTags.join('+OR+')})`;
 }
 
 function extractTableCollectionTags(el) {
