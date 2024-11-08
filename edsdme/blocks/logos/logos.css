@@ -1,0 +1,5 @@
+@media (min-width: 900px) {
+  .section:has(.logos-cards-wrapper.main) {
+    grid-template-columns: 1fr 3fr;
+  }
+}
