@@ -425,7 +425,7 @@ export default class Search extends PartnerCards {
               ${this.filtersMobile}
             </div>
             <div class="all-filters-footer-mobile">
-              <span class="all-filters-footer-results-mobile">${this.cards?.length} ${this.blockData.localizedText['{{results}}']}</span>
+              <span class="all-filters-footer-results-mobile">${this.getTotalResults()} ${this.blockData.localizedText['{{results}}']}</span>
               <div class="all-filters-footer-buttons-mobile">
                 <button class="all-filters-footer-clear-btn-mobile" @click="${this.handleResetActions}" aria-label="${this.blockData.localizedText['{{clear-all}}']}">${this.blockData.localizedText['{{clear-all}}']}</button>
                 <sp-theme theme="spectrum" color="light" scale="medium">
