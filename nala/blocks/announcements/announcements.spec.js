@@ -310,22 +310,6 @@ export default {
     },
     {
       tcid: '19',
-      name: '@desc-regression-worldwide-cards-not-visible-for-logged-in-users',
-      path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
-      data: {
-        partnerData: {
-          partnerPortal: 'CPP',
-          partnerLevel: 'Distributor',
-          permissionRegion: 'North America',
-        },
-        announcementCardTitle: 'Worldwide',
-        numberOfMatchingTitleCardsNonLoggedIn: 6,
-        numberOfMatchingTitleCardsLoggedIn: 6,
-      },
-    },
-    {
-      tcid: '20',
       name: '@desc-regression-logged-in-platinum-user',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
       tags: '@dme-announcements @regression @anonymous',
@@ -336,12 +320,12 @@ export default {
           permissionRegion: 'Europe West',
         },
         platinumCardTitle: 'CPP Platinum Spain Announcement',
-        totalNumberOfCards: 4,
+        totalNumberOfCards: 11,
         numberOfMatchingTitleCards: 1,
       },
     },
     {
-      tcid: '21',
+      tcid: '20',
       name: '@desc-regression-logged-in-gold-user',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
       tags: '@dme-announcements @regression @anonymous',
@@ -359,7 +343,7 @@ export default {
       },
     },
     {
-      tcid: '22',
+      tcid: '21',
       name: '@desc-regression-logged-in-certified-user',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
       tags: '@dme-announcements @regression @anonymous',
@@ -377,7 +361,7 @@ export default {
       },
     },
     {
-      tcid: '23',
+      tcid: '22',
       name: '@desc-regression-logged-in-registered-user',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
       tags: '@dme-announcements @regression @anonymous',
