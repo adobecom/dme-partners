@@ -238,7 +238,7 @@ export default class Search extends PartnerCards {
   }
 
   getPageNumArray() {
-    const countAll = this.selectedTypeCount();
+    const countAll = this.getTotalResults();
     const numberOfPages = Math.ceil(countAll / this.cardsPerPage);
     this.totalPages = numberOfPages;
     // eslint-disable-next-line consistent-return
@@ -247,7 +247,7 @@ export default class Search extends PartnerCards {
 
   get cardsCounter() {
     const startIndex = (this.paginationCounter - 1) * this.cardsPerPage;
-    const countAll = this.selectedTypeCount();
+    const countAll = this.getTotalResults();
     const endIndex = startIndex + this.cardsPerPage;
     const lastCardIndex = countAll < endIndex
       ? countAll : endIndex;
@@ -256,7 +256,7 @@ export default class Search extends PartnerCards {
     return `${startIndex + 1} - ${lastCardIndex}`;
   }
 
-  selectedTypeCount() {
+  getTotalResults() {
     let countAll;
     switch (this.contentType) {
       case 'page':
@@ -333,7 +333,7 @@ export default class Search extends PartnerCards {
             ${!this.mobileView
               ? html`
                 <div class="sidebar-header">
-                  <h3 class="sidebar-title">${this.blockData.localizedText['{{filter}}']}</h3>
+                  <h3 class="sidebar-title">${this.blockData.localizedText['{{filters}}']}</h3>
                   <button class="sidebar-clear-btn" @click="${this.handleResetActions}" aria-label="${this.blockData.localizedText['{{clear-all}}']}">${this.blockData.localizedText['{{clear-all}}']}</button>
                 </div>
                 <div class="sidebar-chosen-filters-wrapper">
@@ -405,7 +405,7 @@ export default class Search extends PartnerCards {
             ? html`
               <div class="pagination-wrapper ${this.blockData?.pagination === 'load-more' ? 'pagination-wrapper-load-more' : 'pagination-wrapper-default'}">
                 ${this.pagination}
-                <span class="pagination-total-results">${this.cardsCounter} ${this.blockData.localizedText['{{of}}']} ${this.selectedTypeCount()} ${this.blockData.localizedText['{{results}}']}</span>
+                <span class="pagination-total-results">${this.cardsCounter} <span>${this.blockData.localizedText['{{of}}']} ${this.getTotalResults()} ${this.blockData.localizedText['{{results}}']}</span></span>
               </div>
             `
             : ''
@@ -425,7 +425,7 @@ export default class Search extends PartnerCards {
               ${this.filtersMobile}
             </div>
             <div class="all-filters-footer-mobile">
-              <span class="all-filters-footer-results-mobile">${this.cards?.length} ${this.blockData.localizedText['{{results}}']}</span>
+              <span class="all-filters-footer-results-mobile">${this.getTotalResults()} ${this.blockData.localizedText['{{results}}']}</span>
               <div class="all-filters-footer-buttons-mobile">
                 <button class="all-filters-footer-clear-btn-mobile" @click="${this.handleResetActions}" aria-label="${this.blockData.localizedText['{{clear-all}}']}">${this.blockData.localizedText['{{clear-all}}']}</button>
                 <sp-theme theme="spectrum" color="light" scale="medium">
