@@ -2,7 +2,7 @@ import searchCardStyles from './SearchCardStyles.js';
 import { formatDate, getLibs } from '../scripts/utils.js';
 
 const miloLibs = getLibs();
-const { html, repeat, LitElement } = await import(`${miloLibs}/deps/lit-all.min.js`);
+const { html, LitElement } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
 class SearchCard extends LitElement {
   static properties = {
@@ -12,17 +12,6 @@ class SearchCard extends LitElement {
   };
 
   static styles = searchCardStyles;
-
-  get cardTags() {
-    const tags = this.data.arbitrary;
-    if (!tags.length) return;
-    // eslint-disable-next-line consistent-return
-    return html`${repeat(
-      tags,
-      (tag) => tag.key,
-      (tag) => html`<span class="card-tag">${this.localizedText[`{{${Object.values(tag)[0]}}}`]}</span>`,
-    )}`;
-  }
 
   // eslint-disable-next-line class-methods-use-this
   setDownloadParam(url) {
@@ -78,7 +67,6 @@ class SearchCard extends LitElement {
     }
             </span>
             <p class="card-description">${this.data.contentArea?.description}</p>
-            <div class="card-tags-wrapper">${this.cardTags}</div>
           </div>
         </div>
       </div>
