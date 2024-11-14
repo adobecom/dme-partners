@@ -315,16 +315,18 @@ export default class Search extends PartnerCards {
           </h3>
           <sp-theme class="search-wrapper" theme="spectrum" color="light" scale="medium">
             <sp-search @keydown="${this.handleEnter}" id="search" size="m" value="${this.searchTerm}" @input="${this.onSearchInput}" @submit="${(event) => event.preventDefault()}" placeholder="${this.blockData.localizedText['{{search-topics-resources-files}}']}"></sp-search>
+            <dialog class="suggestion-dialog-wrapper" @close="${this.dialogClosed}" id="typeahead">
+              <div class="suggestion-dialog ">
+                ${this.typeaheadOptionsHTML}
+                <div class="option footer">
+                  ${html`<p @click="${() => this.closeTypeahead(SEE_ALL)}">
+                    ${this.blockData.localizedText['{{view-all-results}}']}</p>`}
+                </div>
+              </div>
+            </dialog>
           </sp-theme>
         </div>
-        <dialog class="suggestion-dialog-wrapper" @close="${this.dialogClosed}" id="typeahead">
-          <div class="suggestion-dialog content">
-            ${this.typeaheadOptionsHTML}
-            <div class="option footer">
-              ${html`<p @click="${() => this.closeTypeahead(SEE_ALL)}">See all</p>`}
-            </div>
-          </div>
-        </dialog>
+
       </div>
       <div @click="${this.handleClickOutside}" class="content">
         <div class="partner-cards">

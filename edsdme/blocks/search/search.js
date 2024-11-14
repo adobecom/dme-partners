@@ -50,6 +50,7 @@ export default async function init(el) {
     '{{show}}': 'Show',
     '{{showing-results-for}}': 'Showing results for:',
     '{{size}}': 'Size',
+    '{{view-all-results}}': 'View all results',
   };
 
   populateLocalizedTextFromListItems(el, localizedText);
