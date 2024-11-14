@@ -19,8 +19,8 @@ class SearchCard extends LitElement {
     // eslint-disable-next-line consistent-return
     return html`${repeat(
       tags,
-      (tag) => tag,
-      (tag) => html`<span class="card-tag">${this.localizedText[`{{${tag.value}}}`]}</span>`,
+      (tag) => tag.key,
+      (tag) => html`<span class="card-tag">${this.localizedText[`{{${Object.values(tag)[0]}}}`]}</span>`,
     )}`;
   }
 
@@ -38,6 +38,12 @@ class SearchCard extends LitElement {
     searchCard.classList.toggle('expanded');
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  isDownloadDisabled(fileType) {
+    const disabledTypes = ['html'];
+    return disabledTypes.includes(fileType);
+  }
+
   /* eslint-disable indent */
   render() {
     return html`
@@ -50,8 +56,8 @@ class SearchCard extends LitElement {
           </div>
           <div class="card-icons">
             <sp-theme theme="spectrum" color="light" scale="medium">
-              <sp-action-button href="${this.setDownloadParam(this.data.contentArea?.url)}" download="${this.data.contentArea?.title}" aria-label="${this.localizedText['{{download}}']}"><sp-icon-download /></sp-action-button>
-              ${this.data.contentArea?.type === 'pdf'
+              <sp-action-button ?disabled=${this.isDownloadDisabled(this.data.contentArea?.type)} href="${this.setDownloadParam(this.data.contentArea?.url)}" download="${this.data.contentArea?.title}" aria-label="${this.localizedText['{{download}}']}"><sp-icon-download /></sp-action-button>
+              ${this.data.contentArea?.type !== 'zip'
                 ? html`<sp-action-button href="${this.data.contentArea?.url}" target="_blank" aria-label="${this.localizedText['{{open-in}}']}"><sp-icon-open-in /></sp-action-button>`
                 : html`<sp-action-button disabled selected aria-label="${this.localizedText['{{open-in-disabled}}']}"><sp-icon-open-in /></sp-action-button>`
               }
@@ -66,7 +72,10 @@ class SearchCard extends LitElement {
           }
           <div class="card-text">
             <span class="card-date">${this.localizedText['{{last-modified}}']}: ${formatDate(this.data.cardDate, this.ietf)}
-              <span class="card-size">${this.localizedText['{{size}}']}: ${this.data.contentArea?.size}</span>
+          ${this.data.contentArea?.type !== 'html'
+    ? html`<span class="card-size">${this.localizedText['{{size}}']}: ${this.data.contentArea?.size}</span>`
+                : ''
+    }
             </span>
             <p class="card-description">${this.data.contentArea?.description}</p>
             <div class="card-tags-wrapper">${this.cardTags}</div>

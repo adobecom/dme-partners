@@ -343,6 +343,10 @@ export default class PartnerCards extends LitElement {
     )}`;
   }
 
+  getTotalResults() {
+    return this.cards?.length;
+  }
+
   get filtersMobile() {
     if (!this.blockData.filters.length) return;
 
@@ -381,7 +385,7 @@ export default class PartnerCards extends LitElement {
               </ul>
               <div class="filter-footer-mobile-wrapper">
                 <div class="filter-footer-mobile">
-                  <span class="filter-footer-results-mobile">${this.cards?.length} ${this.blockData.localizedText['{{results}}']}</span>
+                  <span class="filter-footer-results-mobile">${this.getTotalResults()} ${this.blockData.localizedText['{{results}}']}</span>
                   <div class="filter-footer-buttons-mobile">
                     <button class="filter-footer-clear-btn-mobile" @click="${() => this.handleResetTags(filter.key)}" aria-label="${this.blockData.localizedText['{{clear-all}}']}">${this.blockData.localizedText['{{clear-all}}']}</button>
                     <sp-theme theme="spectrum" color="light" scale="medium">

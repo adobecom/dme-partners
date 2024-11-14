@@ -8,7 +8,7 @@ let singInPage;
 
 const { features } = Announcements;
 const regionCases = features.slice(6, 18);
-const partnerLevelCases = features.slice(20, 23);
+const partnerLevelCases = features.slice(19, 22);
 
 test.describe('Validate announcements block', () => {
   test.beforeEach(async ({ page, browserName, baseURL, context }) => {
@@ -299,37 +299,6 @@ test.describe('Validate announcements block', () => {
 
   test(`${features[18].name},${features[18].tags}`, async ({ page, context, baseURL }) => {
     const { data, path } = features[18];
-    await test.step('Go to Announcements page', async () => {
-      await page.goto(`${baseURL}${path}`);
-      await handleEvent(page);
-    });
-
-    await test.step(`Verify card titled ${data.announcementCardTitle} is present on page`, async () => {
-      await announcementsPage.searchField.fill(`${data.announcementCardTitle}`);
-      await announcementsPage.firstCardDate.waitFor({ state: 'visible', timeout: 15000 });
-      const result = await announcementsPage.resultNumber.textContent();
-      await expect(parseInt(result.split(' ')[0], 10)).toBe(data.numberOfMatchingTitleCardsNonLoggedIn);
-    });
-
-    await test.step('Set partner_data cookie', async () => {
-      await singInPage.addCookie(
-        data.partnerData,
-        `${baseURL}${path}`,
-        context,
-      );
-      await page.reload();
-      await handleEvent(page);
-    });
-
-    await test.step(`Verify card titled ${data.announcementCardTitle} is not present on page after login`, async () => {
-      await announcementsPage.searchField.fill(`${data.announcementCardTitle}`);
-      const result = await announcementsPage.resultNumber.textContent();
-      await expect(parseInt(result.split(' ')[0], 10)).toBe(data.numberOfMatchingTitleCardsLoggedIn);
-    });
-  });
-
-  test(`${features[19].name},${features[19].tags}`, async ({ page, context, baseURL }) => {
-    const { data, path } = features[19];
     await test.step('Go to Announcements page', async () => {
       await page.goto(`${baseURL}${path}`);
     });

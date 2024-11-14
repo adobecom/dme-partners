@@ -542,6 +542,10 @@ export const partnerCardsStyles = css`
     font-weight: 700;
     text-transform: lowercase;
   }
+
+  .pagination-wrapper .pagination-total-results span {
+    font-weight: 500;
+  }
   
   @media screen and (max-width: 1200px) {
     .pagination-wrapper .pagination-total-results {
