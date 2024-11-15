@@ -216,10 +216,15 @@ export default class Search extends PartnerCards {
 
   async handleActions() {
     this.hasResponseData = false;
+    this.additionalResetActions();
     const cardsData = await this.getCards();
     const { cards, count } = cardsData || { cards: [], count: { all: 0, assets: 0, pages: 0 } };
     this.cards = cards;
-    this.paginatedCards = cards;
+    if (this.blockData.pagination === 'load-more') {
+      this.paginatedCards = this.paginatedCards.concat(cards);
+    } else {
+      this.paginatedCards = cards;
+    }
     this.countAll = count.all;
     this.contentTypeCounter = {
       countAll: count.all,
@@ -299,6 +304,16 @@ export default class Search extends PartnerCards {
     if (!isInDialog && !isInSearch) {
       // eslint-disable-next-line no-underscore-dangle
       this.closeTypeahead(SEE_ALL);
+    }
+  }
+
+  shouldDisplayLoadMore() {
+    return this.getTotalResults() !== this.paginatedCards.length;
+  }
+
+  additionalResetActions() {
+    if (this.blockData.pagination === 'load-more' && this.paginationCounter === 1) {
+      this.paginatedCards = [];
     }
   }
 
