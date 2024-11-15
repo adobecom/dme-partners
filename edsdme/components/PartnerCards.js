@@ -1,5 +1,5 @@
-import {getLibs} from '../scripts/utils.js';
-import {partnerCardsLoadMoreStyles, partnerCardsPaginationStyles, partnerCardsStyles} from './PartnerCardsStyles.js';
+import { getLibs } from '../scripts/utils.js';
+import { partnerCardsLoadMoreStyles, partnerCardsPaginationStyles, partnerCardsStyles } from './PartnerCardsStyles.js';
 import './SinglePartnerCard.js';
 
 const miloLibs = getLibs();
@@ -136,7 +136,7 @@ export default class PartnerCards extends LitElement {
       'filter-info': (cols) => {
         const filterName = cols[0].innerText.trim();
         this.blockData.filtersInfos[filterName] = cols[1].innerText.trim();
-      }
+      },
     };
 
     const rows = Array.from(this.blockData.tableData);
@@ -339,11 +339,10 @@ export default class PartnerCards extends LitElement {
               <span class="filter-selected-tags-total-num">${tagsCount}</span>
             </button>
             <ul class="filter-list">
-              ${this.blockData.filtersInfos[filter.key] ?
-                html`<div class="filter-info">
+              ${this.blockData.filtersInfos[filter.key] ? html`<div class="filter-info">
                   <div class="info-icon" style="background-image: url('/edsdme/img/icons/info.svg')"></div>
-                 <span class="filter-info-text"> ${this.blockData.filtersInfos[filter.key] }</span> </div>`
-                : ''}
+                 <span class="filter-info-text"> ${this.blockData.filtersInfos[filter.key]}</span> </div>`
+    : ''}
               <sp-theme theme="spectrum" color="light" scale="medium">
                 ${this.getTagsByFilter(filter)}
               </sp-theme>

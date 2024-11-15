@@ -206,7 +206,7 @@ export default class Search extends PartnerCards {
 
   generateFilters() {
     function checkKey(key) {
-      if (key ==='asset-language') {
+      if (key === 'asset-language') {
         return 'language';
       }
       return key;
