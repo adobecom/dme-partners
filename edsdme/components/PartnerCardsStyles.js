@@ -840,6 +840,24 @@ export const partnerCardsStyles = css`
   .all-filters-wrapper-mobile .all-filters-footer-clear-btn-mobile:focus {
     border-color: ${blueColor};
   }
+  
+  .filter-info {
+    display: flex;
+    margin: 0 5px;
+  }
+  
+  .info-icon {
+    height: 18px;
+    width: 18px;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: cover;
+    margin-right: 5px;
+    flex-shrink: 0;
+  }
+  .filter-info-text {
+    font: normal normal normal 14px/17px Adobe Clean;
+  }
 `;
 
 export const partnerCardsLoadMoreStyles = css`

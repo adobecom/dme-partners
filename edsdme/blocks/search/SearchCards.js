@@ -205,9 +205,16 @@ export default class Search extends PartnerCards {
   }
 
   generateFilters() {
+    function checkKey(key) {
+      if (key ==='asset-language') {
+        return 'language';
+      }
+      return key;
+    }
+
     const filters = Object.fromEntries(
       Object.entries(this.selectedFilters).map(([key, arr]) => [
-        key,
+        checkKey(key),
         arr.map((item) => item.key),
       ]),
     );
