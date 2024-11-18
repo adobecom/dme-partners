@@ -261,9 +261,15 @@ export default class PartnerCards extends LitElement {
     return this.defaultPagination;
   }
 
+  shouldDisplayLoadMore() {
+    return this.cards.length !== this.paginatedCards.length;
+  }
+
   get loadMorePagination() {
-    if (this.cards.length === this.paginatedCards.length) return '';
-    return html`<button class="load-more-btn" @click="${this.handleLoadMore}" aria-label="${this.blockData.localizedText['{{load-more}}']}">${this.blockData.localizedText['{{load-more}}']}</button>`;
+    if (this.shouldDisplayLoadMore()) {
+      return html`<button class="load-more-btn" @click="${this.handleLoadMore}" aria-label="${this.blockData.localizedText['{{load-more}}']}">${this.blockData.localizedText['{{load-more}}']}</button>`;
+    }
+    return '';
   }
 
   get defaultPagination() {

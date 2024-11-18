@@ -216,10 +216,15 @@ export default class Search extends PartnerCards {
 
   async handleActions() {
     this.hasResponseData = false;
+    this.additionalResetActions();
     const cardsData = await this.getCards();
     const { cards, count } = cardsData || { cards: [], count: { all: 0, assets: 0, pages: 0 } };
     this.cards = cards;
-    this.paginatedCards = cards;
+    if (this.blockData.pagination === 'load-more') {
+      this.paginatedCards = this.paginatedCards.concat(cards);
+    } else {
+      this.paginatedCards = cards;
+    }
     this.countAll = count.all;
     this.contentTypeCounter = {
       countAll: count.all,
@@ -302,6 +307,16 @@ export default class Search extends PartnerCards {
     }
   }
 
+  shouldDisplayLoadMore() {
+    return this.getTotalResults() !== this.paginatedCards.length;
+  }
+
+  additionalResetActions() {
+    if (this.blockData.pagination === 'load-more' && this.paginationCounter === 1) {
+      this.paginatedCards = [];
+    }
+  }
+
   /* eslint-disable indent */
   render() {
     return html`
@@ -315,16 +330,18 @@ export default class Search extends PartnerCards {
           </h3>
           <sp-theme class="search-wrapper" theme="spectrum" color="light" scale="medium">
             <sp-search @keydown="${this.handleEnter}" id="search" size="m" value="${this.searchTerm}" @input="${this.onSearchInput}" @submit="${(event) => event.preventDefault()}" placeholder="${this.blockData.localizedText['{{search-topics-resources-files}}']}"></sp-search>
+            <dialog class="suggestion-dialog-wrapper" @close="${this.dialogClosed}" id="typeahead">
+              <div class="suggestion-dialog ">
+                ${this.typeaheadOptionsHTML}
+                <div class="option footer">
+                  ${html`<p @click="${() => this.closeTypeahead(SEE_ALL)}">
+                    ${this.blockData.localizedText['{{view-all-results}}']}</p>`}
+                </div>
+              </div>
+            </dialog>
           </sp-theme>
         </div>
-        <dialog class="suggestion-dialog-wrapper" @close="${this.dialogClosed}" id="typeahead">
-          <div class="suggestion-dialog content">
-            ${this.typeaheadOptionsHTML}
-            <div class="option footer">
-              ${html`<p @click="${() => this.closeTypeahead(SEE_ALL)}">See all</p>`}
-            </div>
-          </div>
-        </dialog>
+
       </div>
       <div @click="${this.handleClickOutside}" class="content">
         <div class="partner-cards">
