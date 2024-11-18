@@ -387,6 +387,10 @@ export default class PartnerCards extends LitElement {
                 </div>
                 <span class="filter-header-chevron-icon"></span>
               </button>
+              ${this.blockData.filtersInfos[filter.key] ? html`<div class="filter-info">
+                  <div class="info-icon" style="background-image: url('/edsdme/img/icons/info.svg')"></div>
+                 <span class="filter-info-text"> ${this.blockData.filtersInfos[filter.key]}</span> </div>`
+                : ''}
               <ul class="filter-tags-mobile">
                 <sp-theme theme="spectrum" color="light" scale="medium">
                   ${this.getTagsByFilter(filter)}

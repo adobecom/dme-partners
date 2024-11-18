@@ -860,6 +860,18 @@ export const partnerCardsStyles = css`
     font-size: var(--type-body-xs-size);
     line-height: 17px;
   }
+  .filter-wrapper-mobile .filter-info {
+    display: none;
+  }
+  .filter-wrapper-mobile.expanded .filter-info {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    padding: 10px 20px;
+  }
+  .filter-wrapper-mobile.expanded .info-icon {
+    margin-top: 0;
+  }
 `;
 
 export const partnerCardsLoadMoreStyles = css`
