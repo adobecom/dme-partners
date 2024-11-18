@@ -23,7 +23,7 @@ export const partnerCardsStyles = css`
     width: 100%;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 204px auto;
+    grid-template-columns: 269px auto;
     gap: 32px;
   }
   
@@ -39,8 +39,8 @@ export const partnerCardsStyles = css`
   .partner-cards-sidebar {
     display: flex;
     flex-direction: column;
-    width: 204px;
-    max-width: 204px;
+    width: 269px;
+    max-width: 269px;
     margin-right: 32px;
     padding: 8px 16px 16px;
     border-radius: 4px;
@@ -843,7 +843,7 @@ export const partnerCardsStyles = css`
   
   .filter-info {
     display: flex;
-    margin: 0 5px;
+    margin: 0 15px 5px 0;
   }
   
   .info-icon {
@@ -852,11 +852,13 @@ export const partnerCardsStyles = css`
     background-repeat: no-repeat;
     background-position: 50% 50%;
     background-size: cover;
-    margin-right: 5px;
+    margin: 5px 10px 0 0;
     flex-shrink: 0;
   }
   .filter-info-text {
-    font: normal normal normal 14px/17px Adobe Clean;
+    font-family: inherit;
+    font-size: var(--type-body-xs-size);
+    line-height: 17px;
   }
 `;
 
