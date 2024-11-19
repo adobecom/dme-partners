@@ -852,7 +852,7 @@ export const partnerCardsStyles = css`
     background-repeat: no-repeat;
     background-position: 50% 50%;
     background-size: cover;
-    margin: 5px 10px 0 0;
+    margin: 5px 10px 0 6px;
     flex-shrink: 0;
   }
   .filter-info-text {
@@ -871,6 +871,7 @@ export const partnerCardsStyles = css`
   }
   .filter-wrapper-mobile.expanded .info-icon {
     margin-top: 0;
+    margin-left: 0;
   }
 `;
 
