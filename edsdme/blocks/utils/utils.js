@@ -48,3 +48,10 @@ export function generateRequestForSearchAPI(pageOptions, body) {
     credentials: 'include',
   });
 }
+
+export async function localizationPromises(localizedText, config) {
+  return Promise.all(Object.keys(localizedText).map(async (key) => {
+    const value = await replaceText(key, config);
+    if (value.length) localizedText[key] = value;
+  }));
+}

@@ -1,17 +1,10 @@
 import { getLibs, getCaasUrl } from '../../scripts/utils.js';
-import { replaceText, getConfig, populateLocalizedTextFromListItems } from '../utils/utils.js';
+import { getConfig, localizationPromises, populateLocalizedTextFromListItems} from '../utils/utils.js';
 import Announcements from './AnnouncementsCards.js';
 
 function declareAnnouncements() {
   if (customElements.get('announcements-cards')) return;
   customElements.define('announcements-cards', Announcements);
-}
-
-async function localizationPromises(localizedText, config) {
-  return Promise.all(Object.keys(localizedText).map(async (key) => {
-    const value = await replaceText(key, config);
-    if (value.length) localizedText[key] = value;
-  }));
 }
 
 export default async function init(el) {
