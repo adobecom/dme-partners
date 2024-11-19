@@ -7,7 +7,7 @@ let announcementsPreviewPage;
 let signInPage;
 
 const { features } = AnnouncementsPreview;
-const regionBasedPreviews = features.slice(0, 10);
+const regionBasedPreviews = features.slice(0, 11);
 
 test.describe('Validate announcements preview block', () => {
   test.beforeEach(async ({ page, baseURL, browserName, context }) => {
