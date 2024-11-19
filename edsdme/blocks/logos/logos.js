@@ -1,17 +1,10 @@
 import { getLibs } from '../../scripts/utils.js';
-import { replaceText, getConfig, populateLocalizedTextFromListItems } from '../utils/utils.js';
+import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
 import Logos from './LogosCards.js';
 
 function declareLogos() {
   if (customElements.get('logos-cards')) return;
   customElements.define('logos-cards', Logos);
-}
-
-async function localizationPromises(localizedText, config) {
-  return Promise.all(Object.keys(localizedText).map(async (key) => {
-    const value = await replaceText(key, config);
-    if (value.length) localizedText[key] = value;
-  }));
 }
 
 export default async function init(el) {
