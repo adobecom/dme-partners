@@ -156,7 +156,7 @@ export const partnerCardsStyles = css`
     align-items: flex-start;
     color: #464646;
     transition: color .3s ease-in-out;
-    padding: 12px 5px 14px;
+    padding: 12px 5px 14px 0;
   }
   
   .partner-cards-sidebar .filter .filter-header:hover {
@@ -239,7 +239,7 @@ export const partnerCardsStyles = css`
   }
   
   .partner-cards-sidebar .filter-list li sp-checkbox {
-    padding: 0 6px;
+    padding: 0 3px;
     font-size: .875rem;
     line-height: 1rem;
     width: 100%;
@@ -852,7 +852,7 @@ export const partnerCardsStyles = css`
     background-repeat: no-repeat;
     background-position: 50% 50%;
     background-size: cover;
-    margin: 5px 10px 0 6px;
+    margin: 5px 10px 0 3px;
     flex-shrink: 0;
   }
   .filter-info-text {
