@@ -50,7 +50,7 @@ export default class Search extends PartnerCards {
 
   // eslint-disable-next-line no-underscore-dangle
   get _dialog() {
-    return this.renderRoot.querySelector('.suggestion-dialog.content');
+    return this.renderRoot.querySelector('.suggestion-dialog');
   }
 
   async onSearchInput(event) {

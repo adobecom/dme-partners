@@ -23,7 +23,7 @@ export const partnerCardsStyles = css`
     width: 100%;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 204px auto;
+    grid-template-columns: 269px auto;
     gap: 32px;
   }
   
@@ -39,8 +39,8 @@ export const partnerCardsStyles = css`
   .partner-cards-sidebar {
     display: flex;
     flex-direction: column;
-    width: 204px;
-    max-width: 204px;
+    width: 269px;
+    max-width: 269px;
     margin-right: 32px;
     padding: 8px 16px 16px;
     border-radius: 4px;
@@ -156,7 +156,7 @@ export const partnerCardsStyles = css`
     align-items: flex-start;
     color: #464646;
     transition: color .3s ease-in-out;
-    padding: 12px 5px 14px;
+    padding: 12px 5px 14px 0;
   }
   
   .partner-cards-sidebar .filter .filter-header:hover {
@@ -239,7 +239,7 @@ export const partnerCardsStyles = css`
   }
   
   .partner-cards-sidebar .filter-list li sp-checkbox {
-    padding: 0 6px;
+    padding: 0 3px;
     font-size: .875rem;
     line-height: 1rem;
     width: 100%;
@@ -839,6 +839,39 @@ export const partnerCardsStyles = css`
   
   .all-filters-wrapper-mobile .all-filters-footer-clear-btn-mobile:focus {
     border-color: ${blueColor};
+  }
+  
+  .filter-info {
+    display: flex;
+    margin: 0 15px 5px 0;
+  }
+  
+  .info-icon {
+    height: 18px;
+    width: 18px;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: cover;
+    margin: 5px 10px 0 3px;
+    flex-shrink: 0;
+  }
+  .filter-info-text {
+    font-family: inherit;
+    font-size: var(--type-body-xs-size);
+    line-height: 17px;
+  }
+  .filter-wrapper-mobile .filter-info {
+    display: none;
+  }
+  .filter-wrapper-mobile.expanded .filter-info {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    padding: 10px 20px;
+  }
+  .filter-wrapper-mobile.expanded .info-icon {
+    margin-top: 0;
+    margin-left: 0;
   }
 `;
 

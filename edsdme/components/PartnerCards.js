@@ -1,5 +1,5 @@
 import { getLibs } from '../scripts/utils.js';
-import { partnerCardsStyles, partnerCardsLoadMoreStyles, partnerCardsPaginationStyles } from './PartnerCardsStyles.js';
+import { partnerCardsLoadMoreStyles, partnerCardsPaginationStyles, partnerCardsStyles } from './PartnerCardsStyles.js';
 import './SinglePartnerCard.js';
 
 const miloLibs = getLibs();
@@ -58,6 +58,7 @@ export default class PartnerCards extends LitElement {
       ...this.blockData,
       title: '',
       filters: [],
+      filtersInfos: [],
       sort: {
         default: {},
         items: [],
@@ -131,6 +132,10 @@ export default class PartnerCards extends LitElement {
         const [backgroundColorEl] = cols;
         const backgroundColor = backgroundColorEl.innerText.trim();
         if (backgroundColor) this.blockData.backgroundColor = backgroundColor;
+      },
+      'filter-info': (cols) => {
+        const filterName = cols[0].innerText.trim();
+        this.blockData.filtersInfos[filterName] = cols[1].innerText.trim();
       },
     };
 
@@ -340,6 +345,10 @@ export default class PartnerCards extends LitElement {
               <span class="filter-selected-tags-total-num">${tagsCount}</span>
             </button>
             <ul class="filter-list">
+              ${this.blockData.filtersInfos[filter.key] ? html`<div class="filter-info">
+                  <div class="info-icon" style="background-image: url('/edsdme/img/icons/info.svg')"></div>
+                 <span class="filter-info-text"> ${this.blockData.filtersInfos[filter.key]}</span> </div>`
+    : ''}
               <sp-theme theme="spectrum" color="light" scale="medium">
                 ${this.getTagsByFilter(filter)}
               </sp-theme>
@@ -384,6 +393,10 @@ export default class PartnerCards extends LitElement {
                 </div>
                 <span class="filter-header-chevron-icon"></span>
               </button>
+              ${this.blockData.filtersInfos[filter.key] ? html`<div class="filter-info">
+                  <div class="info-icon" style="background-image: url('/edsdme/img/icons/info.svg')"></div>
+                 <span class="filter-info-text"> ${this.blockData.filtersInfos[filter.key]}</span> </div>`
+                : ''}
               <ul class="filter-tags-mobile">
                 <sp-theme theme="spectrum" color="light" scale="medium">
                   ${this.getTagsByFilter(filter)}
