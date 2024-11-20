@@ -1,5 +1,5 @@
 import { getLibs } from '../../scripts/utils.js';
-import { getConfig, populateLocalizedTextFromListItems, localizationPromises} from '../utils/utils.js';
+import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
 import Search from './SearchCards.js';
 
 function declareSearch() {
