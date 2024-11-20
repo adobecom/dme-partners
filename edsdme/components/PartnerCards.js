@@ -721,92 +721,105 @@ export default class PartnerCards extends LitElement {
   /* eslint-disable indent */
   render() {
     return html`
-    ${this.fetchedData
-      ? html`
-      <div class="partner-cards">
-        <div class="partner-cards-sidebar-wrapper">
-          <div class="partner-cards-sidebar">
-            <sp-theme class="search-wrapper" theme="spectrum" color="light" scale="medium">
-              <sp-search id="search" size="m" value="${this.searchTerm}" @input="${this.handleSearch}" @submit="${(event) => event.preventDefault()}" placeholder="${this.blockData.localizedText['{{search}}']}"></sp-search>
-            </sp-theme>
-            ${!this.mobileView
-              ? html`
-                <div class="sidebar-header">
-                  <h3 class="sidebar-title">${this.blockData.localizedText['{{filter}}']}</h3>
-                  <button class="sidebar-clear-btn" @click="${this.handleResetActions}" aria-label="${this.blockData.localizedText['{{clear-all}}']}">${this.blockData.localizedText['{{clear-all}}']}</button>
-                </div>
-                <div class="sidebar-chosen-filters-wrapper">
-                  ${this.chosenFilters && this.chosenFilters.htmlContent}
-                </div>
-                <div class="sidebar-filters-wrapper">
-                  ${this.filters}
-                </div>
-              `
-              : ''
-            }
-          </div>
-        </div>
-        <div class="partner-cards-content">
-          <div class="partner-cards-header">
-            <div class="partner-cards-title-wrapper">
-              <h3 class="partner-cards-title">${this.blockData.title}</h3>
-              <span class="partner-cards-cards-results"><strong>${this.cards?.length}</strong> ${this.blockData.localizedText['{{results}}']}</span>
+      ${this.fetchedData
+        ? html`
+          <div class="partner-cards">
+            <div class="partner-cards-sidebar-wrapper">
+              <div class="partner-cards-sidebar">
+                <sp-theme class="search-wrapper" theme="spectrum" color="light" scale="medium">
+                  <sp-search id="search" size="m" value="${this.searchTerm}" @input="${this.handleSearch}"
+                             @submit="${(event) => event.preventDefault()}"
+                             placeholder="${this.blockData.localizedText['{{search}}']}"></sp-search>
+                </sp-theme>
+                ${!this.mobileView
+                  ? html`
+                    <div class="sidebar-header">
+                      <h3 class="sidebar-title">${this.blockData.localizedText['{{filter}}']}</h3>
+                      <button class="sidebar-clear-btn" @click="${this.handleResetActions}"
+                              aria-label="${this.blockData.localizedText['{{clear-all}}']}">
+                        ${this.blockData.localizedText['{{clear-all}}']}
+                      </button>
+                    </div>
+                    <div class="sidebar-chosen-filters-wrapper">
+                      ${this.chosenFilters && this.chosenFilters.htmlContent}
+                    </div>
+                    <div class="sidebar-filters-wrapper">
+                      ${this.filters}
+                    </div>
+                  `
+                  : ''
+                }
+              </div>
             </div>
-            <div class="partner-cards-sort-wrapper">
-              ${this.mobileView
+            <div class="partner-cards-content">
+              <div class="partner-cards-header">
+                <div class="partner-cards-title-wrapper">
+                  <h3 class="partner-cards-title">${this.blockData.title}</h3>
+                  <span
+                    class="partner-cards-cards-results"><strong>${this.cards?.length}</strong> ${this.blockData.localizedText['{{results}}']}</span>
+                </div>
+                <div class="partner-cards-sort-wrapper">
+                  ${this.mobileView
+                    ? html`
+                      <button class="filters-btn-mobile" @click="${this.openFiltersMobile}"
+                              aria-label="${this.blockData.localizedText['{{filters}}']}">
+                        <span class="filters-btn-mobile-icon"></span>
+                        <span class="filters-btn-mobile-title">${this.blockData.localizedText['{{filters}}']}</span>
+                        ${this.chosenFilters?.tagsCount
+                          ? html`<span class="filters-btn-mobile-total">${this.chosenFilters.tagsCount}</span>`
+                          : ''
+                        }
+                      </button>
+                    `
+                    : ''
+                  }
+                  ${this.blockData.sort.items.length
+                    ? html`
+                      <div class="sort-wrapper">
+                        <button class="sort-btn" @click="${this.toggleSort}">
+                          <span class="sort-btn-text">${this.selectedSortOrder.value}</span>
+                          <span class="filter-chevron-icon"></span>
+                        </button>
+                        <div class="sort-list">
+                          ${this.sortItems}
+                        </div>
+                      </div>`
+                    : ''
+                  }
+                </div>
+              </div>
+              <div class="partner-cards-collection">
+                ${this.hasResponseData
+                  ? this.partnerCards
+                  : html`
+                    <div class="progress-circle-wrapper">
+                      <sp-theme theme="spectrum" color="light" scale="medium">
+                        <sp-progress-circle label="Cards loading" indeterminate="" size="l"
+                                            role="progressbar"></sp-progress-circle>
+                      </sp-theme>
+                    </div>
+                  `
+                }
+              </div>
+              ${this.cards.length
                 ? html`
-                  <button class="filters-btn-mobile" @click="${this.openFiltersMobile}" aria-label="${this.blockData.localizedText['{{filters}}']}">
-                    <span class="filters-btn-mobile-icon"></span>
-                    <span class="filters-btn-mobile-title">${this.blockData.localizedText['{{filters}}']}</span>
-                    ${this.chosenFilters?.tagsCount
-                      ? html`<span class="filters-btn-mobile-total">${this.chosenFilters.tagsCount}</span>`
-                      : ''
-                    }
-                  </button>
+                  <div
+                    class="pagination-wrapper ${this.blockData?.pagination === 'load-more' ? 'pagination-wrapper-load-more' : 'pagination-wrapper-default'}">
+                    ${this.pagination}
+                    <span
+                      class="pagination-total-results">${this.cardsCounter} ${this.blockData.localizedText['{{of}}']} ${this.cards.length} ${this.blockData.localizedText['{{results}}']}</span>
+                  </div>
                 `
                 : ''
               }
-              ${this.blockData.sort.items.length
-                ? html`
-                  <div class="sort-wrapper">
-                    <button class="sort-btn" @click="${this.toggleSort}">
-                      <span class="sort-btn-text">${this.selectedSortOrder.value}</span>
-                      <span class="filter-chevron-icon"></span>
-                    </button>
-                    <div class="sort-list">
-                      ${this.sortItems}
-                    </div>
-                  </div>`
-                : ''
-              }
             </div>
-          </div>
-          <div class="partner-cards-collection">
-            ${this.hasResponseData
-              ? this.partnerCards
-              : html`
-                <div class="progress-circle-wrapper">
-                  <sp-theme theme="spectrum" color="light" scale="medium">
-                    <sp-progress-circle label="Cards loading" indeterminate="" size="l" role="progressbar"></sp-progress-circle>
-                  </sp-theme>
-                </div>
-              `
-            }
-          </div>
-          ${this.cards.length
-            ? html`
-              <div class="pagination-wrapper ${this.blockData?.pagination === 'load-more' ? 'pagination-wrapper-load-more' : 'pagination-wrapper-default'}">
-                ${this.pagination}
-                <span class="pagination-total-results">${this.cardsCounter} ${this.blockData.localizedText['{{of}}']} ${this.cards.length} ${this.blockData.localizedText['{{results}}']}</span>
-              </div>
-            `
-            : ''
-          }
-        </div>
-      </div>` : ''}
+          </div>` : ''}
+      ${this.getFilterFullScreenView(this.mobileView && this.fetchData)}
+    `;
+  }
 
-      ${this.mobileView && this.fetchData
-        ? html`
+  getFilterFullScreenView(condition) {
+    return condition ? html`
           <div class="all-filters-wrapper-mobile">
             <div class="all-filters-header-mobile">
               <button class="all-filters-header-back-btn-mobile" @click="${this.closeFiltersMobile}" aria-label="${this.blockData.localizedText['{{back}}']}"></button>
@@ -827,8 +840,7 @@ export default class PartnerCards extends LitElement {
           </div>
         `
         : ''
-      }
-    `;
   }
+
   /* eslint-enable indent */
 }
