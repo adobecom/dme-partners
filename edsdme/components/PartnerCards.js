@@ -63,6 +63,10 @@ export default class PartnerCards extends LitElement {
         default: {},
         items: [],
       },
+      filterInfoBox: {
+        title: '',
+        description: '',
+      }
     };
 
     const blockDataActions = {
@@ -137,12 +141,19 @@ export default class PartnerCards extends LitElement {
         const filterName = cols[0].innerText.trim();
         this.blockData.filtersInfos[filterName] = cols[1].innerText.trim();
       },
+      'filter-info-box': (cols) => {
+        this.blockData.filterInfoBox['title'] = cols[0].innerText.trim();
+        this.blockData.filterInfoBox['description'] = this.htmlToPlainText(cols[1]);
+
+      },
     };
 
     const rows = Array.from(this.blockData.tableData);
     rows.forEach((row) => {
       const cols = Array.from(row.children);
       const rowTitle = cols[0].innerText.trim().toLowerCase().replace(/ /g, '-');
+      console.log('row', rowTitle);
+
       const colsContent = cols.slice(1);
       if (blockDataActions[rowTitle]) blockDataActions[rowTitle](colsContent);
     });
@@ -160,6 +171,19 @@ export default class PartnerCards extends LitElement {
     if (this.blockData.cardsPerPage) this.cardsPerPage = this.blockData.cardsPerPage;
     this.additionalFirstUpdated();
     this.handleActions();
+  }
+
+  htmlToPlainText(node) {
+    if (!node) return '';
+    return Array.from(node.childNodes).map(child => {
+      if (child.nodeType === Node.TEXT_NODE) {
+        return child.textContent;
+      } else if (child.nodeType === Node.ELEMENT_NODE && child.tagName === 'STRONG') {
+        return '<br/> <strong>' + child.textContent + '</strong>';
+      } else {
+        return child.innerText;
+      }
+    }).join('');
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -717,7 +741,11 @@ export default class PartnerCards extends LitElement {
     super.disconnectedCallback();
     window.removeEventListener('resize', this.updateView);
   }
-
+renderInfoBoxDescription () {
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = this.blockData.filterInfoBox.description;
+  return html`${tempDiv}`;
+}
   /* eslint-disable indent */
   render() {
     return html`
@@ -745,6 +773,10 @@ export default class PartnerCards extends LitElement {
                     </div>
                     <div class="sidebar-filters-wrapper">
                       ${this.filters}
+                    </div>
+                    <div class="sidebar-info-box">
+                      <div class="title">${this.blockData.filterInfoBox.title}</div>
+                      ${this.renderInfoBoxDescription()}
                     </div>
                   `
                   : ''

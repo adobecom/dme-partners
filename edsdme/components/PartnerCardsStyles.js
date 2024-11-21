@@ -5,6 +5,7 @@ const { css } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
 const borderColor = css`#eaeaea`;
 const blueColor = css`#1473e6`;
+const grayColor = css`#F5F5F5`;
 
 export const partnerCardsStyles = css`
   h3, p, span, button, li, input {
@@ -97,7 +98,26 @@ export const partnerCardsStyles = css`
     width: 100%;
     order: 3;
   }
-  
+  .partner-cards-sidebar .sidebar-info-box {
+    order: 4;
+    background-color: ${grayColor};
+    font-size: 14px;
+    font-family: inherit;
+    margin-top: 24px;
+    padding: 16px;
+    line-height: 21px;
+  }
+  .partner-cards-sidebar .sidebar-info-box br {
+    content: "";
+    display: block;
+  }
+  .partner-cards-sidebar .sidebar-info-box .title {
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 24px;
+    
+  }
   .partner-cards-sidebar .sidebar-chosen-filter-btn {
     background-color: transparent;
     border: 2px solid transparent;
