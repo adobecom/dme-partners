@@ -59,6 +59,19 @@ class SearchCard extends LitElement {
     return supportedFileTypes.includes(type) ? type : 'default';
   }
 
+  async downloadFile(e) {
+    e.stopPropagation();
+    const url = this.data.contentArea?.url;
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = this.data.contentArea?.title;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   /* eslint-disable indent */
   render() {
     return html`
@@ -71,9 +84,9 @@ class SearchCard extends LitElement {
           </div>
           <div class="card-icons">
             <sp-theme theme="spectrum" color="light" scale="medium">
-              <sp-action-button ?disabled=${this.isDownloadDisabled(this.data.contentArea?.type)} href="${this.setDownloadParam(this.data.contentArea?.url)}" download="${this.data.contentArea?.title}" aria-label="${this.localizedText['{{download}}']}"><sp-icon-download /></sp-action-button>
+              <sp-action-button  @click=${(e) => this.downloadFile(e)} ?disabled=${this.isDownloadDisabled(this.data.contentArea?.type)} aria-label="${this.localizedText['{{download}}']}"><sp-icon-download /></sp-action-button>
               ${this.isPreviewEnabled(this.data.contentArea?.type)
-                ? html`<sp-action-button href="${this.data.contentArea?.url}" target="_blank" aria-label="${this.localizedText['{{open-in}}']}"><sp-icon-open-in /></sp-action-button>`
+                ? html`<sp-action-button href="${this.data.contentArea?.url}" target="_blank" aria-label="${this.localizedText['{{open-in}}']}" @click=${(e) => e.stopPropagation()}><sp-icon-open-in /></sp-action-button>`
                 : html`<sp-action-button disabled selected aria-label="${this.localizedText['{{open-in-disabled}}']}"><sp-icon-open-in /></sp-action-button>`
               }
             </sp-theme>
