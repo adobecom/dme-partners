@@ -70,7 +70,7 @@ export default class PartnerCards extends LitElement {
       filterInfoBox: {
         title: '',
         description: '',
-      }
+      },
     };
 
     const blockDataActions = {
@@ -146,9 +146,8 @@ export default class PartnerCards extends LitElement {
         this.blockData.filtersInfos[filterName] = cols[1].innerText.trim();
       },
       'filter-info-box': (cols) => {
-        this.blockData.filterInfoBox['title'] = cols[0].innerText.trim();
-        this.blockData.filterInfoBox['description'] = this.htmlToPlainText(cols[1]);
-
+        this.blockData.filterInfoBox.title = cols[0].innerText.trim();
+        this.blockData.filterInfoBox.description = this.htmlToPlainText(cols[1]);
       },
     };
 
@@ -156,7 +155,6 @@ export default class PartnerCards extends LitElement {
     rows.forEach((row) => {
       const cols = Array.from(row.children);
       const rowTitle = cols[0].innerText.trim().toLowerCase().replace(/ /g, '-');
-      console.log('row', rowTitle);
 
       const colsContent = cols.slice(1);
       if (blockDataActions[rowTitle]) blockDataActions[rowTitle](colsContent);
@@ -177,15 +175,17 @@ export default class PartnerCards extends LitElement {
     this.handleActions();
   }
 
-  // get text content from node, and if there is content that is bold, keep it bold and insert new line before
+  // get text content from node,
+  // and if there is content that is bold, keep it bold and insert new line before
   htmlToPlainText(node) {
     if (!node) return '';
-    return Array.from(node.childNodes).map(child => {
+    return Array.from(node.childNodes).map((child) => {
       if (child.nodeType === Node.TEXT_NODE) {
         return child.textContent.trim();
-      } else if (child.nodeType === Node.ELEMENT_NODE) {
+      }
+      if (child.nodeType === Node.ELEMENT_NODE) {
         if (child.tagName === 'STRONG') {
-          return '<br/><strong>' + this.htmlToPlainText(child) + '</strong>';
+          return `<br/><strong>${this.htmlToPlainText(child)}</strong>`;
         }
         return this.htmlToPlainText(child);
       }
@@ -228,7 +228,8 @@ export default class PartnerCards extends LitElement {
       console.error('Error fetching data:', error);
     }
   }
-// todo add initialization for search and for checkbox for enduserpricelist
+
+  // todo add initialization for search and for checkbox for enduserpricelist
   initUrlSearchParams() {
     // eslint-disable-next-line no-restricted-globals
     const { search } = location || window.location;
@@ -578,7 +579,6 @@ export default class PartnerCards extends LitElement {
 
   handleFilterAction() {
     const selectedFiltersKeys = Object.keys(this.selectedFilters);
-console.log('selected', selectedFiltersKeys);
     if (selectedFiltersKeys.length) {
       this.cards = this.cards.filter((card) => {
         if (!card.arbitrary.length) return;
@@ -606,9 +606,12 @@ console.log('selected', selectedFiltersKeys);
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   handleNotTranslatedArbitraries(arbitraryTag, key) {
-    // todo check what to do with values for filters, do we need to translate them or just to use what we got in json?
-    // if we use only from json, existing logic have some limitations (since expect tags keys to not have spaces and all are lowercases, this would be solution:
+    // todo check what to do with values for filters,
+    //  do we need to translate them or just to use what we got in json?
+    // if we use only from json, existing logic have some limitations
+    // (since expect tags keys to not have spaces and all are lowercases, this would be solution:
     const filtersFromPricelistData = ['buying_program_type', 'region'];
     return filtersFromPricelistData.includes(key) ? arbitraryTag[key] : arbitraryTag[key].replaceAll(' ', '-');
   }
@@ -720,7 +723,7 @@ console.log('selected', selectedFiltersKeys);
   }
 
   updatePaginatedCards() {
-    //todo cards per page should be also renamed to item per page
+    // todo cards per page should be also renamed to item per page
     const endIndex = this.paginationCounter * this.cardsPerPage;
     const startIndex = this.blockData.pagination === 'load-more' ? 0 : (this.paginationCounter - 1) * this.cardsPerPage;
     this.paginatedCards = this.cards.slice(startIndex, endIndex);
@@ -756,12 +759,16 @@ console.log('selected', selectedFiltersKeys);
     super.disconnectedCallback();
     window.removeEventListener('resize', this.updateView);
   }
-renderInfoBoxDescription () {
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = this.blockData.filterInfoBox.description;
-  return html`${tempDiv}`;
-}
-getSlider() {}
+
+  renderInfoBoxDescription() {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = this.blockData.filterInfoBox.description;
+    return html`${tempDiv}`;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getSlider() {}
+
   /* eslint-disable indent */
   render() {
     return html`
