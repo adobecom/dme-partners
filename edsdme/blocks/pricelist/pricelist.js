@@ -18,6 +18,36 @@ export default async function init(el) {
     '{{filter-by}}': 'Filter by',
     '{{filters}}': 'Filters',
     '{{open-in}}': 'Open in',
+    '{{month}}': 'Month',
+    '{{region}}': 'Region',
+    '{{currency}}': 'Currency',
+    '{{buying_program_type}}': 'Buying program',
+    '{{include_end_user_pricelist}}': 'Include end user pricelist',
+    '{{all}}': 'All',
+    '{{apply}}': 'Apply',
+    '{{assets}}': 'Assets',
+    '{{back}}': 'Back',
+    '{{clear-all}}': 'Clear all',
+    '{{download}}': 'Download',
+    '{{open-in-disabled}}': 'Open in disabled',
+    '{{load-more}}': 'Load more',
+    '{{next}}': 'Next',
+    '{{next-page}}': 'Next Page',
+    '{{no-results-description}}': 'Try checking your spelling or broadening your search.',
+    '{{no-results-title}}': 'No Results Found',
+    '{{of}}': 'Of',
+    '{{page}}': 'Page',
+    '{{pages}}': 'Pages',
+    '{{prev}}': 'Prev',
+    '{{previous-page}}': 'Previous Page',
+    '{{results}}': 'Results',
+    '{{search-topics-resources-files}}': 'Search for topics, resources or files',
+    '{{show}}': 'Show',
+    '{{showing-results-for}}': 'Showing results for:',
+    '{{size}}': 'Size',
+    '{{view-all-results}}': 'View all results',
+    '{{search-here}}': 'Search here',
+    '{{search}}': 'Search here',
   };
   populateLocalizedTextFromListItems(el, localizedText);
 
@@ -26,9 +56,12 @@ export default async function init(el) {
     import(`${miloLibs}/features/spectrum-web-components/dist/theme.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/search.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/checkbox.js`),
+    import(`${miloLibs}/features/spectrum-web-components/dist/switch.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/button.js`),
+    import(`${miloLibs}/features/spectrum-web-components/dist/field-label.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/progress-circle.js`),
-  ]);
+
+]);
 
   declarePricelist();
 

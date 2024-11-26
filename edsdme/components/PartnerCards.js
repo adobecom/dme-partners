@@ -27,6 +27,8 @@ export default class PartnerCards extends LitElement {
     urlSearchParams: { type: Object },
     mobileView: { type: Boolean },
     fetchedData: { type: Boolean },
+    searchInputPlaceholder: { type: String },
+    searchInputLabel: { type: String },
   };
 
   constructor() {
@@ -44,6 +46,8 @@ export default class PartnerCards extends LitElement {
     this.hasResponseData = true;
     this.fetchedData = false;
     this.mobileView = window.innerWidth <= 1200;
+    this.searchInputPlaceholder = '{{search}}';
+    this.searchInputLabel = '';
     this.updateView = this.updateView.bind(this);
   }
 
@@ -173,16 +177,19 @@ export default class PartnerCards extends LitElement {
     this.handleActions();
   }
 
+  // get text content from node, and if there is content that is bold, keep it bold and insert new line before
   htmlToPlainText(node) {
     if (!node) return '';
     return Array.from(node.childNodes).map(child => {
       if (child.nodeType === Node.TEXT_NODE) {
-        return child.textContent;
-      } else if (child.nodeType === Node.ELEMENT_NODE && child.tagName === 'STRONG') {
-        return '<br/> <strong>' + child.textContent + '</strong>';
-      } else {
-        return child.innerText;
+        return child.textContent.trim();
+      } else if (child.nodeType === Node.ELEMENT_NODE) {
+        if (child.tagName === 'STRONG') {
+          return '<br/><strong>' + this.htmlToPlainText(child) + '</strong>';
+        }
+        return this.htmlToPlainText(child);
       }
+      return '';
     }).join('');
   }
 
@@ -221,7 +228,7 @@ export default class PartnerCards extends LitElement {
       console.error('Error fetching data:', error);
     }
   }
-
+// todo add initialization for search and for checkbox for enduserpricelist
   initUrlSearchParams() {
     // eslint-disable-next-line no-restricted-globals
     const { search } = location || window.location;
@@ -503,6 +510,7 @@ export default class PartnerCards extends LitElement {
     if (this.blockData.sort.items.length) this.handleSortAction();
     if (this.blockData.filters.length) this.handleFilterAction();
     this.additionalActions();
+    // todo refactor cards to call data or items since we will store pricelist there also
     // eslint-disable-next-line no-return-assign
     this.cards.forEach((card, index) => card.orderNum = index + 1);
     this.updatePaginatedCards();
@@ -570,7 +578,7 @@ export default class PartnerCards extends LitElement {
 
   handleFilterAction() {
     const selectedFiltersKeys = Object.keys(this.selectedFilters);
-
+console.log('selected', selectedFiltersKeys);
     if (selectedFiltersKeys.length) {
       this.cards = this.cards.filter((card) => {
         if (!card.arbitrary.length) return;
@@ -585,7 +593,7 @@ export default class PartnerCards extends LitElement {
           const arbitraryTagKey = Object.keys(arbitraryTag)[0]?.replaceAll(' ', '-');
           if (arbitraryTagKey !== key) return false;
 
-          const arbitraryTagValue = arbitraryTag[key].replaceAll(' ', '-');
+          const arbitraryTagValue = this.handleNotTranslatedArbitraries(arbitraryTag, key);
           if (arbitraryTagValue) {
             // eslint-disable-next-line max-len
             return this.selectedFilters[key].some((selectedTag) => selectedTag.key === arbitraryTagValue);
@@ -596,6 +604,13 @@ export default class PartnerCards extends LitElement {
     } else {
       this.urlSearchParams.delete('filters');
     }
+  }
+
+  handleNotTranslatedArbitraries(arbitraryTag, key) {
+    // todo check what to do with values for filters, do we need to translate them or just to use what we got in json?
+    // if we use only from json, existing logic have some limitations (since expect tags keys to not have spaces and all are lowercases, this would be solution:
+    const filtersFromPricelistData = ['buying_program_type', 'region'];
+    return filtersFromPricelistData.includes(key) ? arbitraryTag[key] : arbitraryTag[key].replaceAll(' ', '-');
   }
 
   handleUrlSearchParams() {
@@ -640,7 +655,6 @@ export default class PartnerCards extends LitElement {
 
       this.urlSearchParams.append(filterKey, tag.key);
     }
-
     this.paginationCounter = 1;
     this.handleActions();
     this.handleUrlSearchParams();
@@ -706,6 +720,7 @@ export default class PartnerCards extends LitElement {
   }
 
   updatePaginatedCards() {
+    //todo cards per page should be also renamed to item per page
     const endIndex = this.paginationCounter * this.cardsPerPage;
     const startIndex = this.blockData.pagination === 'load-more' ? 0 : (this.paginationCounter - 1) * this.cardsPerPage;
     this.paginatedCards = this.cards.slice(startIndex, endIndex);
@@ -746,6 +761,7 @@ renderInfoBoxDescription () {
   tempDiv.innerHTML = this.blockData.filterInfoBox.description;
   return html`${tempDiv}`;
 }
+getSlider() {}
   /* eslint-disable indent */
   render() {
     return html`
@@ -755,10 +771,13 @@ renderInfoBoxDescription () {
             <div class="partner-cards-sidebar-wrapper">
               <div class="partner-cards-sidebar">
                 <sp-theme class="search-wrapper" theme="spectrum" color="light" scale="medium">
+                  ${this.searchInputLabel ? html`<sp-field-label for="search" size="m">${this.blockData.localizedText[this.searchInputLabel]}</sp-field-label>` : ''}
                   <sp-search id="search" size="m" value="${this.searchTerm}" @input="${this.handleSearch}"
                              @submit="${(event) => event.preventDefault()}"
-                             placeholder="${this.blockData.localizedText['{{search}}']}"></sp-search>
+                             placeholder="${this.blockData.localizedText[this.searchInputPlaceholder]}"></sp-search>
+                  ${this.getSlider()}
                 </sp-theme>
+
                 ${!this.mobileView
                   ? html`
                     <div class="sidebar-header">
