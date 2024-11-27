@@ -87,7 +87,7 @@ function hideSections(page) {
     if (!hide) return;
     const parent = section.parentElement;
     Array.from(parent.children).forEach((el) => {
-      el.classList.add(PERSONALIZATION_HIDE);
+      el.remove();
     });
   });
 }
