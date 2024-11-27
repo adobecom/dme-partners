@@ -18,10 +18,6 @@ const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
 const { debounce } = await import(`${miloLibs}/utils/action.js`);
 
 const CONFIG = {
-  suggestions: {
-    scope: 'adobecom',
-    apiKey: 'adobedotcom2',
-  },
   selectors: {
     hasResults: 'has-results',
     inputIsPopulated: 'feds-search-input--isPopulated',
