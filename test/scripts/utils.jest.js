@@ -383,12 +383,29 @@ describe('Test utils.js', () => {
     document.body.appendChild(main);
     expect(await getRenewBanner(getConfig, jest.fn())).toEqual(null);
   });
+  it('Update ims config if user is signed in', () => {
+    jest.useFakeTimers();
+    window.adobeIMS = {
+      isSignedInUser: () => true,
+      adobeIdData: {},
+    };
+    // document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+    const metaTag = document.createElement('meta');
+    metaTag.name = 'adobe-target-after-logout';
+    metaTag.content = '/channelpartners/home';
+    document.head.appendChild(metaTag);
+    updateIMSConfig();
+    jest.advanceTimersByTime(1000);
+    const redirectUrl = new URL(window.adobeIMS.adobeIdData.redirect_uri);
+    expect(redirectUrl.pathname).toEqual(metaTag.content);
+  });
   it('Update ims config if user is not signed in', () => {
     jest.useFakeTimers();
     window.adobeIMS = {
       isSignedInUser: () => false,
       adobeIdData: {},
     };
+    document.cookie = 'partner_data=';
     const metaTag = document.createElement('meta');
     metaTag.name = 'adobe-target-after-login';
     metaTag.content = '/channelpartners/home';
@@ -398,21 +415,6 @@ describe('Test utils.js', () => {
     const redirectUrl = new URL(window.adobeIMS.adobeIdData.redirect_uri);
     expect(redirectUrl.pathname).toEqual(metaTag.content);
     expect(redirectUrl.searchParams.has('partnerLogin')).toEqual(true);
-  });
-  it('Update ims config if user is signed in', () => {
-    jest.useFakeTimers();
-    window.adobeIMS = {
-      isSignedInUser: () => true,
-      adobeIdData: {},
-    };
-    const metaTag = document.createElement('meta');
-    metaTag.name = 'adobe-target-after-logout';
-    metaTag.content = '/channelpartners/home';
-    document.head.appendChild(metaTag);
-    updateIMSConfig();
-    jest.advanceTimersByTime(1000);
-    const redirectUrl = new URL(window.adobeIMS.adobeIdData.redirect_uri);
-    expect(redirectUrl.pathname).toEqual(metaTag.content);
   });
   it('Get locale', () => {
     const locales = {

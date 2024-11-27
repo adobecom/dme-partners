@@ -245,8 +245,10 @@ export async function getRenewBanner(getConfig, loadBlock) {
 }
 
 export function updateIMSConfig() {
+  const isSignedIn = partnerIsSignedIn();
   const imsReady = setInterval(() => {
     if (!window.adobeIMS) return;
+    if (isSignedIn && !window.adobeIMS.isSignedInUser()) return;
     clearInterval(imsReady);
     let target;
     const partnerLogin = !window.adobeIMS.isSignedInUser();
