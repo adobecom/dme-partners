@@ -159,7 +159,7 @@ export function getMetadata(name) {
 export function redirectLoggedinPartner() {
   if (!isMember()) return;
   const target = getMetadataContent('adobe-target-after-login');
-  if (!target) return;
+  if (!target || target === 'NONE') return;
   document.body.style.display = 'none';
   window.location.assign(target);
 }
@@ -261,7 +261,7 @@ export function updateIMSConfig() {
     const targetUrl = new URL(window.location.href);
     // eslint-disable-next-line chai-friendly/no-unused-expressions
     partnerLogin && targetUrl.searchParams.set(PARTNER_LOGIN_QUERY, true);
-    if (target) {
+    if (target && target !== 'NONE') {
       targetUrl.pathname = target;
     }
     window.adobeIMS.adobeIdData.redirect_uri = targetUrl.toString();
