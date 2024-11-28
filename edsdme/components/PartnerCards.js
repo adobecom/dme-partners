@@ -162,8 +162,12 @@ export default class PartnerCards extends LitElement {
   }
 
   updateView() {
+    const oldValue = this.mobileView;
     this.mobileView = window.innerWidth <= 1200;
+    this.additionalUpdateView(oldValue !== this.mobileView);
   }
+
+  additionalUpdateView() {}
 
   async firstUpdated() {
     await super.firstUpdated();
@@ -778,15 +782,15 @@ export default class PartnerCards extends LitElement {
             <div class="partner-cards-sidebar-wrapper">
               <div class="partner-cards-sidebar">
                 <sp-theme class="search-wrapper" theme="spectrum" color="light" scale="medium">
-                  ${this.searchInputLabel ? html`<sp-field-label for="search" size="m">${this.blockData.localizedText[this.searchInputLabel]}</sp-field-label>` : ''}
+                  ${this.searchInputLabel && !this.mobileView ? html`<sp-field-label for="search" size="m">${this.blockData.localizedText[this.searchInputLabel]}</sp-field-label>` : ''}
                   <sp-search id="search" size="m" value="${this.searchTerm}" @input="${this.handleSearch}"
                              @submit="${(event) => event.preventDefault()}"
                              placeholder="${this.blockData.localizedText[this.searchInputPlaceholder]}"></sp-search>
-                  ${this.getSlider()}
                 </sp-theme>
 
                 ${!this.mobileView
                   ? html`
+                    ${this.getSlider()}
                     <div class="sidebar-header">
                       <h3 class="sidebar-title">${this.blockData.localizedText['{{filter}}']}</h3>
                       <button class="sidebar-clear-btn" @click="${this.handleResetActions}"
@@ -800,52 +804,19 @@ export default class PartnerCards extends LitElement {
                     <div class="sidebar-filters-wrapper">
                       ${this.filters}
                     </div>
-                    <div class="sidebar-info-box">
+                    ${this.blockData.filterInfoBox.title ? html` 
+                      <div class="sidebar-info-box">
                       <div class="title">${this.blockData.filterInfoBox.title}</div>
                       ${this.renderInfoBoxDescription()}
-                    </div>
+                    </div>`: ''
+                }
                   `
                   : ''
                 }
               </div>
             </div>
             <div class="partner-cards-content">
-              <div class="partner-cards-header">
-                <div class="partner-cards-title-wrapper">
-                  <h3 class="partner-cards-title">${this.blockData.title}</h3>
-                  <span
-                    class="partner-cards-cards-results"><strong>${this.cards?.length}</strong> ${this.blockData.localizedText['{{results}}']}</span>
-                </div>
-                <div class="partner-cards-sort-wrapper">
-                  ${this.mobileView
-                    ? html`
-                      <button class="filters-btn-mobile" @click="${this.openFiltersMobile}"
-                              aria-label="${this.blockData.localizedText['{{filters}}']}">
-                        <span class="filters-btn-mobile-icon"></span>
-                        <span class="filters-btn-mobile-title">${this.blockData.localizedText['{{filters}}']}</span>
-                        ${this.chosenFilters?.tagsCount
-                          ? html`<span class="filters-btn-mobile-total">${this.chosenFilters.tagsCount}</span>`
-                          : ''
-                        }
-                      </button>
-                    `
-                    : ''
-                  }
-                  ${this.blockData.sort.items.length
-                    ? html`
-                      <div class="sort-wrapper">
-                        <button class="sort-btn" @click="${this.toggleSort}">
-                          <span class="sort-btn-text">${this.selectedSortOrder.value}</span>
-                          <span class="filter-chevron-icon"></span>
-                        </button>
-                        <div class="sort-list">
-                          ${this.sortItems}
-                        </div>
-                      </div>`
-                    : ''
-                  }
-                </div>
-              </div>
+            ${this.getPartnerCardsHeader()}
               <div class="partner-cards-collection">
                 ${this.hasResponseData
                   ? this.partnerCards
@@ -859,7 +830,7 @@ export default class PartnerCards extends LitElement {
                   `
                 }
               </div>
-              ${this.cards.length
+              ${ this.shouldDisplayPagination()
                 ? html`
                   <div
                     class="pagination-wrapper ${this.blockData?.pagination === 'load-more' ? 'pagination-wrapper-load-more' : 'pagination-wrapper-default'}">
@@ -874,6 +845,10 @@ export default class PartnerCards extends LitElement {
           </div>` : ''}
       ${this.getFilterFullScreenView(this.mobileView && this.fetchData)}
     `;
+  }
+
+  shouldDisplayPagination() {
+    return this.cards.length;
   }
 
   getFilterFullScreenView(condition) {
@@ -898,6 +873,47 @@ export default class PartnerCards extends LitElement {
           </div>
         `
         : '';
+  }
+
+  getPartnerCardsHeader() {
+    return html`
+      <div class="partner-cards-header">
+        <div class="partner-cards-title-wrapper">
+          <h3 class="partner-cards-title">${this.blockData.title}</h3>
+          <span
+            class="partner-cards-cards-results"><strong>${this.cards?.length}</strong> ${this.blockData.localizedText['{{results}}']}</span>
+        </div>
+        <div class="partner-cards-sort-wrapper">
+          ${this.mobileView
+            ? html`
+              <button class="filters-btn-mobile" @click="${this.openFiltersMobile}"
+                      aria-label="${this.blockData.localizedText['{{filters}}']}">
+                <span class="filters-btn-mobile-icon"></span>
+                <span class="filters-btn-mobile-title">${this.blockData.localizedText['{{filters}}']}</span>
+                ${this.chosenFilters?.tagsCount
+                  ? html`<span class="filters-btn-mobile-total">${this.chosenFilters.tagsCount}</span>`
+                  : ''
+                }
+              </button>
+            `
+            : ''
+          }
+          ${this.blockData.sort.items.length
+            ? html`
+              <div class="sort-wrapper">
+                <button class="sort-btn" @click="${this.toggleSort}">
+                  <span class="sort-btn-text">${this.selectedSortOrder.value}</span>
+                  <span class="filter-chevron-icon"></span>
+                </button>
+                <div class="sort-list">
+                  ${this.sortItems}
+                </div>
+              </div>`
+            : ''
+          }
+        </div>
+      </div>
+    `;
   }
 
   /* eslint-enable indent */

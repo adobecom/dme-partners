@@ -56,3 +56,18 @@ export function generateRequestForSearchAPI(pageOptions, body) {
     credentials: 'include',
   });
 }
+
+// eslint-disable-next-line class-methods-use-this
+export function setDownloadParam(url) {
+  try {
+    if (!url) return;
+    const urlWithParam = new URL(url);
+    urlWithParam.search = 'download';
+    // eslint-disable-next-line consistent-return
+    return urlWithParam;
+  } catch (error) {
+    console.error("Invalid URL provided:", url, error.message);
+    return '';
+  }
+
+}

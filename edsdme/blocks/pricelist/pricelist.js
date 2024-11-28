@@ -48,6 +48,8 @@ export default async function init(el) {
     '{{view-all-results}}': 'View all results',
     '{{search-here}}': 'Search here',
     '{{search}}': 'Search here',
+    '{{type}}': 'Type',
+    '{{action}}': 'Action',
   };
   populateLocalizedTextFromListItems(el, localizedText);
 
@@ -60,6 +62,8 @@ export default async function init(el) {
     import(`${miloLibs}/features/spectrum-web-components/dist/button.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/field-label.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/progress-circle.js`),
+    import(`${miloLibs}/features/spectrum-web-components/dist/action-button.js`),
+
 
 ]);
 

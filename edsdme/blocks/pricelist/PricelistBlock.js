@@ -2,6 +2,7 @@ import PartnerCards from "../../components/PartnerCards.js";
 import {getLibs} from "../../scripts/utils.js";
 import {pricelistBlockStyles} from "./PricelistBlockStyles.js";
 import {data} from "./pricelistdata.js";
+import {setDownloadParam} from "../utils/utils.js";
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
@@ -27,6 +28,7 @@ export default class Pricelist extends PartnerCards {
     this.searchInputPlaceholder = '{{search-here}}';
     this.searchInputLabel = '{{search}}';
   }
+
   //todo update when to use api
   async fetch () {
     return { json: data };
@@ -72,15 +74,40 @@ export default class Pricelist extends PartnerCards {
   }
   additionalFirstUpdated() {
     this.getAllCardFilters();
+    if (this.mobileView) {
+      this.blockData.pagination = 'load-more';
+      this.paginationCounter = 1;
+      this.cardsPerPage = this.blockData.cardsPerPage;
+    } else {
+      this.blockData.pagination = 'default';
+      this.paginationCounter = 1;
+      this.cardsPerPage = this.allCards.length;
+    }
+  }
+  additionalUpdateView(viewUpdated) {
+    if (viewUpdated) {
+      if (this.mobileView) {
+        console.log('view');
+        this.blockData.pagination = 'load-more';
+        this.paginationCounter = 1;
+        this.cardsPerPage = this.blockData.cardsPerPage;
+        this.handleActions();
+      } else {
+        this.blockData.pagination = 'default';
+        this.paginationCounter = 1;
+        this.cardsPerPage = this.allCards.length;
+        this.handleActions();
+      }
+    }
   }
 
   getAllCardFilters() {
-    const filterKeys = ['month', 'region', 'currency', 'buying_program_type'];
+    const filterKeys = ['currency', 'month','buying_program_type', 'region'];
     const filtersMap = {
-      month: new Set(),
-      region: new Set(),
       currency: new Set(),
+      month: new Set(),
       buying_program_type: new Set(),
+      region: new Set(),
     };
 
     const allArbitraryItems = this.cards.flatMap((card) => card.arbitrary);
@@ -105,6 +132,7 @@ export default class Pricelist extends PartnerCards {
 
   getSlider() {
     return html`
+      <sp-theme class="search-wrapper" theme="spectrum" color="light" scale="medium">
       <div class="sidebar-slider">
         <sp-switch size="m" 
                      ?checked=${this.includeEndUser} 
@@ -112,31 +140,69 @@ export default class Pricelist extends PartnerCards {
           include endpricelist user
         </sp-switch>
       </div>
+      </sp-theme>
     `;
   }
   handleSlider(event) {
+    this.includeEndUser = !this.includeEndUser;
     this.handleTag(event, this.includeEndUserPricelistFilter.tags[0], this.includeEndUserPricelistFilter.key);
   }
-   renderDivsForArbitrary(arbitrary) {
+
+  getArbitraryValue(arbitrary, key) {
+    const filters = arbitrary.filter((a) => a[key]);
+    const newarray =  filters.map(f=> f[key]);
+    return newarray.join(' ');
+
+  }
+  getTableRow(data) {
     return html`
-    ${arbitrary.map(
-      (item) =>
-        html`<div>${Object.entries(item).map(
-          ([key, value]) => html`<strong>${key}</strong>: ${value}`
-        )}</div>`
-    )}
-  `;
+      <tr>
+        <td>${this.getArbitraryValue(data.arbitrary, 'buying_program_type')}</td>
+        <td>${this.getArbitraryValue(data.arbitrary, 'region')}</td>
+        <td>${this.getArbitraryValue(data.arbitrary, 'currency')}</td>
+        <td>${this.getArbitraryValue(data.arbitrary, 'month')}</td>
+        <td>
+          <sp-theme theme="spectrum" color="light" scale="medium">
+              <sp-action-button 
+                  size="m"
+                  href="${setDownloadParam(data.contentArea?.url)}" 
+                  download="${data.contentArea?.title}" 
+                  aria-label="${this.blockData.localizedText['{{download}}']}">
+                <sp-icon-download slot="icon"></sp-icon-download>
+                ${this.blockData.localizedText['{{download}}']}
+              </sp-action-button>
+            </sp-theme>
+          
+        </td>
+
+      </tr>`
+  }
+  getTableRows() {
+    return html`${repeat(this.paginatedCards,
+        (pricelist) => pricelist.id,
+        (pricelist) => this.getTableRow(pricelist))
+    }`;
   }
 
-  // todo update view to display table
   get partnerCards() {
     if (this.paginatedCards.length) {
-      return html`${repeat(
-        this.paginatedCards,
-        (card) => card.id,
-        (card) => html`<div class="card-wrapper" > ${this.renderDivsForArbitrary(card.arbitrary)}
-        </div>`,
-      )}`;
+      return html`<div class="table-container" tabindex="0" role="region" aria-label="Scrollable table with data"">
+        <table >
+          <thead>
+          <tr>
+            <th scope="type">${this.blockData.localizedText['{{type}}']?.toLocaleUpperCase()}</th>
+            <th scope="region">${this.blockData.localizedText['{{region}}']?.toLocaleUpperCase()}</th>
+            <th scope="currency">${this.blockData.localizedText['{{currency}}']?.toLocaleUpperCase()}</th>
+            <th scope="month">${this.blockData.localizedText['{{month}}']?.toLocaleUpperCase()}</th>
+            <th scope="download">${this.blockData.localizedText['{{action}}']?.toLocaleUpperCase()}</th>
+          </tr>
+          </thead>
+          <tbody>
+          ${this.getTableRows()}
+          </tbody>
+        </table>
+      </div>
+      `;
     }
 
     return html`<div class="no-results">
@@ -155,4 +221,33 @@ export default class Pricelist extends PartnerCards {
     // eslint-disable-next-line max-len
     this.cards = this.allCards.filter((card) => this.getCardArbitraryValues(card).includes(this.searchTerm));
   }
+
+  shouldDisplayPagination() {
+    return this.cards.length && this.mobileView;
+  }
+  getPartnerCardsHeader() {
+    return html`
+      <div class="partner-cards-header">
+
+        <div class="partner-cards-sort-wrapper">
+          ${this.mobileView
+        ? html`
+              <button class="filters-btn-mobile" @click="${this.openFiltersMobile}"
+                      aria-label="${this.blockData.localizedText['{{filters}}']}">
+                <span class="filters-btn-mobile-icon"></span>
+                <span class="filters-btn-mobile-title">${this.blockData.localizedText['{{filters}}']}</span>
+                ${this.chosenFilters?.tagsCount
+            ? html`<span class="filters-btn-mobile-total">${this.chosenFilters.tagsCount}</span>`
+            : ''
+        }
+              </button>
+                ${this.getSlider()}
+            `
+        : ''
+    }
+        </div>
+      </div>
+    `;
+  }
+
 }
