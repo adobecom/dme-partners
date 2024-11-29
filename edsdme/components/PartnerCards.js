@@ -167,6 +167,7 @@ export default class PartnerCards extends LitElement {
     this.additionalUpdateView(oldValue !== this.mobileView);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   additionalUpdateView() {}
 
   async firstUpdated() {
@@ -808,7 +809,7 @@ export default class PartnerCards extends LitElement {
                       <div class="sidebar-info-box">
                       <div class="title">${this.blockData.filterInfoBox.title}</div>
                       ${this.renderInfoBoxDescription()}
-                    </div>`: ''
+                    </div>` : ''
                 }
                   `
                   : ''
@@ -830,7 +831,7 @@ export default class PartnerCards extends LitElement {
                   `
                 }
               </div>
-              ${ this.shouldDisplayPagination()
+              ${this.shouldDisplayPagination()
                 ? html`
                   <div
                     class="pagination-wrapper ${this.blockData?.pagination === 'load-more' ? 'pagination-wrapper-load-more' : 'pagination-wrapper-default'}">

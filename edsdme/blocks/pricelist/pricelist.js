@@ -1,17 +1,14 @@
-import PricelistBlock from "./PricelistBlock.js";
-import {getConfig, localizationPromises, populateLocalizedTextFromListItems} from "../utils/utils.js";
-import {getLibs} from "../../scripts/utils.js";
+import PricelistBlock from './PricelistBlock.js';
+import { getConfig, localizationPromises, populateLocalizedTextFromListItems } from '../utils/utils.js';
+import { getLibs } from '../../scripts/utils.js';
 
 function declarePricelist() {
   if (customElements.get('pricelist-block')) return;
   customElements.define('pricelist-block', PricelistBlock);
 }
 export default async function init(el) {
-  console.log('element', el);
   const miloLibs = getLibs();
   const config = getConfig();
-
-
   const sectionIndex = el.parentNode.getAttribute('data-idx');
   const localizedText = {
     '{{filter}}': 'Filter',
@@ -63,9 +60,7 @@ export default async function init(el) {
     import(`${miloLibs}/features/spectrum-web-components/dist/field-label.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/progress-circle.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/action-button.js`),
-
-
-]);
+  ]);
 
   declarePricelist();
 

@@ -1,6 +1,6 @@
 import searchCardStyles from './SearchCardStyles.js';
 import { formatDate, getLibs } from '../scripts/utils.js';
-import {setDownloadParam} from "../blocks/utils/utils.js";
+import { setDownloadParam } from '../blocks/utils/utils.js';
 
 const miloLibs = getLibs();
 const { html, repeat, LitElement } = await import(`${miloLibs}/deps/lit-all.min.js`);
