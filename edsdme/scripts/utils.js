@@ -245,8 +245,10 @@ export async function getRenewBanner(getConfig, loadBlock) {
 }
 
 export function updateIMSConfig() {
+  const isSignedIn = partnerIsSignedIn();
   const imsReady = setInterval(() => {
     if (!window.adobeIMS) return;
+    if (isSignedIn && !window.adobeIMS.isSignedInUser()) return;
     clearInterval(imsReady);
     let target;
     const partnerLogin = !window.adobeIMS.isSignedInUser();
@@ -346,6 +348,23 @@ function extractTableCollectionTags(el) {
   return tableCollectionTags;
 }
 
+function checkForQaContent(el) {
+  if (!el.children) return false;
+
+  // Iterating backward because we expect 'qa-content' to be in the last rows.
+  // eslint-disable-next-line no-plusplus
+  for (let i = el.children.length - 1; i >= 0; i--) {
+    const row = el.children[i];
+
+    const rowTitle = row.children[0]?.innerText?.trim().toLowerCase().replace(/ /g, '-');
+    if (rowTitle?.includes('qa-content')) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function getComplexQueryParams(el, collectionTag) {
   const portal = getCurrentProgramType();
   if (!portal) return;
@@ -359,6 +378,12 @@ function getComplexQueryParams(el, collectionTag) {
 
   const collectionTagsStr = collectionTags.filter((e) => e.length).join('+AND+');
   let resulStr = `(${collectionTagsStr})`;
+
+  const qaContentTag = '"caas:adobe-partners/qa-content"';
+  if (!checkForQaContent(el)) {
+    resulStr += `+NOT+${qaContentTag}`;
+  }
+
   if (partnerRegionParams) resulStr += `+AND+${partnerRegionParams}`;
   if (partnerLevelParams) resulStr += `+AND+${partnerLevelParams}`;
   // eslint-disable-next-line consistent-return
