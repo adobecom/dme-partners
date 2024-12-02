@@ -23,9 +23,7 @@ export default class Pricelist extends PartnerCards {
     pricelistBlockStyles,
   ];
 
-  static properties = {
-    ...PartnerCards.properties,
-  };
+  static properties = { ...PartnerCards.properties };
 
   constructor() {
     super();
@@ -199,9 +197,9 @@ export default class Pricelist extends PartnerCards {
   additionalActions() {
     this.cards = this.cards.filter((card) => {
       if (!card.arbitrary.length) return false;
-      const isEndUser = card.arbitrary.some((o) => {
-        return o.hasOwnProperty(priceListKeyWords.INCLUDE_EU_PRICELIST);
-      });
+      const isEndUser = card.arbitrary.some(
+        (o) => Object.prototype.hasOwnProperty.call(o, priceListKeyWords.INCLUDE_EU_PRICELIST),
+      );
       return this.includeEndUser || !isEndUser;
     });
   }
@@ -209,10 +207,10 @@ export default class Pricelist extends PartnerCards {
   // eslint-disable-next-line class-methods-use-this
   getArbitraryTagValue(arbitraryTag, key) {
     const filtersFromPricelistData = [
-        priceListKeyWords.BUYING_PROGRAM_TYPE,
+      priceListKeyWords.BUYING_PROGRAM_TYPE,
       priceListKeyWords.REGION,
       priceListKeyWords.CURRENCY,
-      priceListKeyWords.MONTH
+      priceListKeyWords.MONTH,
     ];
     return filtersFromPricelistData.includes(key) ? arbitraryTag[key] : arbitraryTag[key].replaceAll(' ', '-');
   }
@@ -256,7 +254,8 @@ export default class Pricelist extends PartnerCards {
 
   // eslint-disable-next-line class-methods-use-this
   getCardArbitraryValues(card) {
-   return card.arbitrary?.map((object) => Object.entries(object).map(([key, value]) => value.toLocaleLowerCase())).join(' ');
+    // eslint-disable-next-line no-unused-vars
+    return card.arbitrary?.map((object) => Object.entries(object).map(([key, value]) => value.toLocaleLowerCase())).join(' ');
   }
 
   handleSearchAction() {
