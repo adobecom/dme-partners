@@ -159,12 +159,8 @@ export default class Pricelist extends PartnerCards {
   }
 
   handleSlider(event) {
-    this.includeEndUser = !this.includeEndUser;
-    this.handleTag(
-      event,
-      this.includeEndUserPricelistFilter.tags[0],
-      this.includeEndUserPricelistFilter.key,
-    );
+    this.includeEndUser = event.target.checked;
+    this.handleActions();
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -210,6 +206,16 @@ export default class Pricelist extends PartnerCards {
       (pricelist) => this.getTableRow(pricelist),
     )
     }`;
+  }
+
+  additionalActions() {
+    this.cards = this.cards.filter((card) => {
+      if (!card.arbitrary.length) return false;
+      const isEndUser = card.arbitrary.some((o) => {
+        return o.hasOwnProperty(priceListKeyWords.INCLUDE_EU_PRICELIST);
+      });
+      return this.includeEndUser || !isEndUser;
+    });
   }
 
   get partnerCards() {
