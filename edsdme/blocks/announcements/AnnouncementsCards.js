@@ -33,9 +33,9 @@ export default class Announcements extends PartnerCards {
       const cardEndDate = card.endDate ? new Date(card.endDate) : null;
       const now = Date.now();
       if (this.blockData.isArchive) {
-        return cardDate <= startDate || (cardEndDate && cardEndDate < now);
+        return cardEndDate ? cardEndDate < now : cardDate <= startDate;
       }
-      return cardEndDate ? cardDate > startDate && cardEndDate >= now : cardDate > startDate;
+      return cardEndDate ? cardEndDate >= now : cardDate > startDate;
     });
 
     if (this.blockData.dateFilter) {
