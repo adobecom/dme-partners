@@ -206,6 +206,17 @@ export default class Pricelist extends PartnerCards {
     });
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  getArbitraryTagValue(arbitraryTag, key) {
+    const filtersFromPricelistData = [
+        priceListKeyWords.BUYING_PROGRAM_TYPE,
+      priceListKeyWords.REGION,
+      priceListKeyWords.CURRENCY,
+      priceListKeyWords.MONTH
+    ];
+    return filtersFromPricelistData.includes(key) ? arbitraryTag[key] : arbitraryTag[key].replaceAll(' ', '-');
+  }
+
   get partnerCards() {
     if (this.paginatedCards.length) {
       return html`
@@ -245,7 +256,7 @@ export default class Pricelist extends PartnerCards {
 
   // eslint-disable-next-line class-methods-use-this
   getCardArbitraryValues(card) {
-    return card.arbitrary?.map((object) => Object.entries(object).map(([value]) => value.toLocaleLowerCase())).join(' ');
+   return card.arbitrary?.map((object) => Object.entries(object).map(([key, value]) => value.toLocaleLowerCase())).join(' ');
   }
 
   handleSearchAction() {

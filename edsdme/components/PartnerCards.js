@@ -597,7 +597,7 @@ export default class PartnerCards extends LitElement {
           const arbitraryTagKey = Object.keys(arbitraryTag)[0]?.replaceAll(' ', '-');
           if (arbitraryTagKey !== key) return false;
 
-          const arbitraryTagValue = this.handleNotTranslatedArbitraries(arbitraryTag, key);
+          const arbitraryTagValue = this.getArbitraryTagValue(arbitraryTag, key);
           if (arbitraryTagValue) {
             // eslint-disable-next-line max-len
             return this.selectedFilters[key].some((selectedTag) => selectedTag.key === arbitraryTagValue);
@@ -611,9 +611,8 @@ export default class PartnerCards extends LitElement {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  handleNotTranslatedArbitraries(arbitraryTag, key) {
-    const filtersFromPricelistData = ['buying_program_type', 'region', 'currency', 'month'];
-    return filtersFromPricelistData.includes(key) ? arbitraryTag[key] : arbitraryTag[key].replaceAll(' ', '-');
+  getArbitraryTagValue(arbitraryTag, key) {
+    return arbitraryTag[key].replaceAll(' ', '-');
   }
 
   handleUrlSearchParams() {
