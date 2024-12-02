@@ -229,6 +229,7 @@ export default class PartnerCards extends LitElement {
         this.hasResponseData = !!apiData.cards;
       }
     } catch (error) {
+      this.hasResponseData = true;
       // eslint-disable-next-line no-console
       console.error('Error fetching data:', error);
     }
