@@ -8,7 +8,7 @@
     "test": "npm run wtr && npm run jest",
     "wtr": "wtr \"./test/**/*.test.js\" --node-resolve --port=2000 --coverage",
     "test:watch": "npm test -- --watch",
-    "jest": "jest --testPathPattern=test --coverage --coverageDirectory=coverage/jest --maxWorkers=2",
+    "jest": "jest --testPathPattern=test --coverage --coverageDirectory=coverage/jest",
     "nala": "node nala/utils/nala.run.js",
     "lint": "npm run lint:js && npm run lint:css",
     "lint:js": "eslint .",
@@ -53,5 +53,8 @@
   "dependencies": {
     "@playwright/test": "^1.42.1",
     "axios": "^1.7.4"
+  },
+  "overrides": {
+    "nwsapi": "2.2.16"
   }
 }
