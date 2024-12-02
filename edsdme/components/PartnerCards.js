@@ -29,6 +29,7 @@ export default class PartnerCards extends LitElement {
     fetchedData: { type: Boolean },
     searchInputPlaceholder: { type: String },
     searchInputLabel: { type: String },
+    filtersData: { type: Array },
   };
 
   constructor() {
@@ -48,6 +49,7 @@ export default class PartnerCards extends LitElement {
     this.mobileView = window.innerWidth <= 1200;
     this.searchInputPlaceholder = '{{search}}';
     this.searchInputLabel = '';
+    this.filtersData = [];
     this.updateView = this.updateView.bind(this);
   }
 
@@ -210,7 +212,10 @@ export default class PartnerCards extends LitElement {
         this.fetchedData = true;
       }, 5);
 
-      const response = await fetch(this.blockData.caasUrl);
+      const response = await fetch(
+        this.blockData.caasUrl,
+        this.getFetchAdditionalOptions(),
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -227,6 +232,7 @@ export default class PartnerCards extends LitElement {
         this.cards = apiData.cards;
         this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
         this.hasResponseData = !!apiData.cards;
+        this.filtersData = apiData.filters;
       }
     } catch (error) {
       this.hasResponseData = true;
@@ -234,6 +240,9 @@ export default class PartnerCards extends LitElement {
       console.error('Error fetching data:', error);
     }
   }
+
+  // eslint-disable-next-line class-methods-use-this
+  getFetchAdditionalOptions() { return {}; }
 
   initUrlSearchParams() {
     // eslint-disable-next-line no-restricted-globals

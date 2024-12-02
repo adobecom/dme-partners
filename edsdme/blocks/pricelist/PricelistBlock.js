@@ -71,34 +71,9 @@ export default class Pricelist extends PartnerCards {
   }
 
   getAllCardFilters() {
-    const filterKeys = [
-      priceListKeyWords.CURRENCY,
-      priceListKeyWords.MONTH,
-      priceListKeyWords.BUYING_PROGRAM_TYPE,
-      priceListKeyWords.REGION,
-    ];
-    const filtersMap = {
-      currency: new Set(),
-      month: new Set(),
-      buying_program_type: new Set(),
-      region: new Set(),
-    };
-
-    const allArbitraryItems = this.cards.flatMap((card) => card.arbitrary);
-
-    filterKeys.forEach((key) => {
-      allArbitraryItems.forEach((item) => {
-        if (item[key]) {
-          filtersMap[key].add(item[key]);
-        }
-      });
-    });
-
-    filterKeys.forEach((key) => {
-      this.blockData.filters.push(
-        this.createFilterObject({ name: key, tags: Array.from(filtersMap[key]) }),
-      );
-    });
+    this.filtersData?.forEach(
+      (filter) => this.blockData.filters.push(this.createFilterObject(filter)),
+    );
   }
 
   getSlider() {
@@ -184,6 +159,11 @@ export default class Pricelist extends PartnerCards {
       priceListKeyWords.MONTH,
     ];
     return filtersFromPricelistData.includes(key) ? arbitraryTag[key] : arbitraryTag[key].replaceAll(' ', '-');
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getFetchAdditionalOptions() {
+    return { credentials: 'include' };
   }
 
   get partnerCards() {
