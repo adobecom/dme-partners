@@ -27,15 +27,20 @@ export async function localizationPromises(localizedText, config) {
   }));
 }
 
-export function generateRequestForSearchAPI(pageOptions, body) {
-  const { env, locales } = getConfig();
+export function getRuntimeActionUrl(action) {
+  const { env } = getConfig();
   let domain = 'https://io-partners-dx.stage.adobe.com';
   if (env.name === 'prod') {
     domain = 'https://io-partners-dx.adobe.com';
   }
-  const url = new URL(
-    `${domain}/api/v1/web/dx-partners-runtime/search-apc/search-apc?`,
+  return new URL(
+    `${domain}${action}`,
   );
+}
+
+export function generateRequestForSearchAPI(pageOptions, body) {
+  const { locales } = getConfig();
+  const url = getRuntimeActionUrl('/api/v1/web/dx-partners-runtime/search-apc/search-apc?');
   const localesData = getLocale(locales);
   const queryParams = new URLSearchParams(url.search);
   queryParams.append('geo', localesData.prefix && localesData.region);

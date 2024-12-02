@@ -1,7 +1,6 @@
 import PartnerCards from '../../components/PartnerCards.js';
 import { getLibs } from '../../scripts/utils.js';
 import { pricelistBlockStyles } from './PricelistBlockStyles.js';
-import { data } from './pricelistdata.js';
 import { setDownloadParam } from '../utils/utils.js';
 
 const miloLibs = getLibs();
@@ -30,34 +29,6 @@ export default class Pricelist extends PartnerCards {
     this.includeEndUser = false;
     this.searchInputPlaceholder = '{{search-here}}';
     this.searchInputLabel = '{{search}}';
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  async fetch() {
-    return { json: data };
-  }
-
-  async fetchData() {
-    let apiData;
-    setTimeout(() => {
-      this.hasResponseData = !!apiData?.pricelist;
-      this.fetchedData = true;
-    }, 5);
-    try {
-      const response = await this.fetch();
-      // if (!response.ok) {
-      //   throw new Error(`HTTP error! Status: ${response.status}`);
-      // }
-      // apiData = await response.json();
-      apiData = response.json;
-      apiData.pricelist.forEach((card, index) => { card.orderNum = index + 1; });
-      this.allCards = apiData.pricelist;
-      this.cards = apiData.pricelist;
-      this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
-      this.hasResponseData = !!apiData.pricelist;
-    } catch (e) {
-      console.log('error', e);
-    }
   }
 
   createFilterObject(filterData) {

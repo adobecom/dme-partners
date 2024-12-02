@@ -1,5 +1,10 @@
 import PricelistBlock from './PricelistBlock.js';
-import { getConfig, localizationPromises, populateLocalizedTextFromListItems } from '../utils/utils.js';
+import {
+  getConfig,
+  getRuntimeActionUrl,
+  localizationPromises,
+  populateLocalizedTextFromListItems,
+} from '../utils/utils.js';
 import { getLibs } from '../../scripts/utils.js';
 
 function declarePricelist() {
@@ -69,6 +74,7 @@ export default async function init(el) {
     tableData: el.children,
     ietf: config.locale.ietf,
     pagination: 'load-more',
+    caasUrl: getRuntimeActionUrl('/api/v1/web/dx-partners-runtime/pricelists-apc'),
   };
 
   const app = document.createElement('pricelist-block');
