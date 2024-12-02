@@ -25,19 +25,11 @@ export default class Pricelist extends PartnerCards {
 
   static properties = {
     ...PartnerCards.properties,
-    filtersSectionOptions: {
-      searchLabel: 'Search',
-      searchPlaceholder: 'Search here',
-      filtersLabel: 'Filters',
-      includeEndUser: false,
-      includeEndUserPricelistFilter: {},
-    },
   };
 
   constructor() {
     super();
     this.includeEndUser = false;
-    this.includeEndUserPricelistFilter = {};
     this.searchInputPlaceholder = '{{search-here}}';
     this.searchInputLabel = '{{search}}';
   }
@@ -137,10 +129,6 @@ export default class Pricelist extends PartnerCards {
       this.blockData.filters.push(
         this.createFilterObject({ name: key, tags: Array.from(filtersMap[key]) }),
       );
-    });
-    this.includeEndUserPricelistFilter = this.createFilterObject({
-      name: priceListKeyWords.INCLUDE_EU_PRICELIST,
-      tags: [priceListKeyWords.INCLUDE_EU_PRICELIST],
     });
   }
 

@@ -173,10 +173,10 @@ export default class PartnerCards extends LitElement {
   async firstUpdated() {
     await super.firstUpdated();
     await this.fetchData();
-    this.initUrlSearchParams();
     if (this.blockData.sort.items.length) this.selectedSortOrder = this.blockData.sort.default;
     if (this.blockData.cardsPerPage) this.cardsPerPage = this.blockData.cardsPerPage;
     this.additionalFirstUpdated();
+    this.initUrlSearchParams();
     this.handleActions();
   }
 
@@ -234,7 +234,6 @@ export default class PartnerCards extends LitElement {
     }
   }
 
-  // todo add initialization for search and for checkbox for enduserpricelist
   initUrlSearchParams() {
     // eslint-disable-next-line no-restricted-globals
     const { search } = location || window.location;
@@ -613,11 +612,7 @@ export default class PartnerCards extends LitElement {
 
   // eslint-disable-next-line class-methods-use-this
   handleNotTranslatedArbitraries(arbitraryTag, key) {
-    // todo check what to do with values for filters,
-    //  do we need to translate them or just to use what we got in json?
-    // if we use only from json, existing logic have some limitations
-    // (since expect tags keys to not have spaces and all are lowercases, this would be solution:
-    const filtersFromPricelistData = ['buying_program_type', 'region'];
+    const filtersFromPricelistData = ['buying_program_type', 'region', 'currency', 'month'];
     return filtersFromPricelistData.includes(key) ? arbitraryTag[key] : arbitraryTag[key].replaceAll(' ', '-');
   }
 
