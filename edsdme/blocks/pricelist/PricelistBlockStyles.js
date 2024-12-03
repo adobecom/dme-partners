@@ -47,8 +47,8 @@ export const pricelistBlockStyles = css`
         font-size: 14px;
         font-family: inherit;
         line-height: 17px;
-        height: 36px;
-        padding: 2px 12px;
+        height: 46px;
+        padding: 6px 12px;
         text-align: left;
         width: 20%;
         min-width: 150px;

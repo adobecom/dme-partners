@@ -10,6 +10,7 @@ export const priceListKeyWords = {
   MONTH: 'month',
   REGION: 'region',
   BUYING_PROGRAM_TYPE: 'buying_program_type',
+  BUYING_PROGRAM_TYPE_COLUMN_NAME: 'type',
   INCLUDE_EU_PRICELIST: 'include_end_user_pricelist',
   PAGINATION: {
     LOAD_MORE: 'load-more',
@@ -22,13 +23,14 @@ export default class Pricelist extends PartnerCards {
     pricelistBlockStyles,
   ];
 
-  static properties = { ...PartnerCards.properties };
+  static properties = { ...PartnerCards.properties, filtersData: { type: Array } };
 
   constructor() {
     super();
     this.includeEndUser = false;
     this.searchInputPlaceholder = '{{search-here}}';
     this.searchInputLabel = '{{search}}';
+    this.filtersData = [];
   }
 
   createFilterObject(filterData) {
@@ -56,7 +58,7 @@ export default class Pricelist extends PartnerCards {
     }
   }
 
-  additionalUpdateView(viewUpdated) {
+  onViewUpdate(viewUpdated) {
     if (viewUpdated) {
       this.paginationCounter = 1;
       if (this.mobileView) {
@@ -70,9 +72,27 @@ export default class Pricelist extends PartnerCards {
     }
   }
 
+  onDataFetched(apiData) {
+    this.filtersData = apiData.filters;
+  }
+
   getAllCardFilters() {
+    const filtersObjects = {};
     this.filtersData?.forEach(
-      (filter) => this.blockData.filters.push(this.createFilterObject(filter)),
+      (filter) => {
+        filtersObjects[filter.name] = this.createFilterObject(filter);
+      },
+    );
+    const requiredFilters = [
+      priceListKeyWords.CURRENCY,
+      priceListKeyWords.MONTH,
+      priceListKeyWords.BUYING_PROGRAM_TYPE,
+      priceListKeyWords.REGION,
+    ];
+    this.blockData.filters.push(
+      ...requiredFilters
+        .map((key) => filtersObjects[key] || null)
+        .filter((filter) => filter !== null),
     );
   }
 
@@ -104,7 +124,7 @@ export default class Pricelist extends PartnerCards {
   getTableRow(rowData) {
     return html`
         <tr>
-            <td headers="${priceListKeyWords.BUYING_PROGRAM_TYPE}">
+            <td headers="${priceListKeyWords.BUYING_PROGRAM_TYPE_COLUMN_NAME}">
                 ${this.getArbitraryValue(rowData.arbitrary, priceListKeyWords.BUYING_PROGRAM_TYPE)}
             </td>
             <td headers="${priceListKeyWords.REGION}">
@@ -162,7 +182,7 @@ export default class Pricelist extends PartnerCards {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getFetchAdditionalOptions() {
+  getFetchOptions() {
     return { credentials: 'include' };
   }
 
@@ -174,7 +194,7 @@ export default class Pricelist extends PartnerCards {
                 <thead>
                 <tr>
                     <th id="type">
-                        ${this.blockData.localizedText[`{{${priceListKeyWords.BUYING_PROGRAM_TYPE}}}`]?.toLocaleUpperCase()}
+                        ${this.blockData.localizedText[`{{${priceListKeyWords.BUYING_PROGRAM_TYPE_COLUMN_NAME}}}`]?.toLocaleUpperCase()}
                     </th>
                     <th id="region">
                         ${this.blockData.localizedText[`{{${priceListKeyWords.REGION}}}`]?.toLocaleUpperCase()}

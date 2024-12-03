@@ -107,6 +107,7 @@ export const partnerCardsStyles = css`
     padding: 16px;
     line-height: 21px;
   }
+  
   .partner-cards-sidebar .sidebar-info-box br {
     content: "";
     display: block;
@@ -116,8 +117,8 @@ export const partnerCardsStyles = css`
     font-size: 16px;
     font-weight: bold;
     line-height: 24px;
-    
   }
+  
   .partner-cards-sidebar .sidebar-chosen-filter-btn {
     background-color: transparent;
     border: 2px solid transparent;

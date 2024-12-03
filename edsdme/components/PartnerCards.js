@@ -29,7 +29,6 @@ export default class PartnerCards extends LitElement {
     fetchedData: { type: Boolean },
     searchInputPlaceholder: { type: String },
     searchInputLabel: { type: String },
-    filtersData: { type: Array },
   };
 
   constructor() {
@@ -49,7 +48,6 @@ export default class PartnerCards extends LitElement {
     this.mobileView = window.innerWidth <= 1200;
     this.searchInputPlaceholder = '{{search}}';
     this.searchInputLabel = '';
-    this.filtersData = [];
     this.updateView = this.updateView.bind(this);
   }
 
@@ -149,7 +147,7 @@ export default class PartnerCards extends LitElement {
       },
       'filter-info-box': (cols) => {
         this.blockData.filterInfoBox.title = cols[0].innerText.trim();
-        this.blockData.filterInfoBox.description = this.htmlToPlainText(cols[1]);
+        this.blockData.filterInfoBox.description = this.getTextWithStrong(cols[1]);
       },
     };
 
@@ -157,7 +155,6 @@ export default class PartnerCards extends LitElement {
     rows.forEach((row) => {
       const cols = Array.from(row.children);
       const rowTitle = cols[0].innerText.trim().toLowerCase().replace(/ /g, '-');
-
       const colsContent = cols.slice(1);
       if (blockDataActions[rowTitle]) blockDataActions[rowTitle](colsContent);
     });
@@ -166,11 +163,11 @@ export default class PartnerCards extends LitElement {
   updateView() {
     const oldValue = this.mobileView;
     this.mobileView = window.innerWidth <= 1200;
-    this.additionalUpdateView(oldValue !== this.mobileView);
+    this.onViewUpdate(oldValue !== this.mobileView);
   }
 
   // eslint-disable-next-line class-methods-use-this
-  additionalUpdateView() {}
+  onViewUpdate() {}
 
   async firstUpdated() {
     await super.firstUpdated();
@@ -182,9 +179,9 @@ export default class PartnerCards extends LitElement {
     this.handleActions();
   }
 
-  // get text content from node,
-  // and if there is content that is bold, keep it bold and insert new line before
-  htmlToPlainText(node) {
+  // gets text content from node,
+  // and keeps <strong> elements if any, while putting it at the beginning of new row
+  getTextWithStrong(node) {
     if (!node) return '';
     return Array.from(node.childNodes).map((child) => {
       if (child.nodeType === Node.TEXT_NODE) {
@@ -192,9 +189,9 @@ export default class PartnerCards extends LitElement {
       }
       if (child.nodeType === Node.ELEMENT_NODE) {
         if (child.tagName === 'STRONG') {
-          return `<br/><strong>${this.htmlToPlainText(child)}</strong>`;
+          return `<br/><strong>${this.getTextWithStrong(child)}</strong>`;
         }
-        return this.htmlToPlainText(child);
+        return this.getTextWithStrong(child);
       }
       return '';
     }).join('');
@@ -214,7 +211,7 @@ export default class PartnerCards extends LitElement {
 
       const response = await fetch(
         this.blockData.caasUrl,
-        this.getFetchAdditionalOptions(),
+        this.getFetchOptions(),
       );
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -232,7 +229,7 @@ export default class PartnerCards extends LitElement {
         this.cards = apiData.cards;
         this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
         this.hasResponseData = !!apiData.cards;
-        this.filtersData = apiData.filters;
+        this.onDataFetched(apiData);
       }
     } catch (error) {
       this.hasResponseData = true;
@@ -241,8 +238,11 @@ export default class PartnerCards extends LitElement {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this, no-unused-vars
+  onDataFetched(apiData) {}
+
   // eslint-disable-next-line class-methods-use-this
-  getFetchAdditionalOptions() { return {}; }
+  getFetchOptions() { return {}; }
 
   initUrlSearchParams() {
     // eslint-disable-next-line no-restricted-globals
@@ -525,7 +525,6 @@ export default class PartnerCards extends LitElement {
     if (this.blockData.sort.items.length) this.handleSortAction();
     if (this.blockData.filters.length) this.handleFilterAction();
     this.additionalActions();
-    // todo refactor cards to call data or items since we will store pricelist there also
     // eslint-disable-next-line no-return-assign
     this.cards.forEach((card, index) => card.orderNum = index + 1);
     this.updatePaginatedCards();
@@ -667,6 +666,7 @@ export default class PartnerCards extends LitElement {
 
       this.urlSearchParams.append(filterKey, tag.key);
     }
+
     this.paginationCounter = 1;
     this.handleActions();
     this.handleUrlSearchParams();
