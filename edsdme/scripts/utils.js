@@ -469,8 +469,9 @@ export function getNodesByXPath(query, context = document) {
 }
 
 export function enableGeoPopup() {
-  const { hostname } = window.location;
-  if (hostname.endsWith('.adobe.com') && !partnerIsSignedIn()) {
+  const { hostname, search } = window.location;
+  const enableWithParam = new URLSearchParams(search).get('georouting') === 'on';
+  if ((hostname.endsWith('.adobe.com') && !partnerIsSignedIn()) || enableWithParam) {
     return 'on';
   }
   return 'off';
