@@ -732,7 +732,6 @@ export default class PartnerCards extends LitElement {
   }
 
   updatePaginatedCards() {
-    // todo cards per page should be also renamed to item per page
     const endIndex = this.paginationCounter * this.cardsPerPage;
     const startIndex = this.blockData.pagination === 'load-more' ? 0 : (this.paginationCounter - 1) * this.cardsPerPage;
     this.paginatedCards = this.cards.slice(startIndex, endIndex);
