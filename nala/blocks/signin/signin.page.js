@@ -1,17 +1,23 @@
 export default class SignInPage {
   constructor(page) {
     this.page = page;
-    this.signInButton = page.getByRole('button', { name: 'Sign In' });
     this.profileIconButton = page.locator('.feds-profile-button');
     this.profileIconButtonAdobe = page.getByLabel('Profile button');
     this.userNameDisplay = page.locator('.user-name');
-    this.logoutButton = page.locator('[daa-ll="Sign Out"]');
     this.joinNowButton = page.locator('#feds-nav-wrapper .feds-cta--primary:has-text("Join Now")');
 
     this.emailField = page.locator('#EmailPage-EmailField');
     this.emailPageContinueButton = page.locator('//button[@data-id="EmailPage-ContinueButton"]');
     this.passwordField = page.locator('#PasswordPage-PasswordField');
     this.passwordPageContinueButton = page.locator('//button[@data-id="PasswordPage-ContinueButton"]');
+  }
+
+  async getButtonElement(text) {
+    return this.page.locator(`[daa-ll="${text}"]`);
+  }
+
+  async getSignInButton(text) {
+    return this.page.getByRole('button', { name: `${text}` });
   }
 
   async signIn(page, partnerLevel) {
@@ -23,12 +29,15 @@ export default class SignInPage {
     await this.passwordPageContinueButton.click();
   }
 
-  async verifyRedirectAfterLogin({ page, expect, path, partnerLevel, expectedLandingPageURL }) {
+  async verifyRedirectAfterLogin({
+    page, expect, path, partnerLevel, expectedLandingPageURL, buttonText,
+  }) {
     await page.goto(path);
     await page.waitForLoadState('domcontentloaded');
 
     await this.page.getByRole('button', { name: 'Sign In' }).waitFor({ state: 'visible', timeout: 30000 });
-    await this.signInButton.click();
+    const signInButton = await this.getSignInButton(buttonText);
+    await signInButton.click();
     await this.signIn(page, partnerLevel);
     await page.waitForLoadState('domcontentloaded');
     if (!path.includes('automation/regression')) {

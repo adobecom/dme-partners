@@ -251,7 +251,7 @@ export default {
     {
       tcid: '17',
       name: '@desc-regression-banners-sign-in-registered-us-user-anniversary-date-next-30-days',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
+      path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-banners @regression @circleCi',
       data: {
         partnerLevel: 'cpp-us-registered:',
@@ -259,12 +259,13 @@ export default {
         bannerText: 'Your membership will expire',
         renewButtonText: 'Renew now',
         renewLinkPath: 'https://channelpartners.adobe.com/s/renewal/',
+        signInButtonInternationalText: 'Sign In',
       },
     },
     {
       tcid: '18',
       name: '@desc-regression-banners-sign-in-certified-us-user-anniversary-date-last-90-days',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
+      path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-banners @regression @circleCi',
       data: {
         partnerLevel: 'cpp-us-certified:',
@@ -272,6 +273,7 @@ export default {
         bannerText: 'Your account is suspended',
         renewButtonText: 'Renew now',
         renewLinkPath: 'https://channelpartners.adobe.com/s/renewal/',
+        signInButtonInternationalText: 'Sign In',
       },
     },
     {
@@ -279,7 +281,10 @@ export default {
       name: '@desc-regression-banners-sign-in-gold-user-anniversary-date-out-of-range',
       path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @circleCi',
-      data: { partnerLevel: 'cpp-us-gold:' },
+      data: {
+        partnerLevel: 'cpp-us-gold:',
+        signInButtonInternationalText: 'Sign In',
+      },
     },
   ],
 };
