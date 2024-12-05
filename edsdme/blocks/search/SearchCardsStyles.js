@@ -81,7 +81,8 @@ export const searchCardsStyles = css`
     z-index: 10;
     background: transparent;
     border: none;
-    padding: 0;
+    max-width: var(--grid-container-width);
+    padding: 5px 22px;
   }
   .suggestion-dialog-wrapper:focus-visible {
     outline: none
@@ -90,7 +91,7 @@ export const searchCardsStyles = css`
     background-color: #fff;
     box-shadow: 0px 3px 6px #00000029;
     border: 1px solid #BCBCBC;
-    border-radius: 12px;
+    border-radius: 4px;
     width: 100%;
   }
   .suggestion-dialog .option {
@@ -105,8 +106,6 @@ export const searchCardsStyles = css`
     font-weight: bold;
   }
   .option.footer {
-    border-top: 1px solid #BCBCBC;
     color: blue;
-    margin-top: 5px;
   }
 `;

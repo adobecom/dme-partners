@@ -9,7 +9,8 @@ import {
   closeAllDropdowns,
   logErrorFor,
 } from '../../utilities/utilities.js';
-import { getCurrentProgramType, getLibs, getLocale, getPartnerDataCookieObject } from '../../../../scripts/utils.js';
+import {getLibs} from '../../../../scripts/utils.js';
+import {generateRequestForSearchAPI} from "../../../utils/utils.js";
 
 const miloLibs = getLibs();
 const { replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
@@ -17,10 +18,6 @@ const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
 const { debounce } = await import(`${miloLibs}/utils/action.js`);
 
 const CONFIG = {
-  suggestions: {
-    scope: 'adobecom',
-    apiKey: 'adobedotcom2',
-  },
   selectors: {
     hasResults: 'has-results',
     inputIsPopulated: 'feds-search-input--isPopulated',
@@ -129,39 +126,16 @@ class Search {
   }
 
   getSuggestions(query = this.query) {
-    const { env } = getConfig();
-    const partnerDataCookie = getPartnerDataCookieObject(getCurrentProgramType());
-    const partnerLevel = partnerDataCookie?.level?.toLowerCase() || 'public';
-    const regions = partnerDataCookie?.permissionRegion?.toLowerCase() || 'worldwide';
-    const specializations = partnerDataCookie?.permissionSpecializations?.toLowerCase();
-    const { locales } = getConfig();
-    const localesData = getLocale(locales);
-    let domain = 'https://io-partners-dx.stage.adobe.com';
-    if (env.name === 'prod') {
-      domain = 'https://io-partners-dx.adobe.com';
-    }
-    const url = new URL(
-      `${domain}/api/v1/web/dx-partners-runtime/search-apc/search-apc?`,
-    );
-    const queryParams = new URLSearchParams();
-    queryParams.append('suggestions', true);
-    queryParams.append('partnerLevel', partnerLevel);
-    queryParams.append('regions', regions);
-    queryParams.append('specializations', specializations);
-    queryParams.append('term', query);
-    queryParams.append('geo', localesData.prefix && localesData.region);
-    queryParams.append('language', localesData.ietf);
-    queryParams.append('size', SUGGESTIONS_SIZE);
-    url.search = queryParams.toString();
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    headers.append('Authorization', 'Basic NDA3M2UwZTgtMTNlMC00ZjZjLWI5ZTMtZjBhZmQwYWM0ZDMzOjJKMnY1ODdnR3dtVXhoQjNRNlI2NDIydlJNUDYwRDZBYnJtSzRpRTJrMDBmdlI1VGMxRXNRbG9Vc2dBYTNNSUg=');
-
-    return fetch(url.toString(), { headers, credentials: 'include' })
-      .then((data) => data.json())
-      .catch(() => {
-        // do nothing
-      });
+   return generateRequestForSearchAPI(
+        {
+          size: SUGGESTIONS_SIZE,
+          term: query,
+          suggestions: true,
+        }
+      ).then((data) => data.json())
+        .catch(() => {
+          // do nothing
+        });
   }
 
   onSearchInput = debounce(() => {

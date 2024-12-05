@@ -44,6 +44,7 @@ const searchCardStyles = css`
     background-position: 50% 50%;
     background-size: cover;
     margin: 0 20px;
+    flex-shrink: 0;
   }
   
   .card-title-wrapper .card-title {
@@ -53,6 +54,7 @@ const searchCardStyles = css`
   
   .card-header .card-icons {
     z-index: 1;
+    flex-shrink: 0;
   }
   
   .search-card .card-content {
@@ -121,6 +123,27 @@ const searchCardStyles = css`
   
   .card-tags-wrapper .card-tag:first-letter {
     text-transform: uppercase;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .search-card .card-header {
+      height: 89px;
+      flex-direction: column;
+      align-items: flex-start;
+    } 
+   .search-card .card-content {
+      padding-left: 30px;
+    }
+   .search-card .card-icons {
+     padding-left: 30px;
+   }
+    .search-card .card-title {
+     display: -webkit-box;
+     -webkit-box-orient: vertical;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     -webkit-line-clamp: 2;
+   }
   }
 `;
 

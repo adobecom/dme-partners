@@ -159,7 +159,7 @@ export function getMetadata(name) {
 export function redirectLoggedinPartner() {
   if (!isMember()) return;
   const target = getMetadataContent('adobe-target-after-login');
-  if (!target) return;
+  if (!target || target === 'NONE') return;
   document.body.style.display = 'none';
   window.location.assign(target);
 }
@@ -245,8 +245,10 @@ export async function getRenewBanner(getConfig, loadBlock) {
 }
 
 export function updateIMSConfig() {
+  const isSignedIn = partnerIsSignedIn();
   const imsReady = setInterval(() => {
     if (!window.adobeIMS) return;
+    if (isSignedIn && !window.adobeIMS.isSignedInUser()) return;
     clearInterval(imsReady);
     let target;
     const partnerLogin = !window.adobeIMS.isSignedInUser();
@@ -259,7 +261,7 @@ export function updateIMSConfig() {
     const targetUrl = new URL(window.location.href);
     // eslint-disable-next-line chai-friendly/no-unused-expressions
     partnerLogin && targetUrl.searchParams.set(PARTNER_LOGIN_QUERY, true);
-    if (target) {
+    if (target && target !== 'NONE') {
       targetUrl.pathname = target;
     }
     window.adobeIMS.adobeIdData.redirect_uri = targetUrl.toString();
@@ -346,6 +348,23 @@ function extractTableCollectionTags(el) {
   return tableCollectionTags;
 }
 
+function checkForQaContent(el) {
+  if (!el.children) return false;
+
+  // Iterating backward because we expect 'qa-content' to be in the last rows.
+  // eslint-disable-next-line no-plusplus
+  for (let i = el.children.length - 1; i >= 0; i--) {
+    const row = el.children[i];
+
+    const rowTitle = row.children[0]?.innerText?.trim().toLowerCase().replace(/ /g, '-');
+    if (rowTitle?.includes('qa-content')) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function getComplexQueryParams(el, collectionTag) {
   const portal = getCurrentProgramType();
   if (!portal) return;
@@ -359,6 +378,12 @@ function getComplexQueryParams(el, collectionTag) {
 
   const collectionTagsStr = collectionTags.filter((e) => e.length).join('+AND+');
   let resulStr = `(${collectionTagsStr})`;
+
+  const qaContentTag = '"caas:adobe-partners/qa-content"';
+  if (!checkForQaContent(el)) {
+    resulStr += `+NOT+${qaContentTag}`;
+  }
+
   if (partnerRegionParams) resulStr += `+AND+${partnerRegionParams}`;
   if (partnerLevelParams) resulStr += `+AND+${partnerLevelParams}`;
   // eslint-disable-next-line consistent-return
@@ -444,8 +469,9 @@ export function getNodesByXPath(query, context = document) {
 }
 
 export function enableGeoPopup() {
-  const { hostname } = window.location;
-  if (hostname.endsWith('.adobe.com') && !partnerIsSignedIn()) {
+  const { hostname, search } = window.location;
+  const enableWithParam = new URLSearchParams(search).get('georouting') === 'on';
+  if ((hostname.endsWith('.adobe.com') && !partnerIsSignedIn()) || enableWithParam) {
     return 'on';
   }
   return 'off';

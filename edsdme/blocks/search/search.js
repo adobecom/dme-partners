@@ -1,17 +1,10 @@
 import { getLibs } from '../../scripts/utils.js';
-import { replaceText, getConfig, populateLocalizedTextFromListItems } from '../utils/utils.js';
+import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
 import Search from './SearchCards.js';
 
 function declareSearch() {
   if (customElements.get('search-cards')) return;
   customElements.define('search-cards', Search);
-}
-
-async function localizationPromises(localizedText, config) {
-  return Promise.all(Object.keys(localizedText).map(async (key) => {
-    const value = await replaceText(key, config);
-    if (value.length) localizedText[key] = value;
-  }));
 }
 
 export default async function init(el) {
@@ -50,6 +43,7 @@ export default async function init(el) {
     '{{show}}': 'Show',
     '{{showing-results-for}}': 'Showing results for:',
     '{{size}}': 'Size',
+    '{{view-all-results}}': 'View all results',
   };
 
   populateLocalizedTextFromListItems(el, localizedText);

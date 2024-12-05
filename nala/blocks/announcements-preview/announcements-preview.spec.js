@@ -131,19 +131,18 @@ export default {
         rootPath: '/channelpartners/',
       },
     },
-    // This will also be included after MWPW-161391 resolves.
-    // {
-    //   tcid: '11',
-    //   name: '@desc-regression-announcements-preview-japan-region',
-    //   path: '/channelpartners/?georouting=off&martech=off',
-    //   tags: '@dme-announcements-preview @regression @circleCi',
-    //   data: {
-    //     partnerLevel: 'cpp-distributor-japan:',
-    //     signInButton: 'Sign In',
-    //     expectedProtectedHomeURL: 'https://partners.stage.adobe.com/channelpartners/home/',
-    //     selectedSortNewest: 'Date: newest',
-    //     rootPath: '/channelpartners/',
-    //   },
-    // },
+    {
+      tcid: '11',
+      name: '@desc-regression-announcements-preview-japan-region',
+      path: '/channelpartners/?georouting=off&martech=off',
+      tags: '@dme-announcements-preview @regression @circleCi',
+      data: {
+        partnerLevel: 'cpp-distributor-japan:',
+        signInButton: 'Sign In',
+        expectedProtectedHomeURL: 'https://partners.stage.adobe.com/channelpartners/home/',
+        selectedSortNewest: 'Date: newest',
+        rootPath: '/channelpartners/',
+      },
+    },
   ],
 };
