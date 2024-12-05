@@ -431,29 +431,7 @@ export default class Search extends PartnerCards {
       </div>
       </div>
 
-      ${this.mobileView
-        ? html`
-          <div class="all-filters-wrapper-mobile">
-            <div class="all-filters-header-mobile">
-              <button class="all-filters-header-back-btn-mobile" @click="${this.closeFiltersMobile}" aria-label="${this.blockData.localizedText['{{back}}']}"></button>
-              <span class="all-filters-header-title-mobile">${this.blockData.localizedText['{{filter-by}}']}</span>
-            </div>
-            <div class="all-filters-list-mobile">
-              ${this.filtersMobile}
-            </div>
-            <div class="all-filters-footer-mobile">
-              <span class="all-filters-footer-results-mobile">${this.getTotalResults()} ${this.blockData.localizedText['{{results}}']}</span>
-              <div class="all-filters-footer-buttons-mobile">
-                <button class="all-filters-footer-clear-btn-mobile" @click="${this.handleResetActions}" aria-label="${this.blockData.localizedText['{{clear-all}}']}">${this.blockData.localizedText['{{clear-all}}']}</button>
-                <sp-theme theme="spectrum" color="light" scale="medium">
-                  <sp-button @click="${this.closeFiltersMobile}" aria-label="${this.blockData.localizedText['{{apply}}']}">${this.blockData.localizedText['{{apply}}']}</sp-button>
-                </sp-theme>
-              </div>
-            </div>
-          </div>
-        `
-        : ''
-      }
+      ${this.getFilterFullScreenView(this.mobileView)}
     `;
     }
   /* eslint-enable indent */
