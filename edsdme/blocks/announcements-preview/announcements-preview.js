@@ -1,13 +1,16 @@
 import { getCaasUrl } from '../../scripts/utils.js';
 import { getConfig } from '../utils/utils.js';
 
+function formatLinks(link) {
+  const { hostname, pathname } = new URL(link);
+  const isMiloUrl = hostname.endsWith('hlx.live') || hostname.endsWith('hlx.page');
+  return isMiloUrl ? pathname : link;
+}
+
 function addAnnouncement(cardData) {
   const linkWrapper = document.createElement('a');
   linkWrapper.className = 'link-wrapper';
-  const { hostname, pathname } = new URL(cardData.contentArea.url);
-  const isMiloUrl = hostname.endsWith('hlx.live') || hostname.endsWith('hlx.page');
-
-  linkWrapper.href = isMiloUrl ? pathname : cardData.contentArea.url;
+  linkWrapper.href = formatLinks(cardData.contentArea.url);
   linkWrapper.target = '_blank';
 
   linkWrapper.style.display = 'block';
@@ -136,7 +139,7 @@ export default async function init(el) {
     if (blockData.link && blockData.buttonText) {
       const announcementButton = document.createElement('a');
       announcementButton.className = 'con-button blue';
-      announcementButton.setAttribute('href', blockData.link);
+      announcementButton.setAttribute('href', formatLinks(blockData.link));
       announcementButton.innerText = blockData.buttonText;
       app.appendChild(announcementButton);
     }
