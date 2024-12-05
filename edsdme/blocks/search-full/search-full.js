@@ -9,7 +9,6 @@ function declareSearch() {
 
 export default async function init(el) {
   performance.mark('search-cards:start');
-  console.log('starting search');
 
   const miloLibs = getLibs();
   const config = getConfig();
