@@ -34,11 +34,6 @@ const PERSONALIZATION_CONDITIONS = {
   'partner-level': (level) => PARTNER_LEVEL === level,
 };
 
-const SALES_FORCE_DOMAINS = {
-  stage: 'adobe--sfstage.sandbox.my.site.com',
-  prod: 'adobe.force.com',
-};
-
 function personalizePlaceholders(placeholders, context = document) {
   Object.entries(placeholders).forEach(([key, value]) => {
     const placeholderValue = COOKIE_OBJECT[key];
@@ -231,26 +226,9 @@ function personalizeProfile(gnav) {
   processRenew(profile);
 }
 
-function rewriteSalesForceLinks(gnav) {
-  const { env } = getConfig();
-
-  if (env.name !== 'prod') {
-    const links = gnav.querySelectorAll('a[href]');
-    links.forEach((link) => {
-      const href = link.getAttribute('href');
-
-      if (href.includes(SALES_FORCE_DOMAINS.prod)) {
-        const newHref = href.replace(SALES_FORCE_DOMAINS.prod, SALES_FORCE_DOMAINS.stage);
-        link.setAttribute('href', newHref);
-      }
-    });
-  }
-}
-
 export function applyGnavPersonalization(gnav) {
   if (!isMember()) return gnav;
   const importedGnav = document.importNode(gnav, true);
-  rewriteSalesForceLinks(importedGnav);
   personalizeMainNav(importedGnav);
   personalizeProfile(importedGnav);
   return importedGnav;
