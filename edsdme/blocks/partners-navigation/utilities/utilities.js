@@ -178,10 +178,10 @@ export function isDarkMode() {
 // CSS imports were not used due to duplication of file include
 export async function loadBaseStyles() {
   if (isDarkMode()) {
-    new Promise((resolve) => { loadStyle(rootPath('base.css'), resolve); })
-      .then(() => loadStyles(rootPath('dark-nav.css')));
+    new Promise((resolve) => { loadStyle('/edsdme/blocks/partners-navigation/base.css', resolve); })
+      .then(() => loadStyles('/edsdme/blocks/partners-navigation/dark-nav.css'));
   } else {
-    const url = rootPath('base.css');
+    const url = '/edsdme/blocks/partners-navigation/base.css';
     await loadStyles(url);
   }
 }
@@ -201,7 +201,7 @@ export async function loadDecorateMenu() {
 
   const [{ decorateMenu, decorateLinkGroup }] = await Promise.all([
     loadBlock('./menu/menu.js'),
-    loadStyles(rootPath('utilities/menu/menu.css')),
+    loadStyles('/edsdme/blocks/partners-navigation/utilities/menu/menu.css'),
   ]);
 
   resolve({
