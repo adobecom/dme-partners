@@ -74,8 +74,8 @@ export default {
       tags: '@dme-popups @geo-popups @regression @circleCi',
       data: {
         geoPopUpText: 'Este sitio de Adobe no coincide con tu ubicación',
-        buttonType: 'Switch:la-us|Geo_Routing_Modal',
-        switchLocaleUrl: '/la/channelpartners/?akamaiLocale=br',
+        buttonType: 'Switch:latam-us|Geo_Routing_Modal',
+        switchLocaleUrl: '/latam/channelpartners/?akamaiLocale=br',
       },
     },
     {

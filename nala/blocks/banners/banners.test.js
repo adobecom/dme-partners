@@ -147,7 +147,8 @@ test.describe('Validate banners', () => {
     await test.step('Go to public page', async () => {
       await page.goto(`${path}`);
       await page.waitForLoadState('domcontentloaded');
-      await signInPage.signInButton.click();
+      const signInButtonInt = await signInPage.getSignInButton(`${data.signInButtonInternationalText}`);
+      await signInButtonInt.click();
     });
 
     await test.step('Sign in', async () => {
@@ -171,7 +172,8 @@ test.describe('Validate banners', () => {
     await test.step('Go to public page', async () => {
       await page.goto(`${path}`);
       await page.waitForLoadState('domcontentloaded');
-      await signInPage.signInButton.click();
+      const signInButtonInt = await signInPage.getSignInButton(`${data.signInButtonInternationalText}`);
+      await signInButtonInt.click();
     });
 
     await test.step('Sign in', async () => {
@@ -195,7 +197,8 @@ test.describe('Validate banners', () => {
     await test.step('Go to public page', async () => {
       await page.goto(`${path}`);
       await page.waitForLoadState('domcontentloaded');
-      await signInPage.signInButton.click();
+      const signInButtonInt = await signInPage.getSignInButton(`${data.signInButtonInternationalText}`);
+      await signInButtonInt.click();
     });
 
     await test.step('Sign in', async () => {

@@ -9,7 +9,7 @@ export default {
       data: {
         partnerLevel: 'cpp-spain-platinum:',
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: 'https://partners.stage.adobe.com/channelpartners/home/',
+        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },
@@ -22,7 +22,7 @@ export default {
       data: {
         partnerLevel: 'cpp-china-registered:',
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: 'https://partners.stage.adobe.com/channelpartners/home/',
+        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },
@@ -35,7 +35,7 @@ export default {
       data: {
         partnerLevel: 'cpp-latin-america-gold:',
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: 'https://partners.stage.adobe.com/channelpartners/home/',
+        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },
@@ -48,7 +48,7 @@ export default {
       data: {
         partnerLevel: 'cpp-europe-east-certified:',
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: 'https://partners.stage.adobe.com/channelpartners/home/',
+        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },
@@ -61,7 +61,7 @@ export default {
       data: {
         partnerLevel: 'cpp-distributor-us:',
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: 'https://partners.stage.adobe.com/channelpartners/home/',
+        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },
@@ -74,7 +74,7 @@ export default {
       data: {
         partnerLevel: 'cpp-pacific-certified:',
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: 'https://partners.stage.adobe.com/channelpartners/home/',
+        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },
@@ -87,7 +87,7 @@ export default {
       data: {
         partnerLevel: 'cpp-emea-platinum:',
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: 'https://partners.stage.adobe.com/channelpartners/home/',
+        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },
@@ -100,7 +100,7 @@ export default {
       data: {
         partnerLevel: 'cpp-uk-gold:',
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: 'https://partners.stage.adobe.com/channelpartners/home/',
+        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },
@@ -113,7 +113,7 @@ export default {
       data: {
         partnerLevel: 'cpp-distributor-india:',
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: 'https://partners.stage.adobe.com/channelpartners/home/',
+        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },
@@ -126,7 +126,7 @@ export default {
       data: {
         partnerLevel: 'cpp-latin-america-na-platinum:',
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: 'https://partners.stage.adobe.com/channelpartners/home/',
+        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },
@@ -139,7 +139,7 @@ export default {
       data: {
         partnerLevel: 'cpp-distributor-japan:',
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: 'https://partners.stage.adobe.com/channelpartners/home/',
+        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },

@@ -14,7 +14,7 @@ export default {
         editProfileURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
         accountManagementURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
         salesCenterURL: 'https://adobe--sfstage.sandbox.my.site.com/',
-        targetAfterLogout: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off#',
+        targetAfterLogout: 'https://partners.stage.adobe.com/apac/channelpartners/#',
       },
     },
     {
@@ -32,7 +32,7 @@ export default {
         editProfileURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
         accountManagementURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
         renewNowURL: 'https://channelpartners.stage2.adobe.com/s/renewal/',
-        targetAfterLogout: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off#',
+        targetAfterLogout: 'https://partners.stage.adobe.com/na/channelpartners/#',
       },
     },
     {
@@ -50,7 +50,7 @@ export default {
         editProfileURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
         accountManagementURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
         renewNowURL: 'https://channelpartners.stage2.adobe.com/s/renewal/',
-        targetAfterLogout: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off#',
+        targetAfterLogout: 'https://partners.stage.adobe.com/na/channelpartners/#',
       },
     },
   ],

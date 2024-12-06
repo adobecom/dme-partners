@@ -4,7 +4,7 @@ export default class AnnouncementsPreviewPage {
     this.profileIconButton = page.locator('.feds-profile-button');
     this.announcementsPreview = page.locator('.announcements-preview').nth(0);
     this.announcements = page.locator('.announcements-preview .link-wrapper');
-    this.viewAllAnnouncementsButton = page.getByRole('link', { name: 'View all Announcements' });
+    this.viewAllAnnouncementsButton = page.locator('.announcements-preview a[href*="/channelpartners/home/announcements"]');
 
     this.cards = page.locator('single-partner-card');
     this.selectedSortText = page.locator('.sort-btn-text');
