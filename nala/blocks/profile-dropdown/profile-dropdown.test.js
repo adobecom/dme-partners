@@ -90,6 +90,7 @@ test.describe('Validate profile dropdown', () => {
     await test.step('Logout', async () => {
       await profileDropdownPage.logoutButton.click();
       const pages = await page.context().pages();
+      await page.waitForLoadState();
       await expect(pages[0].url())
         .toContain(data.targetAfterLogout);
     });
@@ -155,6 +156,7 @@ test.describe('Validate profile dropdown', () => {
       await test.step('Logout', async () => {
         await profileDropdownPage.logoutButton.click();
         const pages = await page.context().pages();
+        await page.waitForLoadState();
         await expect(pages[0].url())
           .toContain(feature.data.targetAfterLogout);
       });
