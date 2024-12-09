@@ -499,6 +499,7 @@ export default class PartnerCards extends LitElement {
     this.additionalResetActions();
     this.paginationCounter = 1;
     this.handleActions();
+    this.handleFilterAction();
     if (this.blockData.filters.length) this.handleUrlSearchParams();
   }
 
@@ -590,6 +591,10 @@ export default class PartnerCards extends LitElement {
   handleTag(event, tag, filterKey) {
     if (!event.target.checked) {
       this.handleRemoveTag(tag);
+      if (!Object.keys(this.selectedFilters).length) {
+        this.handleFilterAction();
+        this.handleUrlSearchParams();
+      }
       return;
     }
 
@@ -645,6 +650,7 @@ export default class PartnerCards extends LitElement {
     }
 
     this.paginationCounter = 1;
+    this.handleFilterAction();
     this.handleActions();
     this.handleUrlSearchParams();
   }
@@ -662,6 +668,7 @@ export default class PartnerCards extends LitElement {
     });
 
     this.paginationCounter = 1;
+    this.handleFilterAction();
     this.handleActions();
     this.handleUrlSearchParams();
   }
