@@ -1,5 +1,6 @@
 import { getCaasUrl } from '../../scripts/utils.js';
 import { getConfig } from '../utils/utils.js';
+import { filterRestrictedCardsByCurrentSite } from '../../components/PartnerCards.js';
 
 function addAnnouncement(cardData) {
   const linkWrapper = document.createElement('a');
@@ -62,6 +63,8 @@ async function fetchData(blockData, newestCards) {
     apiData = await response.json();
 
     if (apiData?.cards) {
+      // Filter announcements by current site
+      apiData.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
       apiData.cards.forEach((card) => {
         const cardDate = new Date(card.cardDate);
         if (newestCards.length < 3) {
