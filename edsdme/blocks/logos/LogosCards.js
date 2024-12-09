@@ -1,6 +1,6 @@
 import { getLibs } from '../../scripts/utils.js';
 import PartnerCards from '../../components/PartnerCards.js';
-import { searchCardsStyles } from '../search/SearchCardsStyles.js';
+import { searchCardsStyles } from '../search-full/SearchCardsStyles.js';
 import '../../components/SearchCard.js';
 import { generateRequestForSearchAPI } from '../utils/utils.js';
 
