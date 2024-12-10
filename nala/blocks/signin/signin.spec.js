@@ -171,5 +171,38 @@ export default {
         signInButtonText: 'Sign In', // This will require a change as soon as LA NA based is sorted out
       },
     },
+    {
+      tcid: '15',
+      name: '@login-accessing-public-home-page-access-denied-error',
+      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
+      tags: '@dme-signin @regression @login @circleCi',
+      data: {
+        partnerLevel: 'cpp-denied:',
+        expectedToSeeInURL: '/channelpartners/error/account-denied',
+        signInButtonInternationalText: 'Sign In',
+      },
+    },
+    {
+      tcid: '16',
+      name: '@login-accessing-public-home-page-account-abandoned-error',
+      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
+      tags: '@dme-signin @regression @login @circleCi',
+      data: {
+        partnerLevel: 'cpp-abandoned:',
+        expectedToSeeInURL: '/channelpartners/error/login-error',
+        signInButtonInternationalText: 'Sign In',
+      },
+    },
+    {
+      tcid: '17',
+      name: '@login-accessing-public-home-page-account-expired-error',
+      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
+      tags: '@dme-signin @regression @login @circleCi',
+      data: {
+        partnerLevel: 'cpp-expired:',
+        expectedToSeeInURL: '/channelpartners/error/account-expired',
+        signInButtonInternationalText: 'Sign In',
+      },
+    },
   ],
 };
