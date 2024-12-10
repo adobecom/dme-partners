@@ -9,6 +9,7 @@ const redirectionFeatures = features.slice(1, 3);
 const nonMemberRedirects = features.slice(3, 5);
 const nonMemberLoggedInToAdobe = features.slice(5, 7);
 const resellerMembersLogin = features.slice(9, 13);
+const errorPages = features.slice(14, 17);
 
 test.describe('MAPC sign in flow', () => {
   test.beforeEach(async ({ page, browserName, baseURL, context }) => {
@@ -270,6 +271,27 @@ test.describe('MAPC sign in flow', () => {
       const joinNowButton = await signInPage.joinNowButton;
       await expect(joinNowButton).toBeVisible();
       await expect(signInButton).toBeVisible();
+    });
+  });
+
+  errorPages.forEach((feature) => {
+    test(`${feature.name},${feature.tags}`, async ({ page }) => {
+      await test.step('Go to the home page', async () => {
+        await page.goto(`${feature.path}`);
+        await page.waitForLoadState('domcontentloaded');
+        const signInButtonInt = await signInPage.getSignInButton(`${feature.data.signInButtonInternationalText}`);
+        await signInButtonInt.click();
+      });
+
+      await test.step('Sign in', async () => {
+        await signInPage.signIn(page, `${feature.data.partnerLevel}`);
+      });
+
+      await test.step('Verify redirection to the corresponding error page', async () => {
+        await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+        const pages = await page.context().pages();
+        await expect(pages[0].url()).toContain(`${feature.data.expectedToSeeInURL}`);
+      });
     });
   });
 });
