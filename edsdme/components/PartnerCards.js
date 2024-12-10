@@ -10,8 +10,13 @@ export function filterRestrictedCardsByCurrentSite(cards) {
   return cards.filter((card) => {
     const cardUrl = card?.contentArea?.url;
     if (!cardUrl) return false;
-    const cardSite = new URL(cardUrl).pathname.split('/')[1];
-    return currentSite === cardSite;
+    try {
+      const cardSite = new URL(cardUrl).pathname.split('/')[1];
+      return currentSite === cardSite;
+    } catch (error) {
+      console.error(`Invalid URL: ${cardUrl}`, error);
+      return false;
+    }
   });
 }
 
