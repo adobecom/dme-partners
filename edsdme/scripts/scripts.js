@@ -35,7 +35,7 @@ const CONFIG = {
   locales: {
     '': { ietf: 'en-US', tk: 'hah7vzn.css' },
     na: { ietf: 'en', tk: 'hah7vzn.css' },
-    emea: { ietf: 'en', tk: 'hah7vzn.css' },
+    emea: { ietf: 'en-GB', tk: 'hah7vzn.css' },
     apac: { ietf: 'en', tk: 'hah7vzn.css' },
     de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
     kr: { ietf: 'ko-KR', tk: 'zfo3ouc' },
@@ -47,7 +47,7 @@ const CONFIG = {
     uk: { ietf: 'en-GB', tk: 'pps7abe.css' },
     br: { ietf: 'pt-BR', tk: 'inq1xob.css' },
     pt: { ietf: 'pt-PT', tk: 'inq1xob.css' },
-    latam: { ietf: 'es', tk: 'oln4yqj.css' },
+    latam: { ietf: 'en', tk: 'oln4yqj.css' },
     jp: { ietf: 'ja-JP', tk: 'dvg6awq' },
   },
   local: { edgeConfigId: '72b074a6-76d2-43de-a210-124acc734f1c' },
