@@ -71,6 +71,7 @@ export function setDownloadParam(url) {
     // eslint-disable-next-line consistent-return
     return urlWithParam;
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Invalid URL provided:', url, error.message);
     return '';
   }
