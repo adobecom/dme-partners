@@ -112,7 +112,7 @@ export default async function init(el) {
       blockData.title = cols[1].innerText;
     }
     if (rowTitle && rowTitle === 'page-url') {
-      blockData.link = cols[1].innerText;
+      blockData.link = cols[1].querySelector('a')?.href;
     }
     if (rowTitle && rowTitle === 'button-text') {
       blockData.buttonText = cols[1].innerText;
@@ -139,7 +139,7 @@ export default async function init(el) {
     if (blockData.link && blockData.buttonText) {
       const announcementButton = document.createElement('a');
       announcementButton.className = 'con-button blue';
-      announcementButton.setAttribute('href', formatLinks(blockData.link));
+      announcementButton.setAttribute('href', blockData.link);
       announcementButton.innerText = blockData.buttonText;
       app.appendChild(announcementButton);
     }
