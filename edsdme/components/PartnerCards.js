@@ -14,6 +14,7 @@ export function filterRestrictedCardsByCurrentSite(cards) {
       const cardSite = new URL(cardUrl).pathname.split('/')[1];
       return currentSite === cardSite;
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(`Invalid URL: ${cardUrl}`, error);
       return false;
     }
