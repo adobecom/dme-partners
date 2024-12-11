@@ -1,6 +1,6 @@
 import { getCaasUrl } from '../../scripts/utils.js';
 import { getConfig } from '../utils/utils.js';
-import { filterRestrictedCardsByCurrentSite } from '../../components/PartnerCards.js';
+import { filterRestrictedCardsByCurrentSite } from '../announcements/AnnouncementsCards.js';
 
 function formatLinks(link) {
   const { hostname, pathname } = new URL(link);
