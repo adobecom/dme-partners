@@ -5,6 +5,22 @@ import './SinglePartnerCard.js';
 const miloLibs = getLibs();
 const { html, LitElement, css, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
+export function filterRestrictedCardsByCurrentSite(cards) {
+  const currentSite = window.location.pathname.split('/')[1];
+  return cards.filter((card) => {
+    const cardUrl = card?.contentArea?.url;
+    if (!cardUrl) return false;
+    try {
+      const cardSite = new URL(cardUrl).pathname.split('/')[1];
+      return currentSite === cardSite;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Invalid URL: ${cardUrl}`, error);
+      return false;
+    }
+  });
+}
+
 export default class PartnerCards extends LitElement {
   static styles = [
     partnerCardsStyles,
@@ -223,6 +239,8 @@ export default class PartnerCards extends LitElement {
         if (window.location.hostname === 'partners.adobe.com') {
           apiData.cards = apiData.cards.filter((card) => !card.contentArea.url?.includes('/drafts/'));
         }
+        // Filter announcements by current site
+        apiData.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
         // eslint-disable-next-line no-return-assign
         apiData.cards.forEach((card, index) => card.orderNum = index + 1);
         this.allCards = apiData.cards;
@@ -545,6 +563,7 @@ export default class PartnerCards extends LitElement {
     this.additionalResetActions();
     this.paginationCounter = 1;
     this.handleActions();
+    this.handleFilterAction();
     if (this.blockData.filters.length) this.handleUrlSearchParams();
   }
 
@@ -640,6 +659,10 @@ export default class PartnerCards extends LitElement {
   handleTag(event, tag, filterKey) {
     if (!event.target.checked) {
       this.handleRemoveTag(tag);
+      if (!Object.keys(this.selectedFilters).length) {
+        this.handleFilterAction();
+        this.handleUrlSearchParams();
+      }
       return;
     }
 
@@ -695,6 +718,7 @@ export default class PartnerCards extends LitElement {
     }
 
     this.paginationCounter = 1;
+    this.handleFilterAction();
     this.handleActions();
     this.handleUrlSearchParams();
   }
@@ -712,6 +736,7 @@ export default class PartnerCards extends LitElement {
     });
 
     this.paginationCounter = 1;
+    this.handleFilterAction();
     this.handleActions();
     this.handleUrlSearchParams();
   }

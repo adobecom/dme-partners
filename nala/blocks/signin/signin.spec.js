@@ -8,8 +8,11 @@ export default {
       tags: '@dme-signin @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-spain-platinum:',
-        expectedProtectedHomeURL: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/protected-home',
-        expectedPublicPageURL: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page',
+        expectedProtectedHomeURL: '/es/channelpartners/drafts/automation/regression/protected-home',
+        expectedPublicPageURL: '/es/channelpartners/drafts/automation/regression/public-page',
+        logoutButtonText: 'Cerrar sesión',
+        signInButtonEsGeoText: 'Iniciar sesión',
+        signInButtonInternationalText: 'Sign In',
       },
     },
     {
@@ -22,6 +25,7 @@ export default {
         partnerLevel: 'cpp-spain-platinum:',
         expectedToSeeInURL: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/protected-home',
         page: 'public page',
+        signInButtonInternationalText: 'Sign In',
       },
     },
     {
@@ -34,6 +38,7 @@ export default {
         partnerLevel: 'cpp-spain-platinum:',
         expectedToSeeInURL: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/protected-home',
         page: 'restricted page',
+        signInButtonInternationalText: 'Sign In',
       },
     },
     {
@@ -45,6 +50,9 @@ export default {
         partnerLevel: 'spp-platinum:',
         expectedRedirectedURL: 'https://partners.stage.adobe.com/channelpartners/error/contact-not-found',
         expectedPublicPageURL: 'https://partners.stage.adobe.com/channelpartners/',
+        logoutButtonText: 'Sign Out',
+        signInButtonInternationalText: 'Sign In',
+        signInButtonText: 'Sign In',
       },
     },
     {
@@ -56,6 +64,9 @@ export default {
         partnerLevel: 'spp-platinum:',
         expectedRedirectedURL: 'https://partners.stage.adobe.com/channelpartners/error/contact-not-found',
         expectedPublicPageURL: 'https://partners.stage.adobe.com/channelpartners/',
+        logoutButtonText: 'Sign Out',
+        signInButtonInternationalText: 'Sign In',
+        signInButtonText: 'Sign In',
       },
     },
     {
@@ -68,6 +79,7 @@ export default {
         partnerLevel: 'tpp-platinum:',
         expectedRedirectedURL: 'https://partners.stage.adobe.com/channelpartners/error/contact-not-found',
         page: 'restricted home',
+        signInButtonText: 'Sign In',
       },
     },
     {
@@ -80,6 +92,7 @@ export default {
         partnerLevel: 'tpp-platinum:',
         expectedRedirectedURL: 'https://partners.stage.adobe.com/channelpartners/',
         page: 'public page',
+        signInButtonText: 'Sign In',
       },
     },
     {
@@ -93,6 +106,7 @@ export default {
         expectedPublicURL: 'https://partners.stage.adobe.com/channelpartners/',
         restrictedHomePath: 'https://partners.stage.adobe.com/channelpartners/home/?georouting=off&martech=off',
         expectedToSeeInURL: 'https://partners.stage.adobe.com/channelpartners/error/404',
+        signInButtonText: 'Sign In',
       },
     },
     {
@@ -101,34 +115,47 @@ export default {
       path: 'https://partners.stage.adobe.com/channelpartners/home/?georouting=off&martech=off',
       tags: '@dme-signin @regression @login @circleCi',
       expectedToSeeInURL: 'https://auth-stg1.services.adobe.com/',
+      data: { signInButtonText: 'Sign In' },
     },
     {
       tcid: '10',
       name: '@login-functionality-with-registered-member-user',
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-signin @regression @login @circleCi',
-      data: { partnerLevel: 'cpp-china-registered:' },
+      data: {
+        partnerLevel: 'cpp-china-registered:',
+        signInButtonText: 'Sign In',
+      },
     },
     {
       tcid: '11',
       name: '@login-functionality-with-certified-member-user',
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-signin @regression @login @circleCi',
-      data: { partnerLevel: 'cpp-pacific-certified:' },
+      data: {
+        partnerLevel: 'cpp-pacific-certified:',
+        signInButtonText: 'Sign In',
+      },
     },
     {
       tcid: '12',
       name: '@login-functionality-with-gold-member-user',
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-signin @regression @login @circleCi',
-      data: { partnerLevel: 'cpp-latin-america-gold:' },
+      data: {
+        partnerLevel: 'cpp-latin-america-gold:',
+        signInButtonText: 'Sign In',
+      },
     },
     {
       tcid: '13',
       name: '@login-functionality-with-platinum-member-user',
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-signin @regression @login @circleCi',
-      data: { partnerLevel: 'cpp-spain-platinum:' },
+      data: {
+        partnerLevel: 'cpp-spain-platinum:',
+        signInButtonText: 'Sign In',
+      },
     },
     {
       tcid: '14',
@@ -137,8 +164,44 @@ export default {
       tags: '@dme-signin @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-latin-america-na-platinum:',
-        landingPageAfterLoginURL: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/protected-program-page',
-        landingPageAfterLogoutURL: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-program-page',
+        landingPageAfterLoginURL: 'https://partners.stage.adobe.com/latam/channelpartners/drafts/automation/regression/protected-program-page',
+        landingPageAfterLogoutURL: 'https://partners.stage.adobe.com/latam/channelpartners/drafts/automation/regression/public-program-page',
+        logoutButtonText: 'Sign Out',
+        signInButtonInternationalText: 'Sign In',
+        signInButtonText: 'Sign In', // This will require a change as soon as LA NA based is sorted out
+      },
+    },
+    {
+      tcid: '15',
+      name: '@login-accessing-public-home-page-access-denied-error',
+      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
+      tags: '@dme-signin @regression @login @circleCi',
+      data: {
+        partnerLevel: 'cpp-denied:',
+        expectedToSeeInURL: '/channelpartners/error/account-denied',
+        signInButtonInternationalText: 'Sign In',
+      },
+    },
+    {
+      tcid: '16',
+      name: '@login-accessing-public-home-page-account-abandoned-error',
+      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
+      tags: '@dme-signin @regression @login @circleCi',
+      data: {
+        partnerLevel: 'cpp-abandoned:',
+        expectedToSeeInURL: '/channelpartners/error/login-error',
+        signInButtonInternationalText: 'Sign In',
+      },
+    },
+    {
+      tcid: '17',
+      name: '@login-accessing-public-home-page-account-expired-error',
+      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
+      tags: '@dme-signin @regression @login @circleCi',
+      data: {
+        partnerLevel: 'cpp-expired:',
+        expectedToSeeInURL: '/channelpartners/error/account-expired',
+        signInButtonInternationalText: 'Sign In',
       },
     },
   ],
