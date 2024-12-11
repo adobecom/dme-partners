@@ -2,13 +2,16 @@ import { getCaasUrl } from '../../scripts/utils.js';
 import { getConfig } from '../utils/utils.js';
 import { filterRestrictedCardsByCurrentSite } from '../../components/PartnerCards.js';
 
+function formatLinks(link) {
+  const { hostname, pathname } = new URL(link);
+  const isMiloUrl = hostname.endsWith('hlx.live') || hostname.endsWith('hlx.page');
+  return isMiloUrl ? pathname : link;
+}
+
 function addAnnouncement(cardData) {
   const linkWrapper = document.createElement('a');
   linkWrapper.className = 'link-wrapper';
-  const { hostname, pathname } = new URL(cardData.contentArea.url);
-  const isMiloUrl = hostname.endsWith('hlx.live') || hostname.endsWith('hlx.page');
-
-  linkWrapper.href = isMiloUrl ? pathname : cardData.contentArea.url;
+  linkWrapper.href = formatLinks(cardData.contentArea.url);
   linkWrapper.target = '_blank';
 
   linkWrapper.style.display = 'block';
@@ -112,7 +115,7 @@ export default async function init(el) {
       blockData.title = cols[1].innerText;
     }
     if (rowTitle && rowTitle === 'page-url') {
-      blockData.link = cols[1].innerText;
+      blockData.link = cols[1].querySelector('a')?.href;
     }
     if (rowTitle && rowTitle === 'button-text') {
       blockData.buttonText = cols[1].innerText;
