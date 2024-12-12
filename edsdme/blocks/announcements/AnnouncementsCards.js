@@ -252,6 +252,6 @@ export default class Announcements extends PartnerCards {
 
   onDataFetched(apiData) {
     // Filter announcements by current site
-    this.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
+    apiData.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
   }
 }
