@@ -250,6 +250,7 @@ export default class Announcements extends PartnerCards {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   onDataFetched(apiData) {
     // Filter announcements by current site
     apiData.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
