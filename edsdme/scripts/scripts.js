@@ -10,6 +10,7 @@ import {
   enableGeoPopup,
   PARTNER_LOGIN_QUERY,
 } from './utils.js';
+import {getConfig} from "../blocks/utils/utils.js";
 
 // Add project-wide style path here.
 const STYLES = '/edsdme/styles/styles.css';
@@ -101,6 +102,33 @@ function setUpPage() {
   updateFooter(CONFIG.locales);
 }
 
+function rewriteLinks() {
+  const CBC_PROD = 'https://cbconnection.adobe.com';
+  const CBC_STAGE = 'https://cbconnection.adobe.com';
+  const PARTNERS_PROD = 'https://partners.adobe.com';
+  const PARTNERS_STAGE = 'https://partners.stage.adobe.com';
+
+  const { env } = getConfig();
+  let cbcLinks = document.querySelectorAll(`[href][href^="${CBC_PROD}"]`);
+  cbcLinks.forEach((link) => {
+    const linkPuzzle1 = env.name !== 'prod' ? CBC_STAGE : CBC_PROD;
+    const linkPuzzle2 = '/bin/fusion/modalImsLogin?resource=';
+    if (!link.href) return;
+    const linkPuzzle3 = link.href.split(CBC_PROD)[1];
+    // if link is already correct
+    if (linkPuzzle3 === linkPuzzle2) return;
+    //check is it already /bin/fuzionn resource
+    link.href = linkPuzzle1 + linkPuzzle2 + linkPuzzle3;
+  });
+
+  if (env.name !== 'prod') {
+    const partnersLinks = document.querySelectorAll(`[href][href^="${PARTNERS_PROD}"]`);
+    partnersLinks.forEach(link => {
+      link.href = link.href.replace([PARTNERS_PROD, PARTNERS_STAGE]);
+    })
+  }
+
+}
 (async function loadPage() {
   applyPagePersonalization();
   setUpPage();
@@ -112,4 +140,6 @@ function setUpPage() {
   setConfig({ ...CONFIG, miloLibs });
   await getRenewBanner(getConfig, loadBlock);
   await loadArea();
+  rewriteLinks();
+
 }());
