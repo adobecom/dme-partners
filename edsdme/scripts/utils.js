@@ -31,7 +31,7 @@ export const [setLibs, getLibs] = (() => {
       libs = (() => {
         const { hostname, search, origin } = location || window.location;
         if (origin.endsWith('adobe.com')) {
-          return origin.replace('partners', '') + prodLibs;
+          return origin.replace('partners.', '') + prodLibs;
         }
         const partnerBranch = hostname.startsWith('main') ? 'main' : 'stage';
         const branch = new URLSearchParams(search).get('milolibs') || partnerBranch;
