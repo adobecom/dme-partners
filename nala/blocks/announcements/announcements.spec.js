@@ -108,7 +108,7 @@ export default {
       tcid: '7',
       name: '@desc-regression-announcements-distributor-north-america',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous @circleCi',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -125,7 +125,7 @@ export default {
       tcid: '8',
       name: '@desc-regression-announcements-distributor-japan',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -142,7 +142,7 @@ export default {
       tcid: '9',
       name: '@desc-regression-announcements-distributor-india',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -159,7 +159,7 @@ export default {
       tcid: '10',
       name: '@desc-regression-announcements-platinum-spain',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -176,7 +176,7 @@ export default {
       tcid: '11',
       name: '@desc-regression-announcements-platinum-latin-america-na-based',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -193,7 +193,7 @@ export default {
       tcid: '12',
       name: '@desc-regression-announcements-platinum-emea',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -210,7 +210,7 @@ export default {
       tcid: '13',
       name: '@desc-regression-announcements-gold-latin-america',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -227,7 +227,7 @@ export default {
       tcid: '14',
       name: '@desc-regression-announcements-gold-uk-europe-west',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -244,7 +244,7 @@ export default {
       tcid: '15',
       name: '@desc-regression-announcements-certified-europe-east',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -261,7 +261,7 @@ export default {
       tcid: '16',
       name: '@desc-regression-announcements-certified-pacific',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -278,7 +278,7 @@ export default {
       tcid: '17',
       name: '@desc-regression-announcements-registered-china',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -295,7 +295,7 @@ export default {
       tcid: '18',
       name: '@desc-regression-announcements-registered-middle-east-and-africa',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -312,7 +312,7 @@ export default {
       tcid: '19',
       name: '@desc-regression-logged-in-platinum-user',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -328,7 +328,7 @@ export default {
       tcid: '20',
       name: '@desc-regression-logged-in-gold-user',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -346,7 +346,7 @@ export default {
       tcid: '21',
       name: '@desc-regression-logged-in-certified-user',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
@@ -364,7 +364,7 @@ export default {
       tcid: '22',
       name: '@desc-regression-logged-in-registered-user',
       path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
-      tags: '@dme-announcements @regression @anonymous',
+      tags: '@dme-announcements @regression',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
