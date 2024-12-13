@@ -14,15 +14,15 @@ describe('Libs', () => {
     const libs = setLibs('/libs', location);
     expect(libs).to.equal('https://main--milo--adobecom.hlx.live/libs');
   });
-  it('Returns prod milo for prod', () => {
+  it('Returns prod adobe for prod', () => {
     const location = { origin: 'https://partners.adobe.com' };
     const libs = setLibs('/libs', location);
-    expect(libs).to.equal('https://milo.adobe.com/libs');
+    expect(libs).to.equal('https://adobe.com/libs');
   });
   it('Returns stage milo for stage', () => {
     const location = { origin: 'https://partners.stage.adobe.com' };
     const libs = setLibs('/libs', location);
-    expect(libs).to.equal('https://milo.stage.adobe.com/libs');
+    expect(libs).to.equal('https://stage.adobe.com/libs');
   });
 
   it('Does not support milolibs query param on prod', () => {
@@ -31,7 +31,7 @@ describe('Libs', () => {
       search: '?milolibs=foo',
     };
     const libs = setLibs('/libs', location);
-    expect(libs).to.equal('https://milo.adobe.com/libs');
+    expect(libs).to.equal('https://adobe.com/libs');
   });
 
   it('Supports milolibs query param', () => {
