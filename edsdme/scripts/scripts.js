@@ -104,6 +104,7 @@ function setUpPage() {
 
 function rewriteLinks() {
   const CBC_PROD = 'https://cbconnection.adobe.com';
+  // todo update value for cbc stage after we got answer on mail
   const CBC_STAGE = 'https://cbconnection.adobe.com';
   const PARTNERS_PROD = 'https://partners.adobe.com';
   const PARTNERS_STAGE = 'https://partners.stage.adobe.com';
@@ -111,14 +112,11 @@ function rewriteLinks() {
   const { env } = getConfig();
   let cbcLinks = document.querySelectorAll(`[href][href^="${CBC_PROD}"]`);
   cbcLinks.forEach((link) => {
-    const linkPuzzle1 = env.name !== 'prod' ? CBC_STAGE : CBC_PROD;
-    const linkPuzzle2 = '/bin/fusion/modalImsLogin?resource=';
-    if (!link.href) return;
-    const linkPuzzle3 = link.href.split(CBC_PROD)[1];
-    // if link is already correct
-    if (linkPuzzle3 === linkPuzzle2) return;
-    //check is it already /bin/fuzionn resource
-    link.href = linkPuzzle1 + linkPuzzle2 + linkPuzzle3;
+    const domain = env.name !== 'prod' ? CBC_STAGE : CBC_PROD;
+    const loginPath = '/bin/fusion/modalImsLogin?resource=';
+    const resource = link.href.split(CBC_PROD)[1];
+    if (resource.indexOf(loginPath) > 0) return;
+    link.href = domain + loginPath + resource;
   });
 
   if (env.name !== 'prod') {
@@ -127,8 +125,8 @@ function rewriteLinks() {
       link.href = link.href.replace([PARTNERS_PROD, PARTNERS_STAGE]);
     })
   }
-
 }
+
 (async function loadPage() {
   applyPagePersonalization();
   setUpPage();
@@ -141,5 +139,4 @@ function rewriteLinks() {
   await getRenewBanner(getConfig, loadBlock);
   await loadArea();
   rewriteLinks();
-
 }());
