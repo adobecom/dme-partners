@@ -10,7 +10,6 @@ import {
   enableGeoPopup,
   PARTNER_LOGIN_QUERY,
 } from './utils.js';
-import {getConfig} from "../blocks/utils/utils.js";
 
 // Add project-wide style path here.
 const STYLES = '/edsdme/styles/styles.css';
@@ -102,7 +101,7 @@ function setUpPage() {
   updateFooter(CONFIG.locales);
 }
 
-function rewriteLinks() {
+function rewriteLinks(getConfig) {
   const CBC_PROD = 'https://cbconnection.adobe.com';
   // todo update value for cbc stage after we got answer on mail
   const CBC_STAGE = 'https://cbconnection.adobe.com';
@@ -110,7 +109,7 @@ function rewriteLinks() {
   const PARTNERS_STAGE = 'https://partners.stage.adobe.com';
 
   const { env } = getConfig();
-  let cbcLinks = document.querySelectorAll(`[href][href^="${CBC_PROD}"]`);
+  const cbcLinks = document.querySelectorAll(`[href][href^="${CBC_PROD}"]`);
   cbcLinks.forEach((link) => {
     const domain = env.name !== 'prod' ? CBC_STAGE : CBC_PROD;
     const loginPath = '/bin/fusion/modalImsLogin?resource=';
@@ -121,9 +120,9 @@ function rewriteLinks() {
 
   if (env.name !== 'prod') {
     const partnersLinks = document.querySelectorAll(`[href][href^="${PARTNERS_PROD}"]`);
-    partnersLinks.forEach(link => {
+    partnersLinks.forEach((link) => {
       link.href = link.href.replace([PARTNERS_PROD, PARTNERS_STAGE]);
-    })
+    });
   }
 }
 
@@ -138,5 +137,5 @@ function rewriteLinks() {
   setConfig({ ...CONFIG, miloLibs });
   await getRenewBanner(getConfig, loadBlock);
   await loadArea();
-  rewriteLinks();
+  rewriteLinks(getConfig);
 }());
