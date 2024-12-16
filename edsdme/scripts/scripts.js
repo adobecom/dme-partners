@@ -10,6 +10,7 @@ import {
   enableGeoPopup,
   PARTNER_LOGIN_QUERY,
 } from './utils.js';
+import { rewriteLinks } from './rewriteLinks.js';
 
 // Add project-wide style path here.
 const STYLES = '/edsdme/styles/styles.css';
@@ -112,4 +113,5 @@ function setUpPage() {
   setConfig({ ...CONFIG, miloLibs });
   await getRenewBanner(getConfig, loadBlock);
   await loadArea();
+  rewriteLinks();
 }());
