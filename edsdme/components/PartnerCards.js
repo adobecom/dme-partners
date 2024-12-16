@@ -225,11 +225,11 @@ export default class PartnerCards extends LitElement {
         }
         // eslint-disable-next-line no-return-assign
         apiData.cards.forEach((card, index) => card.orderNum = index + 1);
+        this.onDataFetched(apiData);
         this.allCards = apiData.cards;
         this.cards = apiData.cards;
         this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
         this.hasResponseData = !!apiData.cards;
-        this.onDataFetched(apiData);
       }
     } catch (error) {
       this.hasResponseData = true;
