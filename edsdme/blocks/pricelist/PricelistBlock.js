@@ -17,6 +17,7 @@ export const priceListKeyWords = {
     DEFAULT: 'default',
   },
 };
+
 export default class Pricelist extends PartnerCards {
   static styles = [
     PartnerCards.styles,
@@ -141,7 +142,7 @@ export default class Pricelist extends PartnerCards {
                     <sp-action-button
                             size="m"
                             href="${setDownloadParam(rowData.contentArea?.url)}"
-                            download="${rowData.contentArea?.title}"
+                            download="${rowData.contentArea?.filename}"
                             aria-label="${this.blockData.localizedText['{{download}}']}">
                         <sp-icon-download slot="icon"></sp-icon-download>
                         ${this.blockData.localizedText['{{download}}']}
