@@ -327,8 +327,7 @@ function extractTableCollectionTags(el) {
     if (rowTitle === 'collection-tags') {
       const [collectionTagsEl] = colsContent;
       const collectionTags = Array.from(collectionTagsEl.querySelectorAll('li'), (li) => `"${li.textContent.trim().toLowerCase()}"`);
-      const filtered = collectionTags.filter((tag) => !tag.includes('caas:adobe-partners/cpp/region/'));
-      tableCollectionTags = [...tableCollectionTags, ...filtered];
+      tableCollectionTags = [...tableCollectionTags, ...collectionTags];
     }
   });
 
