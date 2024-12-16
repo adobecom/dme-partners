@@ -7,7 +7,7 @@ let announcementsPreviewPage;
 let signInPage;
 
 const { features } = AnnouncementsPreview;
-const regionBasedPreviews = features.slice(0, 11);
+const partnerLevelBasedPreviews = features.slice(0, 5);
 
 test.describe('Validate announcements preview block', () => {
   test.beforeEach(async ({ page, baseURL, browserName, context }) => {
@@ -27,7 +27,7 @@ test.describe('Validate announcements preview block', () => {
     }
   });
 
-  regionBasedPreviews.forEach((feature) => {
+  partnerLevelBasedPreviews.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, baseURL }) => {
       test.slow();
       await test.step('Go to public page', async () => {
