@@ -105,6 +105,7 @@ test.describe('Validate banners', () => {
 
       await test.step('Verify renew banner', async () => {
         const renewBanner = await bannersPage.renewBanner;
+
         await expect(renewBanner).toBeHidden();
       });
     });
