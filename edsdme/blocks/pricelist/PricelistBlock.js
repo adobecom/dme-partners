@@ -18,17 +18,6 @@ export const priceListKeyWords = {
   },
 };
 
-const extractFilename = (url) => {
-  const filenameWithExtension = url.substring(url.lastIndexOf('/') + 1);
-  const filenameWithoutExtension = filenameWithExtension.replace('.URL', '');
-
-  if (filenameWithoutExtension.endsWith('csv')) {
-    return `${filenameWithoutExtension.slice(0, -3)}.csv`;
-  }
-
-  return `${filenameWithoutExtension}.csv`;
-};
-
 export default class Pricelist extends PartnerCards {
   static styles = [
     PartnerCards.styles,
@@ -153,7 +142,7 @@ export default class Pricelist extends PartnerCards {
                     <sp-action-button
                             size="m"
                             href="${setDownloadParam(rowData.contentArea?.url)}"
-                            download="${extractFilename(rowData.contentArea?.url)}"
+                            download="${rowData.contentArea?.filename}"
                             aria-label="${this.blockData.localizedText['{{download}}']}">
                         <sp-icon-download slot="icon"></sp-icon-download>
                         ${this.blockData.localizedText['{{download}}']}
