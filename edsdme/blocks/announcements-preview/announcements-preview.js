@@ -64,6 +64,8 @@ async function fetchData(blockData, newestCards) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     apiData = await response.json();
+    const cardsEvent = new Event('partner-cards-loaded');
+    document.dispatchEvent(cardsEvent);
 
     if (apiData?.cards) {
       // Filter announcements by current site
