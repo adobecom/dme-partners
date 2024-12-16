@@ -4,12 +4,15 @@ export default {
     {
       tcid: '1',
       name: '@desc-regression-announcements-preview-platinum-user',
-      path: '/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-announcements-preview @regression @circleCi',
+      path: '/channelpartners/drafts/automation/regression/announcement-preview?georouting=off&martech=off',
+      tags: '@dme-announcements-preview @regression @anonymous',
       data: {
-        partnerLevel: 'cpp-spain-platinum:',
+        partnerData: {
+          partnerPortal: 'CPP',
+          partnerLevel: 'Platinum',
+          permissionRegion: 'Europe West',
+        },
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },
@@ -17,12 +20,15 @@ export default {
     {
       tcid: '2',
       name: '@desc-regression-announcements-preview-registered-user',
-      path: '/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-announcements-preview @regression @circleCi',
+      path: '/channelpartners/drafts/automation/regression/announcement-preview?georouting=off&martech=off',
+      tags: '@dme-announcements-preview @regression @anonymous',
       data: {
-        partnerLevel: 'cpp-china-registered:',
+        partnerData: {
+          partnerPortal: 'CPP',
+          partnerLevel: 'Registered',
+          permissionRegion: 'China',
+        },
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },
@@ -30,12 +36,15 @@ export default {
     {
       tcid: '3',
       name: '@desc-regression-announcements-preview-gold-user',
-      path: '/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-announcements-preview @regression @circleCi',
+      path: '/channelpartners/drafts/automation/regression/announcement-preview?georouting=off&martech=off',
+      tags: '@dme-announcements-preview @regression @anonymous',
       data: {
-        partnerLevel: 'cpp-latin-america-gold:',
+        partnerData: {
+          partnerPortal: 'CPP',
+          partnerLevel: 'Gold',
+          permissionRegion: 'Latin America',
+        },
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },
@@ -43,12 +52,15 @@ export default {
     {
       tcid: '4',
       name: '@desc-regression-announcements-preview-certified-user',
-      path: '/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-announcements-preview @regression @circleCi',
+      path: '/channelpartners/drafts/automation/regression/announcement-preview?georouting=off&martech=off',
+      tags: '@dme-announcements-preview @regression @anonymous',
       data: {
-        partnerLevel: 'cpp-europe-east-certified:',
+        partnerData: {
+          partnerPortal: 'CPP',
+          partnerLevel: 'Certified',
+          permissionRegion: 'Europe East',
+        },
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },
@@ -56,12 +68,15 @@ export default {
     {
       tcid: '5',
       name: '@desc-regression-announcements-preview-distributor-user',
-      path: '/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-announcements-preview @regression @circleCi',
+      path: '/channelpartners/drafts/automation/regression/announcement-preview?georouting=off&martech=off',
+      tags: '@dme-announcements-preview @regression @anonymous',
       data: {
-        partnerLevel: 'cpp-distributor-us:',
+        partnerData: {
+          partnerPortal: 'CPP',
+          partnerLevel: 'Distributor',
+          permissionRegion: 'North America',
+        },
         signInButton: 'Sign In',
-        expectedProtectedHomeURL: '/channelpartners/home/',
         selectedSortNewest: 'Date: newest',
         rootPath: '/channelpartners/',
       },
