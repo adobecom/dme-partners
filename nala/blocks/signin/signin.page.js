@@ -24,6 +24,7 @@ export default class SignInPage {
     const email = process.env.IMS_EMAIL.split(partnerLevel)[1].split(';')[0];
     await page.waitForLoadState('domcontentloaded');
     await this.emailField.fill(email);
+    await page.emailField.waitFor({ state: 'visible', timeout: 1000 });
     await this.emailPageContinueButton.click();
     await this.passwordField.fill(process.env.IMS_PASS);
     await this.passwordPageContinueButton.click();
