@@ -138,9 +138,11 @@ export const pricelistBlockStyles = css`
         font-weight: normal;
         margin-bottom: 20px;
     }
-
+  
+  @media (hover: hover) {
     .pagination-wrapper-load-more .load-more-btn:hover {
-        background-color: ${btnGrayColor};
-        border: 1px solid ${btnGrayColor};
+      background-color: ${btnGrayColor};
+      border: 1px solid ${btnGrayColor};
     }
+  }
 `;
