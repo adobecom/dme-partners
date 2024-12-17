@@ -100,8 +100,8 @@ class Search {
       }
 
       if (e.code === 'Enter') {
-        if (!this.query) return;
-        window.location.href = Search.getSearchLink(this.query);
+        if (!this.input) return;
+        window.location.href = Search.getSearchLink(this.input.value?.trim());
       }
     });
 
