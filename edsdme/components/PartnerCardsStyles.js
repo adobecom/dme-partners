@@ -922,12 +922,13 @@ export const partnerCardsLoadMoreStyles = css`
     cursor: pointer;
     transition: border-color .3s ease-in-out,background-color .3s ease-in-out;
   }
-  
-  .pagination-wrapper-load-more .load-more-btn:hover {
-    text-decoration: none;
-    border-color: #222222;
-    background-color: #222222;
-    color: #ffffff;
+  @media (hover: hover) {
+    .pagination-wrapper-load-more .load-more-btn:hover {
+      text-decoration: none;
+      border-color: #222222;
+      background-color: #222222;
+      color: #ffffff;
+    }
   }
 `;
 
