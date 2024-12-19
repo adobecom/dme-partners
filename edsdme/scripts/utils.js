@@ -318,20 +318,6 @@ function getPartnerLevelParams(portal) {
   return partnerLevel ? `(${partnerTagBase}${partnerLevel}"+OR+${partnerTagBase}public")` : `(${partnerTagBase}public")`;
 }
 
-function getPartnerRegionParams(portal) {
-  const permissionRegion = getPartnerDataCookieValue(portal, 'permissionregion');
-  const regionTagBase = `caas:adobe-partners/${portal}/region/`;
-
-  const regionTags = [`"${regionTagBase}worldwide"`];
-
-  permissionRegion.split(',').forEach((region) => {
-    const regionValue = region.trim().replaceAll(' ', '-');
-    if (regionValue) regionTags.push(`"${regionTagBase}${regionValue}"`);
-  });
-
-  return `(${regionTags.join('+OR+')})`;
-}
-
 function extractTableCollectionTags(el) {
   let tableCollectionTags = [];
   Array.from(el.children).forEach((row) => {
@@ -374,7 +360,6 @@ function getComplexQueryParams(el, collectionTag) {
   const collectionTags = [collectionTag, portalCollectionTag, ...tableTags];
 
   const partnerLevelParams = getPartnerLevelParams(portal);
-  const partnerRegionParams = getPartnerRegionParams(portal);
 
   const collectionTagsStr = collectionTags.filter((e) => e.length).join('+AND+');
   let resulStr = `(${collectionTagsStr})`;
@@ -384,7 +369,6 @@ function getComplexQueryParams(el, collectionTag) {
     resulStr += `+NOT+${qaContentTag}`;
   }
 
-  if (partnerRegionParams) resulStr += `+AND+${partnerRegionParams}`;
   if (partnerLevelParams) resulStr += `+AND+${partnerLevelParams}`;
   // eslint-disable-next-line consistent-return
   return resulStr;

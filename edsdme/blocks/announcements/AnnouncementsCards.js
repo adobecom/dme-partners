@@ -5,6 +5,22 @@ import PartnerCards from '../../components/PartnerCards.js';
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
+export function filterRestrictedCardsByCurrentSite(cards) {
+  const currentSite = window.location.pathname.split('/')[1];
+  return cards.filter((card) => {
+    const cardUrl = card?.contentArea?.url;
+    if (!cardUrl) return false;
+    try {
+      const cardSite = new URL(cardUrl).pathname.split('/')[1];
+      return currentSite === cardSite;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Invalid URL: ${cardUrl}`, error);
+      return false;
+    }
+  });
+}
+
 export default class Announcements extends PartnerCards {
   static styles = [
     PartnerCards.styles,
@@ -232,5 +248,11 @@ export default class Announcements extends PartnerCards {
         return cardDate >= startDate && cardDate <= currentDate;
       });
     }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  onDataFetched(apiData) {
+    // Filter announcements by current site
+    apiData.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
   }
 }

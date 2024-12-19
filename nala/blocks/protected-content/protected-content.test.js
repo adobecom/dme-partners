@@ -87,15 +87,6 @@ test.describe('Validate different Partner Levels accessing protected content', (
         await expect(cardTitle).toBeVisible();
       });
 
-      await test.step('Open non matching region page in a new tab - partner level matches required', async () => {
-        await protectedContentPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
-        const newTab = await context.newPage();
-        const newTabPage = new ProtectedContentPage(newTab);
-        await newTab.goto(`${feature.data.nonMatchingRegionPage}`);
-        const cardTitle = await newTabPage.getCardTitle(feature.nonMatchingRegionCardText);
-        await expect(cardTitle).toBeVisible();
-      });
-
       await test.step('Open non matching partner level page in a new tab', async () => {
         const newTab = await context.newPage();
         await newTab.goto(`${feature.data.nonMatchingPartnerLevelPage}`);

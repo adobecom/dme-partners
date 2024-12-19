@@ -7,7 +7,7 @@ let announcementsPreviewPage;
 let signInPage;
 
 const { features } = AnnouncementsPreview;
-const regionBasedPreviews = features.slice(0, 11);
+const partnerLevelBasedPreviews = features.slice(0, 5);
 
 test.describe('Validate announcements preview block', () => {
   test.beforeEach(async ({ page, baseURL, browserName, context }) => {
@@ -27,25 +27,41 @@ test.describe('Validate announcements preview block', () => {
     }
   });
 
-  regionBasedPreviews.forEach((feature) => {
-    test(`${feature.name},${feature.tags}`, async ({ page, baseURL }) => {
+  async function handleEvent(page) {
+    if (!page.url().includes('partners.stage.adobe.com')) {
+      await page.evaluate(() => {
+        if (document.querySelector('.card-title')) {
+          window.cardsLoaded = true;
+        } else {
+          document.addEventListener('partner-cards-loaded', () => {
+            window.cardsLoaded = true;
+          });
+        }
+      });
+      try {
+        await page.waitForFunction(() => window.cardsLoaded);
+      } catch {
+        console.log('catch block');
+      }
+    }
+  }
+
+  partnerLevelBasedPreviews.forEach((feature) => {
+    test(`${feature.name},${feature.tags}`, async ({ page, context, baseURL }) => {
       test.slow();
       await test.step('Go to public page', async () => {
         await page.goto(`${baseURL}${feature.path}`);
         await page.waitForLoadState('load');
       });
 
-      await test.step('Sign in', async () => {
-        const signInButton = await announcementsPreviewPage.getButtonElement(feature.data.signInButton);
-        await signInButton.click();
-        await signInPage.signIn(page, `${feature.data.partnerLevel}`);
-        await page.waitForLoadState('domcontentloaded');
-      });
-
-      await test.step('Verify redirection to restricted home after successful login', async () => {
-        await announcementsPreviewPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
-        const pages = await page.context().pages();
-        await expect(pages[0].url()).toContain(`${feature.data.expectedProtectedHomeURL}`);
+      await test.step('Set partner_data cookie', async () => {
+        await signInPage.addCookie(
+          feature.data.partnerData,
+          `${baseURL}${feature.path}`,
+          context,
+        );
+        await page.reload();
+        await handleEvent(page);
       });
 
       const announcements = await announcementsPreviewPage.announcements;
@@ -72,6 +88,7 @@ test.describe('Validate announcements preview block', () => {
             await announcementsPreviewPage.sortBtn.click();
             await announcementsPreviewPage.newestOption.click();
           }
+          await announcementsPreviewPage.loadMore.click();
 
           const latestCards = await announcementsPreviewPage.cards.evaluateAll((cards, count) => cards.slice(0, count)
             .map(
