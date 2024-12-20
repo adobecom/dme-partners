@@ -11,8 +11,9 @@
   text-decoration: none;
 }
 
-.announcements-preview .con-button {
-  margin: 5px 0px;
+.announcements-preview:not(:has(> h3)) .link-wrapper:first-of-type,
+.announcements-preview:not(:has(> h3)) .announcement-item:first-of-type{
+  margin-top: 0;
 }
 
 .card-image {

@@ -108,7 +108,12 @@ export default async function init(el) {
 
   const app = document.createElement('div');
   app.className = 'announcements-preview';
-
+  app.classList.add('con-block');
+  el.classList.forEach((elem) => {
+    if (!elem.includes('heading')) {
+      app.classList.add(elem);
+    }
+  });
   Array.from(el.children).forEach((row) => {
     const cols = Array.from(row.children);
     const rowTitle = cols[0].innerText.trim().toLowerCase().replace(/ /g, '-');
@@ -127,9 +132,16 @@ export default async function init(el) {
   await fetchData(blockData, newestCards);
 
   if (blockData.title) {
-    const componentTitle = document.createElement('div');
+    const componentTitle = document.createElement('h3');
     componentTitle.className = 'text announcement-preview-title';
-    const titleText = document.createElement('h3');
+    componentTitle.classList.add('heading-l');
+    el.classList.forEach((elem) => {
+      if (elem.includes('heading')) {
+        componentTitle.classList.remove('heading-l');
+        componentTitle.classList.add('heading-'.concat(elem.split('-')[0]));
+      }
+    });
+    const titleText = document.createElement('strong');
     titleText.textContent = blockData.title;
     componentTitle.appendChild(titleText);
     app.appendChild(componentTitle);
