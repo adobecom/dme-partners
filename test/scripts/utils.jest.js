@@ -332,13 +332,12 @@ describe('Test utils.js', () => {
     const getConfig = () => ({ locale: '' });
     global.fetch = jest.fn(() => Promise.resolve({
       ok: true,
-      text: () => Promise.resolve('<div class="aside">Test</div>'),
+      text: () => Promise.resolve('<div class="notification">Test</div>'),
     }));
-
     const main = document.createElement('main');
     document.body.appendChild(main);
-    await getRenewBanner(getConfig, jest.fn());
-    const banner = document.querySelector('.renew-banner');
+    await getRenewBanner(getConfig);
+    const banner = document.querySelector('.notification');
     expect(banner).toBeTruthy();
   });
   it('Don\'t show renew banner', async () => {
@@ -356,13 +355,13 @@ describe('Test utils.js', () => {
     const getConfig = () => ({ locale: '' });
     global.fetch = jest.fn(() => Promise.resolve({
       ok: true,
-      text: () => Promise.resolve('<div class="aside">Test</div>'),
+      text: () => Promise.resolve('<div class="notification">Test</div>'),
     }));
 
     const main = document.createElement('main');
     document.body.appendChild(main);
-    await getRenewBanner(getConfig, jest.fn());
-    const banner = document.querySelector('.renew-banner');
+    await getRenewBanner(getConfig);
+    const banner = document.querySelector('.notification');
     expect(banner).toBeFalsy();
   });
   it('Renew banner fetch error', async () => {
@@ -381,7 +380,7 @@ describe('Test utils.js', () => {
     global.fetch = jest.fn(() => Promise.resolve({ ok: false }));
     const main = document.createElement('main');
     document.body.appendChild(main);
-    expect(await getRenewBanner(getConfig, jest.fn())).toEqual(null);
+    expect(await getRenewBanner(getConfig)).toEqual(null);
   });
   it('Update ims config if user is signed in', () => {
     jest.useFakeTimers();

@@ -199,7 +199,7 @@ export function isRenew() {
   return { accountStatus, daysNum };
 }
 
-export async function getRenewBanner(getConfig, loadBlock) {
+export async function getRenewBanner(getConfig) {
   const renew = isRenew();
   if (!renew) return;
   const { accountStatus, daysNum } = renew;
@@ -223,16 +223,10 @@ export async function getRenewBanner(getConfig, loadBlock) {
     const componentData = data.replace('$daysNum', daysNum);
     const parser = new DOMParser();
     const doc = parser.parseFromString(componentData, 'text/html');
-    const aside = doc.querySelector('.aside');
-    aside.classList.add('renew-banner');
+    const block = doc.querySelector('.notification');
 
     const div = document.createElement('div');
-    div.style.position = 'sticky';
-    div.style.top = '64px';
-    div.style.zIndex = 1;
-
-    await loadBlock(aside);
-    div.appendChild(aside);
+    div.appendChild(block);
 
     const main = document.querySelector('main');
     if (main) main.insertBefore(div, main.firstChild);
