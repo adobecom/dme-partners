@@ -3,7 +3,7 @@
  */
 import { rewriteLinks } from '../../edsdme/scripts/rewriteLinks.js';
 import { getConfig } from '../../edsdme/blocks/utils/utils.js';
-import {partnerIsSignedIn} from "../../edsdme/scripts/utils.js";
+import { partnerIsSignedIn } from '../../edsdme/scripts/utils.js';
 
 jest.mock('../../edsdme/blocks/utils/utils.js', () => ({ getConfig: jest.fn() }));
 jest.mock('../../edsdme/scripts/utils.js', () => ({ partnerIsSignedIn: jest.fn() }));
@@ -19,7 +19,7 @@ document.body.innerHTML = `
 describe('Test rewrite links', () => {
   beforeEach(() => {
     getConfig.mockReturnValue({ env: { name: 'stage' } });
-    partnerIsSignedIn.mockReturnValue({ "partner name": { company: 'test' } });
+    partnerIsSignedIn.mockReturnValue({ 'partner name': { company: 'test' } });
   });
   afterEach(() => {
     jest.clearAllMocks(); // Clear mocks after each test
