@@ -2,7 +2,7 @@ export default class SmokeTest {
   constructor(page) {
     this.page = page;
     this.joinNowButton = page.locator(
-      '#feds-nav-wrapper .feds-cta--primary:has-text("Join Now")'
+      '#feds-nav-wrapper .feds-cta--primary:has-text("Join Now")',
     );
     this.signInButton = page.locator('.feds-signIn');
     this.GNav = page.locator('.feds-topnav');
@@ -28,21 +28,17 @@ export default class SmokeTest {
   async verifyProtectedGnav() {
     const gNavExists = await this.GNav.isVisible();
 
-    return {
-      GNav: gNavExists,
-    };
+    return { GNav: gNavExists };
   }
 
   async verifyProfileIcon() {
     const profileIconExists = await this.profileIcon.isVisible();
 
-    return {
-      profileIcon: profileIconExists,
-    };
+    return { profileIcon: profileIconExists };
   }
 
   async getCurrentUrl() {
-    return await this.page.url();
+    return this.page.url();
   }
 
   async clickDownloadButtonInFirstRow() {
@@ -61,11 +57,11 @@ export default class SmokeTest {
       .locator('search-cards.search-cards-wrapper[data-idx="2"]')
       .elementHandle();
     const shadowRoot = await shadowHost.evaluateHandle(
-      (node) => node.shadowRoot
+      (node) => node.shadowRoot,
     );
 
     const downloadButton = await shadowRoot.$(
-      'sp-action-button[href="https://partners.stage.adobe.com/channelpartnerassets/assets/public/public_1/scanning_documents_into_pdf_files--ar.pdf?download"]'
+      'sp-action-button[href="https://partners.stage.adobe.com/channelpartnerassets/assets/public/public_1/scanning_documents_into_pdf_files--ar.pdf?download"]',
     );
 
     await downloadButton.click();
@@ -74,11 +70,11 @@ export default class SmokeTest {
   async announcmentCardVerification() {
     const shadowHostCard = await this.page
       .locator(
-        'announcements-cards.content.announcements-wrapper[data-idx="0"]'
+        'announcements-cards.content.announcements-wrapper[data-idx="0"]',
       )
       .elementHandle();
     const shadowRootCard = await shadowHostCard.evaluateHandle(
-      (node) => node.shadowRoot
+      (node) => node.shadowRoot,
     );
 
     const announcementsCrad = await shadowRootCard.$$('.card-wrapper');
