@@ -2,6 +2,7 @@ export default class RegionSelectorsPage {
   constructor(page) {
     this.page = page;
     this.regionSelectorPopUp = page.locator('div.region-nav');
+
     this.profileIconButton = page.locator('.feds-profile-button');
 
     this.oneTrustBanner = page.getByLabel('Cookie banner');
