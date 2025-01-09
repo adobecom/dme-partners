@@ -1,4 +1,5 @@
 import { getConfig } from '../blocks/utils/utils.js';
+import {partnerIsSignedIn} from "./utils.js";
 
 export function rewriteLinks() {
   const environments = {
@@ -12,6 +13,7 @@ export function rewriteLinks() {
   const isProd = env.name === 'prod';
 
   const updateLinks = (currentDomain, newDomain, loginPath) => {
+    const isSignedIn =  partnerIsSignedIn();
     document.querySelectorAll(`[href^="${currentDomain}"]`).forEach((link) => {
       let url;
       try {
@@ -20,7 +22,7 @@ export function rewriteLinks() {
         return;
       }
       url.hostname = new URL(newDomain).hostname;
-      if (loginPath && !url.pathname.includes(loginPath)) {
+      if (isSignedIn && loginPath && !url.pathname.includes(loginPath)) {
         const resource = url.pathname;
         url.searchParams.append('resource', resource);
         url.pathname = loginPath;

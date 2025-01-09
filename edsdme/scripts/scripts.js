@@ -8,7 +8,7 @@ import {
   updateNavigation,
   updateFooter,
   enableGeoPopup,
-  PARTNER_LOGIN_QUERY, partnerIsSignedIn,
+  PARTNER_LOGIN_QUERY,
 } from './utils.js';
 import { rewriteLinks } from './rewriteLinks.js';
 
@@ -113,8 +113,5 @@ function setUpPage() {
   setConfig({ ...CONFIG, miloLibs });
   await getRenewBanner(getConfig);
   await loadArea();
-  partnerIsSignedIn();
-  if (partnerIsSignedIn()) {
-    rewriteLinks();
-  }
+  rewriteLinks();
 }());
