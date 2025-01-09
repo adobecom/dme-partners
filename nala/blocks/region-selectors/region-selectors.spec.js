@@ -20,6 +20,7 @@ export default {
       data: {
         changeRegionEng: 'Change region',
         localeSwitchUrl: '/latam/channelpartners/',
+
         linkText: 'Latin America',
       },
     },
