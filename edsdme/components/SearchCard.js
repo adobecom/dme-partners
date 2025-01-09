@@ -1,5 +1,6 @@
 import searchCardStyles from './SearchCardStyles.js';
 import { formatDate, getLibs } from '../scripts/utils.js';
+import { setDownloadParam } from '../blocks/utils/utils.js';
 
 const miloLibs = getLibs();
 const { html, repeat, LitElement } = await import(`${miloLibs}/deps/lit-all.min.js`);
@@ -19,23 +20,35 @@ class SearchCard extends LitElement {
     // eslint-disable-next-line consistent-return
     return html`${repeat(
       tags,
-      (tag) => tag,
-      (tag) => html`<span class="card-tag">${this.localizedText[`{{${tag.value}}}`]}</span>`,
+      (tag) => tag.key,
+      (tag) => {
+        const key = Object.values(tag)[0];
+        return html`<span class="card-tag">${this.localizedText[`{{${key}}}`] || key.replaceAll('-', ' ')}</span>`;
+      },
     )}`;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  setDownloadParam(url) {
-    if (!url) return;
-    const urlWithParam = new URL(url);
-    urlWithParam.search = 'download';
-    // eslint-disable-next-line consistent-return
-    return urlWithParam;
   }
 
   // eslint-disable-next-line class-methods-use-this
   toggleCard(searchCard) {
     searchCard.classList.toggle('expanded');
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  isDownloadDisabled(fileType) {
+    const disabledTypes = ['html'];
+    return disabledTypes.includes(fileType);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  isPreviewEnabled(fileType) {
+    const enabledTypes = ['pdf', 'html'];
+    return enabledTypes.includes(fileType);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getFileType(type) {
+    const supportedFileTypes = ['excel', 'pdf', 'powerpoint', 'video', 'word', 'zip', 'html'];
+    return supportedFileTypes.includes(type) ? type : 'default';
   }
 
   /* eslint-disable indent */
@@ -45,14 +58,14 @@ class SearchCard extends LitElement {
         <div class="card-header">
           <div class="card-title-wrapper">
             <span class="card-chevron-icon"></span>
-            <div class="file-icon" style="background-image: url('/edsdme/img/icons/${this.data.contentArea?.type}.svg')"></div>
+            <div class="file-icon" style="background-image: url('/edsdme/img/icons/${this.getFileType(this.data.contentArea?.type)}.svg')"></div>
             <span class="card-title">${this.data.contentArea?.title !== 'card-metadata' ? this.data.contentArea?.title : ''}</span>
           </div>
           <div class="card-icons">
             <sp-theme theme="spectrum" color="light" scale="medium">
-              <sp-action-button href="${this.setDownloadParam(this.data.contentArea?.url)}" download="${this.data.contentArea?.title}" aria-label="${this.localizedText['{{download}}']}"><sp-icon-download /></sp-action-button>
-              ${this.data.contentArea?.type === 'pdf'
-                ? html`<sp-action-button href="${this.data.contentArea?.url}" target="_blank" aria-label="${this.localizedText['{{open-in}}']}"><sp-icon-open-in /></sp-action-button>`
+              <sp-action-button @click=${(e) => e.stopPropagation()} ?disabled=${this.isDownloadDisabled(this.data.contentArea?.type)} href="${setDownloadParam(this.data.contentArea?.url)}" download="${this.data.contentArea?.title}" aria-label="${this.localizedText['{{download}}']}"><sp-icon-download /></sp-action-button>
+              ${this.isPreviewEnabled(this.data.contentArea?.type)
+                ? html`<sp-action-button @click=${(e) => e.stopPropagation()} href="${this.data.contentArea?.url}" target="_blank" aria-label="${this.localizedText['{{open-in}}']}"><sp-icon-open-in /></sp-action-button>`
                 : html`<sp-action-button disabled selected aria-label="${this.localizedText['{{open-in-disabled}}']}"><sp-icon-open-in /></sp-action-button>`
               }
             </sp-theme>
@@ -66,7 +79,10 @@ class SearchCard extends LitElement {
           }
           <div class="card-text">
             <span class="card-date">${this.localizedText['{{last-modified}}']}: ${formatDate(this.data.cardDate, this.ietf)}
-              <span class="card-size">${this.localizedText['{{size}}']}: ${this.data.contentArea?.size}</span>
+          ${this.data.contentArea?.type !== 'html'
+    ? html`<span class="card-size">${this.localizedText['{{size}}']}: ${this.data.contentArea?.size}</span>`
+                : ''
+    }
             </span>
             <p class="card-description">${this.data.contentArea?.description}</p>
             <div class="card-tags-wrapper">${this.cardTags}</div>

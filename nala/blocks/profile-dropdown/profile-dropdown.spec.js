@@ -4,7 +4,7 @@ export default {
     {
       tcid: '1',
       name: '@desc-profile-dropdown-member-user-with-sales-center',
-      path: 'https://partners.stage.adobe.com/channelpartners/?akamaiLocale=na&martech=off',
+      path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-profile @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-distributor-apac:',
@@ -14,13 +14,13 @@ export default {
         editProfileURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
         accountManagementURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
         salesCenterURL: 'https://adobe--sfstage.sandbox.my.site.com/',
-        targetAfterLogout: 'https://partners.stage.adobe.com/channelpartners/?akamaiLocale=na&martech=off#',
+        targetAfterLogout: 'https://partners.stage.adobe.com/apac/channelpartners/#',
       },
     },
     {
       tcid: '2',
       name: '@desc-profile-dropdown-member-user-with-anniversary-date-next-30-days',
-      path: 'https://partners.stage.adobe.com/channelpartners/?akamaiLocale=na&martech=off',
+      path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-profile @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-us-registered:',
@@ -32,13 +32,13 @@ export default {
         editProfileURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
         accountManagementURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
         renewNowURL: 'https://channelpartners.stage2.adobe.com/s/renewal/',
-        targetAfterLogout: 'https://partners.stage.adobe.com/channelpartners/?akamaiLocale=na&martech=off#',
+        targetAfterLogout: 'https://partners.stage.adobe.com/na/channelpartners/#',
       },
     },
     {
       tcid: '3',
       name: '@desc-profile-dropdown-member-user-with-anniversary-date-last-90-days',
-      path: 'https://partners.stage.adobe.com/channelpartners/?akamaiLocale=na&martech=off',
+      path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-profile @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-us-certified:',
@@ -50,7 +50,7 @@ export default {
         editProfileURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
         accountManagementURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
         renewNowURL: 'https://channelpartners.stage2.adobe.com/s/renewal/',
-        targetAfterLogout: 'https://partners.stage.adobe.com/channelpartners/?akamaiLocale=na&martech=off#',
+        targetAfterLogout: 'https://partners.stage.adobe.com/na/channelpartners/#',
       },
     },
   ],

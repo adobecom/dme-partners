@@ -4,7 +4,7 @@ export default {
     {
       tcid: '1',
       name: '@desc-regression-banners-logged-in-non-member-user',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -17,7 +17,7 @@ export default {
     {
       tcid: '2',
       name: '@desc-regression-banners-logged-in-member-platinum-user-anniversary-date-out-of-range',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -31,7 +31,7 @@ export default {
     {
       tcid: '3',
       name: '@desc-regression-banners-logged-in-member-distributor-user-anniversary-date-out-of-range',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -45,7 +45,7 @@ export default {
     {
       tcid: '4',
       name: '@desc-regression-banners-logged-in-member-gold-user-anniversary-date-out-of-range',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -59,7 +59,7 @@ export default {
     {
       tcid: '5',
       name: '@desc-regression-banners-logged-in-member-certified-user-anniversary-date-out-of-range',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -73,7 +73,7 @@ export default {
     {
       tcid: '6',
       name: '@desc-regression-banners-logged-in-member-registered-user-anniversary-date-out-of-range',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -87,7 +87,7 @@ export default {
     {
       tcid: '7',
       name: '@desc-regression-banners-logged-in-member-platinum-user-anniversary-date-last-90-days',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -101,7 +101,7 @@ export default {
     {
       tcid: '8',
       name: '@desc-regression-banners-logged-in-member-distributor-user-anniversary-date-last-90-days',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -115,7 +115,7 @@ export default {
     {
       tcid: '9',
       name: '@desc-regression-banners-logged-in-member-platinum-user-anniversary-date-next-30-days',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -129,7 +129,7 @@ export default {
     {
       tcid: '10',
       name: '@desc-regression-banners-logged-in-member-distributor-user-anniversary-date-next-30-days',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -143,7 +143,7 @@ export default {
     {
       tcid: '11',
       name: '@desc-regression-banners-logged-in-member-gold-user-anniversary-date-last-90-days',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -161,7 +161,7 @@ export default {
     {
       tcid: '12',
       name: '@desc-regression-banners-logged-in-member-certified-user-anniversary-date-last-90-days',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -179,7 +179,7 @@ export default {
     {
       tcid: '13',
       name: '@desc-regression-banners-logged-in-member-registered-user-anniversary-date-last-90-days',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -197,7 +197,7 @@ export default {
     {
       tcid: '14',
       name: '@desc-regression-banners-logged-in-member-gold-user-anniversary-date-next-30-days',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -215,7 +215,7 @@ export default {
     {
       tcid: '15',
       name: '@desc-regression-banners-logged-in-member-certified-user-anniversary-date-next-30-days',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -233,7 +233,7 @@ export default {
     {
       tcid: '16',
       name: '@desc-regression-banners-logged-in-member-registered-user-anniversary-date-next-30-days',
-      path: '/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @anonymous',
       data: {
         partnerData: {
@@ -251,7 +251,7 @@ export default {
     {
       tcid: '17',
       name: '@desc-regression-banners-sign-in-registered-us-user-anniversary-date-next-30-days',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-banners @regression @circleCi',
       data: {
         partnerLevel: 'cpp-us-registered:',
@@ -259,12 +259,13 @@ export default {
         bannerText: 'Your membership will expire',
         renewButtonText: 'Renew now',
         renewLinkPath: 'https://channelpartners.adobe.com/s/renewal/',
+        signInButtonInternationalText: 'Sign In',
       },
     },
     {
       tcid: '18',
       name: '@desc-regression-banners-sign-in-certified-us-user-anniversary-date-last-90-days',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-banners @regression @circleCi',
       data: {
         partnerLevel: 'cpp-us-certified:',
@@ -272,14 +273,18 @@ export default {
         bannerText: 'Your account is suspended',
         renewButtonText: 'Renew now',
         renewLinkPath: 'https://channelpartners.adobe.com/s/renewal/',
+        signInButtonInternationalText: 'Sign In',
       },
     },
     {
       tcid: '19',
       name: '@desc-regression-banners-sign-in-gold-user-anniversary-date-out-of-range',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?akamaiLocale=na',
+      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-banners @regression @circleCi',
-      data: { partnerLevel: 'cpp-us-gold:' },
+      data: {
+        partnerLevel: 'cpp-us-gold:',
+        signInButtonInternationalText: 'Sign In',
+      },
     },
   ],
 };

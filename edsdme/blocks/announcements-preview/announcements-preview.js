@@ -1,10 +1,17 @@
 import { getCaasUrl } from '../../scripts/utils.js';
 import { getConfig } from '../utils/utils.js';
+import { filterRestrictedCardsByCurrentSite } from '../announcements/AnnouncementsCards.js';
+
+function formatLinks(link) {
+  const { hostname, pathname } = new URL(link);
+  const isMiloUrl = hostname.endsWith('hlx.live') || hostname.endsWith('hlx.page');
+  return isMiloUrl ? pathname : link;
+}
 
 function addAnnouncement(cardData) {
   const linkWrapper = document.createElement('a');
   linkWrapper.className = 'link-wrapper';
-  linkWrapper.href = cardData.contentArea.url;
+  linkWrapper.href = formatLinks(cardData.contentArea.url);
   linkWrapper.target = '_blank';
 
   linkWrapper.style.display = 'block';
@@ -57,8 +64,12 @@ async function fetchData(blockData, newestCards) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     apiData = await response.json();
+    const cardsEvent = new Event('partner-cards-loaded');
+    document.dispatchEvent(cardsEvent);
 
     if (apiData?.cards) {
+      // Filter announcements by current site
+      apiData.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
       apiData.cards.forEach((card) => {
         const cardDate = new Date(card.cardDate);
         if (newestCards.length < 3) {
@@ -97,7 +108,12 @@ export default async function init(el) {
 
   const app = document.createElement('div');
   app.className = 'announcements-preview';
-
+  app.classList.add('con-block');
+  el.classList.forEach((elem) => {
+    if (!elem.includes('heading')) {
+      app.classList.add(elem);
+    }
+  });
   Array.from(el.children).forEach((row) => {
     const cols = Array.from(row.children);
     const rowTitle = cols[0].innerText.trim().toLowerCase().replace(/ /g, '-');
@@ -106,7 +122,7 @@ export default async function init(el) {
       blockData.title = cols[1].innerText;
     }
     if (rowTitle && rowTitle === 'page-url') {
-      blockData.link = cols[1].innerText;
+      blockData.link = cols[1].querySelector('a')?.href;
     }
     if (rowTitle && rowTitle === 'button-text') {
       blockData.buttonText = cols[1].innerText;
@@ -116,9 +132,16 @@ export default async function init(el) {
   await fetchData(blockData, newestCards);
 
   if (blockData.title) {
-    const componentTitle = document.createElement('div');
+    const componentTitle = document.createElement('h3');
     componentTitle.className = 'text announcement-preview-title';
-    const titleText = document.createElement('h3');
+    componentTitle.classList.add('heading-l');
+    el.classList.forEach((elem) => {
+      if (elem.includes('heading')) {
+        componentTitle.classList.remove('heading-l');
+        componentTitle.classList.add('heading-'.concat(elem.split('-')[0]));
+      }
+    });
+    const titleText = document.createElement('strong');
     titleText.textContent = blockData.title;
     componentTitle.appendChild(titleText);
     app.appendChild(componentTitle);

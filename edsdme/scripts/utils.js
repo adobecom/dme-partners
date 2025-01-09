@@ -29,11 +29,15 @@ export const [setLibs, getLibs] = (() => {
   return [
     (prodLibs, location) => {
       libs = (() => {
-        const { hostname, search } = location || window.location;
-        // TODO: check if better ways are possible for partners.stage.adobe.com
-        if (!(hostname.includes('.hlx.') || hostname.includes('local') || hostname === 'partners.stage.adobe.com')) return prodLibs;
-        const branch = new URLSearchParams(search).get('milolibs') || 'main';
-        if (branch === 'local') return 'http://localhost:6456/libs';
+        const { hostname, search, origin } = location || window.location;
+        if (origin.endsWith('adobe.com')) {
+          return origin.replace('partners', 'milo') + prodLibs;
+        }
+        const partnerBranch = hostname.startsWith('main') ? 'main' : 'stage';
+        const branch = new URLSearchParams(search).get('milolibs') || partnerBranch;
+        if (branch === 'local') {
+          return 'http://localhost:6456/libs';
+        }
         return branch.includes('--') ? `https://${branch}.hlx.live/libs` : `https://${branch}--milo--adobecom.hlx.live/libs`;
       })();
       return libs;
@@ -101,11 +105,11 @@ export function getCookieValue(key) {
 export function getPartnerDataCookieValue(programType, key) {
   try {
     const partnerDataCookie = getCookieValue('partner_data');
-    if (!partnerDataCookie) return;
+    if (!partnerDataCookie) return '';
     const partnerDataObj = JSON.parse(decodeURIComponent(partnerDataCookie.toLowerCase()));
     const portalData = partnerDataObj?.[programType];
     // eslint-disable-next-line consistent-return
-    return portalData?.[key];
+    return portalData?.[key] || '';
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error parsing partner data object:', error);
@@ -155,7 +159,7 @@ export function getMetadata(name) {
 export function redirectLoggedinPartner() {
   if (!isMember()) return;
   const target = getMetadataContent('adobe-target-after-login');
-  if (!target) return;
+  if (!target || target === 'NONE') return;
   document.body.style.display = 'none';
   window.location.assign(target);
 }
@@ -195,7 +199,7 @@ export function isRenew() {
   return { accountStatus, daysNum };
 }
 
-export async function getRenewBanner(getConfig, loadBlock) {
+export async function getRenewBanner(getConfig) {
   const renew = isRenew();
   if (!renew) return;
   const { accountStatus, daysNum } = renew;
@@ -219,16 +223,10 @@ export async function getRenewBanner(getConfig, loadBlock) {
     const componentData = data.replace('$daysNum', daysNum);
     const parser = new DOMParser();
     const doc = parser.parseFromString(componentData, 'text/html');
-    const aside = doc.querySelector('.aside');
-    aside.classList.add('renew-banner');
+    const block = doc.querySelector('.notification');
 
     const div = document.createElement('div');
-    div.style.position = 'sticky';
-    div.style.top = '64px';
-    div.style.zIndex = 1;
-
-    await loadBlock(aside);
-    div.appendChild(aside);
+    div.appendChild(block);
 
     const main = document.querySelector('main');
     if (main) main.insertBefore(div, main.firstChild);
@@ -241,8 +239,10 @@ export async function getRenewBanner(getConfig, loadBlock) {
 }
 
 export function updateIMSConfig() {
+  const isSignedIn = partnerIsSignedIn();
   const imsReady = setInterval(() => {
     if (!window.adobeIMS) return;
+    if (isSignedIn && !window.adobeIMS.isSignedInUser()) return;
     clearInterval(imsReady);
     let target;
     const partnerLogin = !window.adobeIMS.isSignedInUser();
@@ -255,7 +255,7 @@ export function updateIMSConfig() {
     const targetUrl = new URL(window.location.href);
     // eslint-disable-next-line chai-friendly/no-unused-expressions
     partnerLogin && targetUrl.searchParams.set(PARTNER_LOGIN_QUERY, true);
-    if (target) {
+    if (target && target !== 'NONE') {
       targetUrl.pathname = target;
     }
     window.adobeIMS.adobeIdData.redirect_uri = targetUrl.toString();
@@ -312,22 +312,6 @@ function getPartnerLevelParams(portal) {
   return partnerLevel ? `(${partnerTagBase}${partnerLevel}"+OR+${partnerTagBase}public")` : `(${partnerTagBase}public")`;
 }
 
-function getPartnerRegionParams(portal) {
-  const permissionRegion = getPartnerDataCookieValue(portal, 'permissionregion');
-  const regionTagBase = `"caas:adobe-partners/${portal}/region/`;
-
-  if (!permissionRegion) return `(${regionTagBase}worldwide")`;
-
-  const regionTags = [];
-
-  permissionRegion.split(',').forEach((region) => {
-    const regionValue = region.trim().replaceAll(' ', '-');
-    if (regionValue) regionTags.push(`${regionTagBase}${regionValue}"`);
-  });
-
-  return regionTags.length ? `(${regionTags.join('+OR+')})` : `(${regionTagBase}worldwide")`;
-}
-
 function extractTableCollectionTags(el) {
   let tableCollectionTags = [];
   Array.from(el.children).forEach((row) => {
@@ -344,6 +328,23 @@ function extractTableCollectionTags(el) {
   return tableCollectionTags;
 }
 
+function checkForQaContent(el) {
+  if (!el.children) return false;
+
+  // Iterating backward because we expect 'qa-content' to be in the last rows.
+  // eslint-disable-next-line no-plusplus
+  for (let i = el.children.length - 1; i >= 0; i--) {
+    const row = el.children[i];
+
+    const rowTitle = row.children[0]?.innerText?.trim().toLowerCase().replace(/ /g, '-');
+    if (rowTitle?.includes('qa-content')) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function getComplexQueryParams(el, collectionTag) {
   const portal = getCurrentProgramType();
   if (!portal) return;
@@ -353,11 +354,15 @@ function getComplexQueryParams(el, collectionTag) {
   const collectionTags = [collectionTag, portalCollectionTag, ...tableTags];
 
   const partnerLevelParams = getPartnerLevelParams(portal);
-  const partnerRegionParams = getPartnerRegionParams(portal);
 
   const collectionTagsStr = collectionTags.filter((e) => e.length).join('+AND+');
   let resulStr = `(${collectionTagsStr})`;
-  if (partnerRegionParams) resulStr += `+AND+${partnerRegionParams}`;
+
+  const qaContentTag = '"caas:adobe-partners/qa-content"';
+  if (!checkForQaContent(el)) {
+    resulStr += `+NOT+${qaContentTag}`;
+  }
+
   if (partnerLevelParams) resulStr += `+AND+${partnerLevelParams}`;
   // eslint-disable-next-line consistent-return
   return resulStr;
@@ -442,8 +447,9 @@ export function getNodesByXPath(query, context = document) {
 }
 
 export function enableGeoPopup() {
-  const { hostname } = window.location;
-  if (hostname.endsWith('.adobe.com') && !partnerIsSignedIn()) {
+  const { hostname, search } = window.location;
+  const enableWithParam = new URLSearchParams(search).get('georouting') === 'on';
+  if ((hostname.endsWith('.adobe.com') && !partnerIsSignedIn()) || enableWithParam) {
     return 'on';
   }
   return 'off';

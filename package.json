@@ -12,7 +12,8 @@
     "nala": "node nala/utils/nala.run.js",
     "lint": "npm run lint:js && npm run lint:css",
     "lint:js": "eslint .",
-    "lint:css": "stylelint 'edsdme/blocks/**/*.css' 'edsdme/styles/*.css'"
+    "lint:css": "stylelint 'edsdme/blocks/**/*.css' 'edsdme/styles/*.css'",
+    "lint:fix": "eslint --fix --ext .js,.jsx ."
   },
   "repository": {
     "type": "git",
@@ -53,5 +54,8 @@
   "dependencies": {
     "@playwright/test": "^1.42.1",
     "axios": "^1.7.4"
+  },
+  "overrides": {
+    "nwsapi": "2.2.16"
   }
 }

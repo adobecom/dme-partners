@@ -19,7 +19,8 @@ export default {
       tags: '@dme-region-selector @regression @anonymous',
       data: {
         changeRegionEng: 'Change region',
-        localeSwitchUrl: '/la/channelpartners/',
+        localeSwitchUrl: '/latam/channelpartners/',
+
         linkText: 'Latin America',
       },
     },

@@ -4,7 +4,7 @@ export default {
     {
       tcid: '1',
       name: '@desc-regression-announcements-page-search',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
       tags: '@dme-announcements @regression @anonymous @circleCi',
       data: {
         numberOfPublicCards: 7,
@@ -18,7 +18,7 @@ export default {
     {
       tcid: '2',
       name: '@desc-regression-announcements-page-load-more-sort',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
       tags: '@dme-announcements @regression @anonymous @circleCi',
       data: {
         numberOfPublicCards: 7,
@@ -32,7 +32,7 @@ export default {
     {
       tcid: '3',
       name: '@desc-regression-announcements-page-pagination',
-      path: '/channelpartners/drafts/automation/regression/announcements-paginated?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/announcements-paginated?georouting=off&martech=off',
       tags: '@dme-announcements @regression @anonymous @circleCi',
       data: {
         numberOfPublicCards: 7,
@@ -48,7 +48,7 @@ export default {
     {
       tcid: '4',
       name: '@desc-regression-announcements-page-filters',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
       tags: '@dme-announcements @regression @anonymous @circleCi',
       data: {
         numberOfPublicCards: 7,
@@ -74,7 +74,7 @@ export default {
     {
       tcid: '5',
       name: '@desc-regression-announcements-page-read-article',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
       tags: '@dme-announcements @regression @anonymous @circleCi',
       data: {
         searchCardTitle: 'Automation regression announcements card worldwide no1',
@@ -85,7 +85,7 @@ export default {
     {
       tcid: '6',
       name: '@desc-announcements-page-edge-cases',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
       tags: '@dme-announcements @regression @anonymous @circleCi',
       data: {
         numberOfPublicCards: 7,
@@ -106,244 +106,26 @@ export default {
     },
     {
       tcid: '7',
-      name: '@desc-regression-announcements-distributor-north-america',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous @circleCi',
+      name: '@desc-regression-logged-in-platinum-user',
+      path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
+      tags: '@dme-announcements @regression @anonymous',
       data: {
         partnerData: {
           partnerPortal: 'CPP',
-          partnerLevel: 'Distributor',
-          permissionRegion: 'North America',
+          partnerLevel: 'Platinum',
+          permissionRegion: 'Europe West',
         },
-        announcementCardTitle: 'CPP Distributor North America Announcement',
+        partnerLevelCardTitle: 'CPP Platinum Spain Announcement',
+        totalNumberOfCards: 10,
+        numberOfHigherPartnerLevelCards: 0,
         numberOfMatchingTitleCards: 1,
-        announcementDiffRegionCardTitle: 'CPP Distributor Japan Announcement',
-        zeroCards: 0,
+        numberOfPartnerLevelCards: 1,
       },
     },
     {
       tcid: '8',
-      name: '@desc-regression-announcements-distributor-japan',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
-      data: {
-        partnerData: {
-          partnerPortal: 'CPP',
-          partnerLevel: 'Distributor',
-          permissionRegion: 'Japan',
-        },
-        announcementCardTitle: 'CPP Distributor Japan Announcement',
-        numberOfMatchingTitleCards: 1,
-        announcementDiffRegionCardTitle: 'CPP Distributor India Announcement',
-        zeroCards: 0,
-      },
-    },
-    {
-      tcid: '9',
-      name: '@desc-regression-announcements-distributor-india',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
-      data: {
-        partnerData: {
-          partnerPortal: 'CPP',
-          partnerLevel: 'Distributor',
-          permissionRegion: 'Asia Pacific',
-        },
-        announcementCardTitle: 'CPP Distributor India Announcement',
-        numberOfMatchingTitleCards: 1,
-        announcementDiffRegionCardTitle: 'CPP Platinum Spain Announcement',
-        zeroCards: 0,
-      },
-    },
-    {
-      tcid: '10',
-      name: '@desc-regression-announcements-platinum-spain',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
-      data: {
-        partnerData: {
-          partnerPortal: 'CPP',
-          partnerLevel: 'Platinum',
-          permissionRegion: 'Europe West',
-        },
-        announcementCardTitle: 'CPP Platinum Spain Announcement',
-        numberOfMatchingTitleCards: 1,
-        announcementDiffRegionCardTitle: 'CPP Platinum Latin America-North America based Announcement',
-        zeroCards: 0,
-      },
-    },
-    {
-      tcid: '11',
-      name: '@desc-regression-announcements-platinum-latin-america-na-based',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
-      data: {
-        partnerData: {
-          partnerPortal: 'CPP',
-          partnerLevel: 'Platinum',
-          permissionRegion: 'Latin America NA based',
-        },
-        announcementCardTitle: 'CPP Platinum Latin America-North America based Announcement',
-        numberOfMatchingTitleCards: 1,
-        announcementDiffRegionCardTitle: 'CPP Platinum EMEA Announcement',
-        zeroCards: 0,
-      },
-    },
-    {
-      tcid: '12',
-      name: '@desc-regression-announcements-platinum-emea',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
-      data: {
-        partnerData: {
-          partnerPortal: 'CPP',
-          partnerLevel: 'Platinum',
-          permissionRegion: 'EMEA',
-        },
-        announcementCardTitle: 'CPP Platinum EMEA Announcement',
-        numberOfMatchingTitleCards: 1,
-        announcementDiffRegionCardTitle: 'CPP Gold Latin America Announcement',
-        zeroCards: 0,
-      },
-    },
-    {
-      tcid: '13',
-      name: '@desc-regression-announcements-gold-latin-america',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
-      data: {
-        partnerData: {
-          partnerPortal: 'CPP',
-          partnerLevel: 'Gold',
-          permissionRegion: 'Latin America',
-        },
-        announcementCardTitle: 'CPP Gold Latin America Announcement',
-        numberOfMatchingTitleCards: 1,
-        announcementDiffRegionCardTitle: 'CPP Gold UK, Europe West Announcement',
-        zeroCards: 0,
-      },
-    },
-    {
-      tcid: '14',
-      name: '@desc-regression-announcements-gold-uk-europe-west',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
-      data: {
-        partnerData: {
-          partnerPortal: 'CPP',
-          partnerLevel: 'Gold',
-          permissionRegion: 'United Kingdom%2CEurope West',
-        },
-        announcementCardTitle: 'CPP Gold UK, Europe West Announcement',
-        numberOfMatchingTitleCards: 1,
-        announcementDiffRegionCardTitle: 'CPP Certified Europe East Announcement',
-        zeroCards: 0,
-      },
-    },
-    {
-      tcid: '15',
-      name: '@desc-regression-announcements-certified-europe-east',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
-      data: {
-        partnerData: {
-          partnerPortal: 'CPP',
-          partnerLevel: 'Certified',
-          permissionRegion: 'Europe East',
-        },
-        announcementCardTitle: 'CPP Certified Europe East Announcement',
-        numberOfMatchingTitleCards: 1,
-        announcementDiffRegionCardTitle: 'CPP Certified Pacific Announcement',
-        zeroCards: 0,
-      },
-    },
-    {
-      tcid: '16',
-      name: '@desc-regression-announcements-certified-pacific',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
-      data: {
-        partnerData: {
-          partnerPortal: 'CPP',
-          partnerLevel: 'Certified',
-          permissionRegion: 'Pacific',
-        },
-        announcementCardTitle: 'CPP Certified Pacific Announcement',
-        numberOfMatchingTitleCards: 1,
-        announcementDiffRegionCardTitle: 'CPP Registered China Announcement',
-        zeroCards: 0,
-      },
-    },
-    {
-      tcid: '17',
-      name: '@desc-regression-announcements-registered-china',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
-      data: {
-        partnerData: {
-          partnerPortal: 'CPP',
-          partnerLevel: 'Registered',
-          permissionRegion: 'China',
-        },
-        announcementCardTitle: 'CPP Registered China Announcement',
-        numberOfMatchingTitleCards: 1,
-        announcementDiffRegionCardTitle: 'CPP Registered Middle East & Africa Announcement',
-        zeroCards: 0,
-      },
-    },
-    {
-      tcid: '18',
-      name: '@desc-regression-announcements-registered-middle-east-and-africa',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
-      data: {
-        partnerData: {
-          partnerPortal: 'CPP',
-          partnerLevel: 'Registered',
-          permissionRegion: 'Middle East and Africa',
-        },
-        announcementCardTitle: 'CPP Registered Middle East & Africa Announcement',
-        numberOfMatchingTitleCards: 1,
-        announcementDiffRegionCardTitle: 'CPP Distributor North America Announcement',
-        zeroCards: 0,
-      },
-    },
-    {
-      tcid: '19',
-      name: '@desc-regression-worldwide-cards-not-visible-for-logged-in-users',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
-      data: {
-        partnerData: {
-          partnerPortal: 'CPP',
-          partnerLevel: 'Distributor',
-          permissionRegion: 'North America',
-        },
-        announcementCardTitle: 'Worldwide',
-        numberOfMatchingTitleCardsNonLoggedIn: 6,
-        numberOfMatchingTitleCardsLoggedIn: 0,
-      },
-    },
-    {
-      tcid: '20',
-      name: '@desc-regression-logged-in-platinum-user',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
-      tags: '@dme-announcements @regression @anonymous',
-      data: {
-        partnerData: {
-          partnerPortal: 'CPP',
-          partnerLevel: 'Platinum',
-          permissionRegion: 'Europe West',
-        },
-        platinumCardTitle: 'CPP Platinum Spain Announcement',
-        totalNumberOfCards: 4,
-        numberOfMatchingTitleCards: 1,
-      },
-    },
-    {
-      tcid: '21',
       name: '@desc-regression-logged-in-gold-user',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
       tags: '@dme-announcements @regression @anonymous',
       data: {
         partnerData: {
@@ -353,15 +135,15 @@ export default {
         },
         higherPartnerLevelCardTitle: 'CPP Platinum Latin America Announcement',
         partnerLevelCardTitle: 'CPP Gold Latin America Announcement',
-        totalNumberOfCards: 3,
+        totalNumberOfCards: 11,
         numberOfHigherPartnerLevelCards: 0,
         numberOfPartnerLevelCards: 1,
       },
     },
     {
-      tcid: '22',
+      tcid: '9',
       name: '@desc-regression-logged-in-certified-user',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
       tags: '@dme-announcements @regression @anonymous',
       data: {
         partnerData: {
@@ -371,15 +153,15 @@ export default {
         },
         higherPartnerLevelCardTitle: 'CPP Gold Europe East Announcement',
         partnerLevelCardTitle: 'CPP Certified Europe East Announcement',
-        totalNumberOfCards: 2,
+        totalNumberOfCards: 12,
         numberOfHigherPartnerLevelCards: 0,
         numberOfPartnerLevelCards: 1,
       },
     },
     {
-      tcid: '23',
+      tcid: '10',
       name: '@desc-regression-logged-in-registered-user',
-      path: '/channelpartners/drafts/automation/regression/announcements?akamaiLocale=na',
+      path: '/channelpartners/drafts/automation/regression/announcements?georouting=off&martech=off',
       tags: '@dme-announcements @regression @anonymous',
       data: {
         partnerData: {
@@ -389,7 +171,7 @@ export default {
         },
         higherPartnerLevelCardTitle: 'CPP Certified China Announcement',
         partnerLevelCardTitle: 'CPP Registered China Announcement',
-        totalNumberOfCards: 1,
+        totalNumberOfCards: 12,
         numberOfHigherPartnerLevelCards: 0,
         numberOfPartnerLevelCards: 1,
       },

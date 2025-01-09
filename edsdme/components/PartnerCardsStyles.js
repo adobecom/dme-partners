@@ -5,6 +5,7 @@ const { css } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
 const borderColor = css`#eaeaea`;
 const blueColor = css`#1473e6`;
+const grayColor = css`#F5F5F5`;
 
 export const partnerCardsStyles = css`
   h3, p, span, button, li, input {
@@ -23,7 +24,7 @@ export const partnerCardsStyles = css`
     width: 100%;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 204px auto;
+    grid-template-columns: 269px auto;
     gap: 32px;
   }
   
@@ -39,8 +40,8 @@ export const partnerCardsStyles = css`
   .partner-cards-sidebar {
     display: flex;
     flex-direction: column;
-    width: 204px;
-    max-width: 204px;
+    width: 269px;
+    max-width: 269px;
     margin-right: 32px;
     padding: 8px 16px 16px;
     border-radius: 4px;
@@ -96,6 +97,26 @@ export const partnerCardsStyles = css`
     flex-wrap: wrap;
     width: 100%;
     order: 3;
+  }
+  .partner-cards-sidebar .sidebar-info-box {
+    order: 4;
+    background-color: ${grayColor};
+    font-size: 14px;
+    font-family: inherit;
+    margin-top: 24px;
+    padding: 16px;
+    line-height: 21px;
+  }
+  
+  .partner-cards-sidebar .sidebar-info-box br {
+    content: "";
+    display: block;
+  }
+  .partner-cards-sidebar .sidebar-info-box .title {
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 24px;
   }
   
   .partner-cards-sidebar .sidebar-chosen-filter-btn {
@@ -156,7 +177,7 @@ export const partnerCardsStyles = css`
     align-items: flex-start;
     color: #464646;
     transition: color .3s ease-in-out;
-    padding: 12px 5px 14px;
+    padding: 12px 5px 14px 0;
   }
   
   .partner-cards-sidebar .filter .filter-header:hover {
@@ -239,7 +260,7 @@ export const partnerCardsStyles = css`
   }
   
   .partner-cards-sidebar .filter-list li sp-checkbox {
-    padding: 0 6px;
+    padding: 0 3px;
     font-size: .875rem;
     line-height: 1rem;
     width: 100%;
@@ -436,7 +457,7 @@ export const partnerCardsStyles = css`
     display: block;
     right: 0;
     top: 30px;
-    z-index: 1;
+    z-index: 2;
     background-color: #fff;
     border-radius: 5px;
     border: 1px solid #eaeaea;
@@ -541,6 +562,10 @@ export const partnerCardsStyles = css`
   .pagination-wrapper .pagination-total-results {
     font-weight: 700;
     text-transform: lowercase;
+  }
+
+  .pagination-wrapper .pagination-total-results span {
+    font-weight: 500;
   }
   
   @media screen and (max-width: 1200px) {
@@ -836,6 +861,39 @@ export const partnerCardsStyles = css`
   .all-filters-wrapper-mobile .all-filters-footer-clear-btn-mobile:focus {
     border-color: ${blueColor};
   }
+  
+  .filter-info {
+    display: flex;
+    margin: 0 15px 5px 0;
+  }
+  
+  .info-icon {
+    height: 18px;
+    width: 18px;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: cover;
+    margin: 5px 10px 0 3px;
+    flex-shrink: 0;
+  }
+  .filter-info-text {
+    font-family: inherit;
+    font-size: var(--type-body-xs-size);
+    line-height: 17px;
+  }
+  .filter-wrapper-mobile .filter-info {
+    display: none;
+  }
+  .filter-wrapper-mobile.expanded .filter-info {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    padding: 10px 20px;
+  }
+  .filter-wrapper-mobile.expanded .info-icon {
+    margin-top: 0;
+    margin-left: 0;
+  }
 `;
 
 export const partnerCardsLoadMoreStyles = css`
@@ -864,12 +922,13 @@ export const partnerCardsLoadMoreStyles = css`
     cursor: pointer;
     transition: border-color .3s ease-in-out,background-color .3s ease-in-out;
   }
-  
-  .pagination-wrapper-load-more .load-more-btn:hover {
-    text-decoration: none;
-    border-color: #222222;
-    background-color: #222222;
-    color: #ffffff;
+  @media (hover: hover) {
+    .pagination-wrapper-load-more .load-more-btn:hover {
+      text-decoration: none;
+      border-color: #222222;
+      background-color: #222222;
+      color: #ffffff;
+    }
   }
 `;
 

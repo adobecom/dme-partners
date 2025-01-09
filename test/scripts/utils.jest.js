@@ -52,7 +52,7 @@ describe('Test utils.js', () => {
   it('Milo libs', () => {
     window.location.hostname = 'partners.stage.adobe.com';
     const libs = setLibs('/libs');
-    expect(libs).toEqual('https://main--milo--adobecom.hlx.live/libs');
+    expect(libs).toEqual('https://milo.stage.adobe.com/libs');
   });
   describe('Test update footer and gnav', () => {
     beforeEach(() => {
@@ -332,13 +332,12 @@ describe('Test utils.js', () => {
     const getConfig = () => ({ locale: '' });
     global.fetch = jest.fn(() => Promise.resolve({
       ok: true,
-      text: () => Promise.resolve('<div class="aside">Test</div>'),
+      text: () => Promise.resolve('<div class="notification">Test</div>'),
     }));
-
     const main = document.createElement('main');
     document.body.appendChild(main);
-    await getRenewBanner(getConfig, jest.fn());
-    const banner = document.querySelector('.renew-banner');
+    await getRenewBanner(getConfig);
+    const banner = document.querySelector('.notification');
     expect(banner).toBeTruthy();
   });
   it('Don\'t show renew banner', async () => {
@@ -356,13 +355,13 @@ describe('Test utils.js', () => {
     const getConfig = () => ({ locale: '' });
     global.fetch = jest.fn(() => Promise.resolve({
       ok: true,
-      text: () => Promise.resolve('<div class="aside">Test</div>'),
+      text: () => Promise.resolve('<div class="notification">Test</div>'),
     }));
 
     const main = document.createElement('main');
     document.body.appendChild(main);
-    await getRenewBanner(getConfig, jest.fn());
-    const banner = document.querySelector('.renew-banner');
+    await getRenewBanner(getConfig);
+    const banner = document.querySelector('.notification');
     expect(banner).toBeFalsy();
   });
   it('Renew banner fetch error', async () => {
@@ -381,7 +380,23 @@ describe('Test utils.js', () => {
     global.fetch = jest.fn(() => Promise.resolve({ ok: false }));
     const main = document.createElement('main');
     document.body.appendChild(main);
-    expect(await getRenewBanner(getConfig, jest.fn())).toEqual(null);
+    expect(await getRenewBanner(getConfig)).toEqual(null);
+  });
+  it('Update ims config if user is signed in', () => {
+    jest.useFakeTimers();
+    window.adobeIMS = {
+      isSignedInUser: () => true,
+      adobeIdData: {},
+    };
+    // document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+    const metaTag = document.createElement('meta');
+    metaTag.name = 'adobe-target-after-logout';
+    metaTag.content = '/channelpartners/home';
+    document.head.appendChild(metaTag);
+    updateIMSConfig();
+    jest.advanceTimersByTime(1000);
+    const redirectUrl = new URL(window.adobeIMS.adobeIdData.redirect_uri);
+    expect(redirectUrl.pathname).toEqual(metaTag.content);
   });
   it('Update ims config if user is not signed in', () => {
     jest.useFakeTimers();
@@ -389,6 +404,7 @@ describe('Test utils.js', () => {
       isSignedInUser: () => false,
       adobeIdData: {},
     };
+    document.cookie = 'partner_data=';
     const metaTag = document.createElement('meta');
     metaTag.name = 'adobe-target-after-login';
     metaTag.content = '/channelpartners/home';
@@ -398,21 +414,6 @@ describe('Test utils.js', () => {
     const redirectUrl = new URL(window.adobeIMS.adobeIdData.redirect_uri);
     expect(redirectUrl.pathname).toEqual(metaTag.content);
     expect(redirectUrl.searchParams.has('partnerLogin')).toEqual(true);
-  });
-  it('Update ims config if user is signed in', () => {
-    jest.useFakeTimers();
-    window.adobeIMS = {
-      isSignedInUser: () => true,
-      adobeIdData: {},
-    };
-    const metaTag = document.createElement('meta');
-    metaTag.name = 'adobe-target-after-logout';
-    metaTag.content = '/channelpartners/home';
-    document.head.appendChild(metaTag);
-    updateIMSConfig();
-    jest.advanceTimersByTime(1000);
-    const redirectUrl = new URL(window.adobeIMS.adobeIdData.redirect_uri);
-    expect(redirectUrl.pathname).toEqual(metaTag.content);
   });
   it('Get locale', () => {
     const locales = {
@@ -445,7 +446,7 @@ describe('Test utils.js', () => {
       ietf: locale.ietf,
     };
     const caasUrl = getCaasUrl(block);
-    expect(caasUrl).toEqual('https://www.adobe.com/chimera-api/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true&complexQuery=%28%22caas%3Aadobe-partners%2Fcollections%2Fannouncements%22%2BAND%2B%22caas%3Aadobe-partners%2Fcpp%22%2BAND%2B%22caas%3Aadobe-partners%2Fqa-content%22%29%2BAND%2B%28%22caas%3Aadobe-partners%2Fcpp%2Fregion%2Feurope-west%22%29%2BAND%2B%28%22caas%3Aadobe-partners%2Fcpp%2Fpartner-level%2Fplatinum%22%2BOR%2B%22caas%3Aadobe-partners%2Fcpp%2Fpartner-level%2Fpublic%22%29&language=en&country=US');
+    expect(caasUrl).toEqual('https://www.adobe.com/chimera-api/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true&complexQuery=%28%22caas%3Aadobe-partners%2Fcollections%2Fannouncements%22%2BAND%2B%22caas%3Aadobe-partners%2Fcpp%22%2BAND%2B%22caas%3Aadobe-partners%2Fqa-content%22%29%2BNOT%2B%22caas%3Aadobe-partners%2Fqa-content%22%2BAND%2B%28%22caas%3Aadobe-partners%2Fcpp%2Fpartner-level%2Fplatinum%22%2BOR%2B%22caas%3Aadobe-partners%2Fcpp%2Fpartner-level%2Fpublic%22%29&language=en&country=US');
   });
   it('Preload resources', async () => {
     const locales = {

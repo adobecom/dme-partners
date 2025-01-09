@@ -8,8 +8,9 @@ import {
   updateNavigation,
   updateFooter,
   enableGeoPopup,
-  PARTNER_LOGIN_QUERY,
+  PARTNER_LOGIN_QUERY, partnerIsSignedIn,
 } from './utils.js';
+import { rewriteLinks } from './rewriteLinks.js';
 
 // Add project-wide style path here.
 const STYLES = '/edsdme/styles/styles.css';
@@ -35,7 +36,7 @@ const CONFIG = {
   locales: {
     '': { ietf: 'en-US', tk: 'hah7vzn.css' },
     na: { ietf: 'en', tk: 'hah7vzn.css' },
-    emea: { ietf: 'en', tk: 'hah7vzn.css' },
+    emea: { ietf: 'en-GB', tk: 'hah7vzn.css' },
     apac: { ietf: 'en', tk: 'hah7vzn.css' },
     de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
     kr: { ietf: 'ko-KR', tk: 'zfo3ouc' },
@@ -47,7 +48,8 @@ const CONFIG = {
     uk: { ietf: 'en-GB', tk: 'pps7abe.css' },
     br: { ietf: 'pt-BR', tk: 'inq1xob.css' },
     pt: { ietf: 'pt-PT', tk: 'inq1xob.css' },
-    la: { ietf: 'es', tk: 'oln4yqj.css' },
+    latam: { ietf: 'en', tk: 'oln4yqj.css' },
+    jp: { ietf: 'ja-JP', tk: 'dvg6awq' },
   },
   local: { edgeConfigId: '72b074a6-76d2-43de-a210-124acc734f1c' },
   stage: { edgeConfigId: '72b074a6-76d2-43de-a210-124acc734f1c' },
@@ -106,9 +108,13 @@ function setUpPage() {
   redirectLoggedinPartner();
   updateIMSConfig();
   await preloadResources(CONFIG.locales, miloLibs);
-  const { loadArea, setConfig, getConfig, loadBlock } = await import(`${miloLibs}/utils/utils.js`);
+  const { loadArea, setConfig, getConfig } = await import(`${miloLibs}/utils/utils.js`);
 
   setConfig({ ...CONFIG, miloLibs });
-  await getRenewBanner(getConfig, loadBlock);
+  await getRenewBanner(getConfig);
   await loadArea();
+  partnerIsSignedIn();
+  if (partnerIsSignedIn()) {
+    rewriteLinks();
+  }
 }());
