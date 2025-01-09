@@ -108,7 +108,6 @@ test.describe('Smoke Tests', () => {
     });
 
     await test.step('Find a row in assets list and click on download', async () => {
-      // await smokeTest.searchFirstAsset.click();
       await smokeTest.searchPageDownloadButton();
     });
   });
@@ -126,7 +125,7 @@ test.describe('Smoke Tests', () => {
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
       await signInSmokeTest.signIn(page, `${features[4].data.partnerLevel}`);
-      await page.waitForTimeout(10000);
+      await page.waitForLoadState('networkidle');
 
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
@@ -147,7 +146,7 @@ test.describe('Smoke Tests', () => {
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
       await signInSmokeTest.signIn(page, `${features[5].data.partnerLevel}`);
-      await page.waitForTimeout(10000);
+      await page.waitForLoadState('networkidle');
 
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
@@ -168,7 +167,7 @@ test.describe('Smoke Tests', () => {
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
       await signInSmokeTest.signIn(page, `${features[6].data.partnerLevel}`);
-      await page.waitForTimeout(10000);
+      await page.waitForLoadState('networkidle');
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
         features[6].data.expectedPublicPageURL,
@@ -188,7 +187,7 @@ test.describe('Smoke Tests', () => {
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
       await signInSmokeTest.signIn(page, `${features[7].data.partnerLevel}`);
-      await page.waitForTimeout(10000);
+      await page.waitForLoadState('networkidle');
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
         features[7].data.expectedPublicPageURL,

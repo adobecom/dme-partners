@@ -50,20 +50,7 @@ export default class SmokeTest {
   }
 
   async searchPageDownloadButton() {
-    const enableAll = this.page.locator('#onetrust-accept-btn-handler');
-    await enableAll.waitFor({ state: 'visible' });
-    await enableAll.click();
-    const shadowHost = await this.page
-      .locator('search-cards.search-cards-wrapper[data-idx="2"]')
-      .elementHandle();
-    const shadowRoot = await shadowHost.evaluateHandle(
-      (node) => node.shadowRoot,
-    );
-
-    const downloadButton = await shadowRoot.$(
-      'sp-action-button[href="https://partners.stage.adobe.com/channelpartnerassets/assets/public/public_1/scanning_documents_into_pdf_files--ar.pdf?download"]',
-    );
-
+    const downloadButton = this.page.locator('.button.anchor.hidden').first();
     await downloadButton.click();
   }
 
