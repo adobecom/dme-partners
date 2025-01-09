@@ -50,14 +50,14 @@ describe('Test rewrite links', () => {
     expect(links[1].href).toBe('https://partners.stage.adobe.com/');
   });
 
-  test('should  not update partners prod domain and cbc prod domain when on  stage', () => {
+  test('should  not update partners prod domain and cbc prod domain when on  prod', () => {
     getConfig.mockReturnValue({ env: { name: 'prod' } });
     rewriteLinks();
     const links = document.querySelectorAll('a');
     expect(links[1].href).toBe('https://partners.adobe.com/');
     expect(links[3].href).toBe('https://cbconnection.adobe.com/bin/fusion/modalImsLogin?resource=%2Fen%2Fnews%2Fenablement-news-partner-lock');
   });
-  test('should update partners prod domain and cbc prod domain but not login path when not logged in', () => {
+  test('should update partners prod domain and cbc prod domain but not login path when not logged in when on stage', () => {
     partnerIsSignedIn.mockReturnValue(null);
 
     rewriteLinks();
