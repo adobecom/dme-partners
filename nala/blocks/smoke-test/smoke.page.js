@@ -1,18 +1,16 @@
 export default class SmokeTest {
   constructor(page) {
     this.page = page;
-    this.joinNowButton = page.locator(
-      '#feds-nav-wrapper .feds-cta--primary:has-text("Join Now")',
-    );
+    this.joinNowButton = page.locator('text="Join Now"');
     this.signInButton = page.locator('.feds-signIn');
     this.GNav = page.locator('.feds-topnav');
     this.profileIcon = page.locator('.feds-profile-button');
-    this.priceList = page.locator('[daa-ll="Price lists-1"]');
+    this.priceList = page.locator('a[href="https://partners.stage.adobe.com/na/channelpartners/home/pricelists/"]');
     this.tableSelector = '.table-container';
     this.searchGnav = page.locator('.feds-search-trigger');
     this.searchGnavField = page.locator('.feds-search-input');
     this.searchFieldPage = page.locator('#search');
-    this.announcemnts = page.locator('[daa-ll="Announcements-6"]');
+    this.announcemnts = page.locator('text="Announcements"');
   }
 
   async verifyButtonExist() {
