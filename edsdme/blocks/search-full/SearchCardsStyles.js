@@ -30,6 +30,10 @@ export const searchCardsStyles = css`
     border: 1px solid #BCBCBC;
     border-radius: 12px;
   }
+
+  .partner-cards {
+    grid-template-columns: 269px auto;
+  }
   
   .search-box-wrapper .partner-cards-title {
     margin-bottom: 20px;
@@ -37,6 +41,8 @@ export const searchCardsStyles = css`
   
   .partner-cards-sidebar {
     padding-left: 0;
+    width: 269px;
+    max-width: 269px;
   }
   
   .partner-cards-sidebar .sidebar-header {

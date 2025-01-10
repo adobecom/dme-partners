@@ -24,7 +24,7 @@ export const partnerCardsStyles = css`
     width: 100%;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 269px auto;
+    grid-template-columns: 204px auto;
     gap: 32px;
   }
   
@@ -40,8 +40,8 @@ export const partnerCardsStyles = css`
   .partner-cards-sidebar {
     display: flex;
     flex-direction: column;
-    width: 269px;
-    max-width: 269px;
+    width: 204px;
+    max-width: 204px;
     margin-right: 32px;
     padding: 8px 16px 16px;
     border-radius: 4px;
