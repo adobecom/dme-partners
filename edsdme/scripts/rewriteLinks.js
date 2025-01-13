@@ -10,6 +10,10 @@ const domainMap = {
   'partners.adobe.com': 'partners.stage.adobe.com',
 };
 
+/**
+ * Domain configs where the key is the production domain,
+ * and the value is config object for it.
+ */
 const domainConfigs = {
   'cbconnection.adobe.com': {
     localeMap: {
@@ -62,6 +66,11 @@ const domainConfigs = {
   },
 };
 
+/**
+ * Modifies the given URL object by updating its search params
+ * (aimed to handle cbcconnection links and attach login path to them)
+ * @param {URL} url - The URL object to be modified.
+ */
 // eslint-disable-next-line consistent-return
 function setLoginPathIfSignedIn(url) {
   const loginPath = domainConfigs[url.hostname]?.loginPath;
@@ -75,6 +84,14 @@ function setLoginPathIfSignedIn(url) {
   }
 }
 
+/**
+ * Modifies the given URL object by updating its path with correct locale for url domain,
+ * based on current page locale and locale maps that are defined for specific domains
+ *
+ * for cbcconnection it is expected that url already includes /en in path, so it will be updated to correct locale
+ * for other domains it is not expected to have locale in path, so correct locale will be appended to  url.pathname
+ * @param {URL} url - The URL object to be modified.
+ */
 function setLocale(url) {
   const localesToSkip = ['na', 'latam', 'apac'];
   const currentPageLocale = window.location.pathname.split('/')?.[1];
@@ -94,6 +111,11 @@ function setLocale(url) {
   url.pathname = `/${pathParts.join('/')}`;
 }
 
+/**
+ * Takes string that represent url href, updates locale, login path and domain
+ * @param href
+ * @returns {*|string} modified href
+ */
 function getUpdatedHref(href) {
   let url;
   try {
@@ -107,6 +129,11 @@ function getUpdatedHref(href) {
   return rewriteHrefDomainOnStage(url.href, domainMap);
 }
 
+/**
+ * Iterates throw all links on the page and update their hrefs if conditions are fulfilled
+ * (conditions: appropriate domain, appropriate current page locale, environment and is user logged in)
+ *
+ */
 export function rewriteLinks() {
   const links = document.querySelectorAll('a[href]');
   links.forEach((link) => {
