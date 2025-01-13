@@ -11,6 +11,11 @@
   color: var(--link-color);
 }
 
+/* MWPW-165157 */
+.global-navigation .feds-cta-wrapper a:hover {
+  color: var(--feds-color-adobeBrand);
+}
+
 .global-navigation button {
   background: none;
   cursor: pointer;
