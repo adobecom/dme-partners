@@ -10,8 +10,6 @@ const domainMap = {
   'partners.adobe.com': 'partners.stage.adobe.com',
 };
 
-const localesToSkip = ['na', 'latam', 'apac'];
-
 const domainConfigs = {
   'cbconnection.adobe.com': {
     localeMap: {
@@ -78,7 +76,8 @@ function setLoginPathIfSignedIn(url) {
 }
 
 function setLocale(url) {
-  const currentPageLocale =  window.location.pathname.split('/')?.[1];
+  const localesToSkip = ['na', 'latam', 'apac'];
+  const currentPageLocale = window.location.pathname.split('/')?.[1];
   if (localesToSkip.indexOf(currentPageLocale) !== -1) return;
   const domainConfig = domainConfigs[url.hostname];
   if (!domainConfig) return;
@@ -104,7 +103,7 @@ function getUpdatedHref(href) {
   }
   setLocale(url);
   setLoginPathIfSignedIn(url);
-  // always as last step since we need original domains for calculations
+  // always as last step since we need original domains for mappings
   return rewriteHrefDomainOnStage(url.href, domainMap);
 }
 

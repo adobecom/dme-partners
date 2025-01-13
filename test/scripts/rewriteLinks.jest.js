@@ -180,8 +180,8 @@ describe('Test rewrite links', () => {
     const links = document.querySelectorAll('a');
     expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/fr/home/search/');
   });
-  test('should  update adobe,helpx and business.adobe link locale when current page locale is emea, and for cbc ' +
-    'it shouldnt be transformed ', () => {
+  test('should  update adobe,helpx and business.adobe link locale when current page locale is emea, and for cbc '
+    + 'it shouldnt be transformed ', () => {
     document.body.innerHTML = `
   <a href="https://www.business.adobe.com">cbc prod Link</a>
   <a href="https://www.helpx.adobe.com">cbc prod Link</a>
