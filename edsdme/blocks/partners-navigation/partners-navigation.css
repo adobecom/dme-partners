@@ -5,15 +5,14 @@
   list-style-type: none;
 }
 
-/* MWPW-157753 */
 .global-navigation a:hover {
-  text-decoration: underline;
-  color: var(--link-color);
+  text-decoration: none
 }
 
-/* MWPW-165157 */
-.global-navigation .feds-cta-wrapper a:hover {
-  color: var(--feds-color-adobeBrand);
+/* MWPW-157753 */
+.global-navigation .feds-profile-details a:hover {
+  text-decoration: underline;
+  color: var(--link-color);
 }
 
 .global-navigation button {
