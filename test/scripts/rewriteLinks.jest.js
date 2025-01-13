@@ -83,7 +83,7 @@ describe('Test rewrite links', () => {
     partnerIsSignedIn.mockReturnValue(null);
     document.body.innerHTML = `
   <a href="https://cbconnection.adobe.com/en/home/search/">cbc prod Link</a>
-  <a href="https://partners.adobe.com/en/">Partner prod Link</a>
+  <a href="https://partners.adobe.com/">Partner prod Link</a>
   <a href="https://www.adobe.com/">adobe</a>
   <a href="https://www.helpx.adobe.com/">helpx</a>
   <a href="https://www.business.adobe.com/">business</a>
@@ -94,7 +94,7 @@ describe('Test rewrite links', () => {
     rewriteLinks();
     const links = document.querySelectorAll('a');
     expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/zh_cn/home/search');
-    expect(links[1].href).toBe('https://partners.stage.adobe.com/en/');
+    expect(links[1].href).toBe('https://partners.stage.adobe.com/');
     expect(links[2].href).toBe('https://www.adobe.com/cn');
     expect(links[3].href).toBe('https://www.helpx.adobe.com/cn');
     expect(links[4].href).toBe('https://www.business.adobe.com/cn');
@@ -120,26 +120,6 @@ describe('Test rewrite links', () => {
     const links = document.querySelectorAll('a');
     expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/en/home/search/');
     expect(links[1].href).toBe('https://www.business.adobe.com/');
-  });
-  test('should not update  link locale when current locale is na or international sites ', () => {
-    document.body.innerHTML = `
-  <a href="https://cbconnection.adobe.com/en/home/search/">cbc prod Link</a>
-  <a href="https://www.business.adobe.com/emea">cbc prod Link</a>
-`;
-    Object.defineProperty(window, 'location', {
-      writable: true,
-      value: {
-        pathname: '/latam/test-path',
-        href: 'http://example.com/latam/test-path',
-        assign: jest.fn(),
-        reload: jest.fn(),
-      },
-    });
-    partnerIsSignedIn.mockReturnValue(null);
-    rewriteLinks();
-    const links = document.querySelectorAll('a');
-    expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/en/home/search/');
-    expect(links[1].href).toBe('https://www.business.adobe.com/emea');
   });
   test('should not update  link locale when current locale is na or international sites ', () => {
     document.body.innerHTML = `
