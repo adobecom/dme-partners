@@ -5,7 +5,7 @@ export default class SmokeTest {
     this.signInButton = page.locator('.feds-signIn');
     this.GNav = page.locator('.feds-topnav');
     this.profileIcon = page.locator('.feds-profile-button');
-    this.priceList = page.locator('a[href="https://partners.stage.adobe.com/na/channelpartners/home/pricelists/"]');
+    this.priceList = page.locator('a.feds-navLink[href*="pricelists"]');
     this.tableSelector = '.table-container';
     this.searchGnav = page.locator('.feds-search-trigger');
     this.searchGnavField = page.locator('.feds-search-input');
