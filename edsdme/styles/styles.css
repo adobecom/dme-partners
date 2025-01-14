@@ -9,3 +9,10 @@
 .personalization-hide {
   display: none;
 }
+
+/* MWPW-162386 */
+@-moz-document url-prefix() {
+  strong {
+    font-weight: unset;
+  }
+}
