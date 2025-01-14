@@ -13,14 +13,14 @@ const domainMappings = {
 /**
  * Rewrite a link href domain based on production to stage domain mappings.
  * @param {string} href - The link href to rewrite.
+ * @param domainMap map of domains to update
  * @returns {string} - The rewritten link href, or the original if the environment is prod,
  * there was a problem processing, or there is no domain mapping defined for it.
  */
-export function rewriteLinkHref(href) {
+export function rewriteHrefDomainOnStage(href, domainMap) {
   const { env } = getConfig();
 
   if (env.name === 'prod') return href;
-
   let url;
 
   try {
@@ -29,8 +29,8 @@ export function rewriteLinkHref(href) {
     return href;
   }
 
-  if (domainMappings[url.hostname]) {
-    url.hostname = domainMappings[url.hostname];
+  if (domainMap[url.hostname]) {
+    url.hostname = domainMap[url.hostname];
     return url.toString();
   }
 
@@ -45,7 +45,7 @@ export function rewriteLinkHref(href) {
 export function applyGnavLinkRewriting(gnav) {
   const links = gnav.querySelectorAll('a[href]');
   links.forEach((link) => {
-    link.href = rewriteLinkHref(link.href);
+    link.href = rewriteHrefDomainOnStage(link.href, domainMappings);
   });
 
   return gnav;

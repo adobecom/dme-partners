@@ -2,10 +2,15 @@
  * @jest-environment jsdom
  */
 
-import { applyGnavLinkRewriting, rewriteLinkHref } from '../../edsdme/scripts/links.js';
+import { applyGnavLinkRewriting, rewriteHrefDomainOnStage } from '../../edsdme/scripts/links.js';
 import { getConfig } from '../../edsdme/blocks/utils/utils.js';
 
 jest.mock('../../edsdme/blocks/utils/utils.js', () => ({ getConfig: jest.fn() }));
+
+const domainMappings = {
+  'adobe.force.com': 'adobe--sfstage.sandbox.my.site.com',
+  'io-partners-dx.adobe.com': 'io-partners-dx.stage.adobe.com',
+};
 
 describe('Test links.js', () => {
   beforeEach(() => {
@@ -17,35 +22,35 @@ describe('Test links.js', () => {
       getConfig.mockReturnValue({ env: { name: 'prod' } });
 
       const href = 'https://adobe.force.com/path';
-      const result = rewriteLinkHref(href);
+      const result = rewriteHrefDomainOnStage(href, domainMappings);
 
       expect(result).toBe(href);
     });
 
     test('should rewrite sales for link hrefs', () => {
       const href = 'https://adobe.force.com/path';
-      const result = rewriteLinkHref(href);
+      const result = rewriteHrefDomainOnStage(href, domainMappings);
 
       expect(result).toBe('https://adobe--sfstage.sandbox.my.site.com/path');
     });
 
     test('should rewrite runtime link hrefs', () => {
       const href = 'https://io-partners-dx.adobe.com/path';
-      const result = rewriteLinkHref(href);
+      const result = rewriteHrefDomainOnStage(href, domainMappings);
 
       expect(result).toBe('https://io-partners-dx.stage.adobe.com/path');
     });
 
     test('should return unchanged link hrefs if invalid', () => {
       const href = 'invalid-url';
-      const result = rewriteLinkHref(href);
+      const result = rewriteHrefDomainOnStage(href, domainMappings);
 
       expect(result).toBe(href);
     });
 
     test('should return unchanged link hrefs if domain is not mapped', () => {
       const href = 'https://unmapped-domain.com/path';
-      const result = rewriteLinkHref(href);
+      const result = rewriteHrefDomainOnStage(href, domainMappings);
 
       expect(result).toBe(href);
     });
