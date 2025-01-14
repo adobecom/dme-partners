@@ -320,7 +320,7 @@ export default class Search extends PartnerCards {
       <div @click="${this.handleClickOutside}" class="search-box-wrapper" style="${this.blockData.backgroundColor ? `background: ${this.blockData.backgroundColor}` : ''}">
         <div class="search-box content">
           <h3 class="partner-cards-title">
-            ${this.searchTerm
+            ${this.searchTerm && !this.isTypeaheadOpen
               ? `${this.blockData.localizedText['{{showing-results-for}}']} ${this.searchTerm}`
               : this.blockData.title
             }
