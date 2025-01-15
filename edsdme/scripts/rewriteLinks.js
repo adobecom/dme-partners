@@ -40,7 +40,7 @@ const domainConfigs = {
       jp: 'jp',
     },
   },
-  'www.helpx.adobe.com': {
+  'adobe.com': {
     localeMap: {
       emea: 'uk',
       fr: 'fr',
@@ -52,7 +52,19 @@ const domainConfigs = {
       jp: 'jp',
     },
   },
-  'www.business.adobe.com': {
+  'helpx.adobe.com': {
+    localeMap: {
+      emea: 'uk',
+      fr: 'fr',
+      de: 'de',
+      it: 'it',
+      es: 'es',
+      kr: 'kr',
+      cn: 'cn',
+      jp: 'jp',
+    },
+  },
+  'business.adobe.com': {
     localeMap: {
       emea: 'uk',
       fr: 'fr',
