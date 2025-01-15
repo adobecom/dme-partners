@@ -19,7 +19,6 @@ export default class Search extends PartnerCards {
     contentType: { type: String },
     contentTypeCounter: { type: Object },
     typeaheadOptions: { type: Array },
-    suggestionTerm: { type: String },
     isTypeaheadOpen: { type: Boolean },
   };
 
@@ -28,7 +27,6 @@ export default class Search extends PartnerCards {
     this.contentType = 'all';
     this.contentTypeCounter = { countAll: 0, countAssets: 0, countPages: 0 };
     this.typeaheadOptions = [];
-    this.suggestionTerm = '';
     this.isTypeaheadOpen = false;
   }
 
@@ -54,10 +52,10 @@ export default class Search extends PartnerCards {
   }
 
   async onSearchInput(event) {
-    this.suggestionTerm = event.target.value;
+    this.searchTerm = event.target.value;
 
     // Handle empty input
-    if (!this.suggestionTerm) {
+    if (!this.searchTerm) {
       this.closeTypeahead(SEE_ALL);
       return;
     }
@@ -89,13 +87,12 @@ export default class Search extends PartnerCards {
     // eslint-disable-next-line no-underscore-dangle
     if (value !== SEE_ALL) {
       // eslint-disable-next-line no-underscore-dangle
-      this.suggestionTerm = this._typeaheadDialog.returnValue;
+      this.searchTerm = this._typeaheadDialog.returnValue;
     }
     this.handleSearch();
   }
 
   handleSearch() {
-    this.searchTerm = this.suggestionTerm;
     if (this.searchTerm) {
       this.urlSearchParams.set('term', this.searchTerm);
     } else {
@@ -122,7 +119,7 @@ export default class Search extends PartnerCards {
       return html`${beforeText}<span class="bold">${highlightedText}</span>${afterText}`;
     }
 
-    const optionItems = this.typeaheadOptions.map((o) => html`<p class="option" @click="${() => this.closeTypeahead(o.name)}">${highlightFirstOccurrence(o.name, this.suggestionTerm)}<p>`);
+    const optionItems = this.typeaheadOptions.map((o) => html`<p class="option" @click="${() => this.closeTypeahead(o.name)}">${highlightFirstOccurrence(o.name, this.searchTerm)}<p>`);
     return html`${optionItems}`;
   }
 
@@ -137,7 +134,7 @@ export default class Search extends PartnerCards {
           sort: this.getSortValue(this.selectedSortOrder.key),
           from: 0,
           type: this.contentType,
-          term: this.suggestionTerm,
+          term: this.searchTerm,
           suggestions: 'true',
         },
         this.generateFilters(),
@@ -323,7 +320,7 @@ export default class Search extends PartnerCards {
       <div @click="${this.handleClickOutside}" class="search-box-wrapper" style="${this.blockData.backgroundColor ? `background: ${this.blockData.backgroundColor}` : ''}">
         <div class="search-box content">
           <h3 class="partner-cards-title">
-            ${this.searchTerm
+            ${this.searchTerm && !this.isTypeaheadOpen
               ? `${this.blockData.localizedText['{{showing-results-for}}']} ${this.searchTerm}`
               : this.blockData.title
             }
