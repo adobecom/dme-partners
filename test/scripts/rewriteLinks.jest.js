@@ -85,10 +85,12 @@ describe('Test rewrite links', () => {
   <a href="https://cbconnection.adobe.com/en/home/search/">cbc prod Link</a>
   <a href="https://partners.adobe.com/">Partner prod Link</a>
   <a href="https://www.adobe.com/">adobe</a>
-  <a href="https://www.helpx.adobe.com/">helpx</a>
-  <a href="https://www.business.adobe.com/">business</a>
-  <a href="https://www.business.adobe.com/">not in list of locales</a>
-  <a href="https://www.business.adobe.com/">not in list of locales</a>
+  <a href="https://helpx.adobe.com/">helpx</a>
+  <a href="https://business.adobe.com/">business</a>
+  <a href="https://business.adobe.com/">not in list of locales</a>
+  <a href="https://business.adobe.com/">not in list of locales</a>
+  <a href="https://adobe.com/">adobe</a>
+  
 
 `;
     rewriteLinks();
@@ -96,15 +98,16 @@ describe('Test rewrite links', () => {
     expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/zh_cn/home/search');
     expect(links[1].href).toBe('https://partners.stage.adobe.com/');
     expect(links[2].href).toBe('https://www.adobe.com/cn');
-    expect(links[3].href).toBe('https://www.helpx.adobe.com/cn');
-    expect(links[4].href).toBe('https://www.business.adobe.com/cn');
-    expect(links[5].href).toBe('https://www.business.adobe.com/cn');
-    expect(links[6].href).toBe('https://www.business.adobe.com/cn');
+    expect(links[3].href).toBe('https://helpx.adobe.com/cn');
+    expect(links[4].href).toBe('https://business.adobe.com/cn');
+    expect(links[5].href).toBe('https://business.adobe.com/cn');
+    expect(links[6].href).toBe('https://business.adobe.com/cn');
+    expect(links[7].href).toBe('https://adobe.com/cn');
   });
   test('should not update cbc link locale when locale mapping dont exist for current locale ', () => {
     document.body.innerHTML = `
   <a href="https://cbconnection.adobe.com/en/home/search/">cbc prod Link</a>
-  <a href="https://www.business.adobe.com/">cbc prod Link</a>
+  <a href="https://business.adobe.com/">cbc prod Link</a>
 `;
     Object.defineProperty(window, 'location', {
       writable: true,
@@ -119,12 +122,12 @@ describe('Test rewrite links', () => {
     rewriteLinks();
     const links = document.querySelectorAll('a');
     expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/en/home/search/');
-    expect(links[1].href).toBe('https://www.business.adobe.com/');
+    expect(links[1].href).toBe('https://business.adobe.com/');
   });
   test('should not update  link locale when current locale is na or international sites ', () => {
     document.body.innerHTML = `
   <a href="https://cbconnection.adobe.com/en/home/search/">cbc prod Link</a>
-  <a href="https://www.business.adobe.com/emea">cbc prod Link</a>
+  <a href="https://business.adobe.com/emea">cbc prod Link</a>
 `;
     Object.defineProperty(window, 'location', {
       writable: true,
@@ -139,7 +142,7 @@ describe('Test rewrite links', () => {
     rewriteLinks();
     const links = document.querySelectorAll('a');
     expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/en/home/search/');
-    expect(links[1].href).toBe('https://www.business.adobe.com/emea');
+    expect(links[1].href).toBe('https://business.adobe.com/emea');
   });
 
   test('should not update cbc link locale when it have different locale than en ', () => {
@@ -163,8 +166,8 @@ describe('Test rewrite links', () => {
   test('should  update adobe,helpx and business.adobe link locale when current page locale is emea, and for cbc '
     + 'it shouldnt be transformed ', () => {
     document.body.innerHTML = `
-  <a href="https://www.business.adobe.com">cbc prod Link</a>
-  <a href="https://www.helpx.adobe.com">cbc prod Link</a>
+  <a href="https://business.adobe.com">cbc prod Link</a>
+  <a href="https://helpx.adobe.com">cbc prod Link</a>
   <a href="https://www.adobe.com">cbc prod Link</a>
   <a href="https://cbconnection.adobe.com/en/home/search/">cbc prod Link</a>
 `;
@@ -180,8 +183,8 @@ describe('Test rewrite links', () => {
     partnerIsSignedIn.mockReturnValue(null);
     rewriteLinks();
     const links = document.querySelectorAll('a');
-    expect(links[0].href).toBe('https://www.business.adobe.com/uk');
-    expect(links[1].href).toBe('https://www.helpx.adobe.com/uk');
+    expect(links[0].href).toBe('https://business.adobe.com/uk');
+    expect(links[1].href).toBe('https://helpx.adobe.com/uk');
     expect(links[2].href).toBe('https://www.adobe.com/uk');
     expect(links[3].href).toBe('https://cbconnection-stage.adobe.com/en/home/search/');
   });
