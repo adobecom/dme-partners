@@ -13,7 +13,7 @@ document.body.innerHTML = `
   <a href="https://cbconnection.adobe.com/home/search">cbc prod Link</a>
   <a href="https://partners.adobe.com">Partner prod Link</a>
   <a href="https://cbconnection.adobe.com/bin/fusion/modalImsLogin?resource=/home/search">cbc  Login Link</a>
-  <a href = 'https://cbconnection.adobe.com/en/news/enablement-news-partner-lock'></a>
+  <a href = 'https://cbconnection.adobe.com/en/news/enablement-news-partner-lock/'></a>
 `;
 
 describe('Test rewrite links', () => {
@@ -45,7 +45,7 @@ describe('Test rewrite links', () => {
     rewriteLinks();
     const links = document.querySelectorAll('a');
     expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/bin/fusion/modalImsLogin?resource=%2Fhome%2Fsearch');
-    expect(links[3].href).toBe('https://cbconnection-stage.adobe.com/bin/fusion/modalImsLogin?resource=%2Fzh_cn%2Fnews%2Fenablement-news-partner-lock');
+    expect(links[3].href).toBe('https://cbconnection-stage.adobe.com/bin/fusion/modalImsLogin?resource=%2Fzh_cn%2Fnews%2Fenablement-news-partner-lock%2F');
   });
 
   test('should update only domain when login path is already there', () => {
@@ -88,21 +88,21 @@ describe('Test rewrite links', () => {
   <a href="https://helpx.adobe.com/">helpx</a>
   <a href="https://business.adobe.com/">business</a>
   <a href="https://business.adobe.com/">not in list of locales</a>
-  <a href="https://business.adobe.com/">not in list of locales</a>
+  <a href="https://business.adobe.com/home/">not in list of locales</a>
   <a href="https://adobe.com/">adobe</a>
   
 
 `;
     rewriteLinks();
     const links = document.querySelectorAll('a');
-    expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/zh_cn/home/search');
+    expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/zh_cn/home/search/');
     expect(links[1].href).toBe('https://partners.stage.adobe.com/');
-    expect(links[2].href).toBe('https://www.adobe.com/cn');
-    expect(links[3].href).toBe('https://helpx.adobe.com/cn');
-    expect(links[4].href).toBe('https://business.adobe.com/cn');
-    expect(links[5].href).toBe('https://business.adobe.com/cn');
-    expect(links[6].href).toBe('https://business.adobe.com/cn');
-    expect(links[7].href).toBe('https://adobe.com/cn');
+    expect(links[2].href).toBe('https://www.adobe.com/cn/');
+    expect(links[3].href).toBe('https://helpx.adobe.com/cn/');
+    expect(links[4].href).toBe('https://business.adobe.com/cn/');
+    expect(links[5].href).toBe('https://business.adobe.com/cn/');
+    expect(links[6].href).toBe('https://business.adobe.com/cn/home/');
+    expect(links[7].href).toBe('https://adobe.com/cn/');
   });
   test('should not update cbc link locale when locale mapping dont exist for current locale ', () => {
     document.body.innerHTML = `
@@ -169,7 +169,7 @@ describe('Test rewrite links', () => {
   <a href="https://business.adobe.com">cbc prod Link</a>
   <a href="https://helpx.adobe.com">cbc prod Link</a>
   <a href="https://www.adobe.com">cbc prod Link</a>
-  <a href="https://cbconnection.adobe.com/en/home/search/">cbc prod Link</a>
+  <a href="https://cbconnection.adobe.com/en/home/search">cbc prod Link</a>
 `;
     Object.defineProperty(window, 'location', {
       writable: true,
@@ -183,9 +183,29 @@ describe('Test rewrite links', () => {
     partnerIsSignedIn.mockReturnValue(null);
     rewriteLinks();
     const links = document.querySelectorAll('a');
-    expect(links[0].href).toBe('https://business.adobe.com/uk');
-    expect(links[1].href).toBe('https://helpx.adobe.com/uk');
-    expect(links[2].href).toBe('https://www.adobe.com/uk');
-    expect(links[3].href).toBe('https://cbconnection-stage.adobe.com/en/home/search/');
+    expect(links[0].href).toBe('https://business.adobe.com/uk/');
+    expect(links[1].href).toBe('https://helpx.adobe.com/uk/');
+    expect(links[2].href).toBe('https://www.adobe.com/uk/');
+    expect(links[3].href).toBe('https://cbconnection-stage.adobe.com/en/home/search');
+  });
+
+  test('should  not update locale for other adobe domains that are not adobe,helpx and business.adobe link locale  '
+    + 'it shouldnt be transformed ', () => {
+    document.body.innerHTML = `
+  <a href="https://partners.adobe.com/"> prod Link</a>
+`;
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      value: {
+        pathname: '/emea/test-path',
+        href: 'http://example.com/emea/test-path',
+        assign: jest.fn(),
+        reload: jest.fn(),
+      },
+    });
+    partnerIsSignedIn.mockReturnValue(null);
+    rewriteLinks();
+    const links = document.querySelectorAll('a');
+    expect(links[0].href).toBe('https://partners.stage.adobe.com/');
   });
 });
