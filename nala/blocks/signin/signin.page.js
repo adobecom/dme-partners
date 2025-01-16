@@ -51,7 +51,6 @@ export default class SignInPage {
     } else {
       const newTab = await page.context().newPage();
       await newTab.goto(newTabPath);
-      await newTab.pause();
       await newTab.locator('.feds-profile-button').waitFor({ state: 'visible', timeout: 30000 });
 
       currentURL = newTab.url();
