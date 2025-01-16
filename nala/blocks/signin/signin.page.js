@@ -30,7 +30,7 @@ export default class SignInPage {
   }
 
   async verifyRedirectAfterLogin({
-    page, expect, path, partnerLevel, expectedLandingPageURL, buttonText,
+    page, expect, path, newTabPath, partnerLevel, expectedLandingPageURL, buttonText, browserName,
   }) {
     await page.goto(path);
     await page.waitForLoadState('domcontentloaded');
@@ -39,14 +39,24 @@ export default class SignInPage {
     const signInButton = await this.getSignInButton(buttonText);
     await signInButton.click();
     await this.signIn(page, partnerLevel);
-    await page.waitForLoadState('domcontentloaded');
-    if (!path.includes('automation/regression')) {
-      await page.context().pages();
+
+    await page.locator('.feds-utilities').waitFor({ state: 'visible', timeout: 30000 });
+
+    const safariBrowser = browserName === 'webkit';
+    let currentURL;
+    if (safariBrowser) {
+      await page.goto(newTabPath);
+      await page.locator('.feds-profile-button').waitFor({ state: 'visible', timeout: 30000 });
+      currentURL = page.url();
     } else {
-      await this.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
-      const pages = await page.context().pages();
-      await expect(pages[0].url()).toContain(expectedLandingPageURL);
+      const newTab = await page.context().newPage();
+      await newTab.goto(newTabPath);
+      await newTab.pause();
+      await newTab.locator('.feds-profile-button').waitFor({ state: 'visible', timeout: 30000 });
+
+      currentURL = newTab.url();
     }
+    expect(currentURL).toContain(expectedLandingPageURL);
   }
 
   async addCookie(partnerData, page, context) {
