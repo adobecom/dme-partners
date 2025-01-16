@@ -114,15 +114,16 @@ function setLocale(url) {
   if (!domainConfig) return;
   const localeFromMap = domainConfig.localeMap[currentPageLocale];
   if (!localeFromMap) return;
-  const pathParts = url.pathname.split('/').filter(Boolean);
+  let newPath;
   if (domainConfig.expectedLocale) {
+    const pathParts = url.pathname.split('/').filter(Boolean);
     const localeFromHref = pathParts[0];
     if (localeFromHref !== domainConfig.expectedLocale) return;
-    pathParts[0] = localeFromMap;
+    newPath = url.pathname.replace(localeFromHref, localeFromMap);
   } else {
-    pathParts.unshift(localeFromMap);
+    newPath = localeFromMap + url.pathname;
   }
-  url.pathname = `/${pathParts.join('/')}`;
+  url.pathname = newPath;
 }
 
 /**
