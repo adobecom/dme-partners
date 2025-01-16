@@ -31,6 +31,7 @@ const PERSONALIZATION_CONDITIONS = {
   'partner-not-signed-in': !partnerIsSignedIn(),
   'partner-all-levels': isMember(),
   'partner-reseller': isReseller(PARTNER_LEVEL),
+  'partner-sales-access': hasSalesCenterAccess(),
   'partner-level': (level) => PARTNER_LEVEL === level,
 };
 

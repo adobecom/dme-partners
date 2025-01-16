@@ -108,10 +108,10 @@ function setUpPage() {
   redirectLoggedinPartner();
   updateIMSConfig();
   await preloadResources(CONFIG.locales, miloLibs);
-  const { loadArea, setConfig, getConfig, loadBlock } = await import(`${miloLibs}/utils/utils.js`);
+  const { loadArea, setConfig, getConfig } = await import(`${miloLibs}/utils/utils.js`);
 
   setConfig({ ...CONFIG, miloLibs });
-  await getRenewBanner(getConfig, loadBlock);
+  await getRenewBanner(getConfig);
   await loadArea();
   rewriteLinks();
 }());

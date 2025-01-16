@@ -5,8 +5,12 @@
   list-style-type: none;
 }
 
-/* MWPW-157753 */
 .global-navigation a:hover {
+  text-decoration: none;
+}
+
+/* MWPW-157753 */
+.global-navigation .feds-profile-details a:hover {
   text-decoration: underline;
   color: var(--link-color);
 }

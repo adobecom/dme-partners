@@ -30,6 +30,19 @@ export const searchCardsStyles = css`
     border: 1px solid #BCBCBC;
     border-radius: 12px;
   }
+
+  .partner-cards {
+    grid-template-columns: 269px auto;
+  }
+
+  @media screen and (max-width: 1200px) {
+    .partner-cards {
+      grid-template-columns: unset;
+      display: grid;
+      flex-direction: column;
+      gap: 0;
+    }
+  }
   
   .search-box-wrapper .partner-cards-title {
     margin-bottom: 20px;
@@ -37,6 +50,16 @@ export const searchCardsStyles = css`
   
   .partner-cards-sidebar {
     padding-left: 0;
+    width: 269px;
+    max-width: 269px;
+  }
+
+  @media screen and (max-width: 1200px) {
+    .partner-cards-sidebar {
+      width: 100%;
+      max-width: 100%;
+      padding: 0;
+    }
   }
   
   .partner-cards-sidebar .sidebar-header {

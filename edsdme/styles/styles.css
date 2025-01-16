@@ -6,37 +6,14 @@
  *
  *
  */
-
-/* renew banner */
-.aside.notification.renew-banner .foreground.container,
-.aside.notification.extra-small.renew-banner .foreground.container {
-  padding-top: 14px;
-  padding-bottom: 14px;
-}
-
-.aside.notification.renew-banner .foreground.container .text,
-.aside.notification.extra-small.renew-banner .foreground.container .text {
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 32px;
-  flex-wrap: nowrap;
-}
-
-@media screen and (max-width: 600px) {
-  .aside.notification.renew-banner .foreground.container .text,
-  .aside.notification.extra-small.renew-banner .foreground.container .text {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-  }
-}
-
-.aside.renew-banner .foreground.container .text .body-m {
-  margin-bottom: 0;
-  font-size: 16px;
-  font-weight: bold;
-}
-
 .personalization-hide {
   display: none;
+}
+
+/* MWPW-162386 */
+@supports (-moz-appearance: none) {
+  h2 strong,
+  h3 strong {
+    font-weight: unset;
+  }
 }
