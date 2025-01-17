@@ -65,14 +65,16 @@ test.describe('MAPC sign in flow', () => {
   });
 
   redirectionFeatures.forEach((feature) => {
-    test(`${feature.name},${feature.tags}`, async ({ page }) => {
+    test(`${feature.name},${feature.tags}`, async ({ page, browserName }) => {
       await signInPage.verifyRedirectAfterLogin({
         page,
         expect,
         path: feature.baseURL,
         partnerLevel: feature.data.partnerLevel,
+        newTabPath: feature.newTabUrl,
         expectedLandingPageURL: feature.data.expectedToSeeInURL,
         buttonText: feature.data.signInButtonInternationalText,
+        browserName,
       });
     });
   });
