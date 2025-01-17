@@ -191,6 +191,11 @@ class ProfileDropdown {
       e.preventDefault();
       window.dispatchEvent(new Event('feds:signOut'));
       window.adobeIMS.signOut();
+
+      const url = window.location.href;
+      if (url.includes('term')) {
+        window.history.pushState({}, null, window.location.href.split('?term')[0]);
+      }
     });
 
     return signOutLink;
