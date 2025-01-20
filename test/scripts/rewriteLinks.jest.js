@@ -42,20 +42,20 @@ describe('Test rewrite links', () => {
 
   test('should update  prod links to cbc  stage in non-prod, with resource query param and login path,'
     + 'it should update locale if exist for cbc connection', () => {
-    rewriteLinks();
+    rewriteLinks(document);
     const links = document.querySelectorAll('a');
     expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/bin/fusion/modalImsLogin?resource=%2Fhome%2Fsearch');
     expect(links[3].href).toBe('https://cbconnection-stage.adobe.com/bin/fusion/modalImsLogin?resource=%2Fzh_cn%2Fnews%2Fenablement-news-partner-lock%2F');
   });
 
   test('should update only domain when login path is already there', () => {
-    rewriteLinks();
+    rewriteLinks(document);
     const links = document.querySelectorAll('a');
     expect(links[2].href).toBe('https://cbconnection-stage.adobe.com/bin/fusion/modalImsLogin?resource=/home/search');
   });
 
   test('should  update partners prod link when on non prod', () => {
-    rewriteLinks();
+    rewriteLinks(document);
     const links = document.querySelectorAll('a');
     expect(links[1].href).toBe('https://partners.stage.adobe.com/');
   });
@@ -63,7 +63,7 @@ describe('Test rewrite links', () => {
   test('should  not update partners prod domain and cbc prod domain when on  prod.'
     + ' Should update locale if exist for cbcconnection', () => {
     getConfig.mockReturnValue({ env: { name: 'prod' } });
-    rewriteLinks();
+    rewriteLinks(document);
     const links = document.querySelectorAll('a');
     expect(links[1].href).toBe('https://partners.adobe.com/');
     expect(links[3].href).toBe('https://cbconnection.adobe.com/bin/fusion/modalImsLogin?resource=%2Fzh_cn%2Fnews%2Fenablement-news-partner-lock');
@@ -72,7 +72,7 @@ describe('Test rewrite links', () => {
     + 'it should update locale, if exist, for cbconnection', () => {
     partnerIsSignedIn.mockReturnValue(null);
 
-    rewriteLinks();
+    rewriteLinks(document);
     const links = document.querySelectorAll('a');
     expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/home/search');
     expect(links[1].href).toBe('https://partners.stage.adobe.com/');
@@ -93,7 +93,7 @@ describe('Test rewrite links', () => {
   
 
 `;
-    rewriteLinks();
+    rewriteLinks(document);
     const links = document.querySelectorAll('a');
     expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/zh_cn/home/search/');
     expect(links[1].href).toBe('https://partners.stage.adobe.com/');
@@ -119,7 +119,7 @@ describe('Test rewrite links', () => {
       },
     });
     partnerIsSignedIn.mockReturnValue(null);
-    rewriteLinks();
+    rewriteLinks(document);
     const links = document.querySelectorAll('a');
     expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/en/home/search/');
     expect(links[1].href).toBe('https://business.adobe.com/');
@@ -139,7 +139,7 @@ describe('Test rewrite links', () => {
       },
     });
     partnerIsSignedIn.mockReturnValue(null);
-    rewriteLinks();
+    rewriteLinks(document);
     const links = document.querySelectorAll('a');
     expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/en/home/search/');
     expect(links[1].href).toBe('https://business.adobe.com/emea');
@@ -159,7 +159,7 @@ describe('Test rewrite links', () => {
       },
     });
     partnerIsSignedIn.mockReturnValue(null);
-    rewriteLinks();
+    rewriteLinks(document);
     const links = document.querySelectorAll('a');
     expect(links[0].href).toBe('https://cbconnection-stage.adobe.com/fr/home/search/');
   });
@@ -181,7 +181,7 @@ describe('Test rewrite links', () => {
       },
     });
     partnerIsSignedIn.mockReturnValue(null);
-    rewriteLinks();
+    rewriteLinks(document);
     const links = document.querySelectorAll('a');
     expect(links[0].href).toBe('https://business.adobe.com/uk/');
     expect(links[1].href).toBe('https://helpx.adobe.com/uk/');
@@ -204,7 +204,7 @@ describe('Test rewrite links', () => {
       },
     });
     partnerIsSignedIn.mockReturnValue(null);
-    rewriteLinks();
+    rewriteLinks(document);
     const links = document.querySelectorAll('a');
     expect(links[0].href).toBe('https://partners.stage.adobe.com/');
   });
@@ -244,36 +244,41 @@ describe('Test rewrite links', () => {
 
     expect(result).toBe(href);
   });
-  test('should not rewrite links in the production environment', () => {
-    const gnav = document.createElement('div');
-    const gnavHTML = `
+
+  const gnav = document.createElement('div');
+  const gnavHTML = `
         <a href="https://adobe.force.com/path"></a>
         <a href="https://io-partners-dx.adobe.com/path"></a>
         <a href="https://unmapped-domain.com/path"></a>
       `;
-    gnav.innerHTML = gnavHTML;
-    document.body.innerHTML = gnavHTML;
+  gnav.innerHTML = gnavHTML;
+
+  test('should not rewrite links in the production environment', () => {
+    // const gnav = document.createElement('div');
+    // const gnavHTML = `
+    //     <a href="https://adobe.force.com/path"></a>
+    //     <a href="https://io-partners-dx.adobe.com/path"></a>
+    //     <a href="https://unmapped-domain.com/path"></a>
+    //   `;
+    // gnav.innerHTML = gnavHTML;
+    // document.body.innerHTML = gnavHTML;
 
     getConfig.mockReturnValue({ env: { name: 'prod' } });
 
-    rewriteLinks();
+    rewriteLinks(gnav);
+    const result = rewriteLinks(gnav);
 
-    expect(document.body.innerHTML).toBe(gnavHTML);
+    expect(result.innerHTML).toBe(gnavHTML);
+
+    // expect(document.body.innerHTML).toBe(gnavHTML);
   });
 
   test('should rewrite links in the stage environment', () => {
-    const gnav = document.createElement('div');
-    const gnavHTML = `
-        <a href="https://adobe.force.com/path"></a>
-        <a href="https://io-partners-dx.adobe.com/path"></a>
-        <a href="https://unmapped-domain.com/path"></a>
-      `;
-    gnav.innerHTML = gnavHTML;
-    document.body.innerHTML = gnavHTML;
 
-    rewriteLinks();
 
-    expect(document.body.innerHTML).toBe(`
+    const result = rewriteLinks(gnav);
+
+    expect(result.innerHTML).toBe(`
         <a href="https://adobe--sfstage.sandbox.my.site.com/path"></a>
         <a href="https://io-partners-dx.stage.adobe.com/path"></a>
         <a href="https://unmapped-domain.com/path"></a>

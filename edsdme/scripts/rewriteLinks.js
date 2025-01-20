@@ -130,9 +130,10 @@ export function getUpdatedHref(href) {
  * (conditions: appropriate domain, appropriate current page locale,
  * environment and is user logged in)
  */
-export function rewriteLinks() {
-  const links = document.querySelectorAll('a[href]');
+export function rewriteLinks(element) {
+  const links = element.querySelectorAll('a[href]');
   links.forEach((link) => {
     link.href = getUpdatedHref(link.href);
   });
+  return element;
 }
