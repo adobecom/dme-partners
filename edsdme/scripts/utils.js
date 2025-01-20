@@ -24,6 +24,9 @@ export const LEVELS = {
 
 export const RESSELER_LEVELS = [LEVELS.REGISTERED, LEVELS.CERTIFIED, LEVELS.GOLD, LEVELS.PLATINUM];
 
+const MAX_PARTNER_ERROR_REDIRECTS_COUNT = 3;
+const PARTNER_ERROR_REDIRECTS_COUNT_COOKIE = 'partner_redirects_count';
+
 export const [setLibs, getLibs] = (() => {
   let libs;
   return [
@@ -102,6 +105,10 @@ export function getCookieValue(key) {
   return cookie?.substring((`${key}=`).length);
 }
 
+export function deleteCookieValue(key) {
+  document.cookie = `${key}=; Path=/; Max-Age=0;`;
+}
+
 export function getPartnerDataCookieValue(programType, key) {
   try {
     const partnerDataCookie = getCookieValue('partner_data');
@@ -158,6 +165,14 @@ export function getMetadata(name) {
 
 export function redirectLoggedinPartner() {
   if (!isMember()) return;
+  const partnerErrorRedirectsCount = getCookieValue(PARTNER_ERROR_REDIRECTS_COUNT_COOKIE);
+  if (partnerErrorRedirectsCount) {
+    const count = Number(partnerErrorRedirectsCount);
+    if (count && Number.isInteger(count) && count >= MAX_PARTNER_ERROR_REDIRECTS_COUNT) {
+      deleteCookieValue(PARTNER_ERROR_REDIRECTS_COUNT_COOKIE);
+      return;
+    }
+  }
   const target = getMetadataContent('adobe-target-after-login');
   if (!target || target === 'NONE') return;
   document.body.style.display = 'none';
