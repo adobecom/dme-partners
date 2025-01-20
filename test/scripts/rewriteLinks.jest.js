@@ -254,23 +254,11 @@ describe('Test rewrite links', () => {
   gnav.innerHTML = gnavHTML;
 
   test('should not rewrite links in the production environment', () => {
-    // const gnav = document.createElement('div');
-    // const gnavHTML = `
-    //     <a href="https://adobe.force.com/path"></a>
-    //     <a href="https://io-partners-dx.adobe.com/path"></a>
-    //     <a href="https://unmapped-domain.com/path"></a>
-    //   `;
-    // gnav.innerHTML = gnavHTML;
-    // document.body.innerHTML = gnavHTML;
-
     getConfig.mockReturnValue({ env: { name: 'prod' } });
 
     rewriteLinks(gnav);
     const result = rewriteLinks(gnav);
-
     expect(result.innerHTML).toBe(gnavHTML);
-
-    // expect(document.body.innerHTML).toBe(gnavHTML);
   });
 
   test('should rewrite links in the stage environment', () => {
