@@ -2,15 +2,11 @@
  * @jest-environment jsdom
  */
 
-import { applyGnavLinkRewriting, rewriteHrefDomainOnStage } from '../../edsdme/scripts/links.js';
 import { getConfig } from '../../edsdme/blocks/utils/utils.js';
+import {getUpdatedHref, rewriteLinks} from "../../edsdme/scripts/rewriteLinks.js";
 
 jest.mock('../../edsdme/blocks/utils/utils.js', () => ({ getConfig: jest.fn() }));
 
-const domainMappings = {
-  'adobe.force.com': 'adobe--sfstage.sandbox.my.site.com',
-  'io-partners-dx.adobe.com': 'io-partners-dx.stage.adobe.com',
-};
 
 describe('Test links.js', () => {
   beforeEach(() => {
@@ -22,35 +18,35 @@ describe('Test links.js', () => {
       getConfig.mockReturnValue({ env: { name: 'prod' } });
 
       const href = 'https://adobe.force.com/path';
-      const result = rewriteHrefDomainOnStage(href, domainMappings);
+      const result = getUpdatedHref(href);
 
       expect(result).toBe(href);
     });
 
     test('should rewrite sales for link hrefs', () => {
       const href = 'https://adobe.force.com/path';
-      const result = rewriteHrefDomainOnStage(href, domainMappings);
+      const result = getUpdatedHref(href);
 
       expect(result).toBe('https://adobe--sfstage.sandbox.my.site.com/path');
     });
 
     test('should rewrite runtime link hrefs', () => {
       const href = 'https://io-partners-dx.adobe.com/path';
-      const result = rewriteHrefDomainOnStage(href, domainMappings);
+      const result = getUpdatedHref(href);
 
       expect(result).toBe('https://io-partners-dx.stage.adobe.com/path');
     });
 
     test('should return unchanged link hrefs if invalid', () => {
       const href = 'invalid-url';
-      const result = rewriteHrefDomainOnStage(href, domainMappings);
+      const result = getUpdatedHref(href);
 
       expect(result).toBe(href);
     });
 
     test('should return unchanged link hrefs if domain is not mapped', () => {
       const href = 'https://unmapped-domain.com/path';
-      const result = rewriteHrefDomainOnStage(href, domainMappings);
+      const result = getUpdatedHref(href);
 
       expect(result).toBe(href);
     });
@@ -64,19 +60,20 @@ describe('Test links.js', () => {
         <a href="https://unmapped-domain.com/path"></a>
       `;
     gnav.innerHTML = gnavHTML;
+    document.body.innerHTML = gnavHTML;
 
     test('should not rewrite links in the production environment', () => {
       getConfig.mockReturnValue({ env: { name: 'prod' } });
 
-      const result = applyGnavLinkRewriting(gnav);
+      rewriteLinks();
 
-      expect(result.innerHTML).toBe(gnavHTML);
+      expect(document.body.innerHTML).toBe(gnavHTML);
     });
 
     test('should rewrite links in the stage environment', () => {
-      const result = applyGnavLinkRewriting(gnav);
+      rewriteLinks();
 
-      expect(result.innerHTML).toBe(`
+      expect(document.body.innerHTML).toBe(`
         <a href="https://adobe--sfstage.sandbox.my.site.com/path"></a>
         <a href="https://io-partners-dx.stage.adobe.com/path"></a>
         <a href="https://unmapped-domain.com/path"></a>

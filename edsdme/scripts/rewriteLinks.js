@@ -1,5 +1,5 @@
 import { partnerIsSignedIn } from './utils.js';
-import { rewriteHrefDomainOnStage } from './links.js';
+import {getConfig} from "../blocks/utils/utils.js";
 
 /**
  * Domain map where the key is the production domain,
@@ -8,6 +8,8 @@ import { rewriteHrefDomainOnStage } from './links.js';
 const domainMap = {
   'cbconnection.adobe.com': 'cbconnection-stage.adobe.com',
   'partners.adobe.com': 'partners.stage.adobe.com',
+  'adobe.force.com': 'adobe--sfstage.sandbox.my.site.com',
+  'io-partners-dx.adobe.com': 'io-partners-dx.stage.adobe.com',
 };
 
 const acomLocaleMap = {
@@ -95,7 +97,7 @@ function setLocale(url) {
  * @param href
  * @returns {*|string} modified href
  */
-function getUpdatedHref(href) {
+export function getUpdatedHref(href) {
   let url;
   try {
     url = new URL(href);
@@ -105,7 +107,25 @@ function getUpdatedHref(href) {
   setLocale(url);
   setLoginPathIfSignedIn(url);
   // always as last step since we need original domains for mappings
-  return rewriteHrefDomainOnStage(url.href, domainMap);
+  rewriteUrlDomainOnNonProd(url);
+  return url.toString();
+}
+
+/**
+ * Rewrite a link href domain based on production to stage domain mappings.
+ * @param {URL} url - The URL object to be modified.
+ * Modifies URL href, or the original if the environment is prod,
+ * there was a problem processing, or there is no domain mapping defined for it.
+ */
+export function rewriteUrlDomainOnNonProd(url) {
+  const { env } = getConfig();
+
+  if (env.name === 'prod') return;
+
+  if (domainMap[url.hostname]) {
+    url.hostname = domainMap[url.hostname];
+  }
+
 }
 
 /**
