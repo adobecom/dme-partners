@@ -10,6 +10,16 @@ const domainMap = {
   'partners.adobe.com': 'partners.stage.adobe.com',
 };
 
+const acomLocaleMap = {
+  emea: 'uk',
+  fr: 'fr',
+  de: 'de',
+  it: 'it',
+  es: 'es',
+  kr: 'kr',
+  cn: 'cn',
+  jp: 'jp',
+};
 /**
  * Domain configs where the key is the production domain,
  * and the value is config object for it.
@@ -17,65 +27,21 @@ const domainMap = {
 const domainConfigs = {
   'cbconnection.adobe.com': {
     localeMap: {
-      de: 'de',
-      cn: 'zh_cn',
-      fr: 'fr',
-      it: 'it',
-      jp: 'jp',
-      kr: 'ko',
-      es: 'es',
+      de: '/de/',
+      cn: '/zh_cn/',
+      fr: '/fr/',
+      it: '/it/',
+      jp: '/jp/',
+      kr: '/ko/',
+      es: '/es/',
     },
-    expectedLocale: 'en',
+    expectedLocale: '/en/',
     loginPath: '/bin/fusion/modalImsLogin',
   },
-  'www.adobe.com': {
-    localeMap: {
-      emea: 'uk',
-      fr: 'fr',
-      de: 'de',
-      it: 'it',
-      es: 'es',
-      kr: 'kr',
-      cn: 'cn',
-      jp: 'jp',
-    },
-  },
-  'adobe.com': {
-    localeMap: {
-      emea: 'uk',
-      fr: 'fr',
-      de: 'de',
-      it: 'it',
-      es: 'es',
-      kr: 'kr',
-      cn: 'cn',
-      jp: 'jp',
-    },
-  },
-  'helpx.adobe.com': {
-    localeMap: {
-      emea: 'uk',
-      fr: 'fr',
-      de: 'de',
-      it: 'it',
-      es: 'es',
-      kr: 'kr',
-      cn: 'cn',
-      jp: 'jp',
-    },
-  },
-  'business.adobe.com': {
-    localeMap: {
-      emea: 'uk',
-      fr: 'fr',
-      de: 'de',
-      it: 'it',
-      es: 'es',
-      kr: 'kr',
-      cn: 'cn',
-      jp: 'jp',
-    },
-  },
+  'www.adobe.com': { localeMap: acomLocaleMap },
+  'adobe.com': { localeMap: acomLocaleMap },
+  'helpx.adobe.com': { localeMap: acomLocaleMap },
+  'business.adobe.com': { localeMap: acomLocaleMap },
 };
 
 /**
@@ -107,21 +73,20 @@ function setLoginPathIfSignedIn(url) {
  * @param {URL} url - The URL object to be modified.
  */
 function setLocale(url) {
+  if (window.location.pathname === '/' || window.location.pathname === '') return;
   const currentPageLocale = window.location.pathname.split('/')?.[1];
   const domainConfig = domainConfigs[url.hostname];
   if (!domainConfig) return;
   const localeFromMap = domainConfig.localeMap[currentPageLocale];
   if (!localeFromMap) return;
-  let newPath;
+  let { pathname } = url;
   if (domainConfig.expectedLocale) {
-    const pathParts = url.pathname.split('/').filter(Boolean);
-    const localeFromHref = pathParts[0];
-    if (localeFromHref !== domainConfig.expectedLocale) return;
-    newPath = url.pathname.replace(localeFromHref, localeFromMap);
-  } else {
-    newPath = localeFromMap + url.pathname;
+    if (!url.pathname.startsWith(domainConfig.expectedLocale)) {
+      return;
+    }
+    pathname = url.pathname.replace(domainConfig.expectedLocale, '');
   }
-  url.pathname = newPath;
+  url.pathname = localeFromMap + pathname;
 }
 
 /**
