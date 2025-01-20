@@ -10,9 +10,8 @@ export default class BannersPage {
   getBannerParagraphByIndex() {
     return this.page.locator('.foreground.container.no-image .text .body-m:not(.action-area)');
   }
-  
+
   getBannerParagraphCertifiedUS() {
     return this.page.locator('.text .copy-wrap > p.body-m');
   }
-
 }
