@@ -107,9 +107,7 @@ function setLoginPathIfSignedIn(url) {
  * @param {URL} url - The URL object to be modified.
  */
 function setLocale(url) {
-  const localesToSkip = ['na', 'latam', 'apac'];
   const currentPageLocale = window.location.pathname.split('/')?.[1];
-  if (localesToSkip.indexOf(currentPageLocale) !== -1) return;
   const domainConfig = domainConfigs[url.hostname];
   if (!domainConfig) return;
   const localeFromMap = domainConfig.localeMap[currentPageLocale];
