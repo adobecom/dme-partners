@@ -1,5 +1,5 @@
 import { partnerIsSignedIn } from './utils.js';
-import {getConfig} from "../blocks/utils/utils.js";
+import { getConfig } from '../blocks/utils/utils.js';
 
 /**
  * Domain map where the key is the production domain,
@@ -90,6 +90,21 @@ function setLocale(url) {
   }
   url.pathname = localeFromMap + pathname;
 }
+/**
+ * Rewrite a link href domain based on production to stage domain mappings.
+ * @param {URL} url - The URL object to be modified.
+ * Modifies URL href, or the original if the environment is prod,
+ * there was a problem processing, or there is no domain mapping defined for it.
+ */
+export function rewriteUrlDomainOnNonProd(url) {
+  const { env } = getConfig();
+
+  if (env.name === 'prod') return;
+
+  if (domainMap[url.hostname]) {
+    url.hostname = domainMap[url.hostname];
+  }
+}
 
 /**
  * Takes string that represent url href,
@@ -110,24 +125,6 @@ export function getUpdatedHref(href) {
   rewriteUrlDomainOnNonProd(url);
   return url.toString();
 }
-
-/**
- * Rewrite a link href domain based on production to stage domain mappings.
- * @param {URL} url - The URL object to be modified.
- * Modifies URL href, or the original if the environment is prod,
- * there was a problem processing, or there is no domain mapping defined for it.
- */
-export function rewriteUrlDomainOnNonProd(url) {
-  const { env } = getConfig();
-
-  if (env.name === 'prod') return;
-
-  if (domainMap[url.hostname]) {
-    url.hostname = domainMap[url.hostname];
-  }
-
-}
-
 /**
  * Iterates throw all links on the page and updates their hrefs if conditions are fulfilled
  * (conditions: appropriate domain, appropriate current page locale,

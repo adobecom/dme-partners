@@ -3,10 +3,9 @@
  */
 
 import { getConfig } from '../../edsdme/blocks/utils/utils.js';
-import {getUpdatedHref, rewriteLinks} from "../../edsdme/scripts/rewriteLinks.js";
+import { getUpdatedHref, rewriteLinks } from '../../edsdme/scripts/rewriteLinks.js';
 
 jest.mock('../../edsdme/blocks/utils/utils.js', () => ({ getConfig: jest.fn() }));
-
 
 describe('Test links.js', () => {
   beforeEach(() => {
