@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import {getUpdatedHref, rewriteLinks} from '../../edsdme/scripts/rewriteLinks.js';
+import { getUpdatedHref, rewriteLinks } from '../../edsdme/scripts/rewriteLinks.js';
 import { getConfig } from '../../edsdme/blocks/utils/utils.js';
 import { partnerIsSignedIn } from '../../edsdme/scripts/utils.js';
 
@@ -280,5 +280,3 @@ describe('Test rewrite links', () => {
       `);
   });
 });
-
-
