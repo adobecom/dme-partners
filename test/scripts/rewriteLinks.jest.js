@@ -274,8 +274,6 @@ describe('Test rewrite links', () => {
   });
 
   test('should rewrite links in the stage environment', () => {
-
-
     const result = rewriteLinks(gnav);
 
     expect(result.innerHTML).toBe(`
