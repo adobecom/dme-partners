@@ -250,6 +250,12 @@ export function updateIMSConfig() {
       target = getMetadataContent('adobe-target-after-login');
     } else {
       target = getMetadataContent('adobe-target-after-logout') ?? getProgramHomePage(window.location.pathname);
+
+      if (getMetadataContent('adobe-target-after-logout')) {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.search = '';
+        window.history.pushState({}, '', currentUrl);
+      }
     }
 
     const targetUrl = new URL(window.location.href);
