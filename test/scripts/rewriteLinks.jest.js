@@ -189,6 +189,25 @@ describe('Test rewrite links', () => {
     expect(links[3].href).toBe('https://cbconnection-stage.adobe.com/en/home/search');
   });
 
+  test('should  update channel partner domain on stage, no metter if user is signed in', () => {
+    document.body.innerHTML = `
+  <a href="https://channelpartners.adobe.com/s/registration/">update</a>
+  <a href="https://channelpartners.adobe.com/s/uplevel/">update</a>
+  <a href="https://channelpartners.adobe.com/s/contactreg/">updatek</a>
+  <a href="https://channelpartners.adobe.com/s/manageprofile/?appid=mp">update/a>
+  <a href="https://channelpartners.adobe.com/s/manageprofile/?appid=donotupdate">shoudln't update</a>
+  <a href="https://channelpartners.adobe.com/s/">shouldn't update</a>
+`;
+    partnerIsSignedIn.mockReturnValue(null);
+    rewriteLinks(document);
+    const links = document.querySelectorAll('a');
+    expect(links[0].href).toBe('https://channelpartners.stage2.adobe.com/s/registration/');
+    expect(links[1].href).toBe('https://channelpartners.stage2.adobe.com/s/uplevel/');
+    expect(links[2].href).toBe('https://channelpartners.stage2.adobe.com/s/contactreg/');
+    expect(links[3].href).toBe('https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp');
+    expect(links[4].href).toBe('https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=donotupdate');
+    expect(links[5].href).toBe('https://channelpartners.stage2.adobe.com/s/');
+  });
   test('should  not update locale for other adobe domains that are not adobe,helpx and business.adobe link locale  '
     + 'it shouldnt be transformed ', () => {
     document.body.innerHTML = `
