@@ -10,6 +10,7 @@ const domainMap = {
   'partners.adobe.com': 'partners.stage.adobe.com',
   'adobe.force.com': 'adobe--sfstage.sandbox.my.site.com',
   'io-partners-dx.adobe.com': 'io-partners-dx.stage.adobe.com',
+  'channelpartners.adobe.com': 'channelpartners.stage2.adobe.com',
 };
 
 const acomLocaleMap = {
@@ -45,6 +46,8 @@ const domainConfigs = {
   'helpx.adobe.com': { localeMap: acomLocaleMap },
   'business.adobe.com': { localeMap: acomLocaleMap },
 };
+
+const channelPartnersPaths = ['/s/registration/', '/s/uplevel/', '/s/contactreg/', '/s/manageprofile/?appid=mp'];
 
 /**
  * Modifies the given URL object by updating its search params
@@ -101,7 +104,12 @@ export function rewriteUrlDomainOnNonProd(url) {
 
   if (env.name === 'prod') return;
 
-  if (domainMap[url.hostname]) {
+  let shouldUpdateDomain = true;
+  if (url.hostname === 'channelpartners.adobe.com' && channelPartnersPaths.indexOf(url.pathname + url.search) === -1) {
+    shouldUpdateDomain = false;
+  }
+
+  if (domainMap[url.hostname] && shouldUpdateDomain) {
     url.hostname = domainMap[url.hostname];
   }
 }
