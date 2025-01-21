@@ -113,5 +113,5 @@ function setUpPage() {
   setConfig({ ...CONFIG, miloLibs });
   await getRenewBanner(getConfig);
   await loadArea();
-  rewriteLinks();
+  rewriteLinks(document);
 }());

@@ -1,5 +1,5 @@
 import { partnerIsSignedIn } from './utils.js';
-import { rewriteHrefDomainOnStage } from './links.js';
+import { getConfig } from '../blocks/utils/utils.js';
 
 /**
  * Domain map where the key is the production domain,
@@ -8,8 +8,20 @@ import { rewriteHrefDomainOnStage } from './links.js';
 const domainMap = {
   'cbconnection.adobe.com': 'cbconnection-stage.adobe.com',
   'partners.adobe.com': 'partners.stage.adobe.com',
+  'adobe.force.com': 'adobe--sfstage.sandbox.my.site.com',
+  'io-partners-dx.adobe.com': 'io-partners-dx.stage.adobe.com',
 };
 
+const acomLocaleMap = {
+  emea: 'uk',
+  fr: 'fr',
+  de: 'de',
+  it: 'it',
+  es: 'es',
+  kr: 'kr',
+  cn: 'cn',
+  jp: 'jp',
+};
 /**
  * Domain configs where the key is the production domain,
  * and the value is config object for it.
@@ -17,53 +29,21 @@ const domainMap = {
 const domainConfigs = {
   'cbconnection.adobe.com': {
     localeMap: {
-      de: 'de',
-      cn: 'zh_cn',
-      fr: 'fr',
-      it: 'it',
-      jp: 'jp',
-      kr: 'ko',
-      es: 'es',
+      de: '/de/',
+      cn: '/zh_cn/',
+      fr: '/fr/',
+      it: '/it/',
+      jp: '/jp/',
+      kr: '/ko/',
+      es: '/es/',
     },
-    expectedLocale: 'en',
+    expectedLocale: '/en/',
     loginPath: '/bin/fusion/modalImsLogin',
   },
-  'www.adobe.com': {
-    localeMap: {
-      emea: 'uk',
-      fr: 'fr',
-      de: 'de',
-      it: 'it',
-      es: 'es',
-      kr: 'kr',
-      cn: 'cn',
-      jp: 'jp',
-    },
-  },
-  'www.helpx.adobe.com': {
-    localeMap: {
-      emea: 'uk',
-      fr: 'fr',
-      de: 'de',
-      it: 'it',
-      es: 'es',
-      kr: 'kr',
-      cn: 'cn',
-      jp: 'jp',
-    },
-  },
-  'www.business.adobe.com': {
-    localeMap: {
-      emea: 'uk',
-      fr: 'fr',
-      de: 'de',
-      it: 'it',
-      es: 'es',
-      kr: 'kr',
-      cn: 'cn',
-      jp: 'jp',
-    },
-  },
+  'www.adobe.com': { localeMap: acomLocaleMap },
+  'adobe.com': { localeMap: acomLocaleMap },
+  'helpx.adobe.com': { localeMap: acomLocaleMap },
+  'business.adobe.com': { localeMap: acomLocaleMap },
 };
 
 /**
@@ -95,22 +75,35 @@ function setLoginPathIfSignedIn(url) {
  * @param {URL} url - The URL object to be modified.
  */
 function setLocale(url) {
-  const localesToSkip = ['na', 'latam', 'apac'];
+  if (window.location.pathname === '/' || window.location.pathname === '') return;
   const currentPageLocale = window.location.pathname.split('/')?.[1];
-  if (localesToSkip.indexOf(currentPageLocale) !== -1) return;
   const domainConfig = domainConfigs[url.hostname];
   if (!domainConfig) return;
   const localeFromMap = domainConfig.localeMap[currentPageLocale];
   if (!localeFromMap) return;
-  const pathParts = url.pathname.split('/').filter(Boolean);
+  let { pathname } = url;
   if (domainConfig.expectedLocale) {
-    const localeFromHref = pathParts[0];
-    if (localeFromHref !== domainConfig.expectedLocale) return;
-    pathParts[0] = localeFromMap;
-  } else {
-    pathParts.unshift(localeFromMap);
+    if (!url.pathname.startsWith(domainConfig.expectedLocale)) {
+      return;
+    }
+    pathname = url.pathname.replace(domainConfig.expectedLocale, '');
   }
-  url.pathname = `/${pathParts.join('/')}`;
+  url.pathname = localeFromMap + pathname;
+}
+/**
+ * Rewrite a link href domain based on production to stage domain mappings.
+ * @param {URL} url - The URL object to be modified.
+ * Modifies URL href, or the original if the environment is prod,
+ * there was a problem processing, or there is no domain mapping defined for it.
+ */
+export function rewriteUrlDomainOnNonProd(url) {
+  const { env } = getConfig();
+
+  if (env.name === 'prod') return;
+
+  if (domainMap[url.hostname]) {
+    url.hostname = domainMap[url.hostname];
+  }
 }
 
 /**
@@ -119,7 +112,7 @@ function setLocale(url) {
  * @param href
  * @returns {*|string} modified href
  */
-function getUpdatedHref(href) {
+export function getUpdatedHref(href) {
   let url;
   try {
     url = new URL(href);
@@ -129,17 +122,18 @@ function getUpdatedHref(href) {
   setLocale(url);
   setLoginPathIfSignedIn(url);
   // always as last step since we need original domains for mappings
-  return rewriteHrefDomainOnStage(url.href, domainMap);
+  rewriteUrlDomainOnNonProd(url);
+  return url.toString();
 }
-
 /**
  * Iterates throw all links on the page and updates their hrefs if conditions are fulfilled
  * (conditions: appropriate domain, appropriate current page locale,
  * environment and is user logged in)
  */
-export function rewriteLinks() {
-  const links = document.querySelectorAll('a[href]');
+export function rewriteLinks(element) {
+  const links = element.querySelectorAll('a[href]');
   links.forEach((link) => {
     link.href = getUpdatedHref(link.href);
   });
+  return element;
 }
