@@ -5,8 +5,6 @@ const miloLibs = setLibs('/libs');
 const { createTag, localizeLink, getConfig } = await import(`${miloLibs}/utils/utils.js`);
 
 export { createTag, localizeLink, getConfig };
-const { replaceText } = await import(`${miloLibs}/features/placeholders.js`);
-export { replaceText };
 
 export async function populateLocalizedTextFromPlaceholders(localizedText) {
   const { locales } = getConfig();
