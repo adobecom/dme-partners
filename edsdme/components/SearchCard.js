@@ -23,7 +23,8 @@ class SearchCard extends LitElement {
       (tag) => tag.key,
       (tag) => {
         const key = Object.values(tag)[0];
-        return html`<span class="card-tag">${this.localizedText[`{{${key}}}`] || key.replaceAll('-', ' ')}</span>`;
+        const localizedText = this.localizedText[`{{${key}}}`];
+        return localizedText ? html`<span class="card-tag">${localizedText}</span>` : '';
       },
     )}`;
   }

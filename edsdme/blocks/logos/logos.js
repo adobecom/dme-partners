@@ -1,5 +1,5 @@
 import { getLibs } from '../../scripts/utils.js';
-import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
+import { getConfig, populateLocalizedTextFromPlaceholders } from '../utils/utils.js';
 import Logos from './LogosCards.js';
 
 function declareLogos() {
@@ -20,10 +20,9 @@ export default async function init(el) {
     '{{last-modified}}': 'Last modified',
   };
 
-  populateLocalizedTextFromListItems(el, localizedText);
+  populateLocalizedTextFromPlaceholders(localizedText);
 
   const deps = await Promise.all([
-    localizationPromises(localizedText, config),
     import(`${miloLibs}/features/spectrum-web-components/dist/theme.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/button.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/progress-circle.js`),

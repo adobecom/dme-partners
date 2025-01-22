@@ -8,23 +8,23 @@ export { createTag, localizeLink, getConfig };
 const { replaceText } = await import(`${miloLibs}/features/placeholders.js`);
 export { replaceText };
 
-export function populateLocalizedTextFromListItems(el, localizedText) {
-  const liList = Array.from(el.querySelectorAll('li'));
-  liList.forEach((liEl) => {
-    const liInnerText = liEl.innerText;
-    if (!liInnerText) return;
-    let liContent = liInnerText.trim().toLowerCase().replace(/ /g, '-');
-    if (liContent.endsWith('_default')) liContent = liContent.slice(0, -8);
-    localizedText[`{{${liContent}}}`] = liContent;
-  });
-}
-export async function localizationPromises(localizedText, config) {
-  return Promise.all(Object.keys(localizedText).map(async (key) => {
-    const value = await replaceText(key, config);
-    if (value.length) {
-      localizedText[key] = value;
+export async function populateLocalizedTextFromPlaceholders(localizedText) {
+  const { locales } = getConfig();
+  const locale = getLocale(locales);
+  const placeholderPath = `${locale.prefix}/edsdme/partners-shared/placeholders.json`;
+  const placeholderUrl = new URL(placeholderPath, window.location.origin);
+
+  const response = await fetch(placeholderUrl);
+  if (!response.ok) {
+    throw new Error(`Error message: ${response.statusText}`);
+  }
+
+  const jsonResponse = await response.json();
+  jsonResponse.data.forEach((pair) => {
+    if (pair.value) {
+      localizedText[`{{${pair.key}}}`] = pair.value;
     }
-  }));
+  });
 }
 
 export function getRuntimeActionUrl(action) {

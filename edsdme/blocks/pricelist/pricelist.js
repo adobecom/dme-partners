@@ -2,8 +2,7 @@ import PricelistBlock from './PricelistBlock.js';
 import {
   getConfig,
   getRuntimeActionUrl,
-  localizationPromises,
-  populateLocalizedTextFromListItems,
+  populateLocalizedTextFromPlaceholders,
 } from '../utils/utils.js';
 import { getLibs } from '../../scripts/utils.js';
 
@@ -53,10 +52,9 @@ export default async function init(el) {
     '{{type}}': 'Type',
     '{{action}}': 'Action',
   };
-  populateLocalizedTextFromListItems(el, localizedText);
+  populateLocalizedTextFromPlaceholders(localizedText);
 
   const deps = await Promise.all([
-    localizationPromises(localizedText, config),
     import(`${miloLibs}/features/spectrum-web-components/dist/theme.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/search.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/checkbox.js`),

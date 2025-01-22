@@ -1,5 +1,5 @@
 import { getLibs, getCaasUrl } from '../../scripts/utils.js';
-import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
+import { getConfig, populateLocalizedTextFromPlaceholders } from '../utils/utils.js';
 import Announcements from './AnnouncementsCards.js';
 
 function declareAnnouncements() {
@@ -41,10 +41,9 @@ export default async function init(el) {
     '{{show-all}}': 'Show all',
   };
 
-  populateLocalizedTextFromListItems(el, localizedText);
+  populateLocalizedTextFromPlaceholders(localizedText);
 
   const deps = await Promise.all([
-    localizationPromises(localizedText, config),
     import(`${miloLibs}/features/spectrum-web-components/dist/theme.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/search.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/checkbox.js`),
