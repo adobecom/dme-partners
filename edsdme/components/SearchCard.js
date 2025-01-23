@@ -1,9 +1,10 @@
 import searchCardStyles from './SearchCardStyles.js';
 import { formatDate, getLibs } from '../scripts/utils.js';
-import { setDownloadParam } from '../blocks/utils/utils.js';
+import { setDownloadParam, getConfig, replaceText } from '../blocks/utils/utils.js';
 
 const miloLibs = getLibs();
-const { html, repeat, LitElement } = await import(`${miloLibs}/deps/lit-all.min.js`);
+const config = getConfig();
+const { html, repeat, LitElement, until } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
 class SearchCard extends LitElement {
   static properties = {
@@ -23,7 +24,12 @@ class SearchCard extends LitElement {
       (tag) => tag.key,
       (tag) => {
         const key = Object.values(tag)[0];
-        return html`<span class="card-tag">${this.localizedText[`{{${key}}}`] || key.replaceAll('-', ' ')}</span>`;
+        const wrappedKey = `{{${key}}}`;
+        return html`${until(
+          // eslint-disable-next-line no-confusing-arrow
+          replaceText(wrappedKey, config).then((res) => res ? html`<span class="card-tag">${res}</span>` : html``),
+          html``,
+        )}`;
       },
     )}`;
   }
@@ -71,7 +77,7 @@ class SearchCard extends LitElement {
             </sp-theme>
           </div>
         </div>
-        
+
         <div class="card-content">
           ${this.data.styles?.backgroundImage
             ? html`<div class="card-img" style="background-image: url('${this.data.styles?.backgroundImage}')" alt="${this.data.styles?.backgroundAltText}"></div>`
