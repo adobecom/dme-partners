@@ -413,13 +413,21 @@ export async function preloadResources(locales, miloLibs) {
     announcements: '"caas:adobe-partners/collections/announcements"',
     'announcements-preview': '"caas:adobe-partners/collections/announcements"',
   };
-
+  const blockWithPlaceholders = ['announcements', 'search-full', 'logos', 'pricelist'];
+  let isPreloadCalled = false;
+  blockWithPlaceholders.forEach(async (item) => {
+    const el = document.querySelector(`.${item}`);
+    if (!el) return;
+    if (!isPreloadCalled) {
+      preloadPlaceholders(locale);
+      isPreloadCalled = true;
+    }
+  });
   Object.entries(cardBlocks).forEach(async ([key, value]) => {
     const el = document.querySelector(`.${key}`);
     if (!el) return;
 
     if (key !== 'announcements-preview') {
-      preloadPlaceholders(locale);
       preloadLit(miloLibs);
     }
 
