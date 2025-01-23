@@ -21,9 +21,6 @@ class SinglePartnerCard extends LitElement {
       console.error('URL is null or undefined');
       return '';
     }
-    if (window.location.host === 'partners.adobe.com') {
-      return url;
-    }
     const newUrl = new URL(url);
     newUrl.protocol = window.location.protocol;
     newUrl.host = window.location.host;
