@@ -272,7 +272,12 @@ export function updateIMSConfig() {
     partnerLogin && targetUrl.searchParams.set(PARTNER_LOGIN_QUERY, true);
     if (target && target !== 'NONE') {
       targetUrl.pathname = target;
+
+      if (!partnerLogin) {
+        targetUrl.search = '';
+      }
     }
+
     window.adobeIMS.adobeIdData.redirect_uri = targetUrl.toString();
   }, 500);
 }
