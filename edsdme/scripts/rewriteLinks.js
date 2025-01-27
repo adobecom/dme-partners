@@ -14,16 +14,60 @@ const domainMap = {
   'adobe--sfstage1.sandbox.my.salesforce-sites.com': 'adobe.my.salesforce-sites.com',
 };
 
-const acomLocaleMap = {
-  emea: 'uk',
-  fr: 'fr',
-  de: 'de',
-  it: 'it',
-  es: 'es',
-  kr: 'kr',
-  cn: 'cn',
-  jp: 'jp',
+/**
+ * Default rewriters for handling URL locale modifications.
+ */
+const defaultLocaleRewriters = {
+  /**
+   * Rewrites the URL to include the locale in the path prefix.
+   *
+   * @param {URL} url - The URL object to modify.
+   * @param {string} locale - The locale to add to the path as prefix.
+   * @param {Object} domainConfig - The domain configuration object.
+   * @param {string} [domainConfig.expectedLocale] - The locale expected in the current path.
+   */
+  pathPrefix: (url, locale, domainConfig) => {
+    if (!url || !locale) return;
+    let { pathname } = url;
+    if (domainConfig?.expectedLocale) {
+      if (!url.pathname.startsWith(domainConfig.expectedLocale)) {
+        return;
+      }
+      pathname = url.pathname.replace(domainConfig.expectedLocale, '');
+    }
+    url.pathname = locale + pathname;
+  },
+
+  /**
+   * Rewrites the URL to include the locale as a query parameter.
+   *
+   * @param {URL} url - The URL object to modify.
+   * @param {string} locale - The locale to add as a query parameter.
+   * @param {Object} domainConfig - The domain configuration object.
+   * @param {string} [domainConfig.queryParamKey] - The query parameter key to use for the locale.
+   */
+  queryParam: (url, locale, domainConfig) => {
+    if (!url || !locale || !domainConfig?.queryParamKey) return;
+    const params = new URLSearchParams(url.search);
+    params.set(domainConfig.queryParamKey, locale);
+    url.search = `?${params.toString()}`;
+  },
 };
+
+const acomDomainConfig = {
+  localeMap: {
+    emea: 'uk',
+    fr: 'fr',
+    de: 'de',
+    it: 'it',
+    es: 'es',
+    kr: 'kr',
+    cn: 'cn',
+    jp: 'jp',
+  },
+  localeRewriter: defaultLocaleRewriters.pathPrefix,
+};
+
 /**
  * Domain configs where the key is the production domain,
  * and the value is config object for it.
@@ -40,12 +84,30 @@ const domainConfigs = {
       es: '/es/',
     },
     expectedLocale: '/en/',
+    localeRewriter: defaultLocaleRewriters.pathPrefix,
     loginPath: '/bin/fusion/modalImsLogin',
   },
-  'www.adobe.com': { localeMap: acomLocaleMap },
-  'adobe.com': { localeMap: acomLocaleMap },
-  'helpx.adobe.com': { localeMap: acomLocaleMap },
-  'business.adobe.com': { localeMap: acomLocaleMap },
+  'www.adobe.com': acomDomainConfig,
+  'adobe.com': acomDomainConfig,
+  'helpx.adobe.com': acomDomainConfig,
+  'business.adobe.com': acomDomainConfig,
+  'adobe--sfstage1.sandbox.my.salesforce-sites.com': {
+    localeMap: {
+      apac: 'en',
+      cn: 'zh_CN',
+      de: 'de',
+      emea: 'en',
+      es: 'es',
+      fr: 'fr',
+      it: 'it',
+      jp: 'ja',
+      kr: 'ko',
+      latam: 'en',
+      na: 'en',
+    },
+    localeRewriter: defaultLocaleRewriters.queryParam,
+    queryParamKey: 'lang',
+  },
 };
 
 /**
@@ -67,8 +129,9 @@ function setLoginPathIfSignedIn(url) {
 }
 
 /**
- * Modifies the given URL object by updating its path with correct locale for url domain,
- * based on current page locale and locale maps that are defined for specific domains
+ * Modifies the given URL object with the correct locale,
+ * based on the current page locale and locale maps that are defined for specific domains.
+ * A locale rewritter must be defined in the domain configuration.
  *
  * for cbcconnection it is expected that url already includes /en in path,
  * so it will be updated to correct locale
@@ -83,15 +146,12 @@ function setLocale(url) {
   if (!domainConfig) return;
   const localeFromMap = domainConfig.localeMap[currentPageLocale];
   if (!localeFromMap) return;
-  let { pathname } = url;
-  if (domainConfig.expectedLocale) {
-    if (!url.pathname.startsWith(domainConfig.expectedLocale)) {
-      return;
-    }
-    pathname = url.pathname.replace(domainConfig.expectedLocale, '');
+  const { localeRewriter } = domainConfig;
+  if (localeRewriter && typeof localeRewriter === 'function') {
+    localeRewriter(url, localeFromMap, domainConfig);
   }
-  url.pathname = localeFromMap + pathname;
 }
+
 /**
  * Rewrite a link href domain based on production to stage domain mappings.
  * @param {URL} url - The URL object to be modified.
@@ -127,8 +187,9 @@ export function getUpdatedHref(href) {
   rewriteUrlDomainOnNonProd(url);
   return url.toString();
 }
+
 /**
- * Iterates throw all links on the page and updates their hrefs if conditions are fulfilled
+ * Iterates through all links on the page and updates their hrefs if conditions are fulfilled
  * (conditions: appropriate domain, appropriate current page locale,
  * environment and is user logged in)
  */
