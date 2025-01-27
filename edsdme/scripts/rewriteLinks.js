@@ -11,7 +11,7 @@ const domainMap = {
   'adobe.force.com': 'adobe--sfstage.sandbox.my.site.com',
   'io-partners-dx.adobe.com': 'io-partners-dx.stage.adobe.com',
   'channelpartners.adobe.com': 'channelpartners.stage2.adobe.com',
-  'adobe--sfstage1.sandbox.my.salesforce-sites.com': 'adobe.my.salesforce-sites.com',
+  'adobe.my.salesforce-sites.com': 'adobe--sfstage1.sandbox.my.salesforce-sites.com',
 };
 
 /**
@@ -91,7 +91,7 @@ const domainConfigs = {
   'adobe.com': acomDomainConfig,
   'helpx.adobe.com': acomDomainConfig,
   'business.adobe.com': acomDomainConfig,
-  'adobe--sfstage1.sandbox.my.salesforce-sites.com': {
+  'adobe.my.salesforce-sites.com': {
     localeMap: {
       apac: 'en',
       cn: 'zh_CN',
