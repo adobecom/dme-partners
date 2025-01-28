@@ -21,6 +21,7 @@ const GNAV_PERSONALIZATION_PLACEHOLDERS = {
 
 const LEVEL_CONDITION = 'partner-level';
 const PERSONALIZATION_MARKER = 'partner-personalization';
+const PROCESSED_MARKER = '-processed';
 const PERSONALIZATION_HIDE = 'personalization-hide';
 const PROGRAM = getCurrentProgramType();
 const PARTNER_LEVEL = getPartnerDataCookieValue(PROGRAM, 'level');
@@ -93,6 +94,8 @@ function personalizePage(page) {
   blocks.forEach((el) => {
     const conditions = Object.values(el.classList);
     hideElement(el, conditions);
+    el.classList.remove(PERSONALIZATION_MARKER);
+    el.classList.add(`${PERSONALIZATION_MARKER}${PROCESSED_MARKER}`);
   });
   hideSections(page);
 }

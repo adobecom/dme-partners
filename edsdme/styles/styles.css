@@ -10,6 +10,10 @@
   display: none;
 }
 
+.fragment .partner-personalization {
+  display: none;
+}
+
 /* MWPW-162386 */
 @supports (-moz-appearance: none) {
   h2 strong,
