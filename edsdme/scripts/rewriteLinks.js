@@ -141,7 +141,7 @@ function setLocale(url) {
   if (window.location.pathname === '/' || window.location.pathname === '') return;
   const currentPageLocale = window.location.pathname.split('/')?.[1];
   const domainConfig = domainConfigs[url.hostname];
-  if (!domainConfig || !domainConfig.localeMap) return;
+  if (!domainConfig?.localeMap) return;
   const localeFromMap = domainConfig.localeMap[currentPageLocale];
   if (!localeFromMap) return;
   const { localeRewriter } = domainConfig;
