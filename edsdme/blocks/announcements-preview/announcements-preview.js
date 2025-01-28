@@ -1,5 +1,5 @@
 import { getCaasUrl } from '../../scripts/utils.js';
-import { getConfig } from '../utils/utils.js';
+import { getConfig, localizationPromises } from '../utils/utils.js';
 import { filterRestrictedCardsByCurrentSite } from '../announcements/AnnouncementsCards.js';
 
 function formatLinks(link) {
@@ -97,13 +97,19 @@ export default async function init(el) {
     ietf: config.locale.ietf,
   };
 
+  const localizedText = { '{{no-partner-announcement}}': 'Currently, there are no partner announcements' };
+
+  const deps = await Promise.all([
+    localizationPromises(localizedText, config),
+  ]);
+
   const blockData = {
     caasUrl: getCaasUrl(block),
     ietf: config.locale.ietf,
     title: '',
     buttonText: '',
     link: '',
-    empty: 'Currently, there are no partner announcements',
+    localizedText,
   };
 
   const app = document.createElement('div');
@@ -163,9 +169,10 @@ export default async function init(el) {
   } else {
     const emptyAnnouncements = document.createElement('p');
     emptyAnnouncements.className = 'empty-massage';
-    emptyAnnouncements.textContent = blockData.empty;
+    emptyAnnouncements.textContent = blockData.localizedText['{{no-partner-announcement}}'];
     app.appendChild(emptyAnnouncements);
   }
 
+  await deps;
   el.replaceWith(app);
 }
