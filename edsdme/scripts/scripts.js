@@ -113,5 +113,6 @@ function setUpPage() {
   setConfig({ ...CONFIG, miloLibs });
   await getRenewBanner(getConfig);
   await loadArea();
+  applyPagePersonalization();
   rewriteLinks(document);
 }());
