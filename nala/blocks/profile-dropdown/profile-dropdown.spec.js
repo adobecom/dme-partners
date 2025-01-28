@@ -13,7 +13,7 @@ export default {
         profilePartnerLevel: 'Distributor',
         editProfileURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
         accountManagementURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
-        salesCenterURL: 'https://adobe--sfstage.sandbox.my.site.com/',
+        salesCenterURL: 'https://channelpartners.stage2.adobe.com/s/salescenter/dashboard',
         targetAfterLogout: 'https://partners.stage.adobe.com/apac/channelpartners/#',
       },
     },
