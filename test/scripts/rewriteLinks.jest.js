@@ -285,7 +285,7 @@ describe('Test rewrite links', () => {
     const result = rewriteLinks(gnav);
 
     expect(result.innerHTML).toBe(`
-        <a href="https://channelpartners.stage2.adobe.com/app/services/auth/sso/apc"></a>
+        <a href="https://channelpartners.stage2.adobe.com/s/salescenter/dashboard"></a>
         <a href="https://channelpartners.stage2.adobe.com/path"></a>
         <a href="https://io-partners-dx.stage.adobe.com/path"></a>
         <a href="https://unmapped-domain.com/path"></a>

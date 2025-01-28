@@ -162,12 +162,6 @@ export function rewriteUrlOnNonProd(url) {
 
   if (env.name === 'prod') return;
 
-  const stageDomain = domainConfigs[url.hostname]?.stage?.domain;
-
-  if (stageDomain) {
-    url.hostname = stageDomain;
-  }
-
   const stagePathMappings = domainConfigs[url.hostname]?.stage?.pathMappings;
 
   if (stagePathMappings && Object.keys(stagePathMappings).length) {
@@ -176,6 +170,12 @@ export function rewriteUrlOnNonProd(url) {
         url.pathname = value;
       }
     });
+  }
+
+  const stageDomain = domainConfigs[url.hostname]?.stage?.domain;
+
+  if (stageDomain) {
+    url.hostname = stageDomain;
   }
 }
 
