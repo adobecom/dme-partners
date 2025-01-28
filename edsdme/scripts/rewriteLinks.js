@@ -2,19 +2,6 @@ import { partnerIsSignedIn } from './utils.js';
 import { getConfig } from '../blocks/utils/utils.js';
 
 /**
- * Domain map where the key is the production domain,
- * and the value is the corresponding stage domain.
- */
-const domainMap = {
-  'cbconnection.adobe.com': 'cbconnection-stage.adobe.com',
-  'partners.adobe.com': 'partners.stage.adobe.com',
-  'adobe.force.com': 'adobe--sfstage.sandbox.my.site.com',
-  'io-partners-dx.adobe.com': 'io-partners-dx.stage.adobe.com',
-  'channelpartners.adobe.com': 'channelpartners.stage2.adobe.com',
-  'adobe.my.salesforce-sites.com': 'adobe--sfstage1.sandbox.my.salesforce-sites.com',
-};
-
-/**
  * Default rewriters for handling URL locale modifications.
  */
 const defaultLocaleRewriters = {
@@ -74,6 +61,7 @@ const acomDomainConfig = {
  */
 const domainConfigs = {
   'cbconnection.adobe.com': {
+    stage: { domain: 'cbconnection-stage.adobe.com' },
     localeMap: {
       de: '/de/',
       cn: '/zh_cn/',
@@ -87,11 +75,21 @@ const domainConfigs = {
     localeRewriter: defaultLocaleRewriters.pathPrefix,
     loginPath: '/bin/fusion/modalImsLogin',
   },
+  'partners.adobe.com': { stage: { domain: 'partners.stage.adobe.com' } },
+  'adobe.force.com': {
+    stage: {
+      domain: 'channelpartners.stage2.adobe.com',
+      pathMappings: { '/app/services/auth/sso/apc': '/s/salescenter/dashboard' },
+    },
+  },
+  'io-partners-dx.adobe.com': { stage: { domain: 'io-partners-dx.stage.adobe.com' } },
+  'channelpartners.adobe.com': { stage: { domain: 'channelpartners.stage2.adobe.com' } },
   'www.adobe.com': acomDomainConfig,
   'adobe.com': acomDomainConfig,
   'helpx.adobe.com': acomDomainConfig,
   'business.adobe.com': acomDomainConfig,
   'adobe.my.salesforce-sites.com': {
+    stage: { domain: 'adobe--sfstage1.sandbox.my.salesforce-sites.com' },
     localeMap: {
       apac: 'en',
       cn: 'zh_CN',
@@ -143,7 +141,7 @@ function setLocale(url) {
   if (window.location.pathname === '/' || window.location.pathname === '') return;
   const currentPageLocale = window.location.pathname.split('/')?.[1];
   const domainConfig = domainConfigs[url.hostname];
-  if (!domainConfig) return;
+  if (!domainConfig?.localeMap) return;
   const localeFromMap = domainConfig.localeMap[currentPageLocale];
   if (!localeFromMap) return;
   const { localeRewriter } = domainConfig;
@@ -154,17 +152,30 @@ function setLocale(url) {
 
 /**
  * Rewrite a link href domain based on production to stage domain mappings.
+ * As well as the pathname if pathname mappings are defined and there's a match.
  * @param {URL} url - The URL object to be modified.
  * Modifies URL href, or the original if the environment is prod,
  * there was a problem processing, or there is no domain mapping defined for it.
  */
-export function rewriteUrlDomainOnNonProd(url) {
+export function rewriteUrlOnNonProd(url) {
   const { env } = getConfig();
 
   if (env.name === 'prod') return;
 
-  if (domainMap[url.hostname]) {
-    url.hostname = domainMap[url.hostname];
+  const stagePathMappings = domainConfigs[url.hostname]?.stage?.pathMappings;
+
+  if (stagePathMappings && Object.keys(stagePathMappings).length) {
+    Object.entries(stagePathMappings).forEach(([key, value]) => {
+      if (url.pathname === key) {
+        url.pathname = value;
+      }
+    });
+  }
+
+  const stageDomain = domainConfigs[url.hostname]?.stage?.domain;
+
+  if (stageDomain) {
+    url.hostname = stageDomain;
   }
 }
 
@@ -184,7 +195,7 @@ export function getUpdatedHref(href) {
   setLocale(url);
   setLoginPathIfSignedIn(url);
   // always as last step since we need original domains for mappings
-  rewriteUrlDomainOnNonProd(url);
+  rewriteUrlOnNonProd(url);
   return url.toString();
 }
 

@@ -240,7 +240,7 @@ describe('Test rewrite links', () => {
     const href = 'https://adobe.force.com/path';
     const result = getUpdatedHref(href);
 
-    expect(result).toBe('https://adobe--sfstage.sandbox.my.site.com/path');
+    expect(result).toBe('https://channelpartners.stage2.adobe.com/path');
   });
 
   test('should rewrite runtime link hrefs', () => {
@@ -266,7 +266,8 @@ describe('Test rewrite links', () => {
 
   const gnav = document.createElement('div');
   const gnavHTML = `
-        <a href="https://adobe.force.com/path"></a>
+        <a href="https://adobe.force.com/app/services/auth/sso/apc"></a>
+        <a href="https://channelpartners.adobe.com/path"></a>
         <a href="https://io-partners-dx.adobe.com/path"></a>
         <a href="https://unmapped-domain.com/path"></a>
       `;
@@ -284,7 +285,8 @@ describe('Test rewrite links', () => {
     const result = rewriteLinks(gnav);
 
     expect(result.innerHTML).toBe(`
-        <a href="https://adobe--sfstage.sandbox.my.site.com/path"></a>
+        <a href="https://channelpartners.stage2.adobe.com/s/salescenter/dashboard"></a>
+        <a href="https://channelpartners.stage2.adobe.com/path"></a>
         <a href="https://io-partners-dx.stage.adobe.com/path"></a>
         <a href="https://unmapped-domain.com/path"></a>
       `);
