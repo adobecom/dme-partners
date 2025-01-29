@@ -80,7 +80,7 @@ export default {
       tags: '@dme-signin @regression @login @circleCi',
       data: {
         partnerLevel: 'tpp-platinum:',
-        expectedRedirectedURL: 'https://partners.stage.adobe.com/channelpartners/error/contact-not-found',
+        expectedRedirectedURL: 'https://partners.stage.adobe.com/na/channelpartners/error/contact-not-found',
         page: 'restricted home',
         signInButtonText: 'Sign In',
       },
