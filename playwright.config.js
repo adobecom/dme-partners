@@ -1,4 +1,5 @@
 import { devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 
 // const envs = require('./envs/envs.js');
 
@@ -28,7 +29,7 @@ const config = {
   /* Retry on CI only */
   retries: process.env.CI ? 1 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 4 : 3,
+  workers: process.env.CI ? 30 : 20,
   /* Reporter to use. */
   reporter: process.env.CI
     ? [['github'], ['list'], ['./nala/utils/base-reporter.js']]
@@ -50,12 +51,15 @@ const config = {
       use: { ...devices['Desktop Chrome'] },
       bypassCSP: true,
       launchOptions: { args: ['--disable-web-security', '--disable-gpu'] },
+      fullyParallel: true,
     },
 
     {
       name: 'dme-partners-live-firefox',
       use: { ...devices['Desktop Firefox'] },
       bypassCSP: true,
+      fullyParallel: true,
+
     },
     {
       name: 'dme-partners-live-webkit',
@@ -64,6 +68,7 @@ const config = {
         ignoreHTTPSErrors: true,
       },
       bypassCSP: true,
+      fullyParallel: true,
     },
     /* Test Against Mobile View ports */
     // {

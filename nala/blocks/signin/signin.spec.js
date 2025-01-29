@@ -5,7 +5,7 @@ export default {
       tcid: '1',
       name: '@login-sign-in-sign-out-public-page',
       path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off',
-      tags: '@dme-signin @regression @login @circleCi',
+      tags: '@dme-signin @regression @login @circleCi @parallel',
       data: {
         partnerLevel: 'cpp-spain-platinum:',
         expectedProtectedHomeURL: '/es/channelpartners/drafts/automation/regression/protected-home',
@@ -164,7 +164,7 @@ export default {
       tcid: '14',
       name: '@login-sign-in-sign-out-from-program-page-with-member-user',
       path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-program-page?georouting=off&martech=off',
-      tags: '@dme-signin @regression @login @circleCi',
+      tags: '@dme-signin @regression @login @circleCi  @parallel',
       data: {
         partnerLevel: 'cpp-latin-america-na-platinum:',
         landingPageAfterLoginURL: 'https://partners.stage.adobe.com/latam/channelpartners/drafts/automation/regression/protected-program-page',
