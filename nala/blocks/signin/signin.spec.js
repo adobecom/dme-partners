@@ -75,7 +75,7 @@ export default {
     {
       tcid: '6',
       name: '@login-accessing-restricted-home-page-with-non-member-user-logged-in-to-adobe',
-      path: 'https://partners.stage.adobe.com/channelpartners/home/?georouting=off&martech=off',
+      path: 'https://partners.stage.adobe.com/na/channelpartners/home/?georouting=off&martech=off',
       baseURL: 'https://www.stage.adobe.com?akamaiLocale=us',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
