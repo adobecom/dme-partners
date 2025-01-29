@@ -5,14 +5,14 @@ export default {
       tcid: '1',
       name: '@desc-accessing-protected-content-with-non-logged-in-user',
       path: '/channelpartners/drafts/automation/regression/cards/cpp-gold-spain?georouting=off&martech=off',
-      tags: '@dme-protected-content @regression @login @circleCi',
+      tags: '@dme-protected-content @regression @login',
       expectedToSeeInURL: 'https://auth-stg1.services.adobe.com/',
     },
     {
       tcid: '2',
       name: '@desc-accessing-protected-content-with-logged-in-non-member-user',
       path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
-      tags: '@dme-protected-content @regression @login @circleCi',
+      tags: '@dme-protected-content @regression @login',
       data: {
         partnerLevel: 'spp-platinum:',
         contactNotFoundPage: '/error/contact-not-found',
@@ -25,7 +25,7 @@ export default {
       tcid: '3',
       name: '@desc-accessing-protected-content-with-logged-in-member-user-distributor-level',
       path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
-      tags: '@dme-protected-content @regression @login @circleCi',
+      tags: '@dme-protected-content @regression @login',
       data: {
         partnerLevel: 'cpp-distributor-japan:',
         contentNotFoundPage: '/error/404',
@@ -40,7 +40,7 @@ export default {
       tcid: '4',
       name: '@desc-accessing-protected-content-with-logged-in-member-user-platinum-level',
       path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
-      tags: '@dme-protected-content @regression @login @circleCi',
+      tags: '@dme-protected-content @regression @login',
       data: {
         partnerLevel: 'cpp-spain-platinum:',
         contentNotFoundPage: '/error/404',
@@ -53,7 +53,7 @@ export default {
       tcid: '5',
       name: '@desc-accessing-protected-content-with-logged-in-member-user-gold-level',
       path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
-      tags: '@dme-protected-content @regression @login @circleCi',
+      tags: '@dme-protected-content @regression @login',
       data: {
         partnerLevel: 'cpp-uk-gold:',
         contentNotFoundPage: '/error/404',
@@ -66,7 +66,7 @@ export default {
       tcid: '6',
       name: '@desc-accessing-protected-content-with-logged-in-member-user-certified-level',
       path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
-      tags: '@dme-protected-content @regression @login @circleCi',
+      tags: '@dme-protected-content @regression @login',
       data: {
         partnerLevel: 'cpp-pacific-certified:',
         contentNotFoundPage: '/error/404',
@@ -79,7 +79,7 @@ export default {
       tcid: '7',
       name: '@desc-accessing-protected-content-with-logged-in-member-user-registered-level',
       path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
-      tags: '@dme-protected-content @regression @login @circleCi',
+      tags: '@dme-protected-content @regression @login',
       data: {
         partnerLevel: 'cpp-china-registered:',
         contentNotFoundPage: '/error/404',

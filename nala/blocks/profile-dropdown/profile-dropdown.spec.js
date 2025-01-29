@@ -5,7 +5,7 @@ export default {
       tcid: '1',
       name: '@desc-profile-dropdown-member-user-with-sales-center',
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-profile @regression @login @circleCi',
+      tags: '@dme-profile @regression @login',
       data: {
         partnerLevel: 'cpp-distributor-apac:',
         profileName: 'Stage CPP Distributor',
@@ -21,7 +21,7 @@ export default {
       tcid: '2',
       name: '@desc-profile-dropdown-member-user-with-anniversary-date-next-30-days',
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-profile @regression @login @circleCi',
+      tags: '@dme-profile @regression @login',
       data: {
         partnerLevel: 'cpp-us-registered:',
         profileName: 'CPP Stage Registered Reseller Renew',
@@ -39,7 +39,7 @@ export default {
       tcid: '3',
       name: '@desc-profile-dropdown-member-user-with-anniversary-date-last-90-days',
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-profile @regression @login @circleCi',
+      tags: '@dme-profile @regression @login',
       data: {
         partnerLevel: 'cpp-us-certified:',
         profileName: 'CPP Stage Reseller Certified',

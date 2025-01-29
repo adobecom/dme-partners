@@ -5,7 +5,7 @@ export default {
       tcid: '1',
       name: '@desc-public-gnav',
       path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
-      tags: '@dme-gnav @anonymous @circleCi',
+      tags: '@dme-gnav @anonymous',
     },
     {
       tcid: '2',
@@ -24,7 +24,7 @@ export default {
       tcid: '3',
       name: '@desc-loggedin-gnav-not-loaded-for-non-member-user',
       path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
-      tags: '@dme-gnav @anonymous @circleCi',
+      tags: '@dme-gnav @anonymous',
       data: {
         partnerData: {
           partnerPortal: 'SPP',

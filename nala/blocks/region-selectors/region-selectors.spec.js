@@ -127,7 +127,7 @@ export default {
       tcid: '12',
       name: '@login-regression-region-selectors-spain',
       path: '/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-region-selector @regression @circleCi',
+      tags: '@dme-region-selector @regression ',
       data: {
         partnerLevel: 'cpp-spain-platinum:',
         localeSwitchUrl: '/es/channelpartners/',
