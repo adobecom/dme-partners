@@ -55,7 +55,7 @@ export default class SmokeTest {
   async announcmentCardVerification() {
     const shadowHostCard = await this.page
       .locator(
-        'announcements-cards.content.announcements-wrapper[data-idx="0"]',
+        'announcements-cards.content.announcements-wrapper',
       )
       .elementHandle();
     const shadowRootCard = await shadowHostCard.evaluateHandle(

@@ -33,10 +33,9 @@ import {
   darkIcons,
 } from './utilities/utilities.js';
 
-import { applyGnavLinkRewriting } from '../../scripts/links.js';
-
 // MWPW-157751
-import { getLibs } from '../../scripts/utils.js'; // MWPW-157751
+import { getLibs } from '../../scripts/utils.js';// MWPW-157751
+import {rewriteLinks} from "../../scripts/rewriteLinks.js";
 
 const miloLibs = getLibs();
 const {
@@ -1040,7 +1039,7 @@ export default async function init(block) {
     if (!content) return null;
     block.classList.add('global-navigation'); // MWPW-157751
     content = applyGnavPersonalization(content); // MWPW-157751
-    content = applyGnavLinkRewriting(content);
+    content = rewriteLinks(content);
     const gnav = new Gnav({
       content,
       block,
