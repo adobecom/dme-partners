@@ -227,6 +227,7 @@ test.describe('MAPC sign in flow', () => {
       });
 
       await test.step('Verify successful login', async () => {
+        await page.waitForTimeout(10000);
         await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
       });
     });
