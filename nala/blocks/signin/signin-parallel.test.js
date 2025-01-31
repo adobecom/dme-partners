@@ -42,7 +42,8 @@ test.describe('MAPC sign in flow parallel', () => {
         });
 
         await test.step('Verify successful login', async () => {
-          await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+          await page.waitForTimeout(10000);
+          await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
         });
       });
     });

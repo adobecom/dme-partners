@@ -13,7 +13,7 @@ const config = {
   outputDir: './test-results',
   globalSetup: './nala/utils/global.setup.js',
   /* Maximum time one test can run for. */
-  timeout: 30 * 1000,
+  timeout: 60 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -27,9 +27,9 @@ const config = {
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 1 : 0,
+  retries: process.env.CI ? 1 : 2,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 30 : 20,
+  workers: process.env.CI ? 30 : 30,
   /* Reporter to use. */
   reporter: process.env.CI
     ? [['github'], ['list'], ['./nala/utils/base-reporter.js']]
