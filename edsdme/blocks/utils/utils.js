@@ -1,4 +1,5 @@
 import { getLocale, setLibs } from '../../scripts/utils.js';
+import {RT_SEARCH_ACTION_PATH} from "./dmeConstants.js";
 
 const miloLibs = setLibs('/libs');
 
@@ -40,7 +41,7 @@ export function getRuntimeActionUrl(action) {
 
 export function generateRequestForSearchAPI(pageOptions, body) {
   const { locales } = getConfig();
-  const url = getRuntimeActionUrl('/api/v1/web/dx-partners-runtime/search-apc/search-apc?');
+  const url = getRuntimeActionUrl(RT_SEARCH_ACTION_PATH);
   const localesData = getLocale(locales);
   const queryParams = new URLSearchParams(url.search);
   queryParams.append('geo', localesData.prefix && localesData.region);
