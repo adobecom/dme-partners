@@ -1,7 +1,11 @@
-import {COOKIE_OBJECT, PERSONALIZATION_HIDE} from "./personalizationConfig.js";
-import {hasSalesCenterAccess} from "./utils.js";
+import { PROGRAM } from '../blocks/utils/dmeConstants.js';
 
-export  function processPrimaryContact(el) {
+import { getPartnerDataCookieObject, hasSalesCenterAccess } from './utils.js';
+
+export const PERSONALIZATION_HIDE = 'personalization-hide';
+export const COOKIE_OBJECT = getPartnerDataCookieObject(PROGRAM);
+
+export function processPrimaryContact(el) {
   const isPrimary = COOKIE_OBJECT.primaryContact;
   el.classList.add(PERSONALIZATION_HIDE);
   if (!isPrimary) return;

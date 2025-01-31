@@ -1,5 +1,5 @@
 import { getLocale, setLibs } from '../../scripts/utils.js';
-import {RT_SEARCH_ACTION_PATH} from "./dmeConstants.js";
+import { RT_SEARCH_ACTION_PATH } from './dmeConstants.js';
 
 const miloLibs = setLibs('/libs');
 

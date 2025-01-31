@@ -4,17 +4,17 @@ import {
   isRenew,
 }
   from './utils.js';
-import { getConfig } from '../blocks/utils/utils.js';
 import {
   PAGE_PERSONALIZATION_PLACEHOLDERS,
   GNAV_PERSONALIZATION_PLACEHOLDERS,
   PERSONALIZATION_MARKER,
   PROCESSED_MARKER,
-  PERSONALIZATION_HIDE,
   PERSONALIZATION_CONDITIONS,
   MAIN_NAV_PERSONALIZATION_CONDITIONS,
-  PROFILE_PERSONALIZATION_ACTIONS, COOKIE_OBJECT, LEVEL_CONDITION,
-} from './personalizationConfig';
+  PROFILE_PERSONALIZATION_ACTIONS,
+  LEVEL_CONDITION,
+} from './personalizationConfig.js';
+import { COOKIE_OBJECT, PERSONALIZATION_HIDE } from './personalizationUtils.js';
 
 function personalizePlaceholders(placeholders, context = document) {
   Object.entries(placeholders).forEach(([key, value]) => {
@@ -86,9 +86,7 @@ export function applyPagePersonalization() {
   personalizePage(main);
 }
 
-
 function processRenew(profile) {
-  const { env } = getConfig();
   const renew = isRenew();
   const renewElements = Array.from(profile.querySelectorAll('.partner-renew'));
   renewElements.forEach((el) => {
