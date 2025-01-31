@@ -22,7 +22,7 @@ export default class SignInPage {
 
   async signIn(page, partnerLevel) {
     const email = process.env.IMS_EMAIL.split(partnerLevel)[1].split(';')[0];
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
     await page.waitForTimeout(5000);
     await this.emailField.fill(email);
     await this.emailPageContinueButton.click();
@@ -35,7 +35,7 @@ export default class SignInPage {
     page, expect, path, newTabPath, partnerLevel, expectedLandingPageURL, buttonText, browserName,
   }) {
     await page.goto(path);
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
 
     await this.page.getByRole('button', { name: 'Sign In' }).waitFor({ state: 'visible', timeout: 30000 });
     const signInButton = await this.getSignInButton(buttonText);
