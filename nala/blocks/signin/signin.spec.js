@@ -144,7 +144,7 @@ export default {
       tcid: '12',
       name: '@login-functionality-with-gold-member-user',
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-signin @regression @login @parallel',
+      tags: '@dme-signin @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-latin-america-gold:',
         signInButtonText: 'Sign In',
@@ -154,7 +154,7 @@ export default {
       tcid: '13',
       name: '@login-functionality-with-platinum-member-user',
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-signin @regression @login @parallel',
+      tags: '@dme-signin @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-spain-platinum:',
         signInButtonText: 'Sign In',

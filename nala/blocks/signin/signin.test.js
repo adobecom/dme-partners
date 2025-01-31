@@ -64,8 +64,9 @@ test.describe('MAPC sign in flow', () => {
 //     });
 //   });
 
+  for (let i = 0; i < 3; i++) {
   redirectionFeatures.forEach((feature) => {
-    test(`${feature.name},${feature.tags}`, async ({ page, browserName }) => {
+    test(`Run ${i + 1}: ${feature.name},${feature.tags}`, async ({ page, browserName }) => {
       await signInPage.verifyRedirectAfterLogin({
         page,
         expect,
@@ -78,6 +79,7 @@ test.describe('MAPC sign in flow', () => {
       });
     });
   });
+  }
 
   nonMemberRedirects.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, browserName }) => {
