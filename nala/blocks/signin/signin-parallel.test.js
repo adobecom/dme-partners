@@ -27,7 +27,7 @@ test.describe('MAPC sign in flow parallel', () => {
     }
   });
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 3; i++) {
      resellerMembersLogin.forEach((feature) => {
       test(`Run ${i + 1}: ${feature.name},${feature.tags}`, async ({ page }) => {
         await test.step('Go to the public page', async () => {

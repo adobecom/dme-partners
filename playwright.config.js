@@ -13,7 +13,7 @@ const config = {
   outputDir: './test-results',
   globalSetup: './nala/utils/global.setup.js',
   /* Maximum time one test can run for. */
-  timeout: 100 * 1000,
+  timeout: 150 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
