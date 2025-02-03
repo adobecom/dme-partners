@@ -136,8 +136,9 @@ export default {
         closePopUpButton: 'Close',
         signInButton: 'Iniciar sesión',
         linkText: 'España',
-        titleText: 'Elija su región.',
-        titleDesc: 'Al seleccionar una región, se cambia el idioma y el contenido en el sitio de socios de canal de Adobe.',
+        titleText: 'Elige tu región',
+        titleDesc: 'Al seleccionar una región, se cambia el idioma o el contenido del sitio para partners de canal de Adobe.',
+
       },
     },
   ],

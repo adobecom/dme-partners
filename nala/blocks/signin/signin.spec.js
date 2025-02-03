@@ -75,12 +75,12 @@ export default {
     {
       tcid: '6',
       name: '@login-accessing-restricted-home-page-with-non-member-user-logged-in-to-adobe',
-      path: 'https://partners.stage.adobe.com/channelpartners/home/?georouting=off&martech=off',
+      path: 'https://partners.stage.adobe.com/na/channelpartners/home/?georouting=off&martech=off',
       baseURL: 'https://www.stage.adobe.com?akamaiLocale=us',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
         partnerLevel: 'tpp-platinum:',
-        expectedRedirectedURL: 'https://partners.stage.adobe.com/channelpartners/error/contact-not-found',
+        expectedRedirectedURL: 'https://partners.stage.adobe.com/na/channelpartners/error/contact-not-found',
         page: 'restricted home',
         signInButtonText: 'Sign In',
       },
