@@ -29,7 +29,7 @@ const config = {
   /* Retry on CI only */
   retries: process.env.CI ? 1 : 2,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 30 : 30,
+  workers: process.env.CI ? 15 : 10,
   /* Reporter to use. */
   reporter: process.env.CI
     ? [['github'], ['list'], ['./nala/utils/base-reporter.js']]
