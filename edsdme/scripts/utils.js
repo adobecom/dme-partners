@@ -393,10 +393,9 @@ function setApiParams(api, block) {
   const complexQueryParams = getComplexQueryParams(el, collectionTag);
   if (complexQueryParams) api.searchParams.set('complexQuery', complexQueryParams);
 
-  const [language, country] = ietf.split('-');
-  if (language && country) {
+  const [language] = ietf.split('-');
+  if (language) {
     api.searchParams.set('language', language);
-    api.searchParams.set('country', country);
   }
   return api.toString();
 }
