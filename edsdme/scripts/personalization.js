@@ -1,40 +1,20 @@
 import {
-  getCurrentProgramType,
-  getPartnerDataCookieValue,
   isMember,
-  partnerIsSignedIn,
-  getPartnerDataCookieObject,
-  signedInNonMember,
-  isReseller,
-  hasSalesCenterAccess,
   getNodesByXPath,
   isRenew,
 }
   from './utils.js';
-import { getConfig } from '../blocks/utils/utils.js';
-
-const PAGE_PERSONALIZATION_PLACEHOLDERS = { firstName: '//*[contains(text(), "$firstName")]' };
-const GNAV_PERSONALIZATION_PLACEHOLDERS = {
-  company: '//*[contains(text(), "$company")]',
-  level: '//*[contains(text(), "$level")]',
-};
-
-const LEVEL_CONDITION = 'partner-level';
-const PERSONALIZATION_MARKER = 'partner-personalization';
-const PROCESSED_MARKER = '-processed';
-const PERSONALIZATION_HIDE = 'personalization-hide';
-const PROGRAM = getCurrentProgramType();
-const PARTNER_LEVEL = getPartnerDataCookieValue(PROGRAM, 'level');
-const COOKIE_OBJECT = getPartnerDataCookieObject(PROGRAM);
-
-const PERSONALIZATION_CONDITIONS = {
-  'partner-not-member': signedInNonMember(),
-  'partner-not-signed-in': !partnerIsSignedIn(),
-  'partner-all-levels': isMember(),
-  'partner-reseller': isReseller(PARTNER_LEVEL),
-  'partner-sales-access': hasSalesCenterAccess(),
-  'partner-level': (level) => PARTNER_LEVEL === level,
-};
+import {
+  PAGE_PERSONALIZATION_PLACEHOLDERS,
+  GNAV_PERSONALIZATION_PLACEHOLDERS,
+  PERSONALIZATION_MARKER,
+  PROCESSED_MARKER,
+  PERSONALIZATION_CONDITIONS,
+  MAIN_NAV_PERSONALIZATION_CONDITIONS,
+  PROFILE_PERSONALIZATION_ACTIONS,
+  LEVEL_CONDITION,
+} from './personalizationConfig.js';
+import { COOKIE_OBJECT, PERSONALIZATION_HIDE } from './personalizationUtils.js';
 
 function personalizePlaceholders(placeholders, context = document) {
   Object.entries(placeholders).forEach(([key, value]) => {
@@ -106,20 +86,7 @@ export function applyPagePersonalization() {
   personalizePage(main);
 }
 
-function processPrimaryContact(el) {
-  const isPrimary = COOKIE_OBJECT.primaryContact;
-  el.classList.add(PERSONALIZATION_HIDE);
-  if (!isPrimary) return;
-  const primaryContactWrapper = document.createElement('div');
-  const primaryContact = document.createElement('p');
-  primaryContact.textContent = el.textContent;
-  primaryContactWrapper.classList.add('primary-contact-wrapper');
-  primaryContactWrapper.appendChild(primaryContact);
-  el.replaceWith(primaryContactWrapper);
-}
-
 function processRenew(profile) {
-  const { env } = getConfig();
   const renew = isRenew();
   const renewElements = Array.from(profile.querySelectorAll('.partner-renew'));
   renewElements.forEach((el) => {
@@ -129,33 +96,7 @@ function processRenew(profile) {
     if (el.classList.contains(`partner-${accountStatus}`)) {
       el.classList.remove(PERSONALIZATION_HIDE);
     }
-    if (env.name !== 'prod') {
-      const anchor = el.querySelector('a');
-      const url = new URL(anchor.href);
-      url.hostname = 'channelpartners.stage2.adobe.com';
-      anchor.href = url;
-    }
   });
-}
-
-function processSalesAccess(el) {
-  const salesAccess = hasSalesCenterAccess();
-  const element = el.parentElement;
-  if (!salesAccess) {
-    element.classList.add(PERSONALIZATION_HIDE);
-    return;
-  }
-  const divider = document.createElement('hr');
-  element.insertBefore(divider, el);
-}
-
-function processAccountManagement(el) {
-  const { env } = getConfig();
-  if (env.name !== 'prod') {
-    const url = new URL(el.href);
-    url.hostname = 'channelpartners.stage2.adobe.com';
-    el.href = url;
-  }
 }
 
 function processGnavElements(elements) {
@@ -171,12 +112,6 @@ function processGnavElements(elements) {
   });
 }
 
-const PROFILE_PERSONALIZATION_ACTIONS = {
-  'partner-primary': (el) => processPrimaryContact(el),
-  'partner-sales-access': (el) => processSalesAccess(el),
-  'partner-account-management': (el) => processAccountManagement(el),
-};
-
 function personalizeDropdownElements(profile) {
   const personalizationXPath = `//*[contains(text(), "${PERSONALIZATION_MARKER}")]`;
   const elements = getNodesByXPath(personalizationXPath, profile);
@@ -187,11 +122,6 @@ function personalizeDropdownElements(profile) {
     PROFILE_PERSONALIZATION_ACTIONS[action]?.(el);
   });
 }
-
-const MAIN_NAV_PERSONALIZATION_CONDITIONS = {
-  ...PERSONALIZATION_CONDITIONS,
-  'partner-sales-access': hasSalesCenterAccess(),
-};
 
 function personalizeMainNav(gnav) {
   const personalizationXPath = `//*[contains(text(), "${PERSONALIZATION_MARKER}") and not(ancestor::*[contains(@class, "profile")])]`;
