@@ -21,6 +21,8 @@ const LIBS = '/libs';
 const prodHosts = [
   'main--dme-partners--adobecom.hlx.page',
   'main--dme-partners--adobecom.hlx.live',
+  'main--dme-partners--adobecom.aem.page',
+  'main--dme-partners--adobecom.aem.live',
   'partners.adobe.com',
 ];
 

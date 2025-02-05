@@ -4,7 +4,7 @@ import { filterRestrictedCardsByCurrentSite } from '../announcements/Announcemen
 
 function formatLinks(link) {
   const { hostname, pathname } = new URL(link);
-  const isMiloUrl = hostname.endsWith('hlx.live') || hostname.endsWith('hlx.page');
+  const isMiloUrl = hostname.endsWith('hlx.live') || hostname.endsWith('hlx.page') ||  hostname.endsWith('aem.live') || hostname.endsWith('aem.page');
   return isMiloUrl ? pathname : link;
 }
 
