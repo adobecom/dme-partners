@@ -9,7 +9,7 @@ export default class SmokeTest {
     this.tableSelector = '.table-container';
     this.searchGnav = page.locator('.feds-search-trigger');
     this.searchGnavField = page.locator('.feds-search-input');
-    this.searchFieldPage = page.locator('#search');
+    this.searchFieldPage = page.locator('.search-wrapper #search');
     this.announcemnts = page.locator('text="Announcements"');
   }
 

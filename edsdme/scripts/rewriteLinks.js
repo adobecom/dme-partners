@@ -154,8 +154,7 @@ function setLocale(url) {
  * Rewrite a link href domain based on production to stage domain mappings.
  * As well as the pathname if pathname mappings are defined and there's a match.
  * @param {URL} url - The URL object to be modified.
- * Modifies URL href, or the original if the environment is prod,
- * there was a problem processing, or there is no domain mapping defined for it.
+ * Modifies URL href, or the original if the environment is prod
  */
 export function rewriteUrlOnNonProd(url) {
   const { env } = getConfig();

@@ -151,7 +151,13 @@ test.describe('MAPC sign in flow', () => {
           .toContain(`${feature.data.expectedRedirectedURL}`);
         await expect(signInButtonInt).toBeHidden();
         const joinNowButton = await newTabPage.joinNowButton;
-        await expect(joinNowButton).toBeVisible();
+        if (feature === features[5]) {
+          // Test 6 - Join In button visible in gnav
+          await expect(joinNowButton).toBeVisible();
+        } else if (feature === features[6]) {
+          // Test 7 - Join In button is not visible in gnav
+          await expect(joinNowButton).toBeHidden();
+        }
       });
     });
   });
@@ -186,8 +192,6 @@ test.describe('MAPC sign in flow', () => {
       await expect(pages[1].url())
         .toContain(`${data.expectedPublicURL}`);
       await expect(signInButton).toBeHidden();
-      const joinNowButton = await newTabPage.joinNowButton;
-      await expect(joinNowButton).toBeVisible();
     });
 
     await test.step('Open restricted page in a new tab', async () => {
