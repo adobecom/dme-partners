@@ -36,7 +36,6 @@ import {
   enableMobileScroll,
   setAsyncDropdownCount,
 } from './utilities/utilities.js';
-const { getFedsPlaceholderConfig } = await import(`${miloLibs}/utils/federated.js`);
 
 // MWPW-157751
 import { getLibs } from '../../scripts/utils.js';// MWPW-157751
@@ -53,6 +52,8 @@ const {
 } = await import(`${miloLibs}/utils/utils.js`);
 const { replaceKey, replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
 // End
+
+const { getFedsPlaceholderConfig } = await import(`${miloLibs}/utils/federated.js`);
 
 const SIGNIN_CONTEXT = getConfig()?.signInContext;
 

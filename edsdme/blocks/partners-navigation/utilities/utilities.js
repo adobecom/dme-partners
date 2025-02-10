@@ -12,7 +12,7 @@ const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.j
 const { replaceText } = await import(`${miloLibs}/features/placeholders.js`);
 // End
 
-import { PERSONALIZATION_TAGS } from '../../../features/personalization/personalization.js';
+const { PERSONALIZATION_TAGS } = await import(`${miloLibs}/features/personalization/personalization.js`);
 
 loadLana();
 
