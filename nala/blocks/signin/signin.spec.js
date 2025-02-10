@@ -61,7 +61,7 @@ export default {
     {
       tcid: '5',
       name: '@login-direct-sign-in-from-program-page-non-member',
-      path: 'https://partners.stage.adobe.com/channelpartners/program/?georouting=off&martech=off',
+      path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
         partnerLevel: 'spp-platinum:',
