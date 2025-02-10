@@ -68,6 +68,9 @@ async function fetchData(blockData, newestCards) {
     document.dispatchEvent(cardsEvent);
 
     if (apiData?.cards) {
+      if (window.location.hostname === 'partners.adobe.com') {
+        apiData.cards = apiData.cards.filter((card) => !card.contentArea.url?.includes('/drafts/'));
+      }
       // Filter announcements by current site
       apiData.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
       apiData.cards.forEach((card) => {
