@@ -1,6 +1,12 @@
 import { getCaasUrl } from '../../scripts/utils.js';
 import { getConfig, localizationPromises } from '../utils/utils.js';
-import { filterRestrictedCardsByCurrentSite } from '../announcements/AnnouncementsCards.js';
+import AnnouncementsPreview from './AnnouncementsPreviewCards.js';
+import { filterRestrictedCardsByCurrentSite } from '../announcements/AnnouncementsCards.js'
+
+function declareAnnouncementsPreview() {
+  if (customElements.get('announcements-preview-cards')) return;
+  customElements.define('announcements-preview-cards', AnnouncementsPreview);
+}
 
 function formatLinks(link) {
   const { hostname, pathname } = new URL(link);
@@ -68,9 +74,6 @@ async function fetchData(blockData, newestCards) {
     document.dispatchEvent(cardsEvent);
 
     if (apiData?.cards) {
-      if (window.location.hostname === 'partners.adobe.com') {
-        apiData.cards = apiData.cards.filter((card) => !card.contentArea.url?.includes('/drafts/'));
-      }
       // Filter announcements by current site
       apiData.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
       apiData.cards.forEach((card) => {
@@ -106,6 +109,8 @@ export default async function init(el) {
     localizationPromises(localizedText, config),
   ]);
 
+  declareAnnouncementsPreview();
+
   const blockData = {
     caasUrl: getCaasUrl(block),
     ietf: config.locale.ietf,
@@ -113,6 +118,7 @@ export default async function init(el) {
     buttonText: '',
     link: '',
     localizedText,
+    newestCards
   };
 
   const app = document.createElement('div');
@@ -138,7 +144,7 @@ export default async function init(el) {
     }
   });
 
-  await fetchData(blockData, newestCards);
+//   await fetchData(blockData, newestCards);
 
   if (blockData.title) {
     const componentTitle = document.createElement('h3');
@@ -176,6 +182,11 @@ export default async function init(el) {
     app.appendChild(emptyAnnouncements);
   }
 
+  const app1 = document.createElement('announcements-preview-cards');
+  app1.blockData = blockData;
+    console.log('app1.blockData ',app1.blockData );
+
+//   app.appendChild(app1);
   await deps;
-  el.replaceWith(app);
+  el.replaceWith(app1);
 }

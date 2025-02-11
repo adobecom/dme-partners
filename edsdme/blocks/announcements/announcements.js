@@ -85,6 +85,7 @@ export default async function init(el) {
   const app = document.createElement('announcements-cards');
   app.className = 'content announcements-wrapper';
   app.blockData = blockData;
+  console.log('app.blockData ',app.blockData );
   app.setAttribute('data-idx', sectionIndex);
   el.replaceWith(app);
 
