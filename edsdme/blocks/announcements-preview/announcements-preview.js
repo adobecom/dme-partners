@@ -1,4 +1,4 @@
-import { getCaasUrl } from '../../scripts/utils.js';
+import { getCaasUrl, prodHosts } from '../../scripts/utils.js';
 import { getConfig, localizationPromises } from '../utils/utils.js';
 import { filterRestrictedCardsByCurrentSite } from '../announcements/AnnouncementsCards.js';
 
@@ -68,6 +68,9 @@ async function fetchData(blockData, newestCards) {
     document.dispatchEvent(cardsEvent);
 
     if (apiData?.cards) {
+      if (prodHosts.includes(window.location.host)) {
+        apiData.cards = apiData.cards.filter((card) => !card.contentArea.url?.includes('/drafts/'));
+      }
       // Filter announcements by current site
       apiData.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
       apiData.cards.forEach((card) => {
