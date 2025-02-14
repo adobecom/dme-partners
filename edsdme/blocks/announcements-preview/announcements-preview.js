@@ -4,8 +4,8 @@ import { filterRestrictedCardsByCurrentSite } from '../announcements/Announcemen
 
 function formatLinks(link) {
   const { hostname, pathname } = new URL(link);
-  const isMiloUrl = hostname.endsWith('hlx.live') || hostname.endsWith('hlx.page');
-  return isMiloUrl ? pathname : link;
+  console.log('pathname, link', pathname, link)
+  return pathname;
 }
 
 function addAnnouncement(cardData) {
