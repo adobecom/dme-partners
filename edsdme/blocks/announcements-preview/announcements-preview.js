@@ -114,6 +114,7 @@ export default async function init(el) {
   const blockData = {
     caasUrl: getCaasUrl(block),
     ietf: config.locale.ietf,
+    tableData: el.children,
     title: '',
     buttonText: '',
     link: '',

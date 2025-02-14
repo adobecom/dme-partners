@@ -1,4 +1,4 @@
-import { getLibs } from '../scripts/utils.js';
+import { getLibs, prodHosts } from '../scripts/utils.js';
 import { partnerCardsLoadMoreStyles, partnerCardsPaginationStyles, partnerCardsStyles } from './PartnerCardsStyles.js';
 import './SinglePartnerCard.js';
 

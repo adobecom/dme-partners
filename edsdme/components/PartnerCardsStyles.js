@@ -1167,3 +1167,76 @@ export const singlePartnerCardStyles = css`
     padding: 0;
   }
 `;
+
+export const previewPartnerCardStyles = css`
+  .announcement-item,
+  .link-wrapper {
+    display: flex;
+    align-items: center;
+    margin: 26px 0px;
+    background-color: white;
+    width: 100%;
+    height: 130px;
+    max-width: 600px;
+    text-decoration: none;
+  }
+
+  .announcements-preview:not(:has(> h3)) .link-wrapper:first-of-type,
+  .announcements-preview:not(:has(> h3)) .announcement-item:first-of-type{
+    margin-top: 0;
+  }
+
+  .card-image {
+    min-width: 100px;
+    width: 20%;
+    height: 100%;
+    margin-right: 20px;
+    overflow: hidden;
+  }
+
+  .card-image picture,
+  .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card-content {
+    height: 100%;
+    width: 80%;
+    overflow: hidden;
+    margin-right: 20px;
+  }
+
+  .card-content .card-title {
+    margin: 25px 0px 15px 0px;
+    padding: 0;
+    line-height: 1.2;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    text-overflow: ellipsis;
+    color: black;
+  }
+
+  .card-description {
+    margin: 10px 0px;
+    padding: 0;
+    line-height: 1.2;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    color: var(--color-gray-600);
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+  }
+
+  .announcements-preview {
+    width: 100%;
+  }
+
+  .announcement-item:hover {
+    box-shadow: 0px 2px 4px #00000029;
+  }
+`;
