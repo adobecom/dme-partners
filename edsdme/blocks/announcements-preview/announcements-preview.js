@@ -1,17 +1,11 @@
 import { getCaasUrl, prodHosts } from '../../scripts/utils.js';
-import { getConfig, localizationPromises } from '../utils/utils.js';
+import { getConfig, localizationPromises, transformCardUrl } from '../utils/utils.js';
 import { filterRestrictedCardsByCurrentSite } from '../announcements/AnnouncementsCards.js';
-
-function formatLinks(link) {
-  const { hostname, pathname } = new URL(link);
-  const isMiloUrl = hostname.endsWith('hlx.live') || hostname.endsWith('hlx.page');
-  return isMiloUrl ? pathname : link;
-}
 
 function addAnnouncement(cardData) {
   const linkWrapper = document.createElement('a');
   linkWrapper.className = 'link-wrapper';
-  linkWrapper.href = formatLinks(cardData.contentArea.url);
+  linkWrapper.href = transformCardUrl(cardData.contentArea.url);
   linkWrapper.target = '_blank';
 
   linkWrapper.style.display = 'block';
