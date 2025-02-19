@@ -13,11 +13,10 @@ test.describe('Smoke Tests', () => {
     smokeTest = new SmokeTest(page);
     signInSmokeTest = new SignInPage(page);
 
-      const { path } = features[0];
-      await test.step('Go to Landing page', async () => {
-        console.log('smokeURLtest:', new URL(path, baseURL).href);
-        await page.goto(new URL(path, baseURL).href);
-      });
+    const { path } = features[0];
+    await test.step('Go to Landing page', async () => {
+      await page.goto(new URL(path, baseURL).href);
+    });
   });
   // @lending-page-validation-smoke-test
   test(`${features[0].name}, ${features[0].tags}`, async () => {
@@ -115,7 +114,6 @@ test.describe('Smoke Tests', () => {
 
   // @user-redirection-apac-smoke-test
   test(`${features[4].name}, ${features[4].tags}`, async ({ page, baseURL }) => {
-
     await test.step('Click Sign In button', async () => {
       // finding sign in button
       const signInButtonInt = await signInSmokeTest.getSignInButton(

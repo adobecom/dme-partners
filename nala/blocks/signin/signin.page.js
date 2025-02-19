@@ -24,11 +24,10 @@ export default class SignInPage {
     const isProduction = baseURL.includes('partners.adobe.com');
     const emailData = isProduction ? process.env.IMS_EMAIL_PROD : process.env.IMS_EMAIL;
     const emailPart = emailData.split(';');
-    const emailEntry = emailPart.find(pair => pair.startsWith(partnerLevel));
+    const emailEntry = emailPart.find((pair) => pair.startsWith(partnerLevel));
     const email = emailEntry ? emailEntry.split(':')[1] : null;
     await page.waitForLoadState('domcontentloaded');
     await this.emailField.fill(email);
-    console.log("email:", email);
     await this.emailPageContinueButton.click();
     await this.passwordField.fill(process.env.IMS_PASS);
     await this.passwordPageContinueButton.click();
