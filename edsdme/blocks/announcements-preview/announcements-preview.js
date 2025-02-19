@@ -35,12 +35,16 @@ export default async function init(el) {
     localizedText,
     newestCards,
     heading: 'heading-l',
+    buttonSize: 'm-button',
   };
 
   const app = document.createElement('div');
   app.className = 'announcements-preview';
   app.classList.add('con-block');
   el.classList.forEach((elem) => {
+    if (elem.includes('button')) {
+      blockData.buttonSize = elem;
+    }
     if (!elem.includes('heading')) {
       app.classList.add(elem);
     }

@@ -1186,12 +1186,6 @@ export const previewPartnerCardStyles = css`
     margin-top: 0;
   }
 
-  .announcements-preview:not(:has(> h3)) .link-wrapper:first-of-type,
-  .announcements-preview:not(:has(> h3)) .announcement-item:first-of-type{
-    margin-top: 0;
-  }
-
-
   .card-image {
     min-width: 100px;
     width: 20%;

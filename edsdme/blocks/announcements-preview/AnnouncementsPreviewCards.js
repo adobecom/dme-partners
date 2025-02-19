@@ -54,7 +54,9 @@ export default class AnnouncementsPreview extends PartnerCards {
   getViewAllButton() {
     if (this.blockData.link && this.blockData.buttonText) {
       return html`
+            <div class="${this.blockData.buttonSize}">
               <a class="con-button blue" href="${this.blockData.link}">${this.blockData.buttonText}</a>
+            </div>
         `;
     }
     return '';
