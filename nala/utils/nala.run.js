@@ -164,6 +164,7 @@ function runNalaTest() {
 
   const parsedParams = parseArgs(args);
   const localTestLiveUrl = getLocalTestLiveUrl(parsedParams.env, parsedParams.milolibs);
+  console.log('testURL:', localTestLiveUrl);
   const { finalCommand, envVariables } = buildPlaywrightCommand(parsedParams, localTestLiveUrl);
 
   console.log(`\n Executing nala run command: ${finalCommand}`);
