@@ -7,12 +7,6 @@ import { transformCardUrl } from '../utils/utils.js';
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
-export function formatLinks(link) {
-  const { hostname, pathname } = new URL(link);
-  const isMiloUrl = hostname.endsWith('hlx.live') || hostname.endsWith('hlx.page');
-  return isMiloUrl ? pathname : link;
-}
-
 export default class AnnouncementsPreview extends PartnerCards {
   static styles = [
     previewPartnerCardStyles,
@@ -30,33 +24,21 @@ export default class AnnouncementsPreview extends PartnerCards {
     }
   }
 
-  sortLatest(cards) {
-    cards.forEach((card) => {
-      const cardDate = new Date(card.cardDate);
-      if (this.blockData.newestCards.length < 3) {
-        this.blockData.newestCards.push(card);
-        this.blockData.newestCards.sort((a, b) => new Date(b.cardDate) - new Date(a.cardDate));
-      } else if (cardDate > new Date(this.blockData.newestCards[2].cardDate)) {
-        this.blockData.newestCards[2] = card;
-        this.blockData.newestCards.sort((a, b) => new Date(b.cardDate) - new Date(a.cardDate));
-      }
-    });
+  handleSortAction(cards) {
+    const sortFunctions = {
+      newest: (a, b) => new Date(b.cardDate) - new Date(a.cardDate),
+    };
 
-    // Ensure no duplicates and return only 3 cards
-    // eslint-disable-next-line max-len
-    this.blockData.newestCards = Array.from(new Set(this.blockData.newestCards.map((a) => a.cardDate)))
-      .map((date) => this.blockData.newestCards.find((a) => a.cardDate === date));
-
-    // eslint-disable-next-line no-param-reassign
-    cards = this.blockData.newestCards;
-    return cards;
+    const sortKey = 'newest';
+    cards.sort(sortFunctions[sortKey]);
   }
 
   // eslint-disable-next-line class-methods-use-this
   onDataFetched(apiData) {
     // Filter announcements by current site
     apiData.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
-    apiData.cards = this.sortLatest(apiData.cards);
+    this.handleSortAction(apiData.cards);
+    apiData.cards = apiData.cards.slice(0, 3);
   }
 
   // eslint-disable-next-line class-methods-use-this
