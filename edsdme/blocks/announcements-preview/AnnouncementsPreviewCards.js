@@ -2,6 +2,7 @@ import { getLibs } from '../../scripts/utils.js';
 import { previewPartnerCardStyles } from '../../components/PartnerCardsStyles.js';
 import PartnerCards from '../../components/PartnerCards.js';
 import { filterRestrictedCardsByCurrentSite } from '../announcements/AnnouncementsCards.js';
+import { transformCardUrl } from '../utils/utils.js';
 
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
@@ -76,9 +77,9 @@ export default class AnnouncementsPreview extends PartnerCards {
   }
 
   get partnerCards() {
-    if (this.paginatedCards.length) {
+    if (this.cards.length) {
       return html`${repeat(
-        this.paginatedCards,
+        this.cards,
         (card) => card.id,
         (card) => {
           const imageUrl = card.styles?.backgroundImage
@@ -86,7 +87,7 @@ export default class AnnouncementsPreview extends PartnerCards {
             : '';
 
           return html`
-            <a class="link-wrapper" href="${formatLinks(card.contentArea.url)}" target="_blank">
+            <a class="link-wrapper" href="${transformCardUrl(card.contentArea.url)}" target="_blank">
               <div class="announcement-item">
                 <div class="card-image">
                   <picture>
