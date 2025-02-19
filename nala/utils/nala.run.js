@@ -100,11 +100,14 @@ function getLocalTestLiveUrl(env, milolibs) {
       return 'http://127.0.0.1:6456';
     } else if (env === 'partners.stage') {
       return 'https://partners.stage.adobe.com';
+    } else if (env === 'partners') {
+      return 'https://partners.adobe.com';
     } else {
       return `https://${env}--dme-partners--adobecom.hlx.live`;
     }
   }
 }
+
 
 function buildPlaywrightCommand(parsedParams, localTestLiveUrl) {
   const { browser, device, test, tag, mode, config, project } = parsedParams;

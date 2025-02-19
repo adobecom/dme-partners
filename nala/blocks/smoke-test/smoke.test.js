@@ -13,10 +13,10 @@ test.describe('Smoke Tests', () => {
     smokeTest = new SmokeTest(page);
     signInSmokeTest = new SignInPage(page);
 
-    const { path } = features[0];
-    await test.step('Go to Landing page', async () => {
-      await page.goto(new URL(path, baseURL).href);
-    });
+      const { path } = features[0];
+      await test.step('Go to Landing page', async () => {
+        await page.goto(new URL(path, baseURL).href);
+      });
   });
   // @lending-page-validation-smoke-test
   test(`${features[0].name}, ${features[0].tags}`, async () => {
