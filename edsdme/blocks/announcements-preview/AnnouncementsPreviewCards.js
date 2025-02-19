@@ -24,10 +24,9 @@ export default class AnnouncementsPreview extends PartnerCards {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   handleSortAction(cards) {
-    const sortFunctions = {
-      newest: (a, b) => new Date(b.cardDate) - new Date(a.cardDate),
-    };
+    const sortFunctions = { newest: (a, b) => new Date(b.cardDate) - new Date(a.cardDate) };
 
     const sortKey = 'newest';
     cards.sort(sortFunctions[sortKey]);

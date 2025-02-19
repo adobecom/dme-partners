@@ -68,9 +68,9 @@ export default async function init(el) {
     });
   }
 
-  const app1 = document.createElement('announcements-preview-cards');
-  app1.blockData = blockData;
-  app.appendChild(app1);
+  const previewCards = document.createElement('announcements-preview-cards');
+  previewCards.blockData = blockData;
+  app.appendChild(previewCards);
 
   await deps;
   el.replaceWith(app);
