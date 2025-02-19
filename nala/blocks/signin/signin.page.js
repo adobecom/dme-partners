@@ -21,6 +21,7 @@ export default class SignInPage {
   }
 
   async signIn(page, baseURL) {
+    //check env
     const isProduction = baseURL.includes('partners.adobe.com');
     console.log('Base URL:', isProduction);
     const emailData = isProduction ? process.env.IMS_EMAIL_PROD : process.env.IMS_EMAIL;
@@ -30,7 +31,6 @@ export default class SignInPage {
     await page.waitForLoadState('domcontentloaded');
     await this.emailField.fill(email);
     await this.emailPageContinueButton.click();
-    await this.passwordField.fill('Test@123');
     await this.passwordField.fill(process.env.IMS_PASS);
     await this.passwordPageContinueButton.click();
   }
