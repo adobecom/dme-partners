@@ -52,9 +52,12 @@ export default class AnnouncementsPreview extends PartnerCards {
   }
 
   getViewAllButton() {
-    return html`
+    if (this.blockData.link && this.blockData.buttonText) {
+      return html`
               <a class="con-button blue" href="${this.blockData.link}">${this.blockData.buttonText}</a>
         `;
+    }
+    return '';
   }
 
   get partnerCards() {
