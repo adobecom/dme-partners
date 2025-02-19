@@ -17,6 +17,8 @@ test.describe('Smoke Tests', () => {
       await test.step('Go to Landing page', async () => {
         await page.goto(new URL(path, baseURL).href);
       });
+      
+      await signInSmokeTest.signIn(page, baseURL);
   });
   // @lending-page-validation-smoke-test
   test(`${features[0].name}, ${features[0].tags}`, async () => {
