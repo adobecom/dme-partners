@@ -21,7 +21,6 @@ export default class SignInPage {
   }
 
   async signIn(page, baseURL, partnerLevel) {
-    //check env
     const isProduction = baseURL.includes('partners.adobe.com');
     const emailData = isProduction ? process.env.IMS_EMAIL_PROD : process.env.IMS_EMAIL;
     const emailPart = emailData.split(';');
