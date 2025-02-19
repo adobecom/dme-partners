@@ -41,7 +41,6 @@ export default class Announcements extends PartnerCards {
     const startDate = new Date();
     startDate.setHours(0, 0, 0, 0);
     startDate.setDate(startDate.getDate() - 180);
-    console.log('this.blockData.isArchive',this.blockData.isArchive)
     this.allCards = this.allCards.filter((card) => {
       const isNeverExpires = card.tags.some((tag) => tag.id === 'caas:adobe-partners/collections/announcements/never-expires');
       if (isNeverExpires) return !this.blockData.isArchive;

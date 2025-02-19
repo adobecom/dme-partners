@@ -1181,10 +1181,16 @@ export const previewPartnerCardStyles = css`
     text-decoration: none;
   }
 
+  announcements-preview-cards:not(:has(> h3)) .link-wrapper:first-of-type,
+  announcements-preview-cards:not(:has(> h3)) .announcement-item:first-of-type{
+    margin-top: 0;
+  }
+
   .announcements-preview:not(:has(> h3)) .link-wrapper:first-of-type,
   .announcements-preview:not(:has(> h3)) .announcement-item:first-of-type{
     margin-top: 0;
   }
+
 
   .card-image {
     min-width: 100px;
@@ -1239,4 +1245,9 @@ export const previewPartnerCardStyles = css`
   .announcement-item:hover {
     box-shadow: 0px 2px 4px #00000029;
   }
+
+  .partner-cards {
+      grid-template-columns: auto;
+    }
+
 `;
