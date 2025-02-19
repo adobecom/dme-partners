@@ -29,6 +29,7 @@ export default class SignInPage {
     const email = emailEntry ? emailEntry.split(':')[1] : null;
     await page.waitForLoadState('domcontentloaded');
     await this.emailField.fill(email);
+    console.log("email:", email);
     await this.emailPageContinueButton.click();
     await this.passwordField.fill(process.env.IMS_PASS);
     await this.passwordPageContinueButton.click();
