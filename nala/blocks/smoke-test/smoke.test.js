@@ -15,6 +15,7 @@ test.describe('Smoke Tests', () => {
 
       const { path } = features[0];
       await test.step('Go to Landing page', async () => {
+        console.log('smokeURLtest:', new URL(path, baseURL).href);
         await page.goto(new URL(path, baseURL).href);
       });
   });
