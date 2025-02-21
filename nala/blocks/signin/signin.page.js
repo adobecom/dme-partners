@@ -20,12 +20,8 @@ export default class SignInPage {
     return this.page.getByRole('button', { name: `${text}` });
   }
 
-  async signIn(page, baseURL, partnerLevel) {
-    const isProduction = baseURL.includes('partners.adobe.com');
-    const emailData = isProduction ? process.env.IMS_EMAIL_PROD : process.env.IMS_EMAIL;
-    const emailPart = emailData.split(';');
-    const emailEntry = emailPart.find((pair) => pair.startsWith(partnerLevel));
-    const email = emailEntry ? emailEntry.split(':')[1] : null;
+  async signIn(page, partnerLevel) {
+    const email = process.env.IMS_EMAIL.split(partnerLevel)[1].split(';')[0];
     await page.waitForLoadState('domcontentloaded');
     await this.emailField.fill(email);
     await this.emailPageContinueButton.click();

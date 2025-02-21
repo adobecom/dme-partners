@@ -11,6 +11,23 @@ export default class SmokeTest {
     this.searchGnavField = page.locator('.feds-search-input');
     this.searchFieldPage = page.locator('.search-wrapper #search');
     this.announcemnts = page.locator('text="Announcements"');
+    this.emailField = page.locator('#EmailPage-EmailField');
+    this.emailPageContinueButton = page.locator('//button[@data-id="EmailPage-ContinueButton"]');
+    this.passwordField = page.locator('#PasswordPage-PasswordField');
+    this.passwordPageContinueButton = page.locator('//button[@data-id="PasswordPage-ContinueButton"]');
+  }
+
+  async smokeSignIn(page, baseURL, partnerLevel) {
+    const isProduction = baseURL.includes('partners.adobe.com');
+    const emailData = isProduction ? process.env.IMS_EMAIL_PROD : process.env.IMS_EMAIL;
+    const emailPart = emailData.split(';');
+    const emailEntry = emailPart.find((pair) => pair.startsWith(partnerLevel));
+    const email = emailEntry ? emailEntry.split(':')[1] : null;
+    await page.waitForLoadState('domcontentloaded');
+    await this.emailField.fill(email);
+    await this.emailPageContinueButton.click();
+    await this.passwordField.fill(process.env.IMS_PASS);
+    await this.passwordPageContinueButton.click();
   }
 
   async verifyButtonExist() {
