@@ -37,7 +37,7 @@ test.describe('Smoke Tests', () => {
     });
     await test.step('Sing In, enter user email and password', async () => {
       // entering user email and password
-      await signInSmokeTest.signIn(page, baseURL, `${features[1].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[1].data.partnerLevel}`);
     });
     await test.step('Verify protected Gnav exists', async () => {
       await smokeTest.verifyProtectedGnav();
@@ -58,7 +58,7 @@ test.describe('Smoke Tests', () => {
     });
     await test.step('Sing In, enter user email and password', async () => {
       // entering user email and password
-      await signInSmokeTest.signIn(page, baseURL, `${features[2].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[2].data.partnerLevel}`);
     });
     await test.step('Go to Price List from GNav and verify redirection', async () => {
       // cliking on price list from gnav
@@ -87,7 +87,7 @@ test.describe('Smoke Tests', () => {
     });
     await test.step('Sing In, enter user email and password', async () => {
       // entering user email and password
-      await signInSmokeTest.signIn(page, baseURL, `${features[2].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[2].data.partnerLevel}`);
     });
     await test.step('Click rearch from GNav', async () => {
       // cliking on search from gnav
@@ -124,7 +124,7 @@ test.describe('Smoke Tests', () => {
     });
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
-      await signInSmokeTest.signIn(page, baseURL, `${features[4].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[4].data.partnerLevel}`);
       await page.waitForLoadState('networkidle');
 
       const currentURL = await page.evaluate(() => window.location.href);
@@ -145,7 +145,7 @@ test.describe('Smoke Tests', () => {
     });
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
-      await signInSmokeTest.signIn(page, baseURL, `${features[5].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[5].data.partnerLevel}`);
       await page.waitForLoadState('networkidle');
 
       const currentURL = await page.evaluate(() => window.location.href);
@@ -166,7 +166,7 @@ test.describe('Smoke Tests', () => {
     });
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
-      await signInSmokeTest.signIn(page, baseURL, `${features[6].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[6].data.partnerLevel}`);
       await page.waitForLoadState('networkidle');
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
@@ -186,7 +186,7 @@ test.describe('Smoke Tests', () => {
     });
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
-      await signInSmokeTest.signIn(page, baseURL, `${features[7].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[7].data.partnerLevel}`);
       await page.waitForLoadState('networkidle');
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
@@ -206,7 +206,7 @@ test.describe('Smoke Tests', () => {
     });
     await test.step('Sing In', async () => {
       // entering user email and password
-      await signInSmokeTest.signIn(page, baseURL, `${features[8].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[8].data.partnerLevel}`);
 
       await test.step('Click on Announcments from GNav and verify one Announcment card is displayed', async () => {
         await smokeTest.announcemnts.click();
