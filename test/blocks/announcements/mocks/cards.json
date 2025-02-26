@@ -7,7 +7,7 @@
     },
     "styles": {
       "typeOverride": "default",
-      "backgroundImage": "https://main--dme-partners--adobecom.hlx.live/default-meta-image.png?width=1200&format=pjpg&optimize=medium",
+      "backgroundImage": "https://main--dme-partners--adobecom.aem.live/default-meta-image.png?width=1200&format=pjpg&optimize=medium",
       "backgroundAltText": "Test1",
       "mnemonic": "",
       "icon": "",
@@ -44,7 +44,7 @@
     "contentArea": {
       "detailText": "This is the detail of automation regression",
       "title": "\n              Dragana cpp card2\n            ",
-      "url": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card2",
+      "url": "https://main--dme-partners--adobecom.aem.live/channelpartners/drafts/dragana/cpp-card2",
       "description": "Test1",
       "dateDetailText": {
         "type": "date-interval",
@@ -70,7 +70,7 @@
             "type": "button",
             "style": "",
             "text": "Read now",
-            "href": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card2"
+            "href": "https://main--dme-partners--adobecom.aem.live/channelpartners/drafts/dragana/cpp-card2"
           }
         ]
       }
@@ -83,7 +83,7 @@
     "modifiedDate": "2024-06-26T10:23:07.000Z",
     "startDate": "",
     "endDate": "",
-    "ctaLink": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card2",
+    "ctaLink": "https://main--dme-partners--adobecom.aem.live/channelpartners/drafts/dragana/cpp-card2",
     "arbitrary": [
       {
         "key": "region",
@@ -98,7 +98,7 @@
         "value": "amplify"
       }
     ],
-    "overlayLink": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card2",
+    "overlayLink": "https://main--dme-partners--adobecom.aem.live/channelpartners/drafts/dragana/cpp-card2",
     "lang": "en",
     "country": "us",
     "origin": "dme-partners"
@@ -111,7 +111,7 @@
     },
     "styles": {
       "typeOverride": "default",
-      "backgroundImage": "https://main--dme-partners--adobecom.hlx.page/default-meta-image.png?width=1200&format=pjpg&optimize=medium",
+      "backgroundImage": "https://main--dme-partners--adobecom.aem.page/default-meta-image.png?width=1200&format=pjpg&optimize=medium",
       "backgroundAltText": "Test1",
       "mnemonic": "",
       "icon": "",
@@ -148,7 +148,7 @@
     "contentArea": {
       "detailText": "This is the detail of automation regression",
       "title": "\n              Dragana cpp card1\n            ",
-      "url": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card1",
+      "url": "https://main--dme-partners--adobecom.aem.live/channelpartners/drafts/dragana/cpp-card1",
       "description": "Test1",
       "dateDetailText": {
         "type": "date-interval",
@@ -174,7 +174,7 @@
             "type": "button",
             "style": "",
             "text": "Read now",
-            "href": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card1"
+            "href": "https://main--dme-partners--adobecom.aem.live/channelpartners/drafts/dragana/cpp-card1"
           }
         ]
       }
@@ -187,7 +187,7 @@
     "modifiedDate": "2024-06-26T11:07:50.000Z",
     "startDate": "",
     "endDate": "",
-    "ctaLink": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card1",
+    "ctaLink": "https://main--dme-partners--adobecom.aem.live/channelpartners/drafts/dragana/cpp-card1",
     "arbitrary": [
       {
         "key": "region",
@@ -202,7 +202,7 @@
         "value": "amplify"
       }
     ],
-    "overlayLink": "https://main--dme-partners--adobecom.hlx.live/channelpartners/drafts/dragana/cpp-card1",
+    "overlayLink": "https://main--dme-partners--adobecom.aem.live/channelpartners/drafts/dragana/cpp-card1",
     "lang": "en",
     "country": "us",
     "origin": "dme-partners"

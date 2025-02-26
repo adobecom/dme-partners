@@ -15,7 +15,7 @@ test.describe('Validate popups', () => {
       console.log(`${msg.type()}: ${msg.text()}`, msg.type() === 'error' ? msg.location().url : null);
     });
     if (!baseURL.includes('partners.stage.adobe.com')) {
-      await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
+      await context.setExtraHTTPHeaders({ authorization: `token ${process.env.MILO_AEM_API_KEY}` });
     }
     if (browserName === 'chromium' && !baseURL.includes('partners.stage.adobe.com')) {
       await page.route('https://www.adobe.com/chimera-api/**', async (route, request) => {
@@ -34,7 +34,7 @@ test.describe('Validate popups', () => {
 
   differentLocaleCases.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, baseURL }) => {
-      const newBaseUrl = baseURL.includes('adobecom.hlx.live') ? 'https://partners.stage.adobe.com' : baseURL;
+      const newBaseUrl = baseURL.includes('adobecom.aem.live') ? 'https://partners.stage.adobe.com' : baseURL;
       await test.step('Go to public page', async () => {
         await page.goto(`${newBaseUrl}${feature.path}`);
         await page.waitForLoadState('domcontentloaded');
@@ -53,7 +53,7 @@ test.describe('Validate popups', () => {
 
   switchLocaleCases.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, baseURL }) => {
-      const newBaseUrl = baseURL.includes('adobecom.hlx.live') ? 'https://partners.stage.adobe.com' : baseURL;
+      const newBaseUrl = baseURL.includes('adobecom.aem.live') ? 'https://partners.stage.adobe.com' : baseURL;
       await test.step('Go to public page', async () => {
         await page.goto(`${newBaseUrl}${feature.path}`);
         await page.waitForLoadState('domcontentloaded');
