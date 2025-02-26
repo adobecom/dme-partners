@@ -11,6 +11,9 @@ const { features } = smokeSpec;
 test.describe('Smoke Tests', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     smokeTest = new SmokeTest(page);
+    page.on('console', (msg) => {
+      console.log(`${msg.type()}: ${msg.text()}`, msg.type() === 'error' ? msg.location().url : null);
+    });
     signInSmokeTest = new SignInPage(page);
 
     const { path } = features[0];
@@ -77,6 +80,7 @@ test.describe('Smoke Tests', () => {
   // @search-page-validation-smoke-test
   test(`${features[3].name}, ${features[3].tags}`, async ({ page, baseURL }) => {
     const { data } = features[3];
+    console.log('Test starts ', new Date());
     await test.step('Click Sign In button', async () => {
       // finding sign in button
       const signInButtonInt = await signInSmokeTest.getSignInButton(
@@ -85,21 +89,25 @@ test.describe('Smoke Tests', () => {
       // click on sign in button
       await signInButtonInt.click();
     });
+    console.log('Test 2 ', new Date());
     await test.step('Sing In, enter user email and password', async () => {
       // entering user email and password
       await smokeTest.smokeSignIn(page, baseURL, `${features[2].data.partnerLevel}`);
     });
+    console.log('Test 3 ', new Date());
     await test.step('Click rearch from GNav', async () => {
       // cliking on search from gnav
       await smokeTest.searchGnav.click();
     });
     // search pdf and click enter
+    console.log('Test 4 ', new Date());
     await test.step('Verify a search field and type text', async () => {
       //   await smokeTest.search();
       await smokeTest.searchGnavField.fill(data.searchText);
       await smokeTest.searchGnavField.press('Enter');
     });
 
+    console.log('Test 5 ', new Date());
     await test.step('Verify search page conntent', async () => {
       const searchFieldValue = await smokeTest.searchFieldPage.getAttribute(
         'value',
@@ -107,6 +115,7 @@ test.describe('Smoke Tests', () => {
       expect(searchFieldValue).toContain(data.searchText);
     });
 
+    console.log('Test 6 ', new Date());
     await test.step('Find a row in assets list and click on download', async () => {
       await smokeTest.searchPageDownloadButton();
     });
