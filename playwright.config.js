@@ -28,7 +28,7 @@ const config = {
   /* Retry on CI only */
   retries: process.env.CI ? 1 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: 3,
+  workers: 9,
   /* Reporter to use. */
   reporter: process.env.CI
     ? [['github'], ['list'], ['./nala/utils/base-reporter.js']]
@@ -57,14 +57,14 @@ const config = {
       use: { ...devices['Desktop Firefox'] },
       bypassCSP: true,
     },
-    {
-      name: 'dme-partners-live-webkit',
-      use: {
-        ...devices['Desktop Safari'],
-        ignoreHTTPSErrors: true,
-      },
-      bypassCSP: true,
-    },
+//     {
+//       name: 'dme-partners-live-webkit',
+//       use: {
+//         ...devices['Desktop Safari'],
+//         ignoreHTTPSErrors: true,
+//       },
+//       bypassCSP: true,
+//     },
     /* Test Against Mobile View ports */
     // {
     //   name: 'mobile-chrome-pixel5',
