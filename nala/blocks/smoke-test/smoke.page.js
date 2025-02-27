@@ -52,8 +52,10 @@ export default class SmokeTest {
     await downloadButton.click();
   }
 
-  async announcmentCardVerification() {
-    const shadowHostCard = await this.page
+  async announcmentCardVerification({
+    page, expect
+  }) {
+    const shadowHostCard = await page
       .locator(
         'announcements-cards.content.announcements-wrapper',
       )
@@ -65,5 +67,14 @@ export default class SmokeTest {
     const announcementsCrad = await shadowRootCard.$$('.card-wrapper');
     const firstCard = announcementsCrad[0];
     await firstCard.isVisible();
+
+    const firstCardTitle = await page.locator('.announcements-wrapper .card-wrapper:nth-of-type(1) p.card-title').textContent();
+
+    const readMoreBtn =  await firstCard.$('.card-btn');
+    await readMoreBtn.click();
+
+    await page.waitForLoadState();
+    const title = await page.title();
+    expect(title).toBe(firstCardTitle);
   }
 }

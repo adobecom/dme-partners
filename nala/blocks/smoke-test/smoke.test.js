@@ -204,13 +204,14 @@ test.describe('Smoke Tests', () => {
       // click on sign in button
       await signInButtonInt.click();
     });
+
     await test.step('Sing In', async () => {
       // entering user email and password
       await signInSmokeTest.signIn(page, `${features[8].data.partnerLevel}`);
 
-      await test.step('Click on Announcments from GNav and verify one Announcment card is displayed', async () => {
+      await test.step('Click on Announcments from GNav and verify one Announcment card is displayed and page is loaded correctly', async () => {
         await smokeTest.announcemnts.click();
-        await smokeTest.announcmentCardVerification();
+        await smokeTest.announcmentCardVerification({ page, expect });
       });
     });
   });
