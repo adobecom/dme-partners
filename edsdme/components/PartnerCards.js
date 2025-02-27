@@ -1,4 +1,4 @@
-import { getLibs } from '../scripts/utils.js';
+import { getLibs, prodHosts } from '../scripts/utils.js';
 import { partnerCardsLoadMoreStyles, partnerCardsPaginationStyles, partnerCardsStyles } from './PartnerCardsStyles.js';
 import './SinglePartnerCard.js';
 
@@ -220,7 +220,7 @@ export default class PartnerCards extends LitElement {
       const cardsEvent = new Event('partner-cards-loaded');
       document.dispatchEvent(cardsEvent);
       if (apiData?.cards) {
-        if (window.location.hostname === 'partners.adobe.com') {
+        if (prodHosts.includes(window.location.host)) {
           apiData.cards = apiData.cards.filter((card) => !card.contentArea.url?.includes('/drafts/'));
         }
         // eslint-disable-next-line no-return-assign
