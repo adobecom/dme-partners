@@ -2,7 +2,9 @@
 import pkg from 'axios';
 
 const { head } = pkg;
-export async function isBranchURLValid(url) {
+export async function isBranchURLValid(url, includeAuthorization = false) {
+  const headers = includeAuthorization ? { Authorization: `token ${process.env.MILO_AEM_API_KEY}` } : {};
+  const response = await head(url, { headers });
   try {
     const response = await head(url);
     if (response.status === 200) {
