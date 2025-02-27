@@ -211,7 +211,7 @@ test.describe('Smoke Tests', () => {
 
       await test.step('Click on Announcments from GNav and verify one Announcment card is displayed and page is loaded correctly', async () => {
         await smokeTest.announcemnts.click();
-        await smokeTest.announcmentCardVerification({ page, expect });
+        await smokeTest.announcmentCardVerification({ expect });
       });
     });
   });
