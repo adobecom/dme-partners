@@ -208,9 +208,9 @@ test.describe('Smoke Tests', () => {
       // entering user email and password
       await smokeTest.smokeSignIn(page, baseURL, `${features[8].data.partnerLevel}`);
 
-      await test.step('Click on Announcments from GNav and verify one Announcment card is displayed', async () => {
+      await test.step('Click on Announcments from GNav and verify one Announcment card is displayed and page is loaded correctly', async () => {
         await smokeTest.announcemnts.click();
-        await smokeTest.announcmentCardVerification();
+        await smokeTest.announcmentCardVerification({ expect });
       });
     });
   });
