@@ -5,7 +5,6 @@ export default {
       tcid: '1',
       name: '@lending-page-validation-smoke-test',
       path: '/channelpartners/?georouting=off&martech=off',
-      // path: '/channelpartners/drafts/automation/regression/public-page?georouting=off',
       tags: '@dme-smoke-test',
     },
 
