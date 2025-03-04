@@ -48,7 +48,7 @@ const {
   loadIms,
   decorateLinks,
   loadScript,
-  getFedsPlaceholderConfig
+  getFedsPlaceholderConfig,
   getGnavSource,
 } = await import(`${miloLibs}/utils/utils.js`);
 const { replaceKey, replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
