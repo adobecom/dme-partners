@@ -1,10 +1,10 @@
 {
+  "previewHost": "main--dme-partners--adobecom.hlx.page",
+  "liveHost": "main--dme-partners--adobecom.hlx.live",
   "plugins": [
     {
       "id": "library",
       "title": "Library",
-      "previewHost": "main--dme-partners--adobecom.hlx.page",
-      "liveHost": "main--dme-partners--adobecom.hlx.live",
       "environments": [
         "edit"
       ],
