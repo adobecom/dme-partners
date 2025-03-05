@@ -92,4 +92,8 @@ export default class SmokeTest {
     const title = await this.page.title();
     expect(title).toBe(firstCardTitle);
   }
+
+  getJoinNowButtonByRegion(text) {
+    return this.page.locator(`#feds-nav-wrapper .feds-cta--primary:has-text("${text}")`);
+  }
 }

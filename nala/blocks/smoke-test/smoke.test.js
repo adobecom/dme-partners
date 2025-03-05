@@ -214,4 +214,84 @@ test.describe('Smoke Tests', () => {
       });
     });
   });
+
+  // @join-now-button-validation-smoke-test
+  test(`${features[9].name}, ${features[9].tags}`, async ({ page, baseURL }) => {
+    const { data, path } = features[9];
+    const joinNowButton = await smokeTest.getJoinNowButtonByRegion(data.joinNowButtonText);
+
+    await test.step('Verify if Join Now button is not visible on international pages', async () => {
+      await page.goto(`${baseURL}${path}`);
+      await expect(joinNowButton).toBeHidden();
+    });
+
+    await test.step('Verify if Join Now button is visible on North America pages', async () => {
+      await page.goto(data.naLocaleSwitchUrl);
+      await expect(joinNowButton).toBeVisible();
+    });
+
+    await test.step('Verify if Join button is visible on Latin America pages', async () => {
+      await page.goto(data.latamLocaleSwitchUrl);
+      await expect(joinNowButton).toBeVisible();
+    });
+
+    await test.step('Verify if Join button is visible on Europe, Middle East, and Africa (English) pages', async () => {
+      await page.goto(data.emeaLocaleSwitchUrl);
+      await expect(joinNowButton).toBeVisible();
+    });
+
+    await test.step('Verify if Join button is visible on Franch pages', async () => {
+      const joinNowButtonFr = await smokeTest.getJoinNowButtonByRegion(data.joinNowButtonFrenchText);
+
+      await page.goto(data.frLocaleSwitchUrl);
+      await expect(joinNowButtonFr).toBeVisible();
+    });
+
+    await test.step('Verify if Join button is visible on German pages', async () => {
+      const joinNowButtonDe = await smokeTest.getJoinNowButtonByRegion(data.joinNowButtonGermanText);
+
+      await page.goto(data.deLocaleSwitchUrl);
+      await expect(joinNowButtonDe).toBeVisible();
+    });
+
+    await test.step('Verify if Join button is visible on Italian pages', async () => {
+      const joinNowButtonIt = await smokeTest.getJoinNowButtonByRegion(data.joinNowButtonItalianText);
+
+      await page.goto(data.itLocaleSwitchUrl);
+      await expect(joinNowButtonIt).toBeVisible();
+    });
+
+    await test.step('Verify if Join button is visible on Spanish pages', async () => {
+      const joinNowButtonEs = await smokeTest.getJoinNowButtonByRegion(data.joinNowButtonSpanishText);
+
+      await page.goto(data.esLocaleSwitchUrl);
+      await expect(joinNowButtonEs).toBeVisible();
+    });
+
+    await test.step('Verify if Join button is visible on Asia Pacific pages', async () => {
+      await page.goto(data.apacLocaleSwitchUrl);
+      await expect(joinNowButton).toBeVisible();
+    });
+
+    await test.step('Verify if Join button is visible on Korian pages', async () => {
+      const joinNowButtonKr = await smokeTest.getJoinNowButtonByRegion(data.joinNowButtonKorianText);
+
+      await page.goto(data.krLocaleSwitchUrl);
+      await expect(joinNowButtonKr).toBeVisible();
+    });
+
+    await test.step('Verify if Join button is visible on China pages', async () => {
+      const joinNowButtonCn = await smokeTest.getJoinNowButtonByRegion(data.joinNowButtonChinaText);
+
+      await page.goto(data.cnLocaleSwitchUrl);
+      await expect(joinNowButtonCn).toBeVisible();
+    });
+
+    await test.step('Verify if Join button is visible on Japan pages', async () => {
+      const joinNowButtonJp = await smokeTest.getJoinNowButtonByRegion(data.joinNowButtonJapanText);
+
+      await page.goto(data.jpLocaleSwitchUrl);
+      await expect(joinNowButtonJp).toBeVisible();
+    });
+  });
 });
