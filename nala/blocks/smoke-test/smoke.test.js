@@ -234,7 +234,7 @@ test.describe('Smoke Tests', () => {
     /**
      * Verify is search field and URL do not contain partnerLogin=true as query parameter
      * Verify if search field and URL contain term=Logo as query parameter
-    */ 
+    */
     await test.step('Verify if search field contains term query parameter', async () => {
       const searchFieldValue = await smokeTest.searchFieldPage.getAttribute(
         'value',
