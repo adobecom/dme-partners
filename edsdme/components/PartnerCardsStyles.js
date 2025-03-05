@@ -1168,8 +1168,8 @@ export const singlePartnerCardStyles = css`
   }
 `;
 
-export const previewPartnerCardStyles = css`
-  .announcement-item,
+export const horizontalPartnerCardStyles = css`
+  .horizontal-partner-card,
   .link-wrapper {
     display: flex;
     align-items: center;
@@ -1181,8 +1181,8 @@ export const previewPartnerCardStyles = css`
     text-decoration: none;
   }
 
-  announcements-preview-cards:not(:has(> h3)) .link-wrapper:first-of-type,
-  announcements-preview-cards:not(:has(> h3)) .announcement-item:first-of-type{
+  horizontal-cards:not(:has(> h3)) .link-wrapper:first-of-type,
+  horizontal-cards:not(:has(> h3)) .horizontal-partner-card:first-of-type{
     margin-top: 0;
   }
 
@@ -1236,7 +1236,7 @@ export const previewPartnerCardStyles = css`
     width: 100%;
   }
 
-  .announcement-item:hover {
+  .horizontal-partner-card:hover {
     box-shadow: 0px 2px 4px #00000029;
   }
 

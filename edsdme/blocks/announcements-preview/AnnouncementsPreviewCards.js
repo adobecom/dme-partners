@@ -1,7 +1,7 @@
 import { getLibs } from '../../scripts/utils.js';
-import { previewPartnerCardStyles } from '../../components/PartnerCardsStyles.js';
+import { horizontalPartnerCardStyles } from '../../components/PartnerCardsStyles.js';
 import PartnerCards from '../../components/PartnerCards.js';
-import { filterRestrictedCardsByCurrentSite } from '../announcements/AnnouncementsCards.js';
+import { filterRestrictedCardsByCurrentSite, filterExpiredAnnouncements } from '../announcements/AnnouncementsCards.js';
 import { transformCardUrl } from '../utils/utils.js';
 
 const miloLibs = getLibs();
@@ -9,7 +9,7 @@ const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
 export default class AnnouncementsPreview extends PartnerCards {
   static styles = [
-    previewPartnerCardStyles,
+    horizontalPartnerCardStyles,
   ];
 
   static properties = { ...PartnerCards.properties };
@@ -37,6 +37,7 @@ export default class AnnouncementsPreview extends PartnerCards {
     // Filter announcements by current site
     apiData.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
     this.handleSortAction(apiData.cards);
+    apiData.cards = filterExpiredAnnouncements(apiData.cards, this.blockData);
     apiData.cards = apiData.cards.slice(0, 3);
   }
 
@@ -45,7 +46,7 @@ export default class AnnouncementsPreview extends PartnerCards {
 
   getPartnerCardsHeader() {
     return html`
-            <h3 class="text announcement-preview-title ${this.blockData.heading}">
+            <h3 class="text horizontal-cards-title ${this.blockData.heading}">
               <strong>${this.blockData.title}</strong>
             </h3>
       `;
@@ -74,7 +75,7 @@ export default class AnnouncementsPreview extends PartnerCards {
 
           return html`
             <a class="link-wrapper" href="${transformCardUrl(card.contentArea.url)}" target="_blank">
-              <div class="announcement-item">
+              <div class="horizontal-partner-card">
                 <div class="card-image">
                   <picture>
                     <source srcset="${imageUrl}" type="image/webp" />
