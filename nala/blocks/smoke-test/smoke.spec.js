@@ -108,5 +108,19 @@ export default {
         signInButtonInternationalText: 'Sign In',
       },
     },
+
+    {
+      tcid: '10',
+      name: '@search-page-query-param-validation-smoke-test',
+      path: '/na/channelpartners/home/search/?term=Logo',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-na-certified:',
+        expectedPublicPageURL:
+          '/na/channelpartners/home/#',
+        signInButtonInternationalText: 'Sign In',
+        searchText: 'Logo',
+      },
+    },
   ],
 };
