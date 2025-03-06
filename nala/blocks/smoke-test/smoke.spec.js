@@ -112,12 +112,10 @@ export default {
     {
       tcid: '10',
       name: '@search-page-query-param-validation-smoke-test',
-      path: '/na/channelpartners/home/search/?term=Logo',
+      path: '/na/channelpartners/home/search/?term=Logo&martech=off',
       tags: '@dme-smoke-test',
       data: {
         partnerLevel: 'cpp-na-certified:',
-        expectedPublicPageURL:
-          '/na/channelpartners/home/#',
         signInButtonInternationalText: 'Sign In',
         searchText: 'Logo',
       },
