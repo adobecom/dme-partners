@@ -23,9 +23,9 @@ export default class SmokeTest {
     this.resellerProgram = page.locator('#reseller-program');
     this.retailProgram = page.locator('#retail-program');
     this.regionPicker = page.locator('.feds-regionPicker');
-    this.apacRegion = page.locator('[daa-ll="Asia Pacific English-9--Asia Pacific English"]');
+    this.apacRegion = page.locator('.tracking-header a[href*="/apac/channelpartners/"]');
     this.salesGnavButton = page.locator('.feds-navItem:nth-of-type(2) button');
-    this.specializationButton = page.locator('.feds-menu-items ul li:nth-of-type(2) a');
+    this.specializationButton = page.locator('div.feds-menu-items a[href*="sales-resources/specializations/"]');
     this.vipMarketplace = page.locator('[tabindex]:has-text("VIP Marketplace")');
     this.government = page.locator('[tabindex]:has-text("Government")');
     this.education = page.locator('[tabindex]').filter({ hasText: /^Education$/ });
@@ -35,11 +35,9 @@ export default class SmokeTest {
     this.govermentElite = page.locator('[tabindex]:has-text("공공 기관용 Elite")');
     this.adobeSubstance3D = page.locator('[tabindex]:has-text("Adobe Substance 3D")');
     this.resellerDeProgram = page.locator('#leitfäden-zum-apc-programm');
-    this.resellerProgramLink = page.locator('h2.body-m').nth(0);
-    this.retailProgramLink = page.locator('h2.body-m').nth(1);
-    this.apacResellerProgramGuid = page.locator('[daa-ll="Reseller Program Gui-1--APC Program Guides"]');
-    this.apacRetailProgramGuid = page.locator('[daa-ll="Distributor Guide-2--APC Program Guides"]');
-    this.cal = page.locator('.feds-menu-items ul li:nth-of-type(4) a');
+    this.apacResellerProgramGuid = page.locator('#apc-program-guides-1 a[href*="/p/Adobe_Partner_Connection_Reseller_Program_Guide_Asia_Pacific.pdf"]');
+    this.apacRetailProgramGuid = page.locator('#apc-program-guides-1 a[href*="/p/Adobe_Partner_Connection_Distributor_Program_Guide_FY25_Asia_Pacific_v9.pdf"]');
+    this.cal = page.locator('div.feds-menu-items a[href*="/sales-resources/cal/"]');
   }
 
   async smokeSignIn(page, baseURL, partnerLevel) {
@@ -166,55 +164,55 @@ export default class SmokeTest {
   }
 
   async emeaSpecializationVerify() {
-    const salesBatton = this.salesGnavButton;
-    await salesBatton.click();
+    const { salesGnavButton } = this;
+    await salesGnavButton.click();
 
     const { specializationButton } = this;
     await specializationButton.click();
 
-    const educationTab = this.education;
-    const educationEliteTab = this.educationElite;
-    const worldwideTab = this.worldwide;
+    const { education } = this;
+    const { educationElite } = this;
+    const { worldwide } = this;
 
-    await expect(educationTab).toHaveCount(1);
-    await expect(educationTab).toBeVisible();
+    await expect(education).toHaveCount(1);
+    await expect(education).toBeVisible();
 
-    await expect(educationEliteTab).toHaveCount(1);
-    await expect(educationEliteTab).toBeVisible();
+    await expect(educationElite).toHaveCount(1);
+    await expect(educationElite).toBeVisible();
 
-    await expect(worldwideTab).toHaveCount(1);
-    await expect(worldwideTab).toBeVisible();
+    await expect(worldwide).toHaveCount(1);
+    await expect(worldwide).toBeVisible();
   }
 
   async krSpecializationVerify() {
-    const salesBatton = this.salesGnavButton;
-    await salesBatton.click();
+    const { salesGnavButton } = this;
+    await salesGnavButton.click();
 
     const { specializationButton } = this;
     await specializationButton.click();
 
-    const govermentEliteTab = this.govermentElite;
-    const educationEliteTab = this.educationEliteKorea;
-    const adobeSubstanceTab = this.adobeSubstance3D;
+    const { govermentElite } = this;
+    const { educationEliteKorea } = this;
+    const { adobeSubstance3D } = this;
 
-    await expect(govermentEliteTab).toHaveCount(1);
-    await expect(govermentEliteTab).toBeVisible();
+    await expect(govermentElite).toHaveCount(1);
+    await expect(govermentElite).toBeVisible();
 
-    await expect(educationEliteTab).toHaveCount(1);
-    await expect(educationEliteTab).toBeVisible();
+    await expect(educationEliteKorea).toHaveCount(1);
+    await expect(educationEliteKorea).toBeVisible();
 
-    await expect(adobeSubstanceTab).toHaveCount(1);
-    await expect(adobeSubstanceTab).toBeVisible();
+    await expect(adobeSubstance3D).toHaveCount(1);
+    await expect(adobeSubstance3D).toBeVisible();
   }
 
   async checkUplevelProgram() {
-    const resellerDeProgramn = this.resellerDeProgram;
-    await resellerDeProgramn.isVisible();
+    const { resellerDeProgram } = this;
+    await resellerDeProgram.isVisible();
   }
 
   async membershipPageInfoVerification() {
-    const membershipDePage = this.membershipDe;
-    await membershipDePage.click();
+    const { membershipDe } = this;
+    await membershipDe.click();
 
     const goldLevel = this.page.locator('#gold');
     await goldLevel.isVisible();
@@ -224,24 +222,24 @@ export default class SmokeTest {
   }
 
   async apcProgramGuidsVerify() {
-    const apacReseller = this.apacResellerProgramGuid;
-    await apacReseller.isVisible();
-    const apacRetail = this.apacRetailProgramGuid;
-    await apacRetail.isVisible();
+    const { apacResellerProgramGuid } = this;
+    await apacResellerProgramGuid.isVisible();
+    const { apacRetailProgramGuid } = this;
+    await apacRetailProgramGuid.isVisible();
   }
 
   async requestCalverify() {
-    const salesButton = this.salesGnavButton;
-    await salesButton.click();
-    const calButton = this.cal;
-    await calButton.click();
+    const { salesGnavButton } = this;
+    await salesGnavButton.click();
+    const { cal } = this;
+    await cal.click();
   }
 
   async indidaCalVerify() {
-    const calIndiaRequest = this.page.locator('[daa-ll="INDIA-1--Request a CAL INDIAS"]');
+    const calIndiaRequest = this.page.locator('h3#request-a-cal-httpsmain--dme-partners--adobecomhlxpageedsdmepartners-sharedfragmentscommondistributor-cal-links-1.heading-m strong p.body-m.action-area a.con-button.blue.button-m ').nth(0);
     await calIndiaRequest.isVisible();
     const calIndidaRequestlink = await calIndiaRequest.getAttribute('href');
-    const calIndiaSubmit = this.page.locator('[daa-ll="INDIA-1--Submit a Channel Aut"]');
+    const calIndiaSubmit = this.page.locator('#submit-a-channel-authorization-letter + p a:has-text("INDIA")');
     await calIndiaSubmit.isVisible();
     const calIndiaSubmitLink = await calIndiaSubmit.getAttribute('href');
 
@@ -249,10 +247,10 @@ export default class SmokeTest {
   }
 
   async seabdCalVerify() {
-    const calSeabdRequest = this.page.locator('[daa-ll="SEA BD-2--Request a CAL INDIAS"]');
+    const calSeabdRequest = this.page.locator('h3#request-a-cal-httpsmain--dme-partners--adobecomhlxpageedsdmepartners-sharedfragmentscommondistributor-cal-links-1.heading-m strong p.body-m.action-area a.con-button.blue.button-m ').nth(1);
     await calSeabdRequest.isVisible();
     const calSeabdRequestlink = await calSeabdRequest.getAttribute('href');
-    const calSeabdSubmit = this.page.locator('[daa-ll="SEA BD-2--Submit a Channel Aut"]');
+    const calSeabdSubmit = this.page.locator('#submit-a-channel-authorization-letter + p a:has-text("SEA/BD")');
     await calSeabdSubmit.isVisible();
     const calSeabdSubmitLink = await calSeabdSubmit.getAttribute('href');
 
@@ -260,10 +258,10 @@ export default class SmokeTest {
   }
 
   async hktCalVerify() {
-    const calHktRequest = this.page.locator('[daa-ll="HKT-3--Request a CAL INDIAS"]');
+    const calHktRequest = this.page.locator('h3#request-a-cal-httpsmain--dme-partners--adobecomhlxpageedsdmepartners-sharedfragmentscommondistributor-cal-links-1.heading-m strong p.body-m.action-area a.con-button.blue.button-m ').nth(2);
     await calHktRequest.isVisible();
     const calHktRequestlink = await calHktRequest.getAttribute('href');
-    const calHktSubmit = this.page.locator('[daa-ll="HKT-3--Submit a Channel Aut"]');
+    const calHktSubmit = this.page.locator('#submit-a-channel-authorization-letter + p a:has-text("HKT")');
     await calHktSubmit.isVisible();
     const calHktSubmitLink = await calHktSubmit.getAttribute('href');
 
@@ -271,10 +269,10 @@ export default class SmokeTest {
   }
 
   async chinaCalVerify() {
-    const calChinaRequest = this.page.locator('[daa-ll="China-4--Request a CAL INDIAS"]');
+    const calChinaRequest = this.page.locator('h3#request-a-cal-httpsmain--dme-partners--adobecomhlxpageedsdmepartners-sharedfragmentscommondistributor-cal-links-1.heading-m strong p.body-m.action-area a.con-button.blue.button-m ').nth(3);
     await calChinaRequest.isVisible();
     const calChinaRequestlink = await calChinaRequest.getAttribute('href');
-    const calChinaSubmit = this.page.locator('[daa-ll="China-4--Submit a Channel Aut"]');
+    const calChinaSubmit = this.page.locator('#submit-a-channel-authorization-letter + p a:has-text("China")');
     await calChinaSubmit.isVisible();
     const calChinaSubmitLink = await calChinaSubmit.getAttribute('href');
 
@@ -282,10 +280,10 @@ export default class SmokeTest {
   }
 
   async anzCalVerify() {
-    const calAnzRequest = this.page.locator('[daa-ll="ANZ-5--Request a CAL INDIAS"]');
+    const calAnzRequest = this.page.locator('h3#request-a-cal-httpsmain--dme-partners--adobecomhlxpageedsdmepartners-sharedfragmentscommondistributor-cal-links-1.heading-m strong p.body-m.action-area a.con-button.blue.button-m ').nth(4);
     await calAnzRequest.isVisible();
     const calAnzRequestlink = await calAnzRequest.getAttribute('href');
-    const calAnzSubmit = this.page.locator('[daa-ll="ANZ-5--Submit a Channel Aut"]');
+    const calAnzSubmit = this.page.locator('#submit-a-channel-authorization-letter + p a:has-text("ANZ")');
     await calAnzSubmit.isVisible();
     const calAnzSubmitLink = await calAnzSubmit.getAttribute('href');
 
@@ -293,10 +291,10 @@ export default class SmokeTest {
   }
 
   async koreaCalVerify() {
-    const calKoreaRequest = this.page.locator('[daa-ll="Korea-6--Request a CAL INDIAS"]');
+    const calKoreaRequest = this.page.locator('h3#request-a-cal-httpsmain--dme-partners--adobecomhlxpageedsdmepartners-sharedfragmentscommondistributor-cal-links-1.heading-m strong p.body-m.action-area a.con-button.blue.button-m ').nth(5);
     await calKoreaRequest.isVisible();
     const calKoreaRequestlink = await calKoreaRequest.getAttribute('href');
-    const calKoreaSubmit = this.page.locator('[daa-ll="Korea-6--Submit a Channel Aut"]');
+    const calKoreaSubmit = this.page.locator('#submit-a-channel-authorization-letter + p a:has-text("Korea")');
     await calKoreaSubmit.isVisible();
     const calKoreaSubmitLink = await calKoreaSubmit.getAttribute('href');
 
@@ -304,7 +302,7 @@ export default class SmokeTest {
   }
 
   async submitEmailVerify() {
-    const submitEmail = this.page.locator('[daa-ll="apacpm adobe com-7--Submit a Channel Aut"]');
+    const submitEmail = this.page.locator('a[href*="mailto:apacpm@adobe.com"]').nth(0);
     await expect(submitEmail).toHaveAttribute('href', 'mailto:apacpm@adobe.com');
   }
 

@@ -226,7 +226,7 @@ test.describe('Smoke Tests', () => {
       const [newPage] = await Promise.all([
         page.waitForEvent('popup'),
         // clicking on nort america program from public page
-        page.locator('[daa-ll="Learn more about the-1--North America"]').click(),
+        page.locator('//a[contains(@href, "na/channelpartners/")]').click(),
       ]);
       await newPage.waitForLoadState();
       // check if section select you region is not vsible on na public page
@@ -324,7 +324,7 @@ test.describe('Smoke Tests', () => {
     await test.step('Reseller program uplevel verification', async () => {
       await smokeTest.checkUplevelProgram();
 
-      const resellerProgramLink = page.locator('[daa-ll="Leitfaden zum Resell-1--Leitfäden zum APC Pr"]').nth(0);
+      const resellerProgramLink = page.locator('p.body-m a[href*="/p/Reseller_Program_Guide_EMEA.pdf"]').nth(0);
       await resellerProgramLink.isVisible();
       const resellerProgramhref = await resellerProgramLink.getAttribute('href');
       expect(resellerProgramhref).toContain(
@@ -333,7 +333,7 @@ test.describe('Smoke Tests', () => {
     });
 
     await test.step('Retail program uplevel verification', async () => {
-      const retailProgramLink = page.locator('[daa-ll="Leitfaden zum Retail-2--Leitfäden zum APC Pr"]').nth(0);
+      const retailProgramLink = page.locator('p.body-m a[href*="/p/EMEA_Retail_Program_Guide.pdf"]').nth(0);
       await retailProgramLink.isVisible();
       const retailProgramhHref = await retailProgramLink.getAttribute('href');
       expect(retailProgramhHref).toContain(
@@ -382,7 +382,7 @@ test.describe('Smoke Tests', () => {
       await test.step('Mebership page verififcation', async () => {
         await smokeTest.apacMembershipVerify();
 
-        const distributorGuid = page.locator('[daa-ll="Distributor Guide-1--Distributor"]');
+        const distributorGuid = page.locator('p.body-m.action-area a[href*="/p/Adobe_Partner_Connection_Distributor_Program_Guide_FY25_Asia_Pacific_v9.pdf"]');
         const distributorGuidlink = await distributorGuid.getAttribute('href');
         expect(distributorGuidlink).toContain(features[15].data.expectedDistributorGuidLink);
       });
