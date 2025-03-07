@@ -124,7 +124,7 @@ export default {
     {
       tcid: '11',
       name: '@join-now-button-validation-smoke-test',
-      path: '/channelpartners/#',
+      path: '/channelpartners/#?martech=off',
       tags: '@dme-smoke-test',
       data: {
         joinNowButtonText: 'Join Now',
