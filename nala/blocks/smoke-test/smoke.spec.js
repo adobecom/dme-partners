@@ -111,13 +111,25 @@ export default {
 
     {
       tcid: '10',
+      name: '@search-page-query-param-validation-smoke-test',
+      path: '/na/channelpartners/home/search/?term=Logo&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-na-certified:',
+        signInButtonInternationalText: 'Sign In',
+        searchText: 'Logo',
+      },
+    },
+
+    {
+      tcid: '11',
       name: '@retail-program-validation-smoke-test',
       path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',
     },
 
     {
-      tcid: '11',
+      tcid: '12',
       name: '@apac-specialization-validation-smoke-test',
       path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',
@@ -128,7 +140,7 @@ export default {
     },
 
     {
-      tcid: '12',
+      tcid: '13',
       name: '@latam-specialization-validation-smoke-test',
       path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',
@@ -139,7 +151,7 @@ export default {
     },
 
     {
-      tcid: '13',
+      tcid: '14',
       name: '@emea-specialization-validation-smoke-test',
       path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',
@@ -150,7 +162,7 @@ export default {
     },
 
     {
-      tcid: '14',
+      tcid: '15',
       name: '@korea-specialization-validation-smoke-test',
       path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',
@@ -161,7 +173,7 @@ export default {
     },
 
     {
-      tcid: '15',
+      tcid: '16',
       name: '@uplevel-info-validation-smoke-test',
       path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',
@@ -176,7 +188,7 @@ export default {
     },
 
     {
-      tcid: '16',
+      tcid: '17',
       name: '@cal-links-apac-validation-smoke-test',
       path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',

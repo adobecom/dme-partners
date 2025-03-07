@@ -2,9 +2,11 @@ import { test, expect } from '@playwright/test';
 import smokeSpec from './smoke.spec.js';
 import SmokeTest from './smoke.page.js';
 import SignInPage from '../signin/signin.page.js';
+import ProfileDropdownPage from '../profile-dropdown/profile-dropdown.page.js';
 
 let smokeTest;
 let signInSmokeTest;
+let profileDropdownPage;
 
 const { features } = smokeSpec;
 
@@ -12,6 +14,7 @@ test.describe('Smoke Tests', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     smokeTest = new SmokeTest(page);
     signInSmokeTest = new SignInPage(page);
+    profileDropdownPage = new ProfileDropdownPage(page);
 
     const { path } = features[0];
     await test.step('Go to Landing page', async () => {
@@ -208,14 +211,48 @@ test.describe('Smoke Tests', () => {
       // entering user email and password
       await smokeTest.smokeSignIn(page, baseURL, `${features[8].data.partnerLevel}`);
 
-      await test.step('Click on Announcments from GNav and verify one Announcment card is displayed', async () => {
+      await test.step('Click on Announcments from GNav and verify one Announcment card is displayed and page is loaded correctly', async () => {
         await smokeTest.announcemnts.click();
-        await smokeTest.announcmentCardVerification();
+        await smokeTest.announcmentCardVerification({ expect });
       });
     });
   });
+  // @search-page-query-param-validation-smoke-test
+  test(`${features[9].name}, ${features[9].tags}`, async ({ page, baseURL }) => {
+    const { data } = features[9];
+
+    await test.step('Go to prefiltered Search page', async () => {
+      await page.goto(`${baseURL}${features[9].path}`);
+    });
+
+    await test.step('Sing In, enter user email and password', async () => {
+      // entering user email and password
+      await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`);
+    });
+
+    /**
+     * Verify is search field and URL do not contain partnerLogin=true as query parameter
+     * Verify if search field and URL contain term=Logo as query parameter
+    */
+    await test.step('Verify if search field contains term query parameter', async () => {
+      const searchFieldValue = await smokeTest.searchFieldPage.getAttribute(
+        'value',
+      );
+      expect(searchFieldValue).toContain(data.searchText);
+      expect(page.url()).toContain(data.searchText);
+
+      expect(searchFieldValue).not.toContain('partnerLogin');
+      expect(page.url()).not.toContain('partnerLogin');
+    });
+
+    await test.step('Verify if the URL search query parameter does not exist after the logout', async () => {
+      page.locator('.feds-profile-button').click();
+      await profileDropdownPage.logoutButton.click();
+      expect(page.url()).not.toContain(data.searchText);
+    });
+  });
   // @retail-program-validation-smoke-test
-  test(`${features[9].name}, ${features[9].tags}`, async ({ page }) => {
+  test(`${features[10].name}, ${features[10].tags}`, async ({ page }) => {
     await test.step('Veryfy the Select you region is visible', async () => {
       // select you region visible on public page
       const selectYourRegionPublicSection = page.locator('#select-your-region');
@@ -241,23 +278,6 @@ test.describe('Smoke Tests', () => {
     });
   });
   // @apac-specialization-validation-smoke-test
-  test(`${features[10].name}, ${features[10].tags}`, async ({ page, baseURL }) => {
-    const signInButtonInt = await signInSmokeTest.getSignInButton(
-      `${features[10].data.signInButtonInternationalText}`,
-    );
-    // click on sign in button
-    await signInButtonInt.click();
-
-    await test.step('Sing In, enter user email and password', async () => {
-    // entering user email and password
-      await smokeTest.smokeSignIn(page, baseURL, `${features[10].data.partnerLevel}`);
-    });
-
-    await test.step('Verify VIP Marketplace specialization', async () => {
-      await smokeTest.apacSpecializationVerify();
-    });
-  });
-  // @latam-specialization-validation-smoke-test
   test(`${features[11].name}, ${features[11].tags}`, async ({ page, baseURL }) => {
     const signInButtonInt = await signInSmokeTest.getSignInButton(
       `${features[11].data.signInButtonInternationalText}`,
@@ -266,16 +286,16 @@ test.describe('Smoke Tests', () => {
     await signInButtonInt.click();
 
     await test.step('Sing In, enter user email and password', async () => {
-      // entering user email and password
+    // entering user email and password
       await smokeTest.smokeSignIn(page, baseURL, `${features[11].data.partnerLevel}`);
     });
 
     await test.step('Verify VIP Marketplace specialization', async () => {
-      await smokeTest.latamSpecializationVerify();
+      await smokeTest.apacSpecializationVerify();
     });
   });
-  // @emea-specialization-validation-smoke-test
-  test(`${features[12].name}, ${features[12].tags}`, async ({ page, baseURL }) => {
+  // @latam-specialization-validation-smoke-test
+  test(`${features[12].name}, ${features[11].tags}`, async ({ page, baseURL }) => {
     const signInButtonInt = await signInSmokeTest.getSignInButton(
       `${features[12].data.signInButtonInternationalText}`,
     );
@@ -283,15 +303,15 @@ test.describe('Smoke Tests', () => {
     await signInButtonInt.click();
 
     await test.step('Sing In, enter user email and password', async () => {
-    // entering user email and password
+      // entering user email and password
       await smokeTest.smokeSignIn(page, baseURL, `${features[12].data.partnerLevel}`);
     });
 
     await test.step('Verify VIP Marketplace specialization', async () => {
-      await smokeTest.emeaSpecializationVerify();
+      await smokeTest.latamSpecializationVerify();
     });
   });
-  // @korea-specialization-validation-smoke-test
+  // @emea-specialization-validation-smoke-test
   test(`${features[13].name}, ${features[13].tags}`, async ({ page, baseURL }) => {
     const signInButtonInt = await signInSmokeTest.getSignInButton(
       `${features[13].data.signInButtonInternationalText}`,
@@ -305,10 +325,10 @@ test.describe('Smoke Tests', () => {
     });
 
     await test.step('Verify VIP Marketplace specialization', async () => {
-      await smokeTest.krSpecializationVerify();
+      await smokeTest.emeaSpecializationVerify();
     });
   });
-  // @uplevel-info-validation-smoke-test
+  // @korea-specialization-validation-smoke-test
   test(`${features[14].name}, ${features[14].tags}`, async ({ page, baseURL }) => {
     const signInButtonInt = await signInSmokeTest.getSignInButton(
       `${features[14].data.signInButtonInternationalText}`,
@@ -321,31 +341,11 @@ test.describe('Smoke Tests', () => {
       await smokeTest.smokeSignIn(page, baseURL, `${features[14].data.partnerLevel}`);
     });
 
-    await test.step('Reseller program uplevel verification', async () => {
-      await smokeTest.checkUplevelProgram();
-
-      const resellerProgramLink = page.locator('p.body-m a[href*="/p/Reseller_Program_Guide_EMEA.pdf"]').nth(0);
-      await resellerProgramLink.isVisible();
-      const resellerProgramhref = await resellerProgramLink.getAttribute('href');
-      expect(resellerProgramhref).toContain(
-        features[14].data.expectedResellerProgramURL,
-      );
-    });
-
-    await test.step('Retail program uplevel verification', async () => {
-      const retailProgramLink = page.locator('p.body-m a[href*="/p/EMEA_Retail_Program_Guide.pdf"]').nth(0);
-      await retailProgramLink.isVisible();
-      const retailProgramhHref = await retailProgramLink.getAttribute('href');
-      expect(retailProgramhHref).toContain(
-        features[14].data.expectedRetailProgramURL,
-      );
-    });
-
-    await test.step('Membership page info verification', async () => {
-      await smokeTest.membershipPageInfoVerification();
+    await test.step('Verify VIP Marketplace specialization', async () => {
+      await smokeTest.krSpecializationVerify();
     });
   });
-  // @cal-links-apac-validation-smoke-test
+  // @uplevel-info-validation-smoke-test
   test(`${features[15].name}, ${features[15].tags}`, async ({ page, baseURL }) => {
     const signInButtonInt = await signInSmokeTest.getSignInButton(
       `${features[15].data.signInButtonInternationalText}`,
@@ -356,6 +356,43 @@ test.describe('Smoke Tests', () => {
     await test.step('Sing In, enter user email and password', async () => {
     // entering user email and password
       await smokeTest.smokeSignIn(page, baseURL, `${features[15].data.partnerLevel}`);
+    });
+
+    await test.step('Reseller program uplevel verification', async () => {
+      await smokeTest.checkUplevelProgram();
+
+      const resellerProgramLink = page.locator('p.body-m a[href*="/p/Reseller_Program_Guide_EMEA.pdf"]').nth(0);
+      await resellerProgramLink.isVisible();
+      const resellerProgramhref = await resellerProgramLink.getAttribute('href');
+      expect(resellerProgramhref).toContain(
+        features[15].data.expectedResellerProgramURL,
+      );
+    });
+
+    await test.step('Retail program uplevel verification', async () => {
+      const retailProgramLink = page.locator('p.body-m a[href*="/p/EMEA_Retail_Program_Guide.pdf"]').nth(0);
+      await retailProgramLink.isVisible();
+      const retailProgramhHref = await retailProgramLink.getAttribute('href');
+      expect(retailProgramhHref).toContain(
+        features[15].data.expectedRetailProgramURL,
+      );
+    });
+
+    await test.step('Membership page info verification', async () => {
+      await smokeTest.membershipPageInfoVerification();
+    });
+  });
+  // @cal-links-apac-validation-smoke-test
+  test(`${features[16].name}, ${features[16].tags}`, async ({ page, baseURL }) => {
+    const signInButtonInt = await signInSmokeTest.getSignInButton(
+      `${features[16].data.signInButtonInternationalText}`,
+    );
+    // click on sign in button
+    await signInButtonInt.click();
+
+    await test.step('Sing In, enter user email and password', async () => {
+    // entering user email and password
+      await smokeTest.smokeSignIn(page, baseURL, `${features[16].data.partnerLevel}`);
     });
     await test.step('Cal page verification', async () => {
       // verify APC program guids
@@ -384,7 +421,7 @@ test.describe('Smoke Tests', () => {
 
         const distributorGuid = page.locator('p.body-m.action-area a[href*="/p/Adobe_Partner_Connection_Distributor_Program_Guide_FY25_Asia_Pacific_v9.pdf"]');
         const distributorGuidlink = await distributorGuid.getAttribute('href');
-        expect(distributorGuidlink).toContain(features[15].data.expectedDistributorGuidLink);
+        expect(distributorGuidlink).toContain(features[16].data.expectedDistributorGuidLink);
       });
     });
   });

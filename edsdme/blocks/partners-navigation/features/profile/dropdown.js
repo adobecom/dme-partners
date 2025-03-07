@@ -5,9 +5,8 @@ import { getLibs, isMember } from '../../../../scripts/utils.js';
 
 const miloLibs = getLibs();
 const { replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
-const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
-const { getFedsPlaceholderConfig } = await import(`${miloLibs}/utils/federated.js`);
 
+const { getConfig, getFedsPlaceholderConfig } = await import(`${miloLibs}/utils/utils.js`);
 const getLanguage = (ietfLocale) => {
   if (!ietfLocale.length) return 'en';
 
