@@ -57,6 +57,33 @@ class SearchCard extends LitElement {
     return supportedFileTypes.includes(type) ? type : 'default';
   }
 
+  async download(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    const downloadUrl = setDownloadParam(this.data.contentArea?.url);
+    try {
+      const response = await fetch(downloadUrl, { method: "HEAD", redirect: "manual" });
+      if (response.status === 200) {
+        this.triggerDownload(downloadUrl);
+      } else if (response.type === "opaqueredirect") {
+        window.location.href = downloadUrl;
+      } else {
+        window.location.href = "/channelpartners/error/404";
+      }
+    } catch (error) {
+      window.location.href = "/channelpartners/error/404";
+    }
+  }
+
+  triggerDownload(url) {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   /* eslint-disable indent */
   render() {
     return html`
@@ -69,7 +96,7 @@ class SearchCard extends LitElement {
           </div>
           <div class="card-icons">
             <sp-theme theme="spectrum" color="light" scale="medium">
-              <sp-action-button @click=${(e) => e.stopPropagation()} ?disabled=${this.isDownloadDisabled(this.data.contentArea?.type)} href="${setDownloadParam(this.data.contentArea?.url)}" download="${this.data.contentArea?.title}" aria-label="${this.localizedText['{{download}}']}"><sp-icon-download /></sp-action-button>
+              <sp-action-button @click=${(e) => this.download(e, this.data.contentArea?.url)} ?disabled=${this.isDownloadDisabled(this.data.contentArea?.type)} href="${setDownloadParam(this.data.contentArea?.url)}" download="${this.data.contentArea?.title}" aria-label="${this.localizedText['{{download}}']}"><sp-icon-download /></sp-action-button>
               ${this.isPreviewEnabled(this.data.contentArea?.type)
                 ? html`<sp-action-button @click=${(e) => e.stopPropagation()} href="${this.data.contentArea?.url}" target="_blank" aria-label="${this.localizedText['{{open-in}}']}"><sp-icon-open-in /></sp-action-button>`
                 : html`<sp-action-button disabled selected aria-label="${this.localizedText['{{open-in-disabled}}']}"><sp-icon-open-in /></sp-action-button>`
@@ -86,9 +113,9 @@ class SearchCard extends LitElement {
           <div class="card-text">
             <span class="card-date">${this.localizedText['{{last-modified}}']}: ${formatDate(this.data.cardDate, this.ietf)}
           ${this.data.contentArea?.type !== 'html'
-    ? html`<span class="card-size">${this.localizedText['{{size}}']}: ${this.data.contentArea?.size}</span>`
-                : ''
-    }
+            ? html`<span class="card-size">${this.localizedText['{{size}}']}: ${this.data.contentArea?.size}</span>`
+            : ''
+          }
             </span>
             <p class="card-description">${this.data.contentArea?.description}</p>
             <div class="card-tags-wrapper">${this.cardTags}</div>
