@@ -94,6 +94,6 @@ export default class SmokeTest {
   }
 
   getJoinNowButtonByRegion(text) {
-    return this.page.locator(`#feds-nav-wrapper .feds-cta--primary:has-text("${text}")`);
+    return this.page.locator(`#feds-nav-wrapper a[href*="/enrollment/"]:has-text("${text}")`);
   }
 }

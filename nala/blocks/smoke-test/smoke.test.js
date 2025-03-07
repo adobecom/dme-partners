@@ -2,9 +2,11 @@ import { test, expect } from '@playwright/test';
 import smokeSpec from './smoke.spec.js';
 import SmokeTest from './smoke.page.js';
 import SignInPage from '../signin/signin.page.js';
+import ProfileDropdownPage from '../profile-dropdown/profile-dropdown.page.js';
 
 let smokeTest;
 let signInSmokeTest;
+let profileDropdownPage;
 
 const { features } = smokeSpec;
 
@@ -12,6 +14,7 @@ test.describe('Smoke Tests', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     smokeTest = new SmokeTest(page);
     signInSmokeTest = new SignInPage(page);
+    profileDropdownPage = new ProfileDropdownPage(page);
 
     const { path } = features[0];
     await test.step('Go to Landing page', async () => {
@@ -215,9 +218,44 @@ test.describe('Smoke Tests', () => {
     });
   });
 
-  // @join-now-button-validation-smoke-test
+  // @search-page-query-param-validation-smoke-test
   test(`${features[9].name}, ${features[9].tags}`, async ({ page, baseURL }) => {
-    const { data, path } = features[9];
+    const { data } = features[9];
+
+    await test.step('Go to prefiltered Search page', async () => {
+      await page.goto(`${baseURL}${features[9].path}`);
+    });
+
+    await test.step('Sing In, enter user email and password', async () => {
+      // entering user email and password
+      await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`);
+    });
+
+    /**
+     * Verify is search field and URL do not contain partnerLogin=true as query parameter
+     * Verify if search field and URL contain term=Logo as query parameter
+    */
+    await test.step('Verify if search field contains term query parameter', async () => {
+      const searchFieldValue = await smokeTest.searchFieldPage.getAttribute(
+        'value',
+      );
+      expect(searchFieldValue).toContain(data.searchText);
+      expect(page.url()).toContain(data.searchText);
+
+      expect(searchFieldValue).not.toContain('partnerLogin');
+      expect(page.url()).not.toContain('partnerLogin');
+    });
+
+    await test.step('Verify if the URL search query parameter does not exist after the logout', async () => {
+      page.locator('.feds-profile-button').click();
+      await profileDropdownPage.logoutButton.click();
+      expect(page.url()).not.toContain(data.searchText);
+    });
+  });
+
+  // @join-now-button-validation-smoke-test
+  test(`${features[10].name}, ${features[10].tags}`, async ({ page, baseURL }) => {
+    const { data, path } = features[10];
     const joinNowButton = await smokeTest.getJoinNowButtonByRegion(data.joinNowButtonText);
 
     await test.step('Verify if Join Now button is not visible on international pages', async () => {
