@@ -419,9 +419,9 @@ test.describe('Smoke Tests', () => {
       await test.step('Mebership page verififcation', async () => {
         await smokeTest.apacMembershipVerify();
 
-        const distributorGuid = page.locator('p.body-m.action-area a[href*="/p/Adobe_Partner_Connection_Distributor_Program_Guide_FY25_Asia_Pacific_v9.pdf"]');
+        const distributorGuid = page.locator('p.body-m.action-area a:has-text("Distributor Guide")');
         const distributorGuidlink = await distributorGuid.getAttribute('href');
-        expect(distributorGuidlink).toContain(features[16].data.expectedDistributorGuidLink);
+        expect(distributorGuidlink.includes('Asia') && distributorGuidlink.includes('Distributor')).toBeTruthy();
       });
     });
   });

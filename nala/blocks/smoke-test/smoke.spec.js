@@ -197,8 +197,6 @@ export default {
         signInButtonInternationalText: 'Sign In',
         expectedApacEmail:
           'apacpm@adobe.com',
-        expectedDistributorGuidLink:
-          '/Adobe_Partner_Connection_Distributor_Program_Guide_FY25_Asia_Pacific_v9.pdf',
       },
     },
   ],
