@@ -65,7 +65,7 @@ class SearchCard extends LitElement {
       const response = await fetch(downloadUrl, { method: 'HEAD', redirect: "manual" });
       if (response.status === 200) {
         this.triggerDownload(downloadUrl);
-      } else if (response.type === "opaqueredirect") {
+      } else if (response.type === 'opaqueredirect') {
         window.location.href = downloadUrl;
       } else {
         window.location.href = "/channelpartners/error/404";
