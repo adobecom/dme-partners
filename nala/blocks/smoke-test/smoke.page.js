@@ -116,6 +116,10 @@ export default class SmokeTest {
     expect(title).toBe(firstCardTitle);
   }
 
+  getJoinNowButtonByRegion(text) {
+    return this.page.locator(`#feds-nav-wrapper a[href*="/enrollment/"]:has-text("${text}")`);
+  }
+
   async verifySelectYouRegion() {
     const syrExist = await this.selectYourRegionPublicSection.isVisible();
 
