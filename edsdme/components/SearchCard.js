@@ -62,23 +62,24 @@ class SearchCard extends LitElement {
     event.preventDefault();
     const downloadUrl = setDownloadParam(this.data.contentArea?.url);
     try {
-      const response = await fetch(downloadUrl, { method: "HEAD", redirect: "manual" });
+      const response = await fetch(downloadUrl, { method: 'HEAD', redirect: 'manual' });
       if (response.status === 200) {
         this.triggerDownload(downloadUrl);
-      } else if (response.type === "opaqueredirect") {
+      } else if (response.type === 'opaqueredirect') {
         window.location.href = downloadUrl;
       } else {
-        window.location.href = "/channelpartners/error/404";
+        window.location.href = '/channelpartners/error/404';
       }
     } catch (error) {
-      window.location.href = "/channelpartners/error/404";
+      window.location.href = '/channelpartners/error/404';
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   triggerDownload(url) {
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = url;
-    link.download = "";
+    link.download = '';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
