@@ -1,0 +1,32 @@
+export default {
+  FeatureName: 'DME redirections flow',
+  features: [
+    {
+      tcid: '1',
+      name: '@verify-partner-search-redirections',
+      path: '/channelpartners/#?martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        joinNowButtonText: 'Join Now',
+        joinNowButtonFrenchText: 'Adhérer',
+        joinNowButtonGermanText: 'Mitglied werden',
+        joinNowButtonItalianText: 'Iscriviti',
+        joinNowButtonSpanishText: 'Unirse ahora',
+        joinNowButtonKorianText: '가입하기',
+        joinNowButtonChinaText: '立即加入',
+        joinNowButtonJapanText: '参加する',
+        naLocaleSwitchUrl: '/na/channelpartners/#?martech=off',
+        latamLocaleSwitchUrl: '/latam/channelpartners/#?martech=off',
+        emeaLocaleSwitchUrl: '/emea/channelpartners/#?martech=off',
+        frLocaleSwitchUrl: '/fr/channelpartners/#?martech=off',
+        deLocaleSwitchUrl: '/de/channelpartners/#?martech=off',
+        itLocaleSwitchUrl: '/it/channelpartners/#?martech=off',
+        esLocaleSwitchUrl: '/es/channelpartners/#?martech=off',
+        apacLocaleSwitchUrl: '/apac/channelpartners/#?martech=off',
+        krLocaleSwitchUrl: '/kr/channelpartners/#?martech=off',
+        cnLocaleSwitchUrl: '/cn/channelpartners/#?martech=off',
+        jpLocaleSwitchUrl: '/jp/channelpartners/#?martech=off',
+      },
+    },
+  ],
+};
