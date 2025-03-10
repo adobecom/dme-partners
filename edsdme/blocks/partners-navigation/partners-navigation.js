@@ -49,7 +49,6 @@ const {
   decorateLinks,
   loadScript,
   getFedsPlaceholderConfig,
-  getGnavSource,
 } = await import(`${miloLibs}/utils/utils.js`);
 const { replaceKey, replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
 // End
@@ -1301,6 +1300,16 @@ class Gnav {
 
     return this.elements.search;
   };
+}
+
+async function getGnavSource() {
+  const { locale, dynamicNavKey } = getConfig();
+  let url = getMetadata('gnav-source') || `${locale.contentRoot}/gnav`;
+  if (dynamicNavKey) {
+    const { default: dynamicNav } = await import('../../features/dynamic-navigation/dynamic-navigation.js');
+    url = dynamicNav(url, dynamicNavKey);
+  }
+  return url;
 }
 
 export default async function init(block) {
