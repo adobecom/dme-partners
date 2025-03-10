@@ -62,7 +62,7 @@ class SearchCard extends LitElement {
     event.preventDefault();
     const downloadUrl = setDownloadParam(this.data.contentArea?.url);
     try {
-      const response = await fetch(downloadUrl, { method: 'HEAD', redirect: "manual" });
+      const response = await fetch(downloadUrl, { method: 'HEAD', redirect: 'manual' });
       if (response.status === 200) {
         this.triggerDownload(downloadUrl);
       } else if (response.type === 'opaqueredirect') {
