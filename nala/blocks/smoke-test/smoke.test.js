@@ -217,7 +217,6 @@ test.describe('Smoke Tests', () => {
       });
     });
   });
-
   // @search-page-query-param-validation-smoke-test
   test(`${features[9].name}, ${features[9].tags}`, async ({ page, baseURL }) => {
     const { data } = features[9];
@@ -253,9 +252,184 @@ test.describe('Smoke Tests', () => {
     });
   });
 
+  // @retail-program-validation-smoke-test
+  test(`${features[10].name}, ${features[10].tags}`, async ({ page }) => {
+    await test.step('Veryfy the Select you region is visible', async () => {
+      // select you region visible on public page
+      const selectYourRegionPublicSection = page.locator('#select-your-region');
+      await selectYourRegionPublicSection.isVisible();
+    });
+
+    await test.step('Open North America public page and verify select you region does not exist', async () => {
+      const [newPage] = await Promise.all([
+        page.waitForEvent('popup'),
+        // clicking on nort america program from public page
+        page.locator('//a[contains(@href, "na/channelpartners/")]').click(),
+      ]);
+      await newPage.waitForLoadState();
+      // check if section select you region is not vsible on na public page
+      await expect(newPage.locator('#select-your-region')).not.toBeVisible();
+    });
+    await test.step('Verify NA Partnership Opportunities is visible', async () => {
+      await smokeTest.verifyNorthAmericaPublicPage();
+    });
+    await test.step('Verify Partnership Opportunities on APAC Page', async () => {
+      // opening the APAC public page and checking partnership opportunities
+      await smokeTest.verifyApacPage();
+    });
+  });
+  // @apac-specialization-validation-smoke-test
+  test(`${features[11].name}, ${features[11].tags}`, async ({ page, baseURL }) => {
+    const signInButtonInt = await signInSmokeTest.getSignInButton(
+      `${features[11].data.signInButtonInternationalText}`,
+    );
+    // click on sign in button
+    await signInButtonInt.click();
+
+    await test.step('Sing In, enter user email and password', async () => {
+    // entering user email and password
+      await smokeTest.smokeSignIn(page, baseURL, `${features[11].data.partnerLevel}`);
+    });
+
+    await test.step('Verify VIP Marketplace specialization', async () => {
+      await smokeTest.apacSpecializationVerify();
+    });
+  });
+  // @latam-specialization-validation-smoke-test
+  test(`${features[12].name}, ${features[11].tags}`, async ({ page, baseURL }) => {
+    const signInButtonInt = await signInSmokeTest.getSignInButton(
+      `${features[12].data.signInButtonInternationalText}`,
+    );
+    // click on sign in button
+    await signInButtonInt.click();
+
+    await test.step('Sing In, enter user email and password', async () => {
+      // entering user email and password
+      await smokeTest.smokeSignIn(page, baseURL, `${features[12].data.partnerLevel}`);
+    });
+
+    await test.step('Verify VIP Marketplace specialization', async () => {
+      await smokeTest.latamSpecializationVerify();
+    });
+  });
+  // @emea-specialization-validation-smoke-test
+  test(`${features[13].name}, ${features[13].tags}`, async ({ page, baseURL }) => {
+    const signInButtonInt = await signInSmokeTest.getSignInButton(
+      `${features[13].data.signInButtonInternationalText}`,
+    );
+    // click on sign in button
+    await signInButtonInt.click();
+
+    await test.step('Sing In, enter user email and password', async () => {
+    // entering user email and password
+      await smokeTest.smokeSignIn(page, baseURL, `${features[13].data.partnerLevel}`);
+    });
+
+    await test.step('Verify VIP Marketplace specialization', async () => {
+      await smokeTest.emeaSpecializationVerify();
+    });
+  });
+  // @korea-specialization-validation-smoke-test
+  test(`${features[14].name}, ${features[14].tags}`, async ({ page, baseURL }) => {
+    const signInButtonInt = await signInSmokeTest.getSignInButton(
+      `${features[14].data.signInButtonInternationalText}`,
+    );
+    // click on sign in button
+    await signInButtonInt.click();
+
+    await test.step('Sing In, enter user email and password', async () => {
+    // entering user email and password
+      await smokeTest.smokeSignIn(page, baseURL, `${features[14].data.partnerLevel}`);
+    });
+
+    await test.step('Verify VIP Marketplace specialization', async () => {
+      await smokeTest.krSpecializationVerify();
+    });
+  });
+  // @uplevel-info-validation-smoke-test
+  test(`${features[15].name}, ${features[15].tags}`, async ({ page, baseURL }) => {
+    const signInButtonInt = await signInSmokeTest.getSignInButton(
+      `${features[15].data.signInButtonInternationalText}`,
+    );
+    // click on sign in button
+    await signInButtonInt.click();
+
+    await test.step('Sing In, enter user email and password', async () => {
+    // entering user email and password
+      await smokeTest.smokeSignIn(page, baseURL, `${features[15].data.partnerLevel}`);
+    });
+
+    await test.step('Reseller program uplevel verification', async () => {
+      await smokeTest.checkUplevelProgram();
+
+      const resellerProgramLink = page.locator('p.body-m a[href*="/p/Reseller_Program_Guide_EMEA.pdf"]').nth(0);
+      await resellerProgramLink.isVisible();
+      const resellerProgramhref = await resellerProgramLink.getAttribute('href');
+      expect(resellerProgramhref).toContain(
+        features[15].data.expectedResellerProgramURL,
+      );
+    });
+
+    await test.step('Retail program uplevel verification', async () => {
+      const retailProgramLink = page.locator('p.body-m a[href*="/p/EMEA_Retail_Program_Guide.pdf"]').nth(0);
+      await retailProgramLink.isVisible();
+      const retailProgramhHref = await retailProgramLink.getAttribute('href');
+      expect(retailProgramhHref).toContain(
+        features[15].data.expectedRetailProgramURL,
+      );
+    });
+
+    await test.step('Membership page info verification', async () => {
+      await smokeTest.membershipPageInfoVerification();
+    });
+  });
+  // @cal-links-apac-validation-smoke-test
+  test(`${features[16].name}, ${features[16].tags}`, async ({ page, baseURL }) => {
+    const signInButtonInt = await signInSmokeTest.getSignInButton(
+      `${features[16].data.signInButtonInternationalText}`,
+    );
+    // click on sign in button
+    await signInButtonInt.click();
+
+    await test.step('Sing In, enter user email and password', async () => {
+    // entering user email and password
+      await smokeTest.smokeSignIn(page, baseURL, `${features[16].data.partnerLevel}`);
+    });
+    await test.step('Cal page verification', async () => {
+      // verify APC program guids
+      await smokeTest.apcProgramGuidsVerify();
+      // open cal from gnav
+      await smokeTest.requestCalverify();
+      // verify request and submit for INDIA cal
+      await smokeTest.indidaCalVerify();
+      // verify request and submit for SEA/BD cal
+      await smokeTest.seabdCalVerify();
+      // verify request and submit for HKT cal
+      await smokeTest.hktCalVerify();
+      // verify request and submit for China cal
+      await smokeTest.chinaCalVerify();
+      // verify request and submit for ANZ cal
+      await smokeTest.anzCalVerify();
+      // verify request and submit for Kora cal
+      await smokeTest.koreaCalVerify();
+
+      await test.step('Submit email verification', async () => {
+        await smokeTest.submitEmailVerify();
+      });
+
+      await test.step('Mebership page verififcation', async () => {
+        await smokeTest.apacMembershipVerify();
+
+        const distributorGuid = page.locator('p.body-m.action-area a:has-text("Distributor Guide")');
+        const distributorGuidlink = await distributorGuid.getAttribute('href');
+        expect(distributorGuidlink.includes('Asia') && distributorGuidlink.includes('Distributor')).toBeTruthy();
+      });
+    });
+  });
+
   // @join-now-button-validation-smoke-test
-  test(`${features[10].name}, ${features[10].tags}`, async ({ page, baseURL }) => {
-    const { data, path } = features[10];
+  test(`${features[17].name}, ${features[17].tags}`, async ({ page, baseURL }) => {
+    const { data, path } = features[17];
     const joinNowButton = await smokeTest.getJoinNowButtonByRegion(data.joinNowButtonText);
 
     await test.step('Verify if Join Now button is not visible on international pages', async () => {

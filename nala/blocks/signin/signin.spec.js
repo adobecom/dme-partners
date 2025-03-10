@@ -207,5 +207,18 @@ export default {
         signInButtonInternationalText: 'Sign In',
       },
     },
+    {
+      tcid: '18',
+      name: '@login-accessing-view-account-abandoned-user',
+      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
+      tags: '@dme-signin @regression @login @circleCi',
+      data: {
+        partnerLevel: 'cpp-abandoned:',
+        expectedToSeeInURL: '/channelpartners/error/login-error',
+        signInButtonInternationalText: 'Sign In',
+        viewAccountButton: 'View Account',
+        newTabUrl: 'https://stage.account.adobe.com/?lang=en',
+      },
+    },
   ],
 };
