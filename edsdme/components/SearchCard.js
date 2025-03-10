@@ -78,7 +78,7 @@ class SearchCard extends LitElement {
   triggerDownload(url) {
     const link = document.createElement('a');
     link.href = url;
-    link.download = "";
+    link.download = '';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
