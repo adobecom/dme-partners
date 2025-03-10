@@ -6,7 +6,14 @@ import { getConfig } from '../../edsdme/blocks/utils/utils.js';
 import { partnerIsSignedIn } from '../../edsdme/scripts/utils.js';
 
 jest.mock('../../edsdme/blocks/utils/utils.js', () => ({ getConfig: jest.fn() }));
-jest.mock('../../edsdme/scripts/utils.js', () => ({ partnerIsSignedIn: jest.fn(() => ({ 'partner name': { company: 'test' } })) }));
+jest.mock('../../edsdme/scripts/utils.js', () => ({
+  partnerIsSignedIn: jest.fn(() => ({ 'partner name': { company: 'test' } })),
+  prodHosts: [
+    'main--dme-partners--adobecom.hlx.page',
+    'main--dme-partners--adobecom.hlx.live',
+    'partners.adobe.com',
+  ],
+}));
 
 // Mock DOM
 document.body.innerHTML = `
@@ -18,7 +25,7 @@ document.body.innerHTML = `
 
 describe('Test rewrite links', () => {
   beforeEach(() => {
-    getConfig.mockReturnValue({ env: { name: 'stage' } });
+    getConfig.mockReturnValue({ env: { name: 'stage' }, codeRoot: 'https://stage--dme-partners--adobecom.aem.page/edsdme' });
     partnerIsSignedIn.mockReturnValue({ 'partner name': { company: 'test' } });
     Object.defineProperty(window, 'location', {
       writable: true,
@@ -62,7 +69,7 @@ describe('Test rewrite links', () => {
 
   test('should  not update partners prod domain and cbc prod domain when on  prod.'
     + ' Should update locale if exist for cbcconnection', () => {
-    getConfig.mockReturnValue({ env: { name: 'prod' } });
+    getConfig.mockReturnValue({ env: { name: 'prod' }, codeRoot: 'https://stage--dme-partners--adobecom.aem.page/edsdme' });
     rewriteLinks(document);
     const links = document.querySelectorAll('a');
     expect(links[1].href).toBe('https://partners.adobe.com/');
@@ -228,7 +235,7 @@ describe('Test rewrite links', () => {
     expect(links[0].href).toBe('https://partners.stage.adobe.com/');
   });
   test('should return link href unchanged in production environment', () => {
-    getConfig.mockReturnValue({ env: { name: 'prod' } });
+    getConfig.mockReturnValue({ env: { name: 'prod' }, codeRoot: 'https://main--dme-partners--adobecom.aem.page/edsdme' });
 
     const href = 'https://adobe.force.com/path';
     const result = getUpdatedHref(href);
@@ -274,7 +281,7 @@ describe('Test rewrite links', () => {
   gnav.innerHTML = gnavHTML;
 
   test('should not rewrite links in the production environment', () => {
-    getConfig.mockReturnValue({ env: { name: 'prod' } });
+    getConfig.mockReturnValue({ env: { name: 'prod' }, codeRoot: 'https://stage--dme-partners--adobecom.aem.page/edsdme' });
 
     rewriteLinks(gnav);
     const result = rewriteLinks(gnav);
