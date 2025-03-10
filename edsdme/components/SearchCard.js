@@ -71,7 +71,7 @@ class SearchCard extends LitElement {
         window.location.href = "/channelpartners/error/404";
       }
     } catch (error) {
-      window.location.href = "/channelpartners/error/404";
+      window.location.href = '/channelpartners/error/404';
     }
   }
 
