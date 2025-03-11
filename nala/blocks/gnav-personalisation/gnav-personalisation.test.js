@@ -13,7 +13,7 @@ test.describe('Validate Public GNav', () => {
     gnavPersonalisationPage = new GnavPersonalisationPage(page);
     singInPage = new SignInPage(page);
     if (!baseURL.includes('partners.stage.adobe.com')) {
-      await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
+      await context.setExtraHTTPHeaders({ authorization: `token ${process.env.MILO_AEM_API_KEY}` });
     }
     if (browserName === 'chromium' && !baseURL.includes('partners.stage.adobe.com')) {
       await page.route('https://www.adobe.com/chimera-api/**', async (route, request) => {
