@@ -6,6 +6,7 @@ const CARD_METADATA_PROPERTY_CREATED = 'created';
 export default async function init(el) {
   performance.mark('announcement-date:start');
 
+  // dummy
   let createdDateValue;
   const cardMetadataEl = document.querySelector('.card-metadata');
 
