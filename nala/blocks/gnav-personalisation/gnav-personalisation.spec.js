@@ -182,5 +182,15 @@ export default {
         h3ElementResellerId: 'partner-reseller',
       },
     },
+    {
+      tcid: '12',
+      name: '@desc-personalisation-partner-all-level-rule',
+      path: '/na/channelpartners/drafts/automation/regression/personalization?georouting=off&martech=off',
+      tags: '@dme-gnav @personalisation @circleCi',
+      data: {
+        partnerLevel: 'cpp-na-certified:',
+        signInButton: 'Sign In',
+      },
+    },
   ],
 };
