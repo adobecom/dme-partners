@@ -11,6 +11,8 @@ jest.mock('../../edsdme/scripts/utils.js', () => ({
   prodHosts: [
     'main--dme-partners--adobecom.hlx.page',
     'main--dme-partners--adobecom.hlx.live',
+    'main--dme-partners--adobecom.aem.page',
+    'main--dme-partners--adobecom.aem.live',
     'partners.adobe.com',
   ],
 }));
@@ -297,5 +299,14 @@ describe('Test rewrite links', () => {
         <a href="https://io-partners-dx.stage.adobe.com/path"></a>
         <a href="https://unmapped-domain.com/path"></a>
       `);
+  });
+
+  test('should return prod link href unchanged in on aem.page', () => {
+    getConfig.mockReturnValue({ env: { name: 'stage' }, codeRoot: 'https://main--dme-partners--adobecom.aem.page/edsdme' });
+
+    const href = 'https://partners.adobe.com/';
+    const result = getUpdatedHref(href);
+
+    expect(result).toBe(href);
   });
 });
