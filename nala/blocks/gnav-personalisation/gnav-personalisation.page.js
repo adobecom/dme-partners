@@ -5,8 +5,10 @@ export default class GnavPersonalisationPage {
     this.publicGnavHeader = page.locator('header[daa-lh="gnav|public-gnav"]');
     this.joinNowButton = page.locator('#feds-nav-wrapper .feds-cta--primary:has-text("Join Now")');
     this.signInButton = page.locator('button[daa-ll="Sign In"].feds-signIn');
+    this.profileIconButton = page.locator('.feds-profile-button');
 
     this.welcomeFirstName = page.locator('h4#welcome-firstname');
+    this.fragmentPartnerAllLevel = page.locator('.partner-all-levels div .fragment');
   }
 
   getH3ElementById(id) {
