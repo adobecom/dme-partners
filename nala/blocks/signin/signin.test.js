@@ -300,4 +300,41 @@ test.describe('MAPC sign in flow', () => {
       });
     });
   });
+
+  // @login-accessing-view-account-abandoned-user
+  test(`${features[17].name},${features[17].tags}`, async ({ page }) => {
+    const { data, path } = features[17];
+    const signInButton = await signInPage.getSignInButton(`${data.signInButtonInternationalText}`);
+
+    await test.step('Go to home page', async () => {
+      await page.goto(`${path}`);
+      await page.waitForLoadState('domcontentloaded');
+
+      await signInButton.click();
+    });
+
+    await test.step('Sign in', async () => {
+      await signInPage.signIn(page, `${data.partnerLevel}`);
+    });
+
+    await test.step('After login user is redirected to error page', async () => {
+      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+      const pages = await page.context().pages();
+      await expect(pages[0].url()).toContain(`${data.expectedToSeeInURL}`);
+    });
+
+    await test.step('Click on the View account', async () => {
+      await signInPage.profileIconButton.click();
+      const viewAccount = await signInPage.getButtonElement(`${data.viewAccountButton}`);
+      await viewAccount.click();
+    });
+
+    await test.step('Verify redirection to Adobe account management page', async () => {
+      const [newTab] = await Promise.all([
+        page.waitForEvent('popup'),
+      ]);
+      await newTab.waitForLoadState();
+      expect(newTab.url()).toBe(`${data.newTabUrl}`);
+    });
+  });
 });
