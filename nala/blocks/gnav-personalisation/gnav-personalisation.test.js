@@ -338,4 +338,30 @@ test.describe('Validate Public GNav', () => {
       await expect(resellerBlock).toBeHidden();
     });
   });
+
+  test(`${features[11].name},${features[11].tags}`, async ({ page, baseURL }) => {
+    const { data, path } = features[11];
+    await test.step('Go to CPP page', async () => {
+      await page.goto(`${baseURL}${path}`);
+      await page.waitForLoadState('domcontentloaded');
+    });
+
+    await test.step('Verify that user cannot see partner-all-levels fragment before login', async () => {
+      const partnerAllLevelFragment = await gnavPersonalisationPage.fragmentPartnerAllLevel;
+      await expect(partnerAllLevelFragment).not.toBeVisible();
+    });
+
+    await test.step('Sign in', async () => {
+      const signInButtonInt = await singInPage.getSignInButton(`${data.signInButton}`);
+      await signInButtonInt.click();
+      await singInPage.signIn(page, `${data.partnerLevel}`);
+      await page.waitForLoadState();
+    });
+
+    await test.step('Verify that user can see partner-all-levels fragment after login', async () => {
+      await gnavPersonalisationPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+      const partnerAllLevelFragment = await gnavPersonalisationPage.fragmentPartnerAllLevel;
+      await expect(partnerAllLevelFragment).toBeVisible();
+    });
+  });
 });
