@@ -211,5 +211,20 @@ test.describe('Validate banners', () => {
       const renewBanner = await bannersPage.renewBanner;
       await expect(renewBanner).toBeHidden();
     });
+
+    await test.step('Verify if account has info abandoned', async () => {
+      const reEnrollLink = page.locator('.body-m a[href*="/enrollment/"]:has-text("re-enroll")');
+
+      await expect(page.locator('.tracking-header:has-text("Abandoned account")')).toBeVisible();
+      await expect(reEnrollLink).toBeVisible();
+      reEnrollLink.click();
+
+      const [newTab] = await Promise.all([
+        page.waitForEvent('popup'),
+      ]);
+
+      await newTab.waitForLoadState();
+      expect(newTab.url()).toContain(`${data.enrollmentURL}`);
+    });
   });
 });
