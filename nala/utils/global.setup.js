@@ -28,9 +28,9 @@ async function getGitHubPRBranchLiveUrl() {
   const prFromRepoName = process.env.prRepo;
   
   const prBranchLiveUrl = `https://${prBranch}--${prFromRepoName}--${prFromOrg}.aem.live`;
-
+  const existingPageLiveUrl = `${prBranchLiveUrl}/channelpartners/home/`;
   try {
-    if (await isBranchURLValid(prBranchLiveUrl, true)) {
+    if (await isBranchURLValid(existingPageLiveUrl, true)) {
       process.env.PR_BRANCH_LIVE_URL = prBranchLiveUrl;
     }
     console.info('PR Repository : ', repository);
