@@ -103,4 +103,262 @@ test.describe('Validate popups', () => {
         .toContain(`${data.expectedToSeeInURL}`);
     });
   });
+  // @login-accessing-asset-with-member-user-logged-in-to-adobe
+  test(`${features[3].name}, ${features[3].tags}`, async ({ page }) => {
+    const { data, path } = features[3];
+    const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
+    await test.step('Go to adobe homepage', async () => {
+      const url = `${path}`;
+      await page.evaluate((navigationUrl) => {
+        window.location.href = navigationUrl;
+      }, url);
+
+      await signInButton.click();
+      await page.waitForLoadState('domcontentloaded');
+    });
+
+    await test.step('Sign in with member user', async () => {
+      await signInPage.signIn(page, `${data.partnerLevel}`);
+      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 15000 });
+    });
+    // search pdf and click enter
+    await test.step('Search for asset', async () => {
+      await accessingAssetsPage.searchGnav.click();
+      await accessingAssetsPage.searchGnavField.fill(data.unwantedAsset);
+      await accessingAssetsPage.searchGnavField.press('Enter');
+        });
+
+    await test.step('Verify Asset is visible for user', async () => {
+      await page.waitForLoadState('domcontentloaded');
+      await accessingAssetsPage.unwantedAssetCheck(`${data.unwantedAsset}`);
+    })
+    // search pdf and click enter
+    await test.step('Search for asset', async () => {
+      await accessingAssetsPage.resetButton.click()
+      await accessingAssetsPage.searchFieldPage.fill(data.searchText);
+      await expect(accessingAssetsPage.searchFieldPage).toHaveValue(data.searchText, { timeout: 3000 });
+      await accessingAssetsPage.searchFieldPage.evaluate(el => el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' })));
+        });
+
+    await test.step('Verify Asset is visible for user', async () => {
+      await accessingAssetsPage.searchAsset(data.locatorText, data.expectedAsset);
+      await accessingAssetsPage.checkOpenAsset(data.locatorText, data.assetURL);
+    });
+
+  });
+  // @login-accessing-asset-with-emea-member-user-logged-in-to-adobe
+  test(`${features[4].name}, ${features[4].tags}`, async ({ page }) => {
+    const { data, path } = features[4];
+    const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
+    await test.step('Go to adobe homepage', async () => {
+      const url = `${path}`;
+      await page.evaluate((navigationUrl) => {
+        window.location.href = navigationUrl;
+      }, url);
+
+      await signInButton.click();
+      await page.waitForLoadState('domcontentloaded');
+    });
+
+    await test.step('Sign in with member user', async () => {
+      await signInPage.signIn(page, `${data.partnerLevel}`);
+      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 15000 });
+    });
+    // search pdf and click enter
+    await test.step('Search for asset', async () => {
+      await accessingAssetsPage.searchGnav.click();
+      await accessingAssetsPage.searchGnavField.fill(data.unwantedAsset);
+      await accessingAssetsPage.searchGnavField.press('Enter');
+        });
+
+    await test.step('Verify Asset is visible for user', async () => {
+      await page.waitForLoadState('domcontentloaded');
+      await accessingAssetsPage.unwantedAssetCheck(`${data.unwantedAsset}`);
+    })
+    // search pdf and click enter
+    await test.step('Search for asset', async () => {
+      await accessingAssetsPage.resetButton.click()
+      await accessingAssetsPage.searchFieldPage.fill(data.searchText);
+      await expect(accessingAssetsPage.searchFieldPage).toHaveValue(data.searchText, { timeout: 3000 });
+      await accessingAssetsPage.searchFieldPage.evaluate(el => el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' })));
+        });
+
+    await test.step('Verify Asset is visible for user', async () => {
+      await accessingAssetsPage.searchAsset(data.locatorText, data.expectedAsset);
+      await accessingAssetsPage.checkOpenAsset(data.locatorText, data.assetURL);
+    });
+  });
+  // @login-accessing-asset-with-na-member-user-logged-in-to-adobe
+  test(`${features[5].name}, ${features[5].tags}`, async ({ page }) => {
+    const { data, path } = features[5];
+    const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
+    await test.step('Go to adobe homepage', async () => {
+      const url = `${path}`;
+      await page.evaluate((navigationUrl) => {
+        window.location.href = navigationUrl;
+      }, url);
+
+      await signInButton.click();
+      await page.waitForLoadState('domcontentloaded');
+    });
+
+    await test.step('Sign in with member user', async () => {
+      await signInPage.signIn(page, `${data.partnerLevel}`);
+      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 15000 });
+    });
+    // search pdf and click enter
+    await test.step('Search for asset', async () => {
+      await accessingAssetsPage.searchGnav.click();
+      await accessingAssetsPage.searchGnavField.fill(data.unwantedAsset);
+      await accessingAssetsPage.searchGnavField.press('Enter');
+        });
+
+    await test.step('Verify Asset is visible for user', async () => {
+      await page.waitForLoadState('domcontentloaded');
+      await accessingAssetsPage.unwantedAssetCheck(`${data.unwantedAsset}`);
+    })
+    // search pdf and click enter
+    await test.step('Search for asset', async () => {
+      await accessingAssetsPage.resetButton.click()
+      await accessingAssetsPage.searchFieldPage.fill(data.searchText);
+      await accessingAssetsPage.searchFieldPage.click();
+      await accessingAssetsPage.searchFieldPage.press('Enter');
+      await page.waitForLoadState('load');
+        });
+
+    await test.step('Verify Asset is visible for user', async () => {
+      await accessingAssetsPage.searchAsset(data.locatorText, data.expectedAsset);
+      await accessingAssetsPage.checkOpenAsset(data.locatorText, data.assetURL);
+    });
+  });
+  // @login-accessing-asset-with-jp-member-user-logged-in-to-adobe
+  test(`${features[6].name}, ${features[6].tags}`, async ({ page }) => {
+    const { data, path } = features[6];
+    const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
+    await test.step('Go to adobe homepage', async () => {
+      const url = `${path}`;
+      await page.evaluate((navigationUrl) => {
+        window.location.href = navigationUrl;
+      }, url);
+
+      await signInButton.click();
+      await page.waitForLoadState('domcontentloaded');
+    });
+
+    await test.step('Sign in with member user', async () => {
+      await signInPage.signIn(page, `${data.partnerLevel}`);
+      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 15000 });
+    });
+    // search pdf and click enter
+    await test.step('Search for asset', async () => {
+      await accessingAssetsPage.searchGnav.click();
+      await accessingAssetsPage.searchGnavField.fill(data.unwantedAsset);
+      await accessingAssetsPage.searchGnavField.press('Enter');
+        });
+
+    await test.step('Verify Asset is visible for user', async () => {
+      await page.waitForLoadState('domcontentloaded');
+      await accessingAssetsPage.unwantedAssetCheck(`${data.unwantedAsset}`);
+    })
+    // search pdf and click enter
+    await test.step('Search for asset', async () => {
+      await accessingAssetsPage.resetButton.click()
+      await accessingAssetsPage.searchFieldPage.fill(data.searchText);
+      await accessingAssetsPage.searchFieldPage.click();
+      await accessingAssetsPage.searchFieldPage.press('Enter');
+      await page.waitForLoadState('load');
+        });
+
+    await test.step('Verify Asset is visible for user', async () => {
+      await accessingAssetsPage.searchAsset(data.locatorText, data.expectedAsset);
+      await accessingAssetsPage.checkOpenAsset(data.locatorText, data.assetURL);
+    });
+  });
+  // @login-accessing-asset-with-cn-member-user-logged-in-to-adobe
+  test(`${features[7].name}, ${features[7].tags}`, async ({ page }) => {
+    const { data, path } = features[7];
+    const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
+    await test.step('Go to adobe homepage', async () => {
+      const url = `${path}`;
+      await page.evaluate((navigationUrl) => {
+        window.location.href = navigationUrl;
+      }, url);
+
+      await signInButton.click();
+      await page.waitForLoadState('domcontentloaded');
+    });
+
+    await test.step('Sign in with member user', async () => {
+      await signInPage.signIn(page, `${data.partnerLevel}`);
+      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 15000 });
+    });
+    // search pdf and click enter
+    await test.step('Search for asset', async () => {
+      await accessingAssetsPage.searchGnav.click();
+      await accessingAssetsPage.searchGnavField.fill(data.unwantedAsset);
+      await accessingAssetsPage.searchGnavField.press('Enter');
+        });
+
+    await test.step('Verify Asset is visible for user', async () => {
+      await page.waitForLoadState('domcontentloaded');
+      await accessingAssetsPage.unwantedAssetCheck(`${data.unwantedAsset}`);
+    })
+    // search pdf and click enter
+    await test.step('Search for asset', async () => {
+      await accessingAssetsPage.resetButton.click()
+      await accessingAssetsPage.searchFieldPage.fill(data.searchText);
+      await accessingAssetsPage.searchFieldPage.click();
+      await accessingAssetsPage.searchFieldPage.press('Enter');
+      await page.waitForLoadState('load');
+        });
+
+    await test.step('Verify Asset is visible for user', async () => {
+      await accessingAssetsPage.searchAsset(data.locatorText, data.expectedAsset);
+      await accessingAssetsPage.checkOpenAsset(data.locatorText, data.assetURL);
+    });
+  });
+  // @login-accessing-asset-with-kr-member-user-logged-in-to-adobe
+  test(`${features[8].name}, ${features[8].tags}`, async ({ page }) => {
+    const { data, path } = features[8];
+    const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
+    await test.step('Go to adobe homepage', async () => {
+      const url = `${path}`;
+      await page.evaluate((navigationUrl) => {
+        window.location.href = navigationUrl;
+      }, url);
+
+      await signInButton.click();
+      await page.waitForLoadState('domcontentloaded');
+    });
+
+    await test.step('Sign in with member user', async () => {
+      await signInPage.signIn(page, `${data.partnerLevel}`);
+      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 15000 });
+    });
+    // search pdf and click enter
+    await test.step('Search for asset', async () => {
+      await accessingAssetsPage.searchGnav.click();
+      await accessingAssetsPage.searchGnavField.fill(data.unwantedAsset);
+      await accessingAssetsPage.searchGnavField.press('Enter');
+        });
+
+    await test.step('Verify Asset is visible for user', async () => {
+      await page.waitForLoadState('domcontentloaded');
+      await accessingAssetsPage.unwantedAssetCheck(`${data.unwantedAsset}`);
+    })
+    // search pdf and click enter
+    await test.step('Search for asset', async () => {
+      await accessingAssetsPage.resetButton.click()
+      await accessingAssetsPage.searchFieldPage.fill(data.searchText);
+      await accessingAssetsPage.searchFieldPage.click();
+      await accessingAssetsPage.searchFieldPage.press('Enter');
+      await page.waitForLoadState('load');
+        });
+
+    await test.step('Verify Asset is visible for user', async () => {
+      await accessingAssetsPage.searchAsset(data.locatorText, data.expectedAsset);
+      await accessingAssetsPage.checkOpenAsset(data.locatorText, data.assetURL);
+    });
+  });
+
 });
