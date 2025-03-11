@@ -30,7 +30,7 @@ async function getGitHubPRBranchLiveUrl() {
   const prBranchLiveUrl = `https://${prBranch}--${prFromRepoName}--${prFromOrg}.aem.live`;
 
   try {
-    if (await isBranchURLValid(prBranchLiveUrl, true)) {
+    if (await isBranchURLValid(prBranchLiveUrl + '/channelpartners/home/', true)) {
       process.env.PR_BRANCH_LIVE_URL = prBranchLiveUrl;
     }
     console.info('PR Repository : ', repository);
@@ -88,7 +88,8 @@ async function getCircleCIBranchLiveUrl() {
 }
 
 async function getLocalBranchLiveUrl() {
-  let localTestLiveUrl
+  let localTestLiveUrl;
+  console.log('in get local branch live url');
   try {
     const localGitRootDir = execSync('git rev-parse --show-toplevel', { encoding: 'utf-8' }).trim();
 
@@ -118,7 +119,8 @@ async function getLocalBranchLiveUrl() {
 async function globalSetup() {
   console.info('---- Executing Nala Global setup ----\n');
 
-  if (process.env.GITHUB_ACTIONS === 'true') {
+  if ('true' === 'true') {
+  // if (process.env.GITHUB_ACTIONS === 'true') {
     console.info('---- Running Nala Tests in the GitHub environment ----\n');
 
     if (process.env.MILO_LIBS_RUN === 'true') {
