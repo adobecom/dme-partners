@@ -279,7 +279,7 @@ test.describe('Validate popups', () => {
       page.on('response', (response) => {
         if (response.url().includes(`${data.assetURL}`) && response.status() === data.httpStatusCode) {
           resolve(true);
-        };
+        }
       });
     });
 
