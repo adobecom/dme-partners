@@ -485,7 +485,7 @@ describe('Test utils.js', () => {
     expect(hasSalesCenterAccess()).toBe(false);
   });
   it('Disable geo popup for milo urls', () => {
-    window.location.hostname = 'main--dme-partners--adobecom.hlx.live';
+    window.location.hostname = 'main--dme-partners--adobecom.aem.live';
     expect(enableGeoPopup()).toEqual('off');
   });
   it('Disable geo popup for non milo urls if the user is signed in', () => {
