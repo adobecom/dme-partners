@@ -26,7 +26,7 @@ test.describe('Search Page validation', () => {
             });
           }
     });
-
+    // @na-validate-assets-present-for-user
     test(`${features[0].name}, ${features[0].tags}`, async ({ page }) => {
         const { data } = features[0];
 
@@ -48,16 +48,15 @@ test.describe('Search Page validation', () => {
         // check pdf icon is displayed
         await searchTest.checkFileIcon(`${data.iconPdf}`)
         // check the present tags
-        await searchTest.hasCardTag(data.asset1, data.asset1Tag1)
-        await searchTest.hasCardTag(data.asset1, data.asset1Tag2)
-        await searchTest.hasCardTag(data.asset1, data.asset1Tag3)
-        await searchTest.hasCardTag(data.asset1, data.asset1Tag4)
-        console.log('asset tag:', data.asset1Tag1)
-
-        // open asset preview  LATER
-        //await searchTest.openPreviewFile(data.assetURL, data.httpStatusCode);
-
+        await searchTest.hasCardTag(data.asset1, data.asset1Tag1);
+        await searchTest.hasCardTag(data.asset1, data.asset1Tag2);
+        await searchTest.hasCardTag(data.asset1, data.asset1Tag3);
+        await searchTest.hasCardTag(data.asset1, data.asset1Tag4);
         });
+        
+        // await test.step('Open asset preview', async () => {
+        //     await searchTest.openPreviewFile(data.assetURL);
+        // });
 
         await test.step('Check MAPC stage education', async () => {
             await searchTest.checkCardDescription(data.asset2, data.descriptionText);
@@ -66,23 +65,21 @@ test.describe('Search Page validation', () => {
 
         await test.step('Check MAPC stage worldwide', async () => {
             await searchTest.checkFileIcon(data.iconDef);
-            // size and last modife missing LATER
-
         });
 
         await test.step('Check MAPC stage combined', async () => {
             await searchTest.checkFileIcon(data.iconDoc);
         });
     });
-
+    // @na-validate-search-page-filters-part-one
     test(`${features[1].name}, ${features[1].tags}`, async ({ page }) => {
-        const { data } = features[0];
+        const { data } = features[1];
 
         await test.step('Sign In with user', async () => {
             await page.goto(`${features[1].path}`);
             await page.waitForLoadState('domcontentloaded');
 
-            await sginInSearchTest.signIn(page, `${features[0].data.partnerLevel}`);
+            await sginInSearchTest.signIn(page, `${features[1].data.partnerLevel}`);
             await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
         });
 
@@ -96,7 +93,7 @@ test.describe('Search Page validation', () => {
             await searchTest.filterSearchAssets(searchTest.filterType, searchTest.checkBoxLicensing);
             await searchTest.checkCardTitle(data.asset1);
             await searchTest.checkCardTitle(data.asset4);
-            await searchTest.clearAllFilters.clik();
+            await searchTest.clearAllFilters.click();
         });
 
         await test.step('Filter Assets by Language filter', async () => {
@@ -112,11 +109,272 @@ test.describe('Search Page validation', () => {
         });
 
         await test.step('Filter Assets by Topic filter', async () => {
-            await searchTest.filterSearchAssets(searchTest.filterProduct, searchTest.checkBoxAdobeSign);
+            await searchTest.filterSearchAssets(searchTest.filterTopic, searchTest.checkBoxDealRegistration);
+            await searchTest.checkCardTitle(data.asset1);
+            await searchTest.checkCardTitle(data.asset4);
+            await searchTest.clearAll();
+        });
+
+        await test.step('Search Page pagination test', async () => {
+            await searchTest.clearAll();
+            await page.waitForLoadState('domcontentloaded');
+            const number = await searchTest.checkNumberOfAssets();
+            expect(number).toBeGreaterThan(4);
+
+            await searchTest.nextPageCLick();
+            await searchTest.checkCardTitle(data.nextPageAsset);
+            await searchTest.prevPageClick();
+            await searchTest.checkCardTitle(data.asset1);
+            await searchTest.page3Click();
+            await searchTest.checkCardTitle(data.page3Asset);
+
+        });
+    });
+    // @na-validate-search-page-filters-part-two
+    test(`${features[2].name}, ${features[2].tags}`, async ({ page }) => {
+        const { data } = features[2];
+
+        await test.step('Sign In with user', async () => {
+            await page.goto(`${features[2].path}`);
+            await page.waitForLoadState('domcontentloaded');
+
+            await sginInSearchTest.signIn(page, `${features[2].data.partnerLevel}`);
+            await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+        });
+
+        await test.step('Search for assets ', async () => {
+            await searchTest.searchAsset(`${data.searchKeyWord}`);
             await searchTest.checkCardTitle(data.asset1);
             await searchTest.checkCardTitle(data.asset4);
         });
 
+        await test.step('Filter Assets by Language filter', async () => {
+            await searchTest.filterSearchAssets(searchTest.filterLanguage, searchTest.checkBoxSpanish);
+            await searchTest.checkCardTitle(data.asset1);
+            await searchTest.checkCardTitle(data.asset2);
+            // await searchTest.clearAllFilters.click();
+            await searchTest.filterSearchAssets(searchTest.filterLanguage, searchTest.checkBoxArabic);
+            await searchTest.checkCardTitle(data.asset1);
+            await searchTest.checkCardTitle(data.asset2);
+            await searchTest.checkCardTitle(data.asset4);
+        });
+
+        await test.step('Filter Assets by Product filter', async () => {
+            await searchTest.filterSearchAssets(searchTest.filterProduct, searchTest.checkBoxAdobeDreamweaver);
+            await searchTest.checkCardTitle(data.asset1);
+        });
+
+        await test.step('Filter Assets by Topic filter', async () => {
+            await searchTest.filterSearchAssets(searchTest.filterTopic, searchTest.checkBoxProgramGuid);
+            await searchTest.checkCardTitle(data.asset1);
+        });
+
+        await test.step('Filter Assets Uncheck Language filter', async () => {
+            await searchTest.filterSearchAssets(searchTest.filterLanguage, searchTest.checkBoxSpanish);
+            await searchTest.filterSearchAssets(searchTest.filterLanguage, searchTest.checkBoxArabic);
+            await searchTest.checkCardTitle(data.asset1);
+        });
+
+        await test.step('Filter Assets Uncheck Topic and Product filter', async () => {
+            await searchTest.filterSearchAssets(searchTest.filterTopic, searchTest.checkBoxProgramGuid);
+            await searchTest.filterSearchAssets(searchTest.filterProduct, searchTest.checkBoxAdobeDreamweaver);
+            await searchTest.checkCardTitle(data.asset3);
+            await searchTest.checkCardTitle(data.asset1);
+            await searchTest.checkCardTitle(data.asset2);
+            await searchTest.checkCardTitle(data.asset4);
+        });
+
+        await test.step('Crlear seach keyword test', async () => {
+            await searchTest.clearAll();
+            await page.waitForLoadState('domcontentloaded');
+            const number = await searchTest.checkNumberOfAssets();
+            expect(number).toBeGreaterThan(4);
+        });
+    });
+    // @apac-asset-validation-search-page
+    test(`${features[3].name}, ${features[3].tags}`, async ({ page }) => {
+        const { data } = features[3];
+
+        await test.step('Sign In with user', async () => {
+            await page.goto(`${features[3].path}`);
+            await page.waitForLoadState('domcontentloaded');
+
+            await sginInSearchTest.signIn(page, `${features[3].data.partnerLevel}`);
+            await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+        });
+
+        await test.step('Search for assets ', async () => {
+            await searchTest.searchAsset(`${data.searchKeyWord}`);
+            await searchTest.checkCardTitle(data.asset1);
+            await searchTest.checkCardTitle(data.asset4);
+            await searchTest.checkCardTitle(data.asset2);
+            await searchTest.checkCardTitle(data.asset3);
+        });
+    });
+    // @china-asset-validation-search-page
+    test(`${features[4].name}, ${features[4].tags}`, async ({ page }) => {
+        const { data } = features[4];
+
+        await test.step('Sign In with China user', async () => {
+            await page.goto(`${features[4].path}`);
+            await page.waitForLoadState('domcontentloaded');
+
+            await sginInSearchTest.signIn(page, `${features[4].data.partnerLevel}`);
+            await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+        });
+
+        await test.step('Search for assets ', async () => {
+            await searchTest.searchAsset(`${data.searchKeyWord}`);
+            await searchTest.checkCardTitle(data.asset1);
+            await searchTest.checkCardTitle(data.asset4);
+            await searchTest.checkCardTitle(data.asset2);
+            await searchTest.checkCardTitle(data.asset3);
+        });
+    });
+    // @west-europe-asset-validation-search-pag
+    test(`${features[5].name}, ${features[5].tags}`, async ({ page }) => {
+        const { data } = features[5];
+
+        await test.step('Sign In with China user', async () => {
+            await page.goto(`${features[5].path}`);
+            await page.waitForLoadState('domcontentloaded');
+
+            await sginInSearchTest.signIn(page, `${features[5].data.partnerLevel}`);
+            await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+        });
+
+        await test.step('Search for assets ', async () => {
+            await searchTest.searchAsset(`${data.searchKeyWord}`);
+            await searchTest.checkCardTitle(data.asset1);
+            await searchTest.checkCardTitle(data.asset4);
+            await searchTest.checkCardTitle(data.asset2);
+            await searchTest.checkCardTitle(data.asset3);
+        });
+    });
+    // @japan-europe-asset-validation-search-page
+    test(`${features[6].name}, ${features[6].tags}`, async ({ page }) => {
+        const { data } = features[6];
+
+        await test.step('Sign In with China user', async () => {
+            await page.goto(`${features[6].path}`);
+            await page.waitForLoadState('domcontentloaded');
+
+            await sginInSearchTest.signIn(page, `${features[6].data.partnerLevel}`);
+            await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+        });
+
+        await test.step('Search for assets ', async () => {
+            await searchTest.searchAsset(`${data.searchKeyWord}`);
+            await searchTest.checkCardTitle(data.asset1);
+            await searchTest.checkCardTitle(data.asset4);
+            await searchTest.checkCardTitle(data.asset2);
+            await searchTest.checkCardTitle(data.asset3);
+            await searchTest.checkCardTitle(data.asset5);
+        });
+    });
+    // @latin-america-asset-validation-search-page
+    test(`${features[7].name}, ${features[7].tags}`, async ({ page }) => {
+        const { data } = features[7];
+
+        await test.step('Sign In with China user', async () => {
+            await page.goto(`${features[7].path}`);
+            await page.waitForLoadState('domcontentloaded');
+
+            await sginInSearchTest.signIn(page, `${features[7].data.partnerLevel}`);
+            await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+        });
+
+        await test.step('Search for assets ', async () => {
+            await searchTest.searchAsset(`${data.searchKeyWord}`);
+            await searchTest.checkCardTitle(data.asset1);
+            await searchTest.checkCardTitle(data.asset4);
+            await searchTest.checkCardTitle(data.asset2);
+            await searchTest.checkCardTitle(data.asset3);
+            await searchTest.checkCardTitle(data.asset5);
+        });
+    });
+    // @latin-america-na-asset-validation-search-page
+    test(`${features[8].name}, ${features[8].tags}`, async ({ page }) => {
+        const { data } = features[8];
+
+        await test.step('Sign In with China user', async () => {
+            await page.goto(`${features[8].path}`);
+            await page.waitForLoadState('domcontentloaded');
+
+            await sginInSearchTest.signIn(page, `${features[8].data.partnerLevel}`);
+            await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+        });
+
+        await test.step('Search for assets ', async () => {
+            await searchTest.searchAsset(`${data.searchKeyWord}`);
+            await searchTest.checkCardTitle(data.asset1);
+            await searchTest.checkCardTitle(data.asset4);
+            await searchTest.checkCardTitle(data.asset2);
+            await searchTest.checkCardTitle(data.asset3);
+            await searchTest.checkCardTitle(data.asset5);
+        });
+    });
+    // @pacific-user-asset-validation-search-page
+    test(`${features[9].name}, ${features[9].tags}`, async ({ page }) => {
+        const { data } = features[9];
+
+        await test.step('Sign In with China user', async () => {
+            await page.goto(`${features[9].path}`);
+            await page.waitForLoadState('domcontentloaded');
+
+            await sginInSearchTest.signIn(page, `${features[9].data.partnerLevel}`);
+            await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+        });
+
+        await test.step('Search for assets ', async () => {
+            await searchTest.searchAsset(`${data.searchKeyWord}`);
+            await searchTest.checkCardTitle(data.asset1);
+            await searchTest.checkCardTitle(data.asset4);
+            await searchTest.checkCardTitle(data.asset2);
+            await searchTest.checkCardTitle(data.asset3);
+        });
+    });
+    // @uk-user-asset-validation-search-page
+    test(`${features[10].name}, ${features[10].tags}`, async ({ page }) => {
+        const { data } = features[10];
+
+        await test.step('Sign In with China user', async () => {
+            await page.goto(`${features[10].path}`);
+            await page.waitForLoadState('domcontentloaded');
+
+            await sginInSearchTest.signIn(page, `${features[10].data.partnerLevel}`);
+            await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+        });
+
+        await test.step('Search for assets ', async () => {
+            await searchTest.searchAsset(`${data.searchKeyWord}`);
+            await searchTest.checkCardTitle(data.asset1);
+            await searchTest.checkCardTitle(data.asset4);
+            await searchTest.checkCardTitle(data.asset2);
+            await searchTest.checkCardTitle(data.asset3);
+            await searchTest.checkCardTitle(data.asset5);
+            await searchTest.checkCardTitle(data.asset6);
+        });
+    });
+    // @korea-user-asset-validation-search-pag
+    test(`${features[11].name}, ${features[11].tags}`, async ({ page }) => {
+        const { data } = features[11];
+
+        await test.step('Sign In with China user', async () => {
+            await page.goto(`${features[11].path}`);
+            await page.waitForLoadState('domcontentloaded');
+
+            await sginInSearchTest.signIn(page, `${features[11].data.partnerLevel}`);
+            await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+        });
+
+        await test.step('Search for assets ', async () => {
+            await searchTest.searchAsset(`${data.searchKeyWord}`);
+            await searchTest.checkCardTitle(data.asset1);
+            await searchTest.checkCardTitle(data.asset4);
+            await searchTest.checkCardTitle(data.asset2);
+            await searchTest.checkCardTitle(data.asset3);
+        });
     });
 
 })

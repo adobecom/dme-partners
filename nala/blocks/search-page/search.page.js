@@ -1,3 +1,5 @@
+import { expect } from '@playwright/test';
+
 export default class SearchTest {
     constructor(page) {
         this.page = page;
@@ -8,11 +10,18 @@ export default class SearchTest {
         this.checkBoxLicensing = page.getByRole('checkbox', { name: 'Licensing', exact: true });
         this.filterLanguage = page.getByLabel('Asset language');
         this.checkBoxArabic = page.getByRole('checkbox', { name: 'Arabic' });
+        this.checkBoxSpanish = page.getByRole('checkbox', { name: 'Spanish' });
         this.filterProduct = page.getByLabel('Product');
         this.checkBoxAdobeSign = page.getByRole('checkbox', { name: 'Adobe Sign' });
+        this.checkBoxAdobeDreamweaver = page.getByRole('checkbox', { name: 'Adobe Dreamweaver' });
         this.filterTopic = page.getByLabel('Topic');
         this.checkBoxDealRegistration = page.getByRole('checkbox', { name: 'Deal Registration' });
+        this.checkBoxProgramGuid = page.getByRole('checkbox', { name: 'Programme Guide' })
         this.clearAllFilters = page.getByLabel('Clear all');
+        this.tabAll = page.getByLabel('All', { exact: true });
+        this.nextPage = page.getByLabel('Next Page');
+        this.prevPage = page.getByLabel('Previous Page');
+        this.page3 = page.getByLabel('Page 3');
     }
     async cardTitle(text) {
         return this.page.getByText(text);
@@ -49,10 +58,9 @@ export default class SearchTest {
 
     async openPreviewFile(assetURL, httpStatusCode) {
         const { openPreview } = this;
-
         const promise = new Promise((resolve) => {
-            this.page.on('response', (response) => {
-              if (response.url().includes(`${assetURL}`) && response.status() === httpStatusCode) {
+            page.on('response', (response) => {
+              if (response.url().includes(assetURL) && response.status() === httpStatusCode) {
                 resolve(true);
               }
             });
@@ -60,14 +68,11 @@ export default class SearchTest {
 
         const [newPage] = await Promise.all([
             this.page.context().waitForEvent('page'),
-            openPreview.click(), 
+            openPreview.click(),
         ]);
 
         const resourceSuccessfullyLoaded = await promise;
-
-        expect(resourceSuccessfullyLoaded).toBe(true);
-    
-        await newPage.close();
+        await expect(resourceSuccessfullyLoaded).toBe(true);
     }
 
     async checkCardDescription(asset, descriptionText) {
@@ -79,5 +84,35 @@ export default class SearchTest {
     async filterSearchAssets(filter, checkBox) {
         await filter.click();
         await checkBox.click();
+        await filter.click();
+    }
+
+    async clearAll() {
+        const { clearAllFilters } = this;
+        await clearAllFilters.click();
+    }
+
+    async checkNumberOfAssets() {
+        const { tabAll } = this;
+        const buttonText = await tabAll.innerText();
+        const numberMatch = buttonText.match(/\d+/);
+        const number = parseInt(numberMatch[0], 10);
+
+        return number;
+    }
+
+    async nextPageCLick() {
+        const { nextPage } = this;
+        await nextPage.click();
+    }
+
+    async prevPageClick() {
+        const { prevPage } = this;
+        await prevPage.click();
+    }
+
+    async page3Click() {
+        const { page3 } = this;
+        await page3.click();
     }
 }
