@@ -204,5 +204,17 @@ export default {
           asset4: 'MAPC VIP Marketplace',
         }
       },
+      {
+        tcid: '13',
+        name: '@search-page-validation-search-page-test',
+        path: '/channelpartners/?georouting=off&martech=off',
+        tags: '@dme-search @regression @circleCi', 
+        data: {
+          partnerLevel: 'cpp-europe-east-certified:',
+          signInButtonInternationalText: 'Sign In',
+          searchKeyWord: 'automationregressionkeyword',
+          searchText: 'Adobe',
+        }
+      },
     ]
 }

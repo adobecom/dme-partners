@@ -22,6 +22,10 @@ export default class SearchTest {
         this.nextPage = page.getByLabel('Next Page');
         this.prevPage = page.getByLabel('Previous Page');
         this.page3 = page.getByLabel('Page 3');
+        this.searchSpotlight = page.getByLabel('Search', { exact: true });
+        this.searchSpotlightFiled = page.getByPlaceholder('Search for topics, resources');
+        this.assetTabs = page.getByLabel('Assets');
+        this.pagesTab = page.getByLabel('Pages');
     }
     async cardTitle(text) {
         return this.page.getByText(text);
@@ -114,5 +118,14 @@ export default class SearchTest {
     async page3Click() {
         const { page3 } = this;
         await page3.click();
+    }
+
+    async searchForAsset(text) {
+        const { searchSpotlight } = this;
+        const { searchSpotlightFiled } = this;
+
+        await searchSpotlight.click();
+        await searchSpotlightFiled.fill(text);
+        await searchSpotlightFiled.press('Enter');
     }
 }

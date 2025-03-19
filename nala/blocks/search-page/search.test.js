@@ -377,4 +377,35 @@ test.describe('Search Page validation', () => {
         });
     });
 
+    test(`${features[12].name}, ${features[12].tags}`, async ({ page }) => {
+        const { data } = features[12];
+
+        await test.step('Sign In with China user', async () => {
+            await page.goto(`${features[12].path}`);
+            await page.waitForLoadState('domcontentloaded');
+
+            const signInButtonInt = await sginInSearchTest.getSignInButton(
+                `${features[12].data.signInButtonInternationalText}`,
+              );
+              // click on sign in button
+            await signInButtonInt.click();
+
+            await sginInSearchTest.signIn(page, `${features[12].data.partnerLevel}`);
+            await sginInSearchTest.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+            // await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+        });
+
+        await test.step('Search for assets ', async () => {
+            await searchTest.searchForAsset(data.searchText);
+
+            await searchTest.checkNumberOfAssets();
+            await searchTest.clearAll();
+            await searchTest.searchAsset(data.searchText);
+        });
+
+        await test.step('Check assets and pages tabs ', async () => {
+            
+        });
+    });
+
 })
