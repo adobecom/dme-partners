@@ -211,5 +211,18 @@ test.describe('Validate banners', () => {
       const renewBanner = await bannersPage.renewBanner;
       await expect(renewBanner).toBeHidden();
     });
+
+    await test.step('Verify if account has info abandoned', async () => {
+      await expect(bannersPage.abandonedAccountLabel).toBeVisible();
+      await expect(bannersPage.reEnrollLink).toBeVisible();
+      bannersPage.reEnrollLink.click();
+
+      const [newTab] = await Promise.all([
+        page.waitForEvent('popup'),
+      ]);
+
+      await newTab.waitForLoadState();
+      expect(newTab.url()).toContain(`${data.enrollmentURL}`);
+    });
   });
 });
