@@ -1217,7 +1217,7 @@ export const horizontalPartnerCardStyles = css`
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
     text-overflow: ellipsis;
-    color: black;
+    color: red;
   }
 
   .card-description {
