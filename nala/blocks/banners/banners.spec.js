@@ -284,6 +284,7 @@ export default {
       data: {
         partnerLevel: 'cpp-us-gold:',
         signInButtonInternationalText: 'Sign In',
+        enrollmentURL: '/na/channelpartners/enrollment/',
       },
     },
   ],

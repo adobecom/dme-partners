@@ -5,6 +5,8 @@ export default class BannersPage {
     this.renewBannerCertifiedUS = page.locator('div.notification.ribbon');
     this.bannerLink = page.locator('.notification p.body-m.action-area > a.con-button.outline');
     this.profileIconButton = page.locator('.feds-profile-button');
+    this.reEnrollLink = page.locator('.body-m a[href*="/enrollment/"]:has-text("re-enroll")');
+    this.abandonedAccountLabel = page.locator('.tracking-header:has-text("Abandoned account")');
   }
 
   getBannerParagraphByIndex() {

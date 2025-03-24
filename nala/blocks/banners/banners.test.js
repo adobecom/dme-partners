@@ -16,7 +16,7 @@ test.describe('Validate banners', () => {
     bannersPage = new BannersPage(page);
     signInPage = new SignInPage(page);
     if (!baseURL.includes('partners.stage.adobe.com')) {
-      await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
+      await context.setExtraHTTPHeaders({ authorization: `token ${process.env.MILO_AEM_API_KEY}` });
     }
     if (browserName === 'chromium' && !baseURL.includes('partners.stage.adobe.com')) {
       await page.route('https://www.adobe.com/chimera-api/**', async (route, request) => {
@@ -210,6 +210,19 @@ test.describe('Validate banners', () => {
       await bannersPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
       const renewBanner = await bannersPage.renewBanner;
       await expect(renewBanner).toBeHidden();
+    });
+
+    await test.step('Verify if account has info abandoned', async () => {
+      await expect(bannersPage.abandonedAccountLabel).toBeVisible();
+      await expect(bannersPage.reEnrollLink).toBeVisible();
+      bannersPage.reEnrollLink.click();
+
+      const [newTab] = await Promise.all([
+        page.waitForEvent('popup'),
+      ]);
+
+      await newTab.waitForLoadState();
+      expect(newTab.url()).toContain(`${data.enrollmentURL}`);
     });
   });
 });

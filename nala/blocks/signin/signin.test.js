@@ -18,7 +18,7 @@ test.describe('MAPC sign in flow', () => {
       console.log(`${msg.type()}: ${msg.text()}`, msg.type() === 'error' ? msg.location().url : null);
     });
     if (!baseURL.includes('partners.stage.adobe.com')) {
-      await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
+      await context.setExtraHTTPHeaders({ authorization: `token ${process.env.MILO_AEM_API_KEY}` });
     }
     if (browserName === 'chromium' && !baseURL.includes('partners.stage.adobe.com')) {
       await page.route('https://www.adobe.com/chimera-api/**', async (route, request) => {
@@ -298,6 +298,43 @@ test.describe('MAPC sign in flow', () => {
         const pages = await page.context().pages();
         await expect(pages[0].url()).toContain(`${feature.data.expectedToSeeInURL}`);
       });
+    });
+  });
+
+  // @login-accessing-view-account-abandoned-user
+  test(`${features[17].name},${features[17].tags}`, async ({ page }) => {
+    const { data, path } = features[17];
+    const signInButton = await signInPage.getSignInButton(`${data.signInButtonInternationalText}`);
+
+    await test.step('Go to home page', async () => {
+      await page.goto(`${path}`);
+      await page.waitForLoadState('domcontentloaded');
+
+      await signInButton.click();
+    });
+
+    await test.step('Sign in', async () => {
+      await signInPage.signIn(page, `${data.partnerLevel}`);
+    });
+
+    await test.step('After login user is redirected to error page', async () => {
+      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+      const pages = await page.context().pages();
+      await expect(pages[0].url()).toContain(`${data.expectedToSeeInURL}`);
+    });
+
+    await test.step('Click on the View account', async () => {
+      await signInPage.profileIconButton.click();
+      const viewAccount = await signInPage.getButtonElement(`${data.viewAccountButton}`);
+      await viewAccount.click();
+    });
+
+    await test.step('Verify redirection to Adobe account management page', async () => {
+      const [newTab] = await Promise.all([
+        page.waitForEvent('popup'),
+      ]);
+      await newTab.waitForLoadState();
+      expect(newTab.url()).toBe(`${data.newTabUrl}`);
     });
   });
 });
