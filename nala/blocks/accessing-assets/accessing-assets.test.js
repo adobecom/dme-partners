@@ -1,16 +1,13 @@
 import { test, expect } from '@playwright/test';
-import AccessingAssetsPage from './accessing-assets.page.js';
 import SignInPage from '../signin/signin.page.js';
 import AccessingAssets from './accessing-assets.spec.js';
 
-let accessingAssetsPage;
 let signInPage;
-
 const { features } = AccessingAssets;
+const localesAssetAccsess = features.slice(3, 8);
 
 test.describe('Validate popups', () => {
   test.beforeEach(async ({ page, baseURL, browserName, context }) => {
-    accessingAssetsPage = new AccessingAssetsPage(page);
     signInPage = new SignInPage(page);
     if (!baseURL.includes('partners.stage.adobe.com')) {
       await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
@@ -103,245 +100,53 @@ test.describe('Validate popups', () => {
         .toContain(`${data.expectedToSeeInURL}`);
     });
   });
-  // @korea-user-verify-asset-access-base-on-apecialisation
-  test(`${features[3].name},${features[3].tags}`, async ({ page, context }) => {
-    const { data, path } = features[3];
-    const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
-    await test.step('Go to adobe homepage', async () => {
-      const url = `${path}`;
-      await page.evaluate((navigationUrl) => {
-        window.location.href = navigationUrl;
-      }, url);
 
-      await signInButton.click();
-      await page.waitForLoadState('domcontentloaded');
-    });
+  localesAssetAccsess.forEach((feature) => {
+    test(`${feature.name},${feature.tags}`, async ({ page, context }) => {
+      const { data, path } = feature;
+      const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
+      await test.step('Go to adobe homepage', async () => {
+        const url = `${path}`;
+        await page.evaluate((navigationUrl) => {
+          window.location.href = navigationUrl;
+        }, url);
 
-    await test.step('Sign in with member user', async () => {
-      await signInPage.signIn(page, `${data.partnerLevel}`);
-      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
-    });
-
-    await test.step('Open forbidden asset in a new tab', async () => {
-      const newTab = await context.newPage();
-      await newTab.goto(`${data.forbiddenAsset}`);
-      await page.waitForLoadState('load');
-      const pages = await page.context().pages();
-      await expect(pages[1].url())
-        .toContain(`${data.expectedToSeeInURL}`);
-    });
-
-    const promise = new Promise((resolve) => {
-      page.on('response', (response) => {
-        if (response.url().includes(`${data.assetURL}`) && response.status() === data.httpStatusCode) {
-          resolve(true);
-        }
+        await signInButton.click();
+        await page.waitForLoadState('domcontentloaded');
       });
-    });
 
-    await test.step('Navigate to public asset URL', async () => {
-      await page.evaluate((navigationUrl) => {
-        window.location.href = navigationUrl;
-      }, data.assetURL);
-
-      await page.waitForLoadState('load');
-    });
-
-    const resourceSuccessfullyLoaded = await promise;
-
-    expect(resourceSuccessfullyLoaded).toBe(true);
-  });
-  // @china-user-verify-asset-access-base-on-region
-  test(`${features[4].name},${features[4].tags}`, async ({ page, context }) => {
-    const { data, path } = features[4];
-    const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
-    await test.step('Go to adobe homepage', async () => {
-      const url = `${path}`;
-      await page.evaluate((navigationUrl) => {
-        window.location.href = navigationUrl;
-      }, url);
-
-      await signInButton.click();
-      await page.waitForLoadState('domcontentloaded');
-    });
-
-    await test.step('Sign in with member user', async () => {
-      await signInPage.signIn(page, `${data.partnerLevel}`);
-      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
-    });
-
-    await test.step('Open forbidden asset in a new tab', async () => {
-      const newTab = await context.newPage();
-      await newTab.goto(`${data.forbiddenAsset}`);
-      await page.waitForLoadState('load');
-      const pages = await page.context().pages();
-      await expect(pages[1].url())
-        .toContain(`${data.expectedToSeeInURL}`);
-    });
-
-    const promise = new Promise((resolve) => {
-      page.on('response', (response) => {
-        if (response.url().includes(`${data.assetURL}`) && response.status() === data.httpStatusCode) {
-          resolve(true);
-        }
+      await test.step('Sign in with member user', async () => {
+        await signInPage.signIn(page, `${data.partnerLevel}`);
+        await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
       });
-    });
 
-    await test.step('Navigate to public asset URL', async () => {
-      await page.evaluate((navigationUrl) => {
-        window.location.href = navigationUrl;
-      }, data.assetURL);
-
-      await page.waitForLoadState('load');
-    });
-
-    const resourceSuccessfullyLoaded = await promise;
-
-    expect(resourceSuccessfullyLoaded).toBe(true);
-  });
-  // @japan-user-verify-asset-access-base-on-level
-  test(`${features[5].name},${features[5].tags}`, async ({ page, context }) => {
-    const { data, path } = features[5];
-    const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
-    await test.step('Go to adobe homepage', async () => {
-      const url = `${path}`;
-      await page.evaluate((navigationUrl) => {
-        window.location.href = navigationUrl;
-      }, url);
-
-      await signInButton.click();
-      await page.waitForLoadState('domcontentloaded');
-    });
-
-    await test.step('Sign in with member user', async () => {
-      await signInPage.signIn(page, `${data.partnerLevel}`);
-      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
-    });
-
-    await test.step('Open forbidden asset in a new tab', async () => {
-      const newTab = await context.newPage();
-      await newTab.goto(`${data.forbiddenAsset}`);
-      await page.waitForLoadState('load');
-      const pages = await page.context().pages();
-      await expect(pages[1].url())
-        .toContain(`${data.expectedToSeeInURL}`);
-    });
-
-    const promise = new Promise((resolve) => {
-      page.on('response', (response) => {
-        if (response.url().includes(`${data.assetURL}`) && response.status() === data.httpStatusCode) {
-          resolve(true);
-        }
+      await test.step('Open forbidden asset in a new tab', async () => {
+        const newTab = await context.newPage();
+        await newTab.goto(`${data.forbiddenAsset}`);
+        await page.waitForLoadState('load');
+        const pages = await page.context().pages();
+        await expect(pages[1].url())
+          .toContain(`${data.expectedToSeeInURL}`);
       });
-    });
 
-    await test.step('Navigate to public asset URL', async () => {
-      await page.evaluate((navigationUrl) => {
-        window.location.href = navigationUrl;
-      }, data.assetURL);
-
-      await page.waitForLoadState('load');
-    });
-
-    const resourceSuccessfullyLoaded = await promise;
-
-    expect(resourceSuccessfullyLoaded).toBe(true);
-  });
-  // @latam-user-verify-asset-access-base-on-specialization
-  test(`${features[6].name},${features[6].tags}`, async ({ page, context }) => {
-    const { data, path } = features[6];
-    const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
-    await test.step('Go to adobe homepage', async () => {
-      const url = `${path}`;
-      await page.evaluate((navigationUrl) => {
-        window.location.href = navigationUrl;
-      }, url);
-
-      await signInButton.click();
-      await page.waitForLoadState('domcontentloaded');
-    });
-
-    await test.step('Sign in with member user', async () => {
-      await signInPage.signIn(page, `${data.partnerLevel}`);
-      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
-    });
-
-    await test.step('Open forbidden asset in a new tab', async () => {
-      const newTab = await context.newPage();
-      await newTab.goto(`${data.forbiddenAsset}`);
-      await page.waitForLoadState('load');
-      const pages = await page.context().pages();
-      await expect(pages[1].url())
-        .toContain(`${data.expectedToSeeInURL}`);
-    });
-
-    const promise = new Promise((resolve) => {
-      page.on('response', (response) => {
-        if (response.url().includes(`${data.assetURL}`) && response.status() === data.httpStatusCode) {
-          resolve(true);
-        }
+      const promise = new Promise((resolve) => {
+        page.on('response', (response) => {
+          if (response.url().includes(`${data.assetURL}`) && response.status() === data.httpStatusCode) {
+            resolve(true);
+          }
+        });
       });
-    });
 
-    await test.step('Navigate to public asset URL', async () => {
-      await page.evaluate((navigationUrl) => {
-        window.location.href = navigationUrl;
-      }, data.assetURL);
-
-      await page.waitForLoadState('load');
-    });
-
-    const resourceSuccessfullyLoaded = await promise;
-
-    expect(resourceSuccessfullyLoaded).toBe(true);
-  });
-  // @emea-user-verify-asset-access-base-on-region
-  test(`${features[7].name},${features[7].tags}`, async ({ page, context }) => {
-    const { data, path } = features[7];
-    const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
-    await test.step('Go to adobe homepage', async () => {
-      const url = `${path}`;
-      await page.evaluate((navigationUrl) => {
-        window.location.href = navigationUrl;
-      }, url);
-
-      await signInButton.click();
-      await page.waitForLoadState('domcontentloaded');
-    });
-
-    await test.step('Sign in with member user', async () => {
-      await signInPage.signIn(page, `${data.partnerLevel}`);
-      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
-    });
-
-    await test.step('Open forbidden asset in a new tab', async () => {
-      const newTab = await context.newPage();
-      await newTab.goto(`${data.forbiddenAsset}`);
-      await page.waitForLoadState('load');
-      const pages = await page.context().pages();
-      await expect(pages[1].url())
-        .toContain(`${data.expectedToSeeInURL}`);
-    });
-
-    const promise = new Promise((resolve) => {
-      page.on('response', (response) => {
-        if (response.url().includes(`${data.assetURL}`) && response.status() === data.httpStatusCode) {
-          resolve(true);
-        }
+      await test.step('Navigate to public asset URL', async () => {
+        await page.evaluate((navigationUrl) => {
+          window.location.href = navigationUrl;
+        }, data.assetURL);
+        await page.waitForLoadState('load');
       });
+
+      const resourceSuccessfullyLoaded = await promise;
+      expect(resourceSuccessfullyLoaded).toBe(true);
     });
-
-    await test.step('Navigate to public asset URL', async () => {
-      await page.evaluate((navigationUrl) => {
-        window.location.href = navigationUrl;
-      }, data.assetURL);
-
-      await page.waitForLoadState('load');
-    });
-
-    const resourceSuccessfullyLoaded = await promise;
-
-    expect(resourceSuccessfullyLoaded).toBe(true);
   });
   // @accessing-public-asset-non-logged-in-user
   test(`${features[8].name},${features[8].tags}`, async ({ page }) => {
