@@ -48,7 +48,7 @@ export default {
         checkBoxDealRegistration: 'Deal Registration',
         checkBoxAdobeDreamweaver: 'Adobe Dreamweaver',
         checkBoxProgramGuid: 'Programme Guide',
-        checkBoxSpanish: 'Spanish'
+        checkBoxSpanish: 'Spanish',
       },
     },
     {

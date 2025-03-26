@@ -31,7 +31,7 @@ export default class SearchTest {
   }
 
   async checkBox(checkBox, exact) {
-    return this.page.getByRole('checkbox', { name: `${checkBox}`, exact  });
+    return this.page.getByRole('checkbox', { name: `${checkBox}`, exact });
   }
 
   async checkFileIcon(icon) {
