@@ -7,16 +7,9 @@ export default class SearchTest {
     this.openPreview = page.getByLabel('Open in', { exact: true }).locator('#button');
     this.cardDescription = page.locator('.card-description', { hasText: 'Asset Type: Advertising, Channel Copy, Language: English International (EI), Spanish, Product: Adobe Acrobat, Adobe Connect, Topic: Channel Authorization Letter, Onboarding' });
     this.filterType = page.getByLabel('Type');
-    this.checkBoxLicensing = page.getByRole('checkbox', { name: 'Licensing', exact: true });
     this.filterLanguage = page.getByLabel('Asset language');
-    this.checkBoxArabic = page.getByRole('checkbox', { name: 'Arabic' });
-    this.checkBoxSpanish = page.getByRole('checkbox', { name: 'Spanish' });
     this.filterProduct = page.getByLabel('Product');
-    this.checkBoxAdobeSign = page.getByRole('checkbox', { name: 'Adobe Sign' });
-    this.checkBoxAdobeDreamweaver = page.getByRole('checkbox', { name: 'Adobe Dreamweaver' });
     this.filterTopic = page.getByLabel('Topic');
-    this.checkBoxDealRegistration = page.getByRole('checkbox', { name: 'Deal Registration' });
-    this.checkBoxProgramGuid = page.getByRole('checkbox', { name: 'Programme Guide' });
     this.clearAllFilters = page.getByLabel('Clear all');
     this.tabAll = page.getByLabel('All', { exact: true });
     this.nextPage = page.getByLabel('Next Page');
@@ -26,7 +19,7 @@ export default class SearchTest {
     this.searchSpotlightFiled = page.getByPlaceholder('Search for topics, resources');
     this.assetTabs = page.getByLabel('Assets');
     this.pagesTab = page.getByLabel('Pages');
-    this.openPreviewPages = page.locator('search-card').filter({ hasText: 'Adobe Partner Connection Programme Last modified: 7 Feb 2025 As a valued' }).locator('#button').nth(1);
+    this.openPreviewPages = page.locator('search-card').filter({ hasText: 'Adobe Partner Connection Programme' }).locator('#button').nth(1);
   }
 
   async cardTitle(text) {
@@ -35,6 +28,10 @@ export default class SearchTest {
 
   async fileIcon(fileType) {
     return this.page.locator(`div.file-icon[style*="icons/${fileType}.svg"]`);
+  }
+
+  async checkBox(checkBox, exact) {
+    return this.page.getByRole('checkbox', { name: `${checkBox}`, exact  });
   }
 
   async checkFileIcon(icon) {
@@ -71,8 +68,9 @@ export default class SearchTest {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async filterSearchAssets(filter, checkBox) {
+  async filterSearchAssets(filter, checkBoxName, exactMatch = false) {
     await filter.click();
+    const checkBox = await this.checkBox(checkBoxName, exactMatch);
     await checkBox.click();
     await filter.click();
   }

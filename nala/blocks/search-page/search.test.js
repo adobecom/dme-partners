@@ -117,26 +117,26 @@ test.describe('Search Page validation', () => {
     });
 
     await test.step('Filter Assets by Type filter', async () => {
-      await searchTest.filterSearchAssets(searchTest.filterType, searchTest.checkBoxLicensing);
+      await searchTest.filterSearchAssets(searchTest.filterType, data.checkBoxLicensing, true);
       await searchTest.checkCardTitle(data.asset1);
       await searchTest.checkCardTitle(data.asset4);
       await searchTest.clearAllFilters.click();
     });
 
     await test.step('Filter Assets by Language filter', async () => {
-      await searchTest.filterSearchAssets(searchTest.filterLanguage, searchTest.checkBoxArabic);
+      await searchTest.filterSearchAssets(searchTest.filterLanguage, data.checkBoxArabic);
       await searchTest.checkCardTitle(data.asset1);
       await searchTest.checkCardTitle(data.asset4);
     });
 
     await test.step('Filter Assets by Product filter', async () => {
-      await searchTest.filterSearchAssets(searchTest.filterProduct, searchTest.checkBoxAdobeSign);
+      await searchTest.filterSearchAssets(searchTest.filterProduct, data.checkBoxAdobeSign);
       await searchTest.checkCardTitle(data.asset1);
       await searchTest.checkCardTitle(data.asset4);
     });
 
     await test.step('Filter Assets by Topic filter', async () => {
-      await searchTest.filterSearchAssets(searchTest.filterTopic, searchTest.checkBoxDealRegistration);
+      await searchTest.filterSearchAssets(searchTest.filterTopic, data.checkBoxDealRegistration);
       await searchTest.checkCardTitle(data.asset1);
       await searchTest.checkCardTitle(data.asset4);
       await searchTest.clearAll();
@@ -175,34 +175,34 @@ test.describe('Search Page validation', () => {
     });
 
     await test.step('Filter Assets by Language filter', async () => {
-      await searchTest.filterSearchAssets(searchTest.filterLanguage, searchTest.checkBoxSpanish);
+      await searchTest.filterSearchAssets(searchTest.filterLanguage, data.checkBoxSpanish);
       await searchTest.checkCardTitle(data.asset1);
       await searchTest.checkCardTitle(data.asset2);
-      await searchTest.filterSearchAssets(searchTest.filterLanguage, searchTest.checkBoxArabic);
+      await searchTest.filterSearchAssets(searchTest.filterLanguage, data.checkBoxArabic);
       await searchTest.checkCardTitle(data.asset1);
       await searchTest.checkCardTitle(data.asset2);
       await searchTest.checkCardTitle(data.asset4);
     });
 
     await test.step('Filter Assets by Product filter', async () => {
-      await searchTest.filterSearchAssets(searchTest.filterProduct, searchTest.checkBoxAdobeDreamweaver);
+      await searchTest.filterSearchAssets(searchTest.filterProduct, data.checkBoxAdobeDreamweaver);
       await searchTest.checkCardTitle(data.asset1);
     });
 
     await test.step('Filter Assets by Topic filter', async () => {
-      await searchTest.filterSearchAssets(searchTest.filterTopic, searchTest.checkBoxProgramGuid);
+      await searchTest.filterSearchAssets(searchTest.filterTopic, data.checkBoxProgramGuid);
       await searchTest.checkCardTitle(data.asset1);
     });
 
     await test.step('Filter Assets Uncheck Language filter', async () => {
-      await searchTest.filterSearchAssets(searchTest.filterLanguage, searchTest.checkBoxSpanish);
-      await searchTest.filterSearchAssets(searchTest.filterLanguage, searchTest.checkBoxArabic);
+      await searchTest.filterSearchAssets(searchTest.filterLanguage, data.checkBoxSpanish);
+      await searchTest.filterSearchAssets(searchTest.filterLanguage, data.checkBoxArabic);
       await searchTest.checkCardTitle(data.asset1);
     });
 
     await test.step('Filter Assets Uncheck Topic and Product filter', async () => {
-      await searchTest.filterSearchAssets(searchTest.filterTopic, searchTest.checkBoxProgramGuid);
-      await searchTest.filterSearchAssets(searchTest.filterProduct, searchTest.checkBoxAdobeDreamweaver);
+      await searchTest.filterSearchAssets(searchTest.filterTopic, data.checkBoxProgramGuid);
+      await searchTest.filterSearchAssets(searchTest.filterProduct, data.checkBoxAdobeDreamweaver);
       await searchTest.checkCardTitle(data.asset3);
       await searchTest.checkCardTitle(data.asset1);
       await searchTest.checkCardTitle(data.asset2);

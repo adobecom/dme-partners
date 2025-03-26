@@ -42,6 +42,13 @@ export default {
         asset4: 'MAPC stage combined (all levels, regions (except worldwide), no specializations)',
         nextPageAsset: 'Weights_Measurements_EL 2024 (24.0)_Keycard_NA',
         page3Asset: 'Partner Portal (APC) Announcement Submission Form',
+        checkBoxLicensing: 'Licensing',
+        checkBoxArabic: 'Arabic',
+        checkBoxAdobeSign: 'Adobe Sign',
+        checkBoxDealRegistration: 'Deal Registration',
+        checkBoxAdobeDreamweaver: 'Adobe Dreamweaver',
+        checkBoxProgramGuid: 'Programme Guide',
+        checkBoxSpanish: 'Spanish'
       },
     },
     {
@@ -59,6 +66,10 @@ export default {
         asset4: 'MAPC stage combined (all levels, regions (except worldwide), no specializations)',
         nextPageAsset: 'Weights_Measurements_EL 2024 (24.0)_Keycard_NA',
         page3Asset: 'Partner Portal (APC) Announcement Submission Form',
+        checkBoxSpanish: 'Spanish',
+        checkBoxArabic: 'Arabic',
+        checkBoxAdobeDreamweaver: 'Adobe Dreamweaver',
+        checkBoxProgramGuid: 'Programme Guide',
       },
     },
     {
