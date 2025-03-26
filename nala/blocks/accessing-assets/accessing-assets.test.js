@@ -4,7 +4,7 @@ import AccessingAssets from './accessing-assets.spec.js';
 
 let signInPage;
 const { features } = AccessingAssets;
-const localesAssetAccsess = features.slice(3, 8);
+const localesAssetAccess = features.slice(3, 8);
 
 test.describe('Validate popups', () => {
   test.beforeEach(async ({ page, baseURL, browserName, context }) => {
@@ -101,7 +101,7 @@ test.describe('Validate popups', () => {
     });
   });
 
-  localesAssetAccsess.forEach((feature) => {
+  localesAssetAccess.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, context }) => {
       const { data, path } = feature;
       const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
