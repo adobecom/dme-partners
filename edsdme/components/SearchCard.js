@@ -53,7 +53,7 @@ class SearchCard extends LitElement {
 
   // eslint-disable-next-line class-methods-use-this
   getFileType(type) {
-    const supportedFileTypes = ['excel', 'pdf', 'powerpoint', 'video', 'word', 'zip', 'html'];
+    const supportedFileTypes = ['excel', 'pdf', 'powerpoint', 'video', 'word', 'zip', 'html', 'announcement'];
     return supportedFileTypes.includes(type) ? type : 'default';
   }
 
