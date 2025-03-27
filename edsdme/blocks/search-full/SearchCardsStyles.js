@@ -122,6 +122,16 @@ export const searchCardsStyles = css`
     font-size: 14px;
     padding: 5px 20px;
   }
+  .suggestion-dialog .option-icon {
+    display: inline-block;
+    vertical-align: middle;
+    height: 20px;
+    width: 20px;
+    margin-right: 8px;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: cover;
+  }
   .suggestion-dialog .option:hover {
    color: blue;
   }
