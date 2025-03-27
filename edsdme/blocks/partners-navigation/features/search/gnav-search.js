@@ -239,8 +239,12 @@ class Search {
         return '';
       });
 
+      /* MWPW-162729 */
+      const icon = result.type === 'asset' ? `<span class="feds-search-result-icon" style="background-image: url('/edsdme/img/icons/default.svg')"></span>` : '';
+
       const resultTemplate = toFragment`<li>
           <a href="${Search.getSearchLink(resultLabel)}" class="feds-search-result" aria-label="${resultLabel}">
+            ${icon}
             <span>${suggestionPrefix}</span>${suggestionWithoutPrefix}
           </a>
         </li>`;
