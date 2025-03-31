@@ -121,7 +121,7 @@ export default class Search extends PartnerCards {
 
     const optionItems = this.typeaheadOptions.map((o) => {
       const icon = o.type === 'asset' ? html`<span class="option-icon" style="background-image: url('/edsdme/img/icons/default.svg')"></span>` : '';
-      return html`<p class="option" @click="${() => this.closeTypeahead(o.name)}">${icon}${highlightFirstOccurrence(o.name, this.searchTerm)}<p>`;
+      return html`<p class="option" @click="${() => this.closeTypeahead(o.name)}">${icon}<span>${highlightFirstOccurrence(o.name, this.searchTerm)}<span><p>`;
     });
     return html`${optionItems}`;
   }

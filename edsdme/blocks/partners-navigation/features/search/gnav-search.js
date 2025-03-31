@@ -305,7 +305,9 @@ class Search {
       const resultTemplate = toFragment`<li>
           <a href="${Search.getSearchLink(resultLabel)}" class="feds-search-result" aria-label="${resultLabel}">
             ${icon}
-            <span>${suggestionPrefix}</span>${suggestionWithoutPrefix}
+            <span class="feds-search-result-text">
+              <span class="feds-search-result-prefix">${suggestionPrefix}</span>${suggestionWithoutPrefix}
+            </span>
           </a>
         </li>`;
 

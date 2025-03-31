@@ -118,16 +118,18 @@ export const searchCardsStyles = css`
     width: 100%;
   }
   .suggestion-dialog .option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     cursor: pointer;
     font-size: 14px;
+    line-height: 1.6;
     padding: 5px 20px;
   }
   .suggestion-dialog .option-icon {
-    display: inline-block;
-    vertical-align: middle;
+    flex-shrink: 0;
     height: 20px;
     width: 20px;
-    margin-right: 8px;
     background-repeat: no-repeat;
     background-position: 50% 50%;
     background-size: cover;
