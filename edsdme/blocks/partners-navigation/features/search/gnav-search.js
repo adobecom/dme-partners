@@ -8,8 +8,8 @@ import {
   closeAllDropdowns,
   logErrorFor,
 } from '../../utilities/utilities.js';
-import { getLibs } from '../../../../scripts/utils.js';
-import { generateRequestForSearchAPI } from "../../../utils/utils.js";
+import {getLibs} from '../../../../scripts/utils.js';
+import {generateRequestForSearchAPI} from "../../../utils/utils.js";
 
 const miloLibs = getLibs();
 const { replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
@@ -126,16 +126,16 @@ class Search {
   }
 
   getSuggestions(query = this.query) {
-    return generateRequestForSearchAPI(
-      {
-        size: SUGGESTIONS_SIZE,
-        term: query,
-        suggestions: true,
-      }
-    ).then((data) => data.json())
-      .catch(() => {
-        // do nothing
-      });
+   return generateRequestForSearchAPI(
+        {
+          size: SUGGESTIONS_SIZE,
+          term: query,
+          suggestions: true,
+        }
+      ).then((data) => data.json())
+        .catch(() => {
+          // do nothing
+        });
   }
 
   onSearchInput = debounce(() => {
@@ -156,66 +156,6 @@ class Search {
 
     this.getSuggestions()
       .then((data) => {
-        data = {
-          "suggested_completions": [
-            {
-              "name": "Region-nav",
-              "type": "page"
-            },
-            {
-              "name": "Regoion selector page",
-              "type": "page"
-            },
-            {
-              "name": "Nested fragment ignored in search",
-              "type": "page"
-            },
-            {
-              "name": "Ignored page with fragments",
-              "type": "page"
-            },
-            {
-              "name": "Fragment (not ignored) with nested fragments (1 is ignored the other not)",
-              "type": "page"
-            },
-            {
-              "name": "Nested (not ignored) fragment",
-              "type": "page"
-            },
-            {
-              "name": "Page with fragments",
-              "type": "page"
-            },
-            {
-              "name": "Ignored in search fragment",
-              "type": "page"
-            },
-            {
-              "name": "Sales Resources",
-              "type": "page"
-            },
-            {
-              "name": "MAPC public stage (no partner level, no program type, no region, no specializations)",
-              "type": "asset"
-            },
-            {
-              "name": "MAPC stage worldwide (no partner level, no specializations)",
-              "type": "asset"
-            },
-            {
-              "name": "MAPC stage education (level: distributor, gold) (region: Asia Pacific, Japan, Latin America, North America",
-              "type": "asset"
-            },
-            {
-              "name": "MAPC stage combined (all levels, regions (except worldwide), no specializations)",
-              "type": "asset"
-            },
-            {
-              "name": "General Error",
-              "type": "page"
-            },
-          ]
-        };
         const suggestions = data?.suggested_completions;
         this.resultsList.replaceChildren(this.getResultsTemplate(suggestions));
         this.resultsList.appendChild(this.getViewAllResultsTemplate());
