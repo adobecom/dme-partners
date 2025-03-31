@@ -39,7 +39,7 @@ import {
 
 // MWPW-157751
 import { getLibs } from '../../scripts/utils.js';// MWPW-157751
-import {rewriteLinks} from "../../scripts/rewriteLinks.js";
+import { rewriteLinks } from "../../scripts/rewriteLinks.js";
 
 const miloLibs = getLibs();
 const {
@@ -112,9 +112,9 @@ export const CONFIG = {
               enableProfileSwitcher: true,
               miniAppContext: {
                 logger: {
-                  trace: () => {},
-                  debug: () => {},
-                  info: () => {},
+                  trace: () => { },
+                  debug: () => { },
+                  info: () => { },
                   warn: (e) => lanaLog({ message: 'Profile Menu warning', e, tags: 'errorType=warn,module=universalnav' }),
                   error: (e) => lanaLog({ message: 'Profile Menu error', e, tags: 'errorType=error,module=universalnav' }),
                 },
@@ -1305,7 +1305,7 @@ class Gnav {
 
 export default async function init(block) {
   const { mep } = getConfig();
-  const sourceUrl = await getGnavSource();
+  const sourceUrl = '/edsdme/partners-shared/loggedin-gnav';
   let newMobileNav = new URLSearchParams(window.location.search).get('newNav');
   newMobileNav = newMobileNav ? newMobileNav !== 'false' : getMetadata('mobile-gnav-v2') !== 'off';
   const [url, hash = ''] = sourceUrl.split('#');
