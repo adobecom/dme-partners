@@ -227,5 +227,19 @@ export default {
         jpLocaleSwitchUrl: '/jp/channelpartners/#?martech=off',
       },
     },
+
+    {
+      tcid: '19',
+      name: '@find-partner-validation-smoke-test',
+      path: '/na/channelpartners/?akamaiLocale=es',
+      tags: '@dme-smoke-test',
+      data: {
+        findPartnerLinkText: 'Find a Partner',
+        findPartnerGermanLinkText: 'Adobe-Partner suchen',
+        findPartnerJapanLinkText: 'パートナーを見つける',
+        deLocalePartnerUrl: '/de/channelpartners/?akamaiLocale=es',
+        jpLocalePartnerUrl: '/jp/channelpartners/?akamaiLocale=es',
+      },
+    },
   ],
 };

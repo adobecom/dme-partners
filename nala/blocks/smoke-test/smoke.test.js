@@ -506,4 +506,21 @@ test.describe('Smoke Tests', () => {
       await expect(joinNowButtonJp).toBeVisible();
     });
   });
+
+  // @find-partner-validation-smoke-test
+  test(`${features[18].name}, ${features[18].tags}`, async ({ baseURL }) => {
+    const { data, path } = features[18];
+
+    await test.step('Verify if geo modal and Find a Partner link are visible on North America pages', async () => {
+      await smokeTest.verifyGeoModalAndPartnerLinks(`${baseURL}${path}`, data.findPartnerLinkText);
+    });
+
+    await test.step('Verify if geo modal and Find a Partner link are visible on German pages', async () => {
+      await smokeTest.verifyGeoModalAndPartnerLinks(`${baseURL}${data.deLocalePartnerUrl}`, data.findPartnerGermanLinkText);
+    });
+
+    await test.step('Verify if geo modal and Find a Partner link are visible on Japan pages', async () => {
+      await smokeTest.verifyGeoModalAndPartnerLinks(`${baseURL}${data.jpLocalePartnerUrl}`, data.findPartnerJapanLinkText);
+    });
+  });
 });

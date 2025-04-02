@@ -38,6 +38,8 @@ export default class SmokeTest {
     this.apacResellerProgramGuid = page.locator('#apc-program-guides-1 a[href*="/p/Adobe_Partner_Connection_Reseller_Program_Guide_Asia_Pacific.pdf"]');
     this.apacRetailProgramGuid = page.locator('#apc-program-guides-1 a[href*="/p/Adobe_Partner_Connection_Distributor_Program_Guide_FY25_Asia_Pacific_v9.pdf"]');
     this.cal = page.locator('div.feds-menu-items a[href*="/sales-resources/cal/"]');
+    this.geoModal = page.locator('#locale-modal-v2');
+    this.geoModalLinks = page.locator('.link-wrapper a');
   }
 
   async smokeSignIn(page, baseURL, partnerLevel) {
@@ -118,6 +120,10 @@ export default class SmokeTest {
 
   getJoinNowButtonByRegion(text) {
     return this.page.locator(`#feds-nav-wrapper a[href*="/enrollment/"]:has-text("${text}")`);
+  }
+
+  getFindPartnerByRegion(text) {
+    return this.page.locator(`#feds-nav-wrapper a[href*="/PartnerSearch"]:has-text("${text}")`);
   }
 
   async verifySelectYouRegion() {
@@ -325,5 +331,18 @@ export default class SmokeTest {
 
     const membershiplevel = this.page.locator('#distributor');
     await membershiplevel.isVisible();
+  }
+
+  async verifyGeoModalAndPartnerLinks(pageURL, findPartnerLinkText) {
+    await this.page.goto(pageURL);
+
+    await expect(this.geoModal).toBeVisible();
+
+    await expect(this.geoModalLinks.nth(1)).toHaveAttribute('href', `${pageURL}#`);
+    await this.geoModalLinks.nth(1).click();
+
+    const findPartnerLink = await this.getFindPartnerByRegion(findPartnerLinkText);
+    await expect(findPartnerLink).toBeVisible();
+    await expect(findPartnerLink.getAttribute('target')).resolves.toBe('_blank');
   }
 }
