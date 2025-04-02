@@ -417,7 +417,6 @@ export default class PartnerCards extends LitElement {
       (filter) => filter.key,
       (filter) => {
         const selectedTagsData = this.countSelectedTags(filter.key);
-        const { tagsString } = selectedTagsData;
         const { tagsCount } = selectedTagsData;
 
         /* eslint-disable indent */
@@ -428,14 +427,9 @@ export default class PartnerCards extends LitElement {
                 <div class="filter-header-content-mobile">
                   <h3 class="filter-header-name-mobile">${filter.value}</h3>
                   ${tagsCount
-                    ? html`
-                      <div class="filter-header-selected-tags-mobile">
-                        <span class="filter-header-selected-tags-text-mobile">${tagsString}</span>
-                        <span class="filter-header-selected-tags-count-mobile">+ ${tagsCount}</span>
-                      </div>
-                    `
-                    : ''
-                  }
+            ? html`<div class="filter-header-selected-tags-count-mobile">${tagsCount}</div>`
+            : ''
+          }
                 </div>
                 <span class="filter-header-chevron-icon"></span>
               </button>
@@ -475,7 +469,7 @@ export default class PartnerCards extends LitElement {
       extractedTags.sort((a, b) => a.value.localeCompare(b.value)),
       (tag) => tag.key,
       (tag) => html`
-        <button class="sidebar-chosen-filter-btn" @click="${() => this.handleRemoveTag(tag)}" aria-label="${tag.value}">
+        <button class="${this.mobileView ? 'chosen-filter-btn-mobile' : 'sidebar-chosen-filter-btn'}" @click="${() => this.handleRemoveTag(tag)}" aria-label="${tag.value}">
           ${tag.value}
         </button>`,
     )}`;
@@ -869,6 +863,10 @@ export default class PartnerCards extends LitElement {
               <button class="all-filters-header-back-btn-mobile" @click="${this.closeFiltersMobile}" aria-label="${this.blockData.localizedText['{{back}}']}"></button>
               <span class="all-filters-header-title-mobile">${this.blockData.localizedText['{{filter-by}}']}</span>
             </div>
+            ${this.chosenFilters
+        ? html`<div class="all-filter-chosen-filters-wrapper-mobile">
+              ${this.chosenFilters.htmlContent}
+            </div>` : ''}
             <div class="all-filters-list-mobile">
               ${this.filtersMobile}
             </div>

@@ -102,14 +102,9 @@ export default class Announcements extends PartnerCards {
             <div class="filter-header-content-mobile">
               <h3 class="filter-header-name-mobile">${filter.value}</h3>
                 ${this.selectedDateFilter.default
-                  ? ''
-                  : html`
-                     <div class="filter-header-selected-tags-mobile">
-                       <span class="filter-header-selected-tags-text-mobile">${this.selectedDateFilter.value}</span>
-                       <span class="filter-header-selected-tags-count-mobile">+ 1</span>
-                     </div>
-                  `
-                }
+        ? ''
+        : html`<span class="filter-header-selected-tags-count-mobile">1</span>`
+      }
             </div>
             <sp-icon-chevron-down class="filter-header-chevron-icon" />
           </button>
@@ -151,7 +146,7 @@ export default class Announcements extends PartnerCards {
 
     if (!this.selectedDateFilter.default && Object.keys(this.selectedDateFilter).length) {
       htmlContent = html`
-        <button class="sidebar-chosen-filter-btn" @click="${() => this.handleResetDateTags(this.blockData.dateFilter.tags)}" aria-label="${this.selectedDateFilter.value}">
+        <button class="${this.mobileView ? 'chosen-filter-btn-mobile' : 'sidebar-chosen-filter-btn'}" @click="${() => this.handleResetDateTags(this.blockData.dateFilter.tags)}" aria-label="${this.selectedDateFilter.value}">
           ${this.selectedDateFilter.value}
         </button>
         ${htmlContent}
