@@ -4,14 +4,16 @@ import SearchSpec from './search.spec.js';
 import SearchPage from './search.page.js';
 
 let searchTest;
-let sginInSearchTest;
+let signInSearchTest;
 
 const { features } = SearchSpec;
+const localesAssetValidation = features.slice(3, 6);
+const localesAssetValidationPart2 = features.slice(6, 9);
 
 test.describe('Search Page validation', () => {
   test.beforeEach(async ({ page, browserName, baseURL, context }) => {
     searchTest = new SearchPage(page);
-    sginInSearchTest = new SignInPage(page);
+    signInSearchTest = new SignInPage(page);
 
     if (!baseURL.includes('partners.stage.adobe.com')) {
       await context.setExtraHTTPHeaders({ authorization: `token ${process.env.MILO_AEM_API_KEY}` });
@@ -34,7 +36,7 @@ test.describe('Search Page validation', () => {
       await page.goto(`${features[0].path}`);
       await page.waitForLoadState('domcontentloaded');
 
-      await sginInSearchTest.signIn(page, `${features[0].data.partnerLevel}`);
+      await signInSearchTest.signIn(page, `${features[0].data.partnerLevel}`);
       await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
     });
 
@@ -106,7 +108,7 @@ test.describe('Search Page validation', () => {
       await page.goto(`${features[1].path}`);
       await page.waitForLoadState('domcontentloaded');
 
-      await sginInSearchTest.signIn(page, `${features[1].data.partnerLevel}`);
+      await signInSearchTest.signIn(page, `${features[1].data.partnerLevel}`);
       await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
     });
 
@@ -164,7 +166,7 @@ test.describe('Search Page validation', () => {
       await page.goto(`${features[2].path}`);
       await page.waitForLoadState('domcontentloaded');
 
-      await sginInSearchTest.signIn(page, `${features[2].data.partnerLevel}`);
+      await signInSearchTest.signIn(page, `${features[2].data.partnerLevel}`);
       await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
     });
 
@@ -209,7 +211,7 @@ test.describe('Search Page validation', () => {
       await searchTest.checkCardTitle(data.asset4);
     });
 
-    await test.step('Crlear seach keyword test', async () => {
+    await test.step('Clear seach keyword test', async () => {
       await searchTest.clearAll();
       await page.waitForLoadState('domcontentloaded');
       await page.locator('.search-card:visible').first().waitFor({ state: 'visible' });
@@ -217,127 +219,49 @@ test.describe('Search Page validation', () => {
       expect(number).toBeGreaterThan(4);
     });
   });
-  // @apac-asset-validation-search-page
-  test(`${features[3].name}, ${features[3].tags}`, async ({ page }) => {
-    const { data } = features[3];
 
-    await test.step('Sign In with user', async () => {
-      await page.goto(`${features[3].path}`);
-      await page.waitForLoadState('domcontentloaded');
-
-      await sginInSearchTest.signIn(page, `${features[3].data.partnerLevel}`);
-      await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
-    });
-
-    await test.step('Search for assets ', async () => {
-      await searchTest.searchAsset(`${data.searchKeyWord}`);
-      await searchTest.checkCardTitle(data.asset1);
-      await searchTest.checkCardTitle(data.asset4);
-      await searchTest.checkCardTitle(data.asset2);
-      await searchTest.checkCardTitle(data.asset3);
-    });
-  });
-  // @china-asset-validation-search-page
-  test(`${features[4].name}, ${features[4].tags}`, async ({ page }) => {
-    const { data } = features[4];
-
-    await test.step('Sign In with China user', async () => {
-      await page.goto(`${features[4].path}`);
-      await page.waitForLoadState('domcontentloaded');
-
-      await sginInSearchTest.signIn(page, `${features[4].data.partnerLevel}`);
-      await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
-    });
-
-    await test.step('Search for assets ', async () => {
-      await searchTest.searchAsset(`${data.searchKeyWord}`);
-      await searchTest.checkCardTitle(data.asset1);
-      await searchTest.checkCardTitle(data.asset4);
-      await searchTest.checkCardTitle(data.asset2);
-      await searchTest.checkCardTitle(data.asset3);
+  localesAssetValidation.forEach((feature) => {
+    test(`${feature.name},${feature.tags}`, async ({ page }) => {
+      const { data, path } = feature;
+  
+      await test.step('Sign In with user', async () => {
+        await page.goto(`${path}`);
+        await page.waitForLoadState('domcontentloaded');
+  
+        await signInSearchTest.signIn(page, `${data.partnerLevel}`);
+        await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+      });
+  
+      await test.step('Search for assets ', async () => {
+        await searchTest.searchAsset(`${data.searchKeyWord}`);
+        await searchTest.checkCardTitle(data.asset1);
+        await searchTest.checkCardTitle(data.asset4);
+        await searchTest.checkCardTitle(data.asset2);
+        await searchTest.checkCardTitle(data.asset3);
+      });
     });
   });
-  // @west-europe-asset-validation-search-pag
-  test(`${features[5].name}, ${features[5].tags}`, async ({ page }) => {
-    const { data } = features[5];
 
-    await test.step('Sign In with China user', async () => {
-      await page.goto(`${features[5].path}`);
-      await page.waitForLoadState('domcontentloaded');
-
-      await sginInSearchTest.signIn(page, `${features[5].data.partnerLevel}`);
-      await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
-    });
-
-    await test.step('Search for assets ', async () => {
-      await searchTest.searchAsset(`${data.searchKeyWord}`);
-      await searchTest.checkCardTitle(data.asset1);
-      await searchTest.checkCardTitle(data.asset4);
-      await searchTest.checkCardTitle(data.asset2);
-      await searchTest.checkCardTitle(data.asset3);
-    });
-  });
-  // @japan-europe-asset-validation-search-page
-  test(`${features[6].name}, ${features[6].tags}`, async ({ page }) => {
-    const { data } = features[6];
-
-    await test.step('Sign In with China user', async () => {
-      await page.goto(`${features[6].path}`);
-      await page.waitForLoadState('domcontentloaded');
-
-      await sginInSearchTest.signIn(page, `${features[6].data.partnerLevel}`);
-      await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
-    });
-
-    await test.step('Search for assets ', async () => {
-      await searchTest.searchAsset(`${data.searchKeyWord}`);
-      await searchTest.checkCardTitle(data.asset1);
-      await searchTest.checkCardTitle(data.asset4);
-      await searchTest.checkCardTitle(data.asset2);
-      await searchTest.checkCardTitle(data.asset3);
-      await searchTest.checkCardTitle(data.asset5);
-    });
-  });
-  // @latin-america-asset-validation-search-page
-  test(`${features[7].name}, ${features[7].tags}`, async ({ page }) => {
-    const { data } = features[7];
-
-    await test.step('Sign In with China user', async () => {
-      await page.goto(`${features[7].path}`);
-      await page.waitForLoadState('domcontentloaded');
-
-      await sginInSearchTest.signIn(page, `${features[7].data.partnerLevel}`);
-      await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
-    });
-
-    await test.step('Search for assets ', async () => {
-      await searchTest.searchAsset(`${data.searchKeyWord}`);
-      await searchTest.checkCardTitle(data.asset1);
-      await searchTest.checkCardTitle(data.asset4);
-      await searchTest.checkCardTitle(data.asset2);
-      await searchTest.checkCardTitle(data.asset3);
-      await searchTest.checkCardTitle(data.asset5);
-    });
-  });
-  // @latin-america-na-asset-validation-search-page
-  test(`${features[8].name}, ${features[8].tags}`, async ({ page }) => {
-    const { data } = features[8];
-
-    await test.step('Sign In with China user', async () => {
-      await page.goto(`${features[8].path}`);
-      await page.waitForLoadState('domcontentloaded');
-
-      await sginInSearchTest.signIn(page, `${features[8].data.partnerLevel}`);
-      await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
-    });
-
-    await test.step('Search for assets ', async () => {
-      await searchTest.searchAsset(`${data.searchKeyWord}`);
-      await searchTest.checkCardTitle(data.asset1);
-      await searchTest.checkCardTitle(data.asset4);
-      await searchTest.checkCardTitle(data.asset2);
-      await searchTest.checkCardTitle(data.asset3);
-      await searchTest.checkCardTitle(data.asset5);
+  localesAssetValidationPart2.forEach((feature) => {
+    test(`${feature.name}, ${feature.tags}`, async ({ page }) => {
+      const { data, path } = feature;
+  
+      await test.step('Sign In with China user', async () => {
+        await page.goto(`${path}`);
+        await page.waitForLoadState('domcontentloaded');
+  
+        await signInSearchTest.signIn(page, `${data.partnerLevel}`);
+        await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+      });
+  
+      await test.step('Search for assets ', async () => {
+        await searchTest.searchAsset(`${data.searchKeyWord}`);
+        await searchTest.checkCardTitle(data.asset1);
+        await searchTest.checkCardTitle(data.asset4);
+        await searchTest.checkCardTitle(data.asset2);
+        await searchTest.checkCardTitle(data.asset3);
+        await searchTest.checkCardTitle(data.asset5);
+      });
     });
   });
   // @pacific-user-asset-validation-search-page
@@ -348,7 +272,7 @@ test.describe('Search Page validation', () => {
       await page.goto(`${features[9].path}`);
       await page.waitForLoadState('domcontentloaded');
 
-      await sginInSearchTest.signIn(page, `${features[9].data.partnerLevel}`);
+      await signInSearchTest.signIn(page, `${features[9].data.partnerLevel}`);
       await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
     });
 
@@ -368,7 +292,7 @@ test.describe('Search Page validation', () => {
       await page.goto(`${features[10].path}`);
       await page.waitForLoadState('domcontentloaded');
 
-      await sginInSearchTest.signIn(page, `${features[10].data.partnerLevel}`);
+      await signInSearchTest.signIn(page, `${features[10].data.partnerLevel}`);
       await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
     });
 
@@ -390,7 +314,7 @@ test.describe('Search Page validation', () => {
       await page.goto(`${features[11].path}`);
       await page.waitForLoadState('domcontentloaded');
 
-      await sginInSearchTest.signIn(page, `${features[11].data.partnerLevel}`);
+      await signInSearchTest.signIn(page, `${features[11].data.partnerLevel}`);
       await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
     });
 
@@ -402,7 +326,7 @@ test.describe('Search Page validation', () => {
       await searchTest.checkCardTitle(data.asset3);
     });
   });
-
+  // @search-page-validation-search-page-test
   test(`${features[12].name}, ${features[12].tags}`, async ({ page }) => {
     const { data } = features[12];
 
@@ -410,14 +334,14 @@ test.describe('Search Page validation', () => {
       await page.goto(`${features[12].path}`);
       await page.waitForLoadState('domcontentloaded');
 
-      const signInButtonInt = await sginInSearchTest.getSignInButton(
+      const signInButtonInt = await signInSearchTest.getSignInButton(
         `${features[12].data.signInButtonInternationalText}`,
       );
 
       await signInButtonInt.click();
 
-      await sginInSearchTest.signIn(page, `${features[12].data.partnerLevel}`);
-      await sginInSearchTest.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+      await signInSearchTest.signIn(page, `${features[12].data.partnerLevel}`);
+      await signInSearchTest.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
     });
 
     await test.step('Search for assets ', async () => {
