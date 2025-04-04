@@ -41,19 +41,19 @@ class SearchCard extends LitElement {
 
   // eslint-disable-next-line class-methods-use-this
   isDownloadDisabled(fileType) {
-    const disabledTypes = ['html'];
+    const disabledTypes = ['html', 'announcement'];
     return disabledTypes.includes(fileType);
   }
 
   // eslint-disable-next-line class-methods-use-this
   isPreviewEnabled(fileType) {
-    const enabledTypes = ['pdf', 'html'];
+    const enabledTypes = ['pdf', 'html', 'announcement'];
     return enabledTypes.includes(fileType);
   }
 
   // eslint-disable-next-line class-methods-use-this
   getFileType(type) {
-    const supportedFileTypes = ['excel', 'pdf', 'powerpoint', 'video', 'word', 'zip', 'html'];
+    const supportedFileTypes = ['excel', 'pdf', 'powerpoint', 'video', 'word', 'zip', 'html', 'announcement'];
     return supportedFileTypes.includes(type) ? type : 'default';
   }
 
@@ -85,10 +85,10 @@ class SearchCard extends LitElement {
           }
           <div class="card-text">
             <span class="card-date">${this.localizedText['{{last-modified}}']}: ${formatDate(this.data.cardDate, this.ietf)}
-          ${this.data.contentArea?.type !== 'html'
-    ? html`<span class="card-size">${this.localizedText['{{size}}']}: ${this.data.contentArea?.size}</span>`
-                : ''
-    }
+          ${this.data.contentArea?.type !== 'html' && this.data.contentArea?.type !== 'announcement'
+        ? html`<span class="card-size">${this.localizedText['{{size}}']}: ${this.data.contentArea?.size}</span>`
+        : ''
+      }
             </span>
             <p class="card-description">${this.data.contentArea?.description}</p>
             <div class="card-tags-wrapper">${this.cardTags}</div>
