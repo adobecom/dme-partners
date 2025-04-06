@@ -223,15 +223,12 @@ test.describe('Search Page validation', () => {
   localesAssetValidation.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page }) => {
       const { data, path } = feature;
-  
       await test.step('Sign In with user', async () => {
         await page.goto(`${path}`);
         await page.waitForLoadState('domcontentloaded');
-  
         await signInSearchTest.signIn(page, `${data.partnerLevel}`);
         await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
       });
-  
       await test.step('Search for assets ', async () => {
         await searchTest.searchAsset(`${data.searchKeyWord}`);
         await searchTest.checkCardTitle(data.asset1);
@@ -245,15 +242,12 @@ test.describe('Search Page validation', () => {
   localesAssetValidationPart2.forEach((feature) => {
     test(`${feature.name}, ${feature.tags}`, async ({ page }) => {
       const { data, path } = feature;
-  
       await test.step('Sign In with China user', async () => {
         await page.goto(`${path}`);
         await page.waitForLoadState('domcontentloaded');
-  
         await signInSearchTest.signIn(page, `${data.partnerLevel}`);
         await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
       });
-  
       await test.step('Search for assets ', async () => {
         await searchTest.searchAsset(`${data.searchKeyWord}`);
         await searchTest.checkCardTitle(data.asset1);
