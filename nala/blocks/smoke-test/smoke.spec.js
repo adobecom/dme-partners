@@ -231,14 +231,18 @@ export default {
     {
       tcid: '19',
       name: '@find-partner-validation-smoke-test',
-      path: '/na/channelpartners/?akamaiLocale=es',
+      path: '/na/channelpartners/?akamaiLocale=es&georouting=on&martech=off',
       tags: '@dme-smoke-test',
       data: {
         findPartnerLinkText: 'Find a Partner',
         findPartnerGermanLinkText: 'Adobe-Partner suchen',
         findPartnerJapanLinkText: 'パートナーを見つける',
-        deLocalePartnerUrl: '/de/channelpartners/?akamaiLocale=es',
-        jpLocalePartnerUrl: '/jp/channelpartners/?akamaiLocale=es',
+        deLocalePartnerUrl: '/de/channelpartners/?akamaiLocale=es&martech=off',
+        jpLocalePartnerUrl: '/jp/channelpartners/?akamaiLocale=es&martech=off',
+        geoModalLinkNA: 'North America',
+        geoModalLinkGerman: 'Deutschland',
+        geoModalLinkJapan: '日本',
+
       },
     },
   ],

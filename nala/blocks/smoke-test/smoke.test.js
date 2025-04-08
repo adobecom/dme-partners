@@ -21,6 +21,20 @@ test.describe('Smoke Tests', () => {
       await page.goto(new URL(path, baseURL).href);
     });
   });
+
+  async function verifyGeoModalAndPartnerLinks(page, linkText, pageURL, findPartnerLinkText) {
+    await page.goto(pageURL);
+
+    await expect(smokeTest.geoModal).toBeVisible();
+
+    await expect(smokeTest.getGeoModalLink(linkText)).toHaveAttribute('href', `${pageURL}#`);
+    await smokeTest.getGeoModalLink(linkText).click();
+
+    const findPartnerLink = await smokeTest.getFindPartnerByRegion(findPartnerLinkText);
+    await expect(findPartnerLink).toBeVisible();
+    await expect(findPartnerLink.getAttribute('target')).resolves.toBe('_blank');
+  }
+
   // @lending-page-validation-smoke-test
   test(`${features[0].name}, ${features[0].tags}`, async () => {
     await test.step('Validate Join Now and Sign In Buttons', async () => {
@@ -508,19 +522,19 @@ test.describe('Smoke Tests', () => {
   });
 
   // @find-partner-validation-smoke-test
-  test(`${features[18].name}, ${features[18].tags}`, async ({ baseURL }) => {
+  test(`${features[18].name}, ${features[18].tags}`, async ({ page, baseURL }) => {
     const { data, path } = features[18];
 
     await test.step('Verify if geo modal and Find a Partner link are visible on North America pages', async () => {
-      await smokeTest.verifyGeoModalAndPartnerLinks(`${baseURL}${path}`, data.findPartnerLinkText);
+      await verifyGeoModalAndPartnerLinks(page, data.geoModalLinkNA, `${baseURL}${path}`, data.findPartnerLinkText);
     });
 
     await test.step('Verify if geo modal and Find a Partner link are visible on German pages', async () => {
-      await smokeTest.verifyGeoModalAndPartnerLinks(`${baseURL}${data.deLocalePartnerUrl}`, data.findPartnerGermanLinkText);
+      await verifyGeoModalAndPartnerLinks(page, data.geoModalLinkGerman, `${baseURL}${data.deLocalePartnerUrl}`, data.findPartnerGermanLinkText);
     });
 
     await test.step('Verify if geo modal and Find a Partner link are visible on Japan pages', async () => {
-      await smokeTest.verifyGeoModalAndPartnerLinks(`${baseURL}${data.jpLocalePartnerUrl}`, data.findPartnerJapanLinkText);
+      await verifyGeoModalAndPartnerLinks(page, data.geoModalLinkJapan, `${baseURL}${data.jpLocalePartnerUrl}`, data.findPartnerJapanLinkText);
     });
   });
 });
