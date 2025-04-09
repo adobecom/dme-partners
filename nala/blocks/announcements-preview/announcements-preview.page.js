@@ -10,7 +10,7 @@ export default class AnnouncementsPreviewPage {
     this.cards = page.locator('single-partner-card');
     this.selectedSortText = page.locator('.sort-btn-text');
     this.sortBtn = page.locator('.sort-btn');
-    this.newestOption = page.getByRole('button', { name: 'newest' });
+    this.newestOption = page.getByRole('button', { name: 'newest' }).first();
   }
 
   async getButtonElement(text) {
