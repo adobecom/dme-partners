@@ -93,7 +93,7 @@ test.describe('Validate announcements block', () => {
     await test.step('Go to Announcements page', async () => {
       await page.goto(`${baseURL}${features[1].path}`);
       await handleEvent(page);
-      await page.waitForLoadState('networkidle');
+      await announcementsPage.signInButton.waitFor({ state: 'visible' });
       const result = await announcementsPage.resultNumber.textContent();
       await expect(parseInt(result.split(' ')[0], 10)).toBe(data.numberOfPublicCards);
     });
@@ -128,7 +128,7 @@ test.describe('Validate announcements block', () => {
     await test.step('Go to Announcements page', async () => {
       await page.goto(`${baseURL}${features[2].path}`);
       await handleEvent(page);
-      await page.waitForLoadState('networkidle');
+      await announcementsPage.signInButton.waitFor({ state: 'visible' });
       const result = await announcementsPage.resultNumber.textContent();
       await expect(parseInt(result.split(' ')[0], 10)).toBe(data.numberOfPublicCards);
       await announcementsPage.searchField.fill(data.searchCards);
@@ -162,7 +162,7 @@ test.describe('Validate announcements block', () => {
     await test.step('Go to Announcements page', async () => {
       await page.goto(`${baseURL}${features[3].path}`);
       await handleEvent(page);
-      await page.waitForLoadState('networkidle');
+      await announcementsPage.signInButton.waitFor({ state: 'visible' });
       const result = await announcementsPage.resultNumber.textContent();
       await expect(parseInt(result.split(' ')[0], 10)).toBe(data.numberOfPublicCards);
     });
@@ -221,6 +221,7 @@ test.describe('Validate announcements block', () => {
     await test.step('Go to Announcements page', async () => {
       await page.goto(`${baseURL}${features[4].path}`);
       await handleEvent(page);
+      await announcementsPage.signInButton.waitFor({ state: 'visible' });
       await announcementsPage.searchField.fill(data.searchCardTitle);
       const resultAfterSearch = await announcementsPage.resultNumber.textContent();
       await expect(parseInt(resultAfterSearch.split(' ')[0], 10)).toBe(data.numberOfMatchingTitleCards);
@@ -239,7 +240,7 @@ test.describe('Validate announcements block', () => {
     await test.step('Go to Announcements page', async () => {
       await page.goto(`${baseURL}${features[5].path}`);
       await handleEvent(page);
-      await page.waitForLoadState('networkidle');
+      await announcementsPage.signInButton.waitFor({ state: 'visible' });
       const result = await announcementsPage.resultNumber.textContent();
       await expect(parseInt(result.split(' ')[0], 10)).toBe(data.numberOfPublicCards);
     });
