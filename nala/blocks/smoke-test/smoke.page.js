@@ -260,7 +260,7 @@ export default class SmokeTest {
   async indiaCalVerify() {
     const calIndiaRequest = this.page.locator('#request-a-cal-httpsmain--dme-partners--adobecomhlxpageedsdmepartners-sharedfragmentscommondistributor-cal-links-1').getByRole('link', { name: 'INDIA' });
     await calIndiaRequest.isVisible();
-    const calIndiaRequestlink = await calIndiaRequest.getAttribute('href');
+    let calIndiaRequestlink = await calIndiaRequest.getAttribute('href');
     if (calIndiaRequestlink?.includes('#_blank')) {
       calIndiaRequestlink = calIndiaRequestlink.replace('#_blank', '');
     }
