@@ -260,15 +260,15 @@ export default class SmokeTest {
   async indiaCalVerify() {
     const calIndiaRequest = this.page.locator('#request-a-cal-httpsmain--dme-partners--adobecomhlxpageedsdmepartners-sharedfragmentscommondistributor-cal-links-1').getByRole('link', { name: 'INDIA' });
     await calIndiaRequest.isVisible();
-    const calIndidaRequestlink = await calIndiaRequest.getAttribute('href');
-    if (calIndidaRequestlink?.includes('#_blank')) {
-      calIndidaRequestlink = calIndidaRequestlink.replace('#_blank', '');
+    const calIndiaRequestlink = await calIndiaRequest.getAttribute('href');
+    if (calIndiaRequestlink?.includes('#_blank')) {
+      calIndiaRequestlink = calIndiaRequestlink.replace('#_blank', '');
     }
     const calIndiaSubmit = this.page.getByRole('link', { name: 'INDIA' }).nth(1);
     await calIndiaSubmit.isVisible();
     const calIndiaSubmitLink = await calIndiaSubmit.getAttribute('href');
 
-    expect(calIndidaRequestlink).toBe(calIndiaSubmitLink);
+    expect(calIndiaRequestlink).toBe(calIndiaSubmitLink);
   }
 
   async seabdCalVerify() {
