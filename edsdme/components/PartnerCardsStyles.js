@@ -894,6 +894,19 @@ export const partnerCardsStyles = css`
     margin-top: 0;
     margin-left: 0;
   }
+
+  a.hide-filter-option {
+    padding: 0 3px;
+  }
+  a.hide-filter-option:visited {
+    color: blue;
+  }
+  a.hide-filter-option:hover {
+    color: blue;
+  }
+  a.hide-filter-option:active {
+    color: blue;
+  }
 `;
 
 export const partnerCardsLoadMoreStyles = css`

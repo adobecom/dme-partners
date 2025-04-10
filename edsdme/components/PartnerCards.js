@@ -83,14 +83,6 @@ export default class PartnerCards extends LitElement {
         const [filterKeyEl, filterTagsKeysEl] = cols;
         const filterKey = filterKeyEl.innerText.trim().toLowerCase().replace(/ /g, '-');
 
-        // const createTag = (tagKey, initialHidden = false ) => ({
-        //     key: tagKey,
-        //     parentKey: filterKey,
-        //     value: this.blockData.localizedText[`{{${tagKey}}}`],
-        //     checked: false,
-        //     initialHidden: initialHidden
-        //   });
-
         function createTag(tagKey, initialHidden = false, blockData) {
           return {key: tagKey,
             parentKey: filterKey,
@@ -103,7 +95,7 @@ export default class PartnerCards extends LitElement {
           const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
           if (key !== '') filterTagsKeys.push(createTag(key, false, this.blockData));
         });
-// todo make sure that this don't fail if there is no other list
+
         filterTagsKeysEl.querySelectorAll('ul')[1]?.querySelectorAll('li').forEach((li) => {
           const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
           if (key !== '') filterTagsKeys.push(createTag(key, true, this.blockData));
@@ -115,6 +107,8 @@ export default class PartnerCards extends LitElement {
           key: filterKey,
           value: this.blockData.localizedText[`{{${filterKey}}}`],
           tags: filterTagsKeys,
+          hideTags: true,
+          hasHiddenTags: filterTagsKeys.some(tag => tag.initialHidden),
         };
         this.blockData.filters.push(filterObj);
       },
@@ -386,6 +380,18 @@ export default class PartnerCards extends LitElement {
     return `${firstElOrderNum} - ${lastElOrderNum}`;
   }
 
+  toggleHideTags (filter) {
+    this.blockData = {
+      ...this.blockData,
+      filters: this.blockData.filters.map((filterItem) => {
+        if (filterItem.key === filter.key) {
+          filterItem.hideTags = !filterItem.hideTags;
+        }
+        return filterItem;
+      }),
+    };
+  }
+
   get filters() {
     if (!this.blockData.filters.length) return;
 
@@ -413,6 +419,12 @@ export default class PartnerCards extends LitElement {
     : ''}
               <sp-theme theme="spectrum" color="light" scale="medium">
                 ${this.getTagsByFilter(filter)}
+                <a class="hide-filter-option" 
+                   href="#" 
+                   @click=${(event) => { event.preventDefault(); this.toggleHideTags(filter)}}
+                   ?hidden=${!filter.hasHiddenTags}>
+                  ${filter.hideTags? this.blockData.localizedText['{{show-more}}'] 
+                    : this.blockData.localizedText['{{show-less}}']}</a>
               </sp-theme>
             </ul>
           </div>`;
@@ -504,7 +516,7 @@ export default class PartnerCards extends LitElement {
     const { tags } = filter;
 
     return html`${repeat(
-      tags,
+      tags.filter(tag =>  (this.mobileView || (tag.initialHidden && !filter.hideTags) || !tag.initialHidden)),
       (tag) => tag.key,
       (tag) => html`<li><sp-checkbox
         size="m" emphasized
