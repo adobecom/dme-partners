@@ -79,13 +79,34 @@ export default class PartnerCards extends LitElement {
         this.blockData.title = titleEl.innerText.trim();
       },
       filter: (cols) => {
+        console.log('columns for filter', cols);
         const [filterKeyEl, filterTagsKeysEl] = cols;
         const filterKey = filterKeyEl.innerText.trim().toLowerCase().replace(/ /g, '-');
 
+        // const createTag = (tagKey, initialHidden = false ) => ({
+        //     key: tagKey,
+        //     parentKey: filterKey,
+        //     value: this.blockData.localizedText[`{{${tagKey}}}`],
+        //     checked: false,
+        //     initialHidden: initialHidden
+        //   });
+
+        function createTag(tagKey, initialHidden = false, blockData) {
+          return {key: tagKey,
+            parentKey: filterKey,
+            value: blockData.localizedText[`{{${tagKey}}}`],
+            checked: false,
+            initialHidden: initialHidden};
+        }
         const filterTagsKeys = [];
-        filterTagsKeysEl.querySelectorAll('li').forEach((li) => {
+        filterTagsKeysEl.querySelectorAll('ul')[0].querySelectorAll('li').forEach((li) => {
           const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
-          if (key !== '') filterTagsKeys.push(key);
+          if (key !== '') filterTagsKeys.push(createTag(key, false, this.blockData));
+        });
+// todo make sure that this don't fail if there is no other list
+        filterTagsKeysEl.querySelectorAll('ul')[1]?.querySelectorAll('li').forEach((li) => {
+          const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
+          if (key !== '') filterTagsKeys.push(createTag(key, true, this.blockData));
         });
 
         if (!filterKey || !filterTagsKeys.length) return;
@@ -93,12 +114,7 @@ export default class PartnerCards extends LitElement {
         const filterObj = {
           key: filterKey,
           value: this.blockData.localizedText[`{{${filterKey}}}`],
-          tags: filterTagsKeys.map((tagKey) => ({
-            key: tagKey,
-            parentKey: filterKey,
-            value: this.blockData.localizedText[`{{${tagKey}}}`],
-            checked: false,
-          })),
+          tags: filterTagsKeys,
         };
         this.blockData.filters.push(filterObj);
       },
