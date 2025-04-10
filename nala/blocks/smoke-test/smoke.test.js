@@ -415,7 +415,7 @@ test.describe('Smoke Tests', () => {
       // open cal from gnav
       await smokeTest.requestCalverify();
       // verify request and submit for INDIA cal
-      await smokeTest.indidaCalVerify();
+      await smokeTest.indiaCalVerify();
       // verify request and submit for SEA/BD cal
       await smokeTest.seabdCalVerify();
       // verify request and submit for HKT cal
