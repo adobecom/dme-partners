@@ -257,11 +257,14 @@ export default class SmokeTest {
     await cal.click();
   }
 
-  async indidaCalVerify() {
-    const calIndiaRequest = this.page.locator('h3#request-a-cal-httpsmain--dme-partners--adobecomhlxpageedsdmepartners-sharedfragmentscommondistributor-cal-links-1.heading-m strong p.body-m.action-area a.con-button.blue.button-m ').nth(0);
+  async indiaCalVerify() {
+    const calIndiaRequest = this.page.locator('#request-a-cal-httpsmain--dme-partners--adobecomhlxpageedsdmepartners-sharedfragmentscommondistributor-cal-links-1').getByRole('link', { name: 'INDIA' });
     await calIndiaRequest.isVisible();
     const calIndidaRequestlink = await calIndiaRequest.getAttribute('href');
-    const calIndiaSubmit = this.page.locator('#submit-a-channel-authorization-letter + p a:has-text("INDIA")');
+    if (calIndidaRequestlink?.includes('#_blank')) {
+      calIndidaRequestlink = calIndidaRequestlink.replace('#_blank', '');
+    }
+    const calIndiaSubmit = this.page.getByRole('link', { name: 'INDIA' }).nth(1);
     await calIndiaSubmit.isVisible();
     const calIndiaSubmitLink = await calIndiaSubmit.getAttribute('href');
 
