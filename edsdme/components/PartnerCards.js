@@ -79,7 +79,6 @@ export default class PartnerCards extends LitElement {
         this.blockData.title = titleEl.innerText.trim();
       },
       filter: (cols) => {
-        console.log('columns for filter', cols);
         const [filterKeyEl, filterTagsKeysEl] = cols;
         const filterKey = filterKeyEl.innerText.trim().toLowerCase().replace(/ /g, '-');
 
