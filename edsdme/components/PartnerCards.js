@@ -83,12 +83,14 @@ export default class PartnerCards extends LitElement {
         const [filterKeyEl, filterTagsKeysEl] = cols;
         const filterKey = filterKeyEl.innerText.trim().toLowerCase().replace(/ /g, '-');
 
-        function createTag(tagKey, initialHidden = false, blockData) {
-          return {key: tagKey,
+        function createTag(tagKey, initialHidden, blockData) {
+          return {
+            key: tagKey,
             parentKey: filterKey,
             value: blockData.localizedText[`{{${tagKey}}}`],
             checked: false,
-            initialHidden: initialHidden};
+            initialHidden,
+          };
         }
         const filterTagsKeys = [];
         filterTagsKeysEl.querySelectorAll('ul')[0].querySelectorAll('li').forEach((li) => {
@@ -108,7 +110,7 @@ export default class PartnerCards extends LitElement {
           value: this.blockData.localizedText[`{{${filterKey}}}`],
           tags: filterTagsKeys,
           hideTags: true,
-          hasHiddenTags: filterTagsKeys.some(tag => tag.initialHidden),
+          hasHiddenTags: filterTagsKeys.some((tag) => tag.initialHidden),
         };
         this.blockData.filters.push(filterObj);
       },
@@ -380,7 +382,7 @@ export default class PartnerCards extends LitElement {
     return `${firstElOrderNum} - ${lastElOrderNum}`;
   }
 
-  toggleHideTags (filter) {
+  toggleHideTags(filter) {
     this.blockData = {
       ...this.blockData,
       filters: this.blockData.filters.map((filterItem) => {
@@ -421,10 +423,10 @@ export default class PartnerCards extends LitElement {
                 ${this.getTagsByFilter(filter)}
                 <a class="hide-filter-option" 
                    href="#" 
-                   @click=${(event) => { event.preventDefault(); this.toggleHideTags(filter)}}
+                   @click=${(event) => { event.preventDefault(); this.toggleHideTags(filter); }}
                    ?hidden=${!filter.hasHiddenTags}>
-                  ${filter.hideTags? this.blockData.localizedText['{{show-more}}'] 
-                    : this.blockData.localizedText['{{show-less}}']}</a>
+                  ${filter.hideTags ? this.blockData.localizedText['{{show-more}}']
+    : this.blockData.localizedText['{{show-less}}']}</a>
               </sp-theme>
             </ul>
           </div>`;
@@ -516,7 +518,9 @@ export default class PartnerCards extends LitElement {
     const { tags } = filter;
 
     return html`${repeat(
-      tags.filter(tag =>  (this.mobileView || (tag.initialHidden && !filter.hideTags) || !tag.initialHidden)),
+      tags.filter(
+        (tag) => (this.mobileView || (tag.initialHidden && !filter.hideTags) || !tag.initialHidden),
+      ),
       (tag) => tag.key,
       (tag) => html`<li><sp-checkbox
         size="m" emphasized
