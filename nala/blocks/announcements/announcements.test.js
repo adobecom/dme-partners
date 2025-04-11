@@ -49,7 +49,7 @@ test.describe('Validate announcements block', () => {
   test(`${features[0].name},${features[0].tags}`, async ({ page, baseURL }) => {
     const { data } = features[0];
     await test.step('Go to Announcements page', async () => {
-      await page.goto(`${baseURL}${features[0].path}`, {waitUntil: 'networkidle'});
+      await page.goto(`${baseURL}${features[0].path}`, { waitUntil: 'networkidle' });
       console.log(baseURL, features[0].path);
       // await handleEvent(page);
       await announcementsPage.learnMoreButton.waitFor({ state: 'visible' });
@@ -91,7 +91,7 @@ test.describe('Validate announcements block', () => {
   test(`${features[1].name},${features[1].tags}`, async ({ page, baseURL }) => {
     const { data } = features[1];
     await test.step('Go to Announcements page', async () => {
-      await page.goto(`${baseURL}${features[1].path}`, {waitUntil: 'networkidle'});
+      await page.goto(`${baseURL}${features[1].path}`, { waitUntil: 'networkidle' });
       // await handleEvent(page);
       await announcementsPage.learnMoreButton.waitFor({ state: 'visible' });
       const result = await announcementsPage.resultNumber.textContent();
@@ -126,7 +126,7 @@ test.describe('Validate announcements block', () => {
   test(`${features[2].name},${features[2].tags}`, async ({ page, baseURL }) => {
     const { data } = features[2];
     await test.step('Go to Announcements page', async () => {
-      await page.goto(`${baseURL}${features[2].path}`, {waitUntil: 'networkidle'});
+      await page.goto(`${baseURL}${features[2].path}`, { waitUntil: 'networkidle' });
       // await handleEvent(page);
       await announcementsPage.learnMoreButton.waitFor({ state: 'visible' });
       const result = await announcementsPage.resultNumber.textContent();
@@ -160,7 +160,7 @@ test.describe('Validate announcements block', () => {
   test(`${features[3].name},${features[3].tags}`, async ({ page, baseURL }) => {
     const { data } = features[3];
     await test.step('Go to Announcements page', async () => {
-      await page.goto(`${baseURL}${features[3].path}`, {waitUntil: 'networkidle'});
+      await page.goto(`${baseURL}${features[3].path}`, { waitUntil: 'networkidle' });
       // await handleEvent(page);
       await announcementsPage.learnMoreButton.waitFor({ state: 'visible' });
       const result = await announcementsPage.resultNumber.textContent();
@@ -219,7 +219,7 @@ test.describe('Validate announcements block', () => {
   test(`${features[4].name},${features[4].tags}`, async ({ page, baseURL }) => {
     const { data } = features[4];
     await test.step('Go to Announcements page', async () => {
-      await page.goto(`${baseURL}${features[4].path}`, {waitUntil: 'networkidle'});
+      await page.goto(`${baseURL}${features[4].path}`, { waitUntil: 'networkidle' });
       // await handleEvent(page);
       await announcementsPage.learnMoreButton.waitFor({ state: 'visible' });
       await announcementsPage.searchField.fill(data.searchCardTitle);
@@ -238,7 +238,7 @@ test.describe('Validate announcements block', () => {
   test(`${features[5].name},${features[5].tags}`, async ({ page, baseURL }) => {
     const { data } = features[5];
     await test.step('Go to Announcements page', async () => {
-      await page.goto(`${baseURL}${features[5].path}`, {waitUntil: 'networkidle'});
+      await page.goto(`${baseURL}${features[5].path}`, { waitUntil: 'networkidle' });
       // await handleEvent(page);
       await announcementsPage.learnMoreButton.waitFor({ state: 'visible' });
       const result = await announcementsPage.resultNumber.textContent();
