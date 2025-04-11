@@ -19,6 +19,7 @@ export default class AnnouncementsPage {
     this.paginationPrevButton = page.locator('button.pagination-prev-btn');
     this.paginationNextButton = page.locator('button.pagination-next-btn');
     this.pageNumButton = page.locator('button.page-btn');
+    this.learnMoreButton = page.getByRole('link', { name: 'Learn more' });
   }
 
   async clickPageNumButton(pageNum) {

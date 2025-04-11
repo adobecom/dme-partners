@@ -49,10 +49,9 @@ test.describe('Validate announcements block', () => {
   test(`${features[0].name},${features[0].tags}`, async ({ page, baseURL }) => {
     const { data } = features[0];
     await test.step('Go to Announcements page', async () => {
-      await page.goto(`${baseURL}${features[0].path}`);
+      await page.goto(`${baseURL}${features[0].path}`, { waitUntil: 'networkidle' });
       console.log(baseURL, features[0].path);
-      await handleEvent(page);
-
+      await announcementsPage.learnMoreButton.waitFor({ state: 'visible' });
       const result = await announcementsPage.resultNumber.textContent();
       await expect(parseInt(result.split(' ')[0], 10)).toBe(data.numberOfPublicCards);
     });
@@ -91,9 +90,8 @@ test.describe('Validate announcements block', () => {
   test(`${features[1].name},${features[1].tags}`, async ({ page, baseURL }) => {
     const { data } = features[1];
     await test.step('Go to Announcements page', async () => {
-      await page.goto(`${baseURL}${features[1].path}`);
-      await handleEvent(page);
-      await page.getByRole('link', { name: 'Learn more', state: 'visible' });
+      await page.goto(`${baseURL}${features[1].path}`, { waitUntil: 'networkidle' });
+      await announcementsPage.learnMoreButton.waitFor({ state: 'visible' });
       const result = await announcementsPage.resultNumber.textContent();
       await expect(parseInt(result.split(' ')[0], 10)).toBe(data.numberOfPublicCards);
     });
@@ -126,9 +124,8 @@ test.describe('Validate announcements block', () => {
   test(`${features[2].name},${features[2].tags}`, async ({ page, baseURL }) => {
     const { data } = features[2];
     await test.step('Go to Announcements page', async () => {
-      await page.goto(`${baseURL}${features[2].path}`);
-      await handleEvent(page);
-      await page.getByRole('link', { name: 'Learn more', state: 'visible' });
+      await page.goto(`${baseURL}${features[2].path}`, { waitUntil: 'networkidle' });
+      await announcementsPage.learnMoreButton.waitFor({ state: 'visible' });
       const result = await announcementsPage.resultNumber.textContent();
       await expect(parseInt(result.split(' ')[0], 10)).toBe(data.numberOfPublicCards);
       await announcementsPage.searchField.fill(data.searchCards);
@@ -160,9 +157,8 @@ test.describe('Validate announcements block', () => {
   test(`${features[3].name},${features[3].tags}`, async ({ page, baseURL }) => {
     const { data } = features[3];
     await test.step('Go to Announcements page', async () => {
-      await page.goto(`${baseURL}${features[3].path}`);
-      await handleEvent(page);
-      await page.getByRole('link', { name: 'Learn more', state: 'visible' });
+      await page.goto(`${baseURL}${features[3].path}`, { waitUntil: 'networkidle' });
+      await announcementsPage.learnMoreButton.waitFor({ state: 'visible' });
       const result = await announcementsPage.resultNumber.textContent();
       await expect(parseInt(result.split(' ')[0], 10)).toBe(data.numberOfPublicCards);
     });
@@ -219,9 +215,8 @@ test.describe('Validate announcements block', () => {
   test(`${features[4].name},${features[4].tags}`, async ({ page, baseURL }) => {
     const { data } = features[4];
     await test.step('Go to Announcements page', async () => {
-      await page.goto(`${baseURL}${features[4].path}`);
-      await handleEvent(page);
-      await page.getByRole('link', { name: 'Learn more', state: 'visible' });
+      await page.goto(`${baseURL}${features[4].path}`, { waitUntil: 'networkidle' });
+      await announcementsPage.learnMoreButton.waitFor({ state: 'visible' });
       await announcementsPage.searchField.fill(data.searchCardTitle);
       const resultAfterSearch = await announcementsPage.resultNumber.textContent();
       await expect(parseInt(resultAfterSearch.split(' ')[0], 10)).toBe(data.numberOfMatchingTitleCards);
@@ -238,9 +233,8 @@ test.describe('Validate announcements block', () => {
   test(`${features[5].name},${features[5].tags}`, async ({ page, baseURL }) => {
     const { data } = features[5];
     await test.step('Go to Announcements page', async () => {
-      await page.goto(`${baseURL}${features[5].path}`);
-      await handleEvent(page);
-      await page.getByRole('link', { name: 'Learn more', state: 'visible' });
+      await page.goto(`${baseURL}${features[5].path}`, { waitUntil: 'networkidle' });
+      await announcementsPage.learnMoreButton.waitFor({ state: 'visible' });
       const result = await announcementsPage.resultNumber.textContent();
       await expect(parseInt(result.split(' ')[0], 10)).toBe(data.numberOfPublicCards);
     });
