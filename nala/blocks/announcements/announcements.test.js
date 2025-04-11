@@ -49,7 +49,7 @@ test.describe('Validate announcements block', () => {
   test(`${features[0].name},${features[0].tags}`, async ({ page, baseURL }) => {
     const { data } = features[0];
     await test.step('Go to Announcements page', async () => {
-      await page.goto(`${baseURL}${features[0].path}`, { waitUntil: 'networkidle'});
+      await page.goto(`${baseURL}${features[0].path}`, { waitUntil: 'networkidle' });
       console.log(baseURL, features[0].path);
       await announcementsPage.learnMoreButton.waitFor({ state: 'visible' });
       const result = await announcementsPage.resultNumber.textContent();
