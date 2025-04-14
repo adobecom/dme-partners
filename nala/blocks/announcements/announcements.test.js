@@ -27,25 +27,6 @@ test.describe('Validate announcements block', () => {
     }
   });
 
-  async function handleEvent(page) {
-    if (!page.url().includes('partners.stage.adobe.com')) {
-      await page.evaluate(() => {
-        if (document.querySelector('.card-title')) {
-          window.cardsLoaded = true;
-        } else {
-          document.addEventListener('partner-cards-loaded', () => {
-            window.cardsLoaded = true;
-          });
-        }
-      });
-      try {
-        await page.waitForFunction(() => window.cardsLoaded);
-      } catch {
-        console.log('catch block');
-      }
-    }
-  }
-
   test(`${features[0].name},${features[0].tags}`, async ({ page, baseURL }) => {
     const { data } = features[0];
     await test.step('Go to Announcements page', async () => {
@@ -267,7 +248,7 @@ test.describe('Validate announcements block', () => {
   partnerLevelCases.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, context, baseURL }) => {
       await test.step('Go to Announcements page', async () => {
-        await page.goto(`${baseURL}${feature.path}`);
+        await page.goto(`${baseURL}${feature.path}`, { waitUntil: 'networkidle' });
       });
 
       await test.step('Set partner_data cookie', async () => {
@@ -276,8 +257,7 @@ test.describe('Validate announcements block', () => {
           `${baseURL}${feature.path}`,
           context,
         );
-        await page.reload();
-        await handleEvent(page);
+        await page.reload({ waitUntil: 'networkidle' });
       });
 
       await test.step(`Verify card titled ${feature.data.partnerLevelCardTitle} is present on page`, async () => {
