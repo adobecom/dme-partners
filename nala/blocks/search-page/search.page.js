@@ -5,6 +5,7 @@ export default class SearchTest {
     this.page = page;
     this.searchField = page.getByRole('searchbox', { name: 'Search' });
     this.openPreview = page.getByLabel('Open in', { exact: true }).locator('#button');
+    this.download = page.getByLabel('Download', { exact: true }).locator('#button');
     this.cardDescription = page.locator('.card-description', { hasText: 'Asset Type: Advertising, Channel Copy, Language: English International (EI), Spanish, Product: Adobe Acrobat, Adobe Connect, Topic: Channel Authorization Letter, Onboarding' });
     this.filterType = page.getByLabel('Type');
     this.filterLanguage = page.getByLabel('Asset language');
