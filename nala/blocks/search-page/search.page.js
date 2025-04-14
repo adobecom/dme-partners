@@ -21,6 +21,7 @@ export default class SearchTest {
     this.assetTabs = page.getByLabel('Assets');
     this.pagesTab = page.getByLabel('Pages');
     this.openPreviewPages = page.locator('search-card').filter({ hasText: 'Adobe Partner Connection Programme' }).locator('#button').nth(1);
+    this.searchCard = page.locator('.search-card');
   }
 
   async cardTitle(text) {
@@ -47,7 +48,7 @@ export default class SearchTest {
 
   async searchAsset(searchKeyWord) {
     const { searchField } = this;
-    await this.page.locator('.search-card').first().waitFor({ state: 'visible' });
+    await this.searchCard.first().waitFor({ state: 'visible' });
     await searchField.fill(searchKeyWord);
     await searchField.press('Enter');
   }
