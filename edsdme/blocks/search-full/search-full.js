@@ -44,6 +44,8 @@ export default async function init(el) {
     '{{showing-results-for}}': 'Showing results for:',
     '{{size}}': 'Size',
     '{{view-all-results}}': 'View all results',
+    '{{show-more}}': 'Show more',
+    '{{show-less}}': 'Show less',
   };
 
   populateLocalizedTextFromListItems(el, localizedText);

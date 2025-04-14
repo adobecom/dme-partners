@@ -39,6 +39,8 @@ export default async function init(el) {
     '{{results}}': 'Results',
     '{{search}}': 'Search',
     '{{show-all}}': 'Show all',
+    '{{show-more}}': 'Show more',
+    '{{show-less}}': 'Show less',
   };
 
   populateLocalizedTextFromListItems(el, localizedText);
