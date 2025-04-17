@@ -38,6 +38,7 @@ export default class SmokeTest {
     this.apacResellerProgramGuid = page.locator('#apc-program-guides-1 a[href*="/p/Adobe_Partner_Connection_Reseller_Program_Guide_Asia_Pacific.pdf"]');
     this.apacRetailProgramGuid = page.locator('#apc-program-guides-1 a[href*="/p/Adobe_Partner_Connection_Distributor_Program_Guide_FY25_Asia_Pacific_v9.pdf"]');
     this.cal = page.locator('div.feds-menu-items a[href*="/sales-resources/cal/"]');
+    this.geoModal = page.locator('#locale-modal-v2');
   }
 
   async smokeSignIn(page, baseURL, partnerLevel) {
@@ -118,6 +119,14 @@ export default class SmokeTest {
 
   getJoinNowButtonByRegion(text) {
     return this.page.locator(`#feds-nav-wrapper a[href*="/enrollment/"]:has-text("${text}")`);
+  }
+
+  getFindPartnerByRegion(text) {
+    return this.page.locator(`#feds-nav-wrapper a[href*="/PartnerSearch"]:has-text("${text}")`);
+  }
+
+  getGeoModalLink(linkText) {
+    return this.page.locator(`.link-wrapper a:has-text("${linkText}")`);
   }
 
   async verifySelectYouRegion() {
@@ -248,15 +257,18 @@ export default class SmokeTest {
     await cal.click();
   }
 
-  async indidaCalVerify() {
-    const calIndiaRequest = this.page.locator('h3#request-a-cal-httpsmain--dme-partners--adobecomhlxpageedsdmepartners-sharedfragmentscommondistributor-cal-links-1.heading-m strong p.body-m.action-area a.con-button.blue.button-m ').nth(0);
+  async indiaCalVerify() {
+    const calIndiaRequest = this.page.locator('#request-a-cal-httpsmain--dme-partners--adobecomhlxpageedsdmepartners-sharedfragmentscommondistributor-cal-links-1').getByRole('link', { name: 'INDIA' });
     await calIndiaRequest.isVisible();
-    const calIndidaRequestlink = await calIndiaRequest.getAttribute('href');
-    const calIndiaSubmit = this.page.locator('#submit-a-channel-authorization-letter + p a:has-text("INDIA")');
+    let calIndiaRequestlink = await calIndiaRequest.getAttribute('href');
+    if (calIndiaRequestlink?.includes('#_blank')) {
+      calIndiaRequestlink = calIndiaRequestlink.replace('#_blank', '');
+    }
+    const calIndiaSubmit = this.page.getByRole('link', { name: 'INDIA' }).nth(1);
     await calIndiaSubmit.isVisible();
     const calIndiaSubmitLink = await calIndiaSubmit.getAttribute('href');
 
-    expect(calIndidaRequestlink).toBe(calIndiaSubmitLink);
+    expect(calIndiaRequestlink).toBe(calIndiaSubmitLink);
   }
 
   async seabdCalVerify() {

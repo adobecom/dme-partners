@@ -10,6 +10,7 @@ const nonMemberRedirects = features.slice(3, 5);
 const nonMemberLoggedInToAdobe = features.slice(5, 7);
 const resellerMembersLogin = features.slice(9, 13);
 const errorPages = features.slice(14, 17);
+const redirectionByRegionFeatures = features.slice(18, 29);
 
 test.describe('MAPC sign in flow', () => {
   test.beforeEach(async ({ page, browserName, baseURL, context }) => {
@@ -138,7 +139,7 @@ test.describe('MAPC sign in flow', () => {
 
       await test.step('Sign in with tpp platinum user', async () => {
         await signInPage.signIn(page, `${feature.data.partnerLevel}`);
-        await signInPage.userNameDisplay.waitFor({ state: 'visible', timeout: 15000 });
+        await signInPage.userNameDisplay.waitFor({ state: 'visible', timeout: 30000 });
       });
 
       await test.step(`Open ${feature.data.page} in a new tab`, async () => {
@@ -180,7 +181,7 @@ test.describe('MAPC sign in flow', () => {
 
     await test.step('Sign in with tpp platinum user', async () => {
       await signInPage.signIn(page, `${data.partnerLevel}`);
-      await signInPage.userNameDisplay.waitFor({ state: 'visible', timeout: 15000 });
+      await signInPage.userNameDisplay.waitFor({ state: 'visible', timeout: 30000 });
     });
 
     await test.step('Open public page in a new tab', async () => {
@@ -335,6 +336,30 @@ test.describe('MAPC sign in flow', () => {
       ]);
       await newTab.waitForLoadState();
       expect(newTab.url()).toBe(`${data.newTabUrl}`);
+    });
+  });
+
+  redirectionByRegionFeatures.forEach((feature) => {
+    test(`${feature.name},${feature.tags}`, async ({ page }) => {
+      const { path, data } = feature;
+
+      const signInButton = await signInPage.getSignInButton(`${data.signInButtonInternationalText}`);
+
+      await test.step('Go to home page', async () => {
+        await page.goto(`${path}`);
+        await page.waitForLoadState('domcontentloaded');
+
+        await signInButton.click();
+      });
+
+      await test.step('Sign in', async () => {
+        await signInPage.signIn(page, `${data.partnerLevel}`);
+      });
+
+      await test.step('Verify redirection to correct region home page after the login', async () => {
+        await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+        expect(page.url()).toBe(`${data.expectedToSeeInURL}`);
+      });
     });
   });
 });

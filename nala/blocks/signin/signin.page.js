@@ -40,7 +40,7 @@ export default class SignInPage {
     await signInButton.click();
     await this.signIn(page, partnerLevel);
 
-    await page.locator('.feds-utilities').waitFor({ state: 'visible', timeout: 30000 });
+    await page.locator('.unav-comp-external-profile').waitFor({ state: 'visible', timeout: 30000 });
 
     const safariBrowser = browserName === 'webkit';
     let currentURL;
