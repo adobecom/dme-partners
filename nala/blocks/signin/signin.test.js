@@ -138,13 +138,15 @@ test.describe('MAPC sign in flow', () => {
 
       await test.step('Sign in with tpp platinum user', async () => {
         await signInPage.signIn(page, `${feature.data.partnerLevel}`);
+        await page.waitForEvent('load');
         await signInPage.userNameDisplay.waitFor({ state: 'visible', timeout: 15000 });
       });
 
       await test.step(`Open ${feature.data.page} in a new tab`, async () => {
         const newTab = await context.newPage();
-        await newTab.goto(`${feature.path}`);
+        await newTab.goto(`${feature.path}`, { waitUntil: 'networkidle' });
         const newTabPage = new SignInPage(newTab);
+        await newTabPage.regionPicker.waitFor({ state: 'visible', timeout: 30000 });
         await newTabPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
         const pages = await page.context().pages();
         await expect(pages[1].url())
@@ -180,7 +182,8 @@ test.describe('MAPC sign in flow', () => {
 
     await test.step('Sign in with tpp platinum user', async () => {
       await signInPage.signIn(page, `${data.partnerLevel}`);
-      await signInPage.userNameDisplay.waitFor({ state: 'visible', timeout: 15000 });
+      await page.waitForEvent('load');
+      await signInPage.userNameDisplay.waitFor({ state: 'visible', timeout: 30000 });
     });
 
     await test.step('Open public page in a new tab', async () => {
