@@ -209,7 +209,7 @@ export function isRenew() {
     daysNum = Math.floor(differenceInDays);
   } else if (differenceInMilliseconds < 0 && differenceInDays <= 90) {
     accountStatus = 'suspended';
-    daysNum = Math.floor(90 - differenceInDays);
+    daysNum = Math.ceil(90 - differenceInDays);
   } else {
     return;
   }
