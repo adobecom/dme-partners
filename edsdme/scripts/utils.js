@@ -206,10 +206,10 @@ export function isRenew() {
 
   if (differenceInMilliseconds > 0 && differenceInDays < 31) {
     accountStatus = 'expired';
-    daysNum = differenceInDays;
+    daysNum = Math.floor(differenceInDays);
   } else if (differenceInMilliseconds < 0 && differenceInDays <= 90) {
     accountStatus = 'suspended';
-    daysNum = 90 - differenceInDays;
+    daysNum = Math.ceil(90 - differenceInDays);
   } else {
     return;
   }
