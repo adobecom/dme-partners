@@ -195,8 +195,8 @@ export function isRenew() {
   const accountExpiration = getPartnerDataCookieValue(programType, 'accountanniversary');
   if (!accountExpiration) return;
 
-  const expirationDate = new Date(accountExpiration);
-  const now = new Date();
+  const expirationDate = new Date(accountExpiration).toUTCString();
+  const now = new Date().toUTCString();
 
   let accountStatus;
   let daysNum;
