@@ -196,7 +196,9 @@ export function isRenew() {
   if (!accountExpiration) return;
 
   const expirationDate = new Date(accountExpiration);
+  expirationDate.setHours(0, 0, 0, 0);
   const now = new Date();
+  now.setHours(0, 0, 0, 0);
 
   let accountStatus;
   let daysNum;
