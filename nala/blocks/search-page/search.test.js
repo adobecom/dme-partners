@@ -37,7 +37,7 @@ test.describe('Search Page validation', () => {
       await page.waitForLoadState('domcontentloaded');
 
       await signInSearchTest.signIn(page, `${features[0].data.partnerLevel}`);
-      await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+      await searchTest.searchCard.first().waitFor({ state: 'visible', timeout: 40000 });
     });
 
     await test.step('Search for assets ', async () => {
@@ -109,7 +109,7 @@ test.describe('Search Page validation', () => {
       await page.waitForLoadState('domcontentloaded');
 
       await signInSearchTest.signIn(page, `${features[1].data.partnerLevel}`);
-      await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+      await searchTest.searchCard.first().waitFor({ state: 'visible', timeout: 40000 });
     });
 
     await test.step('Search for assets ', async () => {
@@ -167,7 +167,7 @@ test.describe('Search Page validation', () => {
       await page.waitForLoadState('domcontentloaded');
 
       await signInSearchTest.signIn(page, `${features[2].data.partnerLevel}`);
-      await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+      await searchTest.searchCard.first().waitFor({ state: 'visible', timeout: 40000 });
     });
 
     await test.step('Search for assets ', async () => {
@@ -227,7 +227,7 @@ test.describe('Search Page validation', () => {
         await page.goto(`${path}`);
         await page.waitForLoadState('domcontentloaded');
         await signInSearchTest.signIn(page, `${data.partnerLevel}`);
-        await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+        await searchTest.searchCard.first().waitFor({ state: 'visible', timeout: 40000 });
       });
       await test.step('Search for assets ', async () => {
         await searchTest.searchAsset(`${data.searchKeyWord}`);
@@ -246,7 +246,7 @@ test.describe('Search Page validation', () => {
         await page.goto(`${path}`);
         await page.waitForLoadState('domcontentloaded');
         await signInSearchTest.signIn(page, `${data.partnerLevel}`);
-        await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+        await searchTest.searchCard.first().waitFor({ state: 'visible', timeout: 40000 });
       });
       await test.step('Search for assets ', async () => {
         await searchTest.searchAsset(`${data.searchKeyWord}`);
@@ -267,7 +267,7 @@ test.describe('Search Page validation', () => {
       await page.waitForLoadState('domcontentloaded');
 
       await signInSearchTest.signIn(page, `${features[9].data.partnerLevel}`);
-      await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+      await searchTest.searchCard.first().waitFor({ state: 'visible', timeout: 40000 });
     });
 
     await test.step('Search for assets ', async () => {
@@ -287,7 +287,7 @@ test.describe('Search Page validation', () => {
       await page.waitForLoadState('domcontentloaded');
 
       await signInSearchTest.signIn(page, `${features[10].data.partnerLevel}`);
-      await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+      await searchTest.searchCard.first().waitFor({ state: 'visible', timeout: 40000 });
     });
 
     await test.step('Search for assets ', async () => {
@@ -309,7 +309,7 @@ test.describe('Search Page validation', () => {
       await page.waitForLoadState('domcontentloaded');
 
       await signInSearchTest.signIn(page, `${features[11].data.partnerLevel}`);
-      await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+      await searchTest.searchCard.first().waitFor({ state: 'visible', timeout: 40000 });
     });
 
     await test.step('Search for assets ', async () => {
@@ -346,7 +346,7 @@ test.describe('Search Page validation', () => {
       await searchTest.clearAll();
       await searchTest.searchAsset(data.searchText);
       await page.waitForLoadState('networkidle');
-      await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+      await searchTest.searchCard.first().waitFor({ state: 'visible', timeout: 40000 });
       const numberOfAssetsAfterSearch = await searchTest.checkNumberOfAssets();
       expect(numberOfAssets).toBe(numberOfAssetsAfterSearch);
     });
@@ -381,6 +381,47 @@ test.describe('Search Page validation', () => {
       await searchTest.checkCardTitle(data.asset6);
       await searchTest.checkCardTitle(data.asset7);
       await searchTest.checkCardTitle(data.asset8);
+    });
+  });
+
+  // @na-validate-announcement-assets-present-for-user
+  test(`${features[13].name}, ${features[13].tags}`, async ({ page }) => {
+    const { data } = features[13];
+
+    await test.step('Sign In with user', async () => {
+      await page.goto(`${features[0].path}`);
+      await page.waitForLoadState('domcontentloaded');
+
+      await signInSearchTest.signIn(page, `${features[0].data.partnerLevel}`);
+      await searchTest.searchCard.first().waitFor({ state: 'visible', timeout: 40000 });
+    });
+
+    await test.step('Search for assets ', async () => {
+      await searchTest.searchAsset(`${data.searchKeyWord}`);
+    });
+
+    await test.step('Check asset icons', async () => {
+      // check if asset announcement icon is displayed
+      await searchTest.checkFileIcon(`${data.iconAnnouncement}`);
+
+      // check if the download icon is disabled
+      await expect(searchTest.download).toBeDisabled();
+
+      // check if the preview icon is enabled
+      await expect(searchTest.openPreview).toBeEnabled();
+    });
+
+    await test.step('Check if new tab is opened for preview', async () => {
+      const [newTab] = await Promise.all([
+        page.waitForEvent('popup'),
+        searchTest.openPreview.click(),
+      ]);
+
+      const pages = page.context().pages();
+      await expect(pages[1].url())
+        .toContain(`${data.assetURL}`);
+
+      await newTab.close();
     });
   });
 });

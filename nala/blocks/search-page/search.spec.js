@@ -236,5 +236,18 @@ export default {
         asset8: 'MAPC stage no specialization (level: distributor, gold, platinum) (regions: EMEA, Latin America (NA based), Pacific)',
       },
     },
+    {
+      tcid: '14',
+      name: '@na-validate-announcement-assets-present-for-user',
+      path: '/channelpartners/home/search/?georouting=off&martech=off',
+      tags: '@dme-search @regression @circleCi',
+      data: {
+        partnerLevel: 'cpp-distributor-us:',
+        signInButtonInternationalText: 'Sign In',
+        searchKeyWord: 'sunset',
+        assetURL: '/na/channelpartners/home/announcements/sunset',
+        iconAnnouncement: 'announcement',
+      },
+    },
   ],
 };
