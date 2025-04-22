@@ -213,7 +213,6 @@ export function isRenew() {
   } else {
     return;
   }
-  daysNum = Math.floor(daysNum);
   // eslint-disable-next-line consistent-return
   return { accountStatus, daysNum };
 }
