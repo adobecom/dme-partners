@@ -183,6 +183,12 @@ export function redirectLoggedinPartner() {
   window.location.assign(target);
 }
 
+function getUTCDayDiff(date1, date2) {
+  const utc1 = Date.UTC(date1.getUTCFullYear(), date1.getUTCMonth(), date1.getUTCDate());
+  const utc2 = Date.UTC(date2.getUTCFullYear(), date2.getUTCMonth(), date2.getUTCDate());
+  return Math.floor(Math.abs(utc1 - utc2) / (1000 * 60 * 60 * 24));
+}
+
 export function isRenew() {
   const programType = getCurrentProgramType();
 
@@ -195,14 +201,14 @@ export function isRenew() {
   const accountExpiration = getPartnerDataCookieValue(programType, 'accountanniversary');
   if (!accountExpiration) return;
 
-  const expirationDate = new Date(accountExpiration).toUTCString();
-  const now = new Date().toUTCString();
+  const expirationDate = new Date(accountExpiration);
+  const now = new Date();
 
   let accountStatus;
   let daysNum;
 
-  const differenceInMilliseconds = expirationDate - now;
-  const differenceInDays = Math.abs(differenceInMilliseconds) / (1000 * 60 * 60 * 24);
+  const differenceInMilliseconds = expirationDate.getTime() - now.getTime();
+  const differenceInDays = getUTCDayDiff(expirationDate, now);
 
   if (differenceInMilliseconds > 0 && differenceInDays < 31) {
     accountStatus = 'expired';
@@ -213,7 +219,6 @@ export function isRenew() {
   } else {
     return;
   }
-  daysNum = Math.floor(daysNum);
   // eslint-disable-next-line consistent-return
   return { accountStatus, daysNum };
 }
