@@ -25,7 +25,7 @@ export default class SearchTest {
   }
 
   async cardTitle(text) {
-    return this.page.getByText(text);
+    return this.page.getByText(text).nth(0);
   }
 
   async fileIcon(fileType) {

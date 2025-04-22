@@ -10,6 +10,7 @@ export default class SignInPage {
     this.emailPageContinueButton = page.locator('//button[@data-id="EmailPage-ContinueButton"]');
     this.passwordField = page.locator('#PasswordPage-PasswordField');
     this.passwordPageContinueButton = page.locator('//button[@data-id="PasswordPage-ContinueButton"]');
+    this.regionPicker = page.locator('.feds-regionPicker-wrapper');
   }
 
   async getButtonElement(text) {
@@ -40,7 +41,7 @@ export default class SignInPage {
     await signInButton.click();
     await this.signIn(page, partnerLevel);
 
-    await page.locator('.unav-comp-external-profile').waitFor({ state: 'visible', timeout: 30000 });
+    await page.locator('#unav-profile').waitFor({ state: 'visible', timeout: 30000 });
 
     const safariBrowser = browserName === 'webkit';
     let currentURL;
