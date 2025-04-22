@@ -346,7 +346,7 @@ test.describe('Search Page validation', () => {
       await searchTest.clearAll();
       await searchTest.searchAsset(data.searchText);
       await page.waitForLoadState('load');
-      await page.locator('.search-card').first().waitFor({ state: 'visible', timeout: 40000 });
+      await searchTest.searchCard.first().waitFor({ state: 'visible', timeout: 40000 });
       const numberOfAssetsAfterSearch = await searchTest.checkNumberOfAssets();
       expect(numberOfAssets).toBe(numberOfAssetsAfterSearch);
     });
