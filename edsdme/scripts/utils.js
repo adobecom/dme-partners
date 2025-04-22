@@ -203,7 +203,7 @@ export function isRenew() {
   let accountStatus;
   let daysNum;
 
-  const differenceInMilliseconds = expirationDate - now;
+  const differenceInMilliseconds = expirationDate.getTime() - now.getTime();
   const differenceInDays = Math.abs(differenceInMilliseconds) / (1000 * 60 * 60 * 24);
 
   if (differenceInMilliseconds > 0 && differenceInDays < 31) {
@@ -211,7 +211,7 @@ export function isRenew() {
     daysNum = differenceInDays - 1;
   } else if (differenceInMilliseconds < 0 && differenceInDays <= 90) {
     accountStatus = 'suspended';
-    daysNum = 90 - differenceInDays;
+    daysNum = Math.floor(90 - differenceInDays);
   } else {
     return;
   }
