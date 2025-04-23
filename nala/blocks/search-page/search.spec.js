@@ -250,10 +250,10 @@ export default {
       },
     },
     {
-      tcid: '25',
+      tcid: '15',
       name: '@fragments-in-search',
       path: '/na/channelpartners/home/search/?georouting=off&martech=off',
-      tags: '@dme-smoke-test',
+      tags: '@dme-search @regression @circleCi',
       data: {
         partnerLevel: 'cpp-distributor-us:',
         signInButtonInternationalText: 'Sign In',
