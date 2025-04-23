@@ -459,7 +459,6 @@ test.describe('Search Page validation', () => {
       await searchTest.clearAllFilters.click();
       await searchTest.searchAsset(`${data.searchKeyWord6}`);
       await expect(searchTest.noResultsTitle).toBeVisible();
-
     });
   });
 });
