@@ -22,6 +22,7 @@ export default class SearchTest {
     this.pagesTab = page.getByLabel('Pages');
     this.openPreviewPages = page.locator('search-card').filter({ hasText: 'Adobe Partner Connection Programme' }).locator('#button').nth(1);
     this.searchCard = page.locator('.search-card');
+    this.showMoreLanguage = page.getByRole('link', { name: 'Show more' });
   }
 
   async cardTitle(text) {
@@ -72,6 +73,15 @@ export default class SearchTest {
   // eslint-disable-next-line class-methods-use-this
   async filterSearchAssets(filter, checkBoxName, exactMatch = false) {
     await filter.click();
+    const checkBox = await this.checkBox(checkBoxName, exactMatch);
+    await checkBox.click();
+    await filter.click();
+  }
+
+  async languageFilter(filter, checkBoxName, exactMatch = false) {
+    const {showMoreLanguage} = this;
+    await filter.click();
+    await showMoreLanguage.click();
     const checkBox = await this.checkBox(checkBoxName, exactMatch);
     await checkBox.click();
     await filter.click();
