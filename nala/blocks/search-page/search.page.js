@@ -79,7 +79,7 @@ export default class SearchTest {
   }
 
   async languageFilter(filter, checkBoxName, exactMatch = false) {
-    const {showMoreLanguage} = this;
+    const { showMoreLanguage } = this;
     await filter.click();
     await showMoreLanguage.click();
     const checkBox = await this.checkBox(checkBoxName, exactMatch);
