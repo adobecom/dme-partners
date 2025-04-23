@@ -426,13 +426,13 @@ test.describe('Search Page validation', () => {
     });
   });
   test(`${features[14].name}, ${features[14].tags}`, async ({ page }) => {
-    const { data } = features[14];
+    const { data, path } = features[14];
 
     await test.step('Sign In with user', async () => {
-      await page.goto(`${features[14].path}`);
+      await page.goto(path);
       await page.waitForLoadState('domcontentloaded');
 
-      await signInSearchTest.signIn(page, `${features[14].data.partnerLevel}`);
+      await signInSearchTest.signIn(page, data.partnerLevel);
       await searchTest.searchCard.first().waitFor({ state: 'visible', timeout: 40000 });
     });
 
