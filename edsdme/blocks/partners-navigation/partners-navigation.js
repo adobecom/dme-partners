@@ -1,6 +1,9 @@
 // MWPW-159021
 /* eslint import/no-relative-packages: 0 */
 /* eslint-disable no-async-promise-executor */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable import/no-unresolved */
 import { applyGnavPersonalization } from '../../scripts/personalization.js';
 import {
   closeAllDropdowns,
