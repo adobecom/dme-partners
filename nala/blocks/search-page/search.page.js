@@ -22,6 +22,7 @@ export default class SearchTest {
     this.pagesTab = page.getByLabel('Pages');
     this.openPreviewPages = page.locator('search-card').filter({ hasText: 'Adobe Partner Connection Programme' }).locator('#button').nth(1);
     this.searchCard = page.locator('.search-card');
+    this.noResultsTitle = page.locator('.no-results-title');
   }
 
   async cardTitle(text) {
