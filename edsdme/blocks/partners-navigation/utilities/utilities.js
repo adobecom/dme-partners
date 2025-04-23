@@ -195,10 +195,10 @@ export async function loadBaseStyles() {
   const { standaloneGnav } = getConfig();
   if (standaloneGnav) return;
   if (isDarkMode()) {
-    new Promise((resolve) => { loadStyle('/eds/blocks/partners-navigation/base.css', resolve); })
-      .then(() => loadStyles('/eds/blocks/partners-navigation/dark-nav.css'));
+    new Promise((resolve) => { loadStyle('/edsdme/blocks/partners-navigation/base.css', resolve); })
+      .then(() => loadStyles('/edsdme/blocks/partners-navigation/dark-nav.css'));
   } else {
-    const url = '/eds/blocks/partners-navigation/base.css';
+    const url = '/edsdme/blocks/partners-navigation/base.css';
     await loadStyles(url);
   }
 }
@@ -214,7 +214,7 @@ export async function loadDecorateMenu() {
 
   const [menu] = await Promise.all([
     import('./menu/menu.js'),
-    loadStyles('/eds/blocks/partners-navigation/utilities/menu/menu.css'),
+    loadStyles('/edsdme/blocks/partners-navigation/utilities/menu/menu.css'),
   ]);
 
   resolve(menu.default);
