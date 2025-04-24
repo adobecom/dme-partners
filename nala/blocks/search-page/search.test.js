@@ -126,7 +126,7 @@ test.describe('Search Page validation', () => {
     });
 
     await test.step('Filter Assets by Language filter', async () => {
-      await searchTest.filterSearchAssets(searchTest.filterLanguage, data.checkBoxArabic);
+      await searchTest.languageFilter(searchTest.filterLanguage, data.checkBoxArabic);
       await searchTest.checkCardTitle(data.asset1);
       await searchTest.checkCardTitle(data.asset4);
     });
