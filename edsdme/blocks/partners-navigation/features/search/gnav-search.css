@@ -128,16 +128,6 @@
   font-weight: 400;
 }
 
-/* MWPW-162729 */
-.feds-search-result-icon {
-  flex-shrink: 0;
-  height: 16px;
-  width: 16px;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-  background-size: cover;
-}
-
 /*MWPW-154138*/
 .feds-search-view-all-results {
   color: var(--link-color);
