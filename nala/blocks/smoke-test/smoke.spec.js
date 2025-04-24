@@ -245,5 +245,17 @@ export default {
 
       },
     },
+
+    {
+      tcid: '20',
+      name: '@sso-integration-between-apc-and-cbc',
+      path: '/na/channelpartners/home/#?georouting=on&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-distributor-us:',
+        cbcConnectionDomain: 'cbconnection',
+        expectedURL: '/bin/fusion/modalImsLogin?resource=%2Fen%2Fnews%2Fenablement-news-partner-lock',
+      },
+    },
   ],
 };
