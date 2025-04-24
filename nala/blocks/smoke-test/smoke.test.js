@@ -537,4 +537,25 @@ test.describe('Smoke Tests', () => {
       await verifyGeoModalAndPartnerLinks(page, data.geoModalLinkJapan, `${baseURL}${data.jpLocalePartnerUrl}`, data.findPartnerJapanLinkText);
     });
   });
+
+  // @sso-integration-between-apc-and-cbc
+  test(`${features[19].name}, ${features[19].tags}`, async ({ page, baseURL }) => {
+    const { data, path } = features[19];
+
+    await test.step('Go to home page and sign in', async () => {
+      await page.goto(`${baseURL}${path}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`);
+      await page.waitForLoadState('networkidle');
+    });
+
+    await test.step('Verify CBC Learn More link', async () => {
+      await expect(smokeTest.cbcLearnMore).toBeVisible();
+
+      const href = await smokeTest.cbcLearnMore.getAttribute('href');
+      await expect(href).toContain(data.expectedURL);
+      await expect(href).toContain(data.cbcConnectionDomain);
+
+      await expect(smokeTest.cbcLearnMore.getAttribute('target')).resolves.toBe('_blank');
+    });
+  });
 });
