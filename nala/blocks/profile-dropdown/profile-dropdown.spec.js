@@ -53,5 +53,21 @@ export default {
         targetAfterLogout: 'https://partners.stage.adobe.com/na/channelpartners/#',
       },
     },
+    {
+      tcid: '4',
+      name: '@desc-profile-dropdown-member-user-without-sales-center-mobile',
+      path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
+      tags: '@dme-profile @regression @login @circleCi',
+      data: {
+        partnerLevel: 'cpp-china-registered:',
+        profileName: 'Yugo CPP Stage China-Registered',
+        profileEmail: 'yugo-stage-c…@yopmail.com',
+        profilePartnerLevel: 'Registered',
+        editProfileURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
+        accountManagementURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
+        salesCenterURL: 'https://channelpartners.stage2.adobe.com/s/salescenter/dashboard',
+        targetAfterLogout: 'https://partners.stage.adobe.com/cn/channelpartners/#',
+      },
+    },
   ],
 };

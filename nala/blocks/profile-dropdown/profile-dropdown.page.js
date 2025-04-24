@@ -13,6 +13,7 @@ export default class ProfileDropdownPage {
     this.salesCenterButton = page.locator('a:has-text("Go to Sales Center")');
     this.renewNowButton = page.locator('.intro.partner-expired.partner-renew.text a[target="_blank"]');
     this.logoutButton = page.locator('[daa-ll="Sign Out"]');
+    this.profileMenu = page.locator('#feds-profile-menu');
   }
 
   async toggleProfileDropdown() {
@@ -25,5 +26,13 @@ export default class ProfileDropdownPage {
 
   async clickRenewNowButton(type) {
     await this.page.locator(`.intro.partner-${type}.partner-renew.text a[target="_blank"]`).click();
+  }
+
+  getAccountManagementByText(text) {
+    return this.page.locator(`a:has-text("${text}")`);
+  }
+
+  getLogoutByText(text) {
+    return this.page.locator(`[daa-ll="${text}"]`);
   }
 }

@@ -162,4 +162,64 @@ test.describe('Validate profile dropdown', () => {
       });
     });
   });
+
+  test(`${features[3].name},${features[3].tags}`, async ({ page }) => {
+    test.slow();
+    const { data, path } = features[3];
+    await test.step('Go to the home page', async () => {
+      await page.goto(`${path}`);
+      await page.waitForLoadState('domcontentloaded');
+      await profileDropdownPage.signInButton.click();
+    });
+
+    await test.step('Sign in', async () => {
+      await signInPage.signIn(page, `${data.partnerLevel}`);
+    });
+
+    await test.step('Verify profile dropdown after successful login', async () => {
+      await profileDropdownPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+      await profileDropdownPage.toggleProfileDropdown();
+
+      await page.click('body');
+      await expect(profileDropdownPage.profileMenu).toBeHidden();
+
+      await profileDropdownPage.toggleProfileDropdown();
+      const profileImage = await profileDropdownPage.profileImage;
+      await expect(profileImage).toBeVisible();
+      const profileName = await profileDropdownPage.profileName.textContent();
+      await expect(profileName).toBe(data.profileName);
+      const profileEmail = await profileDropdownPage.profileEmail.textContent();
+      await expect(profileEmail).toBe(data.profileEmail);
+      const primaryContact = await profileDropdownPage.primaryContact;
+      await expect(primaryContact).toBeVisible();
+      const profilePartnerLevel = await profileDropdownPage.profilePartnerLevel.textContent();
+      await expect(profilePartnerLevel).toBe(data.profilePartnerLevel);
+    });
+
+    await test.step('Verify edit profile link', async () => {
+      const [editProfileTab] = await Promise.all([
+        page.context().waitForEvent('page'),
+        await profileDropdownPage.editProfileButton.click(),
+      ]);
+      await editProfileTab.waitForLoadState();
+      await expect(editProfileTab.url()).toContain(`${data.editProfileURL}`);
+    });
+
+    await test.step('Verify account management link', async () => {
+      const [accountManagementTab] = await Promise.all([
+        page.context().waitForEvent('page'),
+        await profileDropdownPage.getAccountManagementByText('打开账户管理').click(),
+      ]);
+      await accountManagementTab.waitForLoadState();
+      await expect(accountManagementTab.url()).toContain(`${data.accountManagementURL}`);
+    });
+
+    await test.step('Logout', async () => {
+      await profileDropdownPage.getLogoutByText('注销').click();
+      const pages = await page.context().pages();
+      await page.waitForLoadState();
+      await expect(pages[0].url())
+        .toContain(data.targetAfterLogout);
+    });
+  });
 });
