@@ -70,7 +70,7 @@ test.describe('Validate profile dropdown', () => {
     await test.step('Verify account management link', async () => {
       const [accountManagementTab] = await Promise.all([
         page.context().waitForEvent('page'),
-        await profileDropdownPage.accountManagementButton.click(),
+        await profileDropdownPage.getAccountManagementByText('Open account management').click(),
       ]);
       await accountManagementTab.waitForLoadState();
       await expect(accountManagementTab.url()).toContain(`${data.accountManagementURL}`);
@@ -88,7 +88,7 @@ test.describe('Validate profile dropdown', () => {
     });
 
     await test.step('Logout', async () => {
-      await profileDropdownPage.logoutButton.click();
+      await profileDropdownPage.getLogoutByText('Sign Out').click();
       const pages = await page.context().pages();
       await page.waitForLoadState();
       await expect(pages[0].url())
@@ -138,7 +138,7 @@ test.describe('Validate profile dropdown', () => {
       await test.step('Verify account management link', async () => {
         const [accountManagementTab] = await Promise.all([
           page.context().waitForEvent('page'),
-          await profileDropdownPage.accountManagementButton.click(),
+          await profileDropdownPage.getAccountManagementByText('Open account management').click(),
         ]);
         await accountManagementTab.waitForLoadState();
         await expect(accountManagementTab.url()).toContain(`${feature.data.accountManagementURL}`);
@@ -154,7 +154,7 @@ test.describe('Validate profile dropdown', () => {
       });
 
       await test.step('Logout', async () => {
-        await profileDropdownPage.logoutButton.click();
+        await profileDropdownPage.getLogoutByText('Sign Out').click();
         const pages = await page.context().pages();
         await page.waitForLoadState();
         await expect(pages[0].url())

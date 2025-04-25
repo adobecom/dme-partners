@@ -69,6 +69,7 @@ const config = {
     {
       name: 'mobile-chrome-pixel5',
       use: { ...devices['Pixel 5'] },
+      grep: /@mobile/, // ⬅️ Only INCLUDE tests tagged with @mobile
     },
     // {
     //   name: 'mobile-safari-iPhone12',

@@ -9,10 +9,8 @@ export default class ProfileDropdownPage {
     this.primaryContact = page.locator('.primary-contact-wrapper');
     this.profilePartnerLevel = page.locator('.level-placeholder');
     this.editProfileButton = page.locator('.feds-profile-account');
-    this.accountManagementButton = page.locator('a:has-text("Open account management")');
     this.salesCenterButton = page.locator('a:has-text("Go to Sales Center")');
     this.renewNowButton = page.locator('.intro.partner-expired.partner-renew.text a[target="_blank"]');
-    this.logoutButton = page.locator('[daa-ll="Sign Out"]');
     this.profileMenu = page.locator('#feds-profile-menu');
   }
 
@@ -33,6 +31,6 @@ export default class ProfileDropdownPage {
   }
 
   getLogoutByText(text) {
-    return this.page.locator(`[daa-ll="${text}"]`);
+    return this.page.locator(`a:has-text("${text}")`);
   }
 }

@@ -57,7 +57,7 @@ export default {
       tcid: '4',
       name: '@desc-profile-dropdown-member-user-without-sales-center-mobile',
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-profile @regression @login @circleCi',
+      tags: '@dme-profile @regression @login @circleCi @mobile',
       data: {
         partnerLevel: 'cpp-china-registered:',
         profileName: 'Yugo CPP Stage China-Registered',
