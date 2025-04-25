@@ -29,7 +29,7 @@ export default {
         partnerLevel: 'cpp-distributor-us:',
         signInButtonText: 'Sign In',
         assetURL: 'https://partners.stage.adobe.com/channelpartnerassets/assets/restricted/restricted_1/MAPC-stage-government.mp4',
-        expectedToSeeInURL: '/channelpartners/error/404',
+        expectedToSeeInURL: '/assets/restricted/restricted_1/MAPC-stage-government.mp4',
       },
     },
     {
@@ -42,8 +42,8 @@ export default {
         signInButtonText: 'Sign In',
         assetURL: 'https://partners.stage.adobe.com/channelpartnerassets/assets/restricted/restricted_1/MAPC-stage-government.mp4',
         forbiddenAsset: 'https://partners.stage.adobe.com/channelpartnerassets/assets/restricted/restricted_1/MAPC-education.xlsx',
-        expectedToSeeInURL: '/channelpartners/error/404',
-        httpStatusCode: 302,
+        expectedToSeeInURL: '/assets/restricted/restricted_1/MAPC-education.xlsx',
+        httpStatusCode: 404,
       },
     },
     {
@@ -56,8 +56,8 @@ export default {
         signInButtonText: 'Sign In',
         assetURL: 'https://partners.stage.adobe.com/channelpartnerassets/assets/restricted/restricted_1/MAPC-stage-government.mp4',
         forbiddenAsset: 'https://partners.stage.adobe.com/channelpartnerassets/assets/restricted/restricted_1/MAPC-education.xlsx',
-        expectedToSeeInURL: '/channelpartners/error/404',
-        httpStatusCode: 200,
+        expectedToSeeInURL: '/assets/restricted/restricted_1/MAPC-education.xlsx',
+        httpStatusCode: 404,
       },
     },
     {
@@ -70,8 +70,8 @@ export default {
         signInButtonText: 'Sign In',
         assetURL: 'https://partners.stage.adobe.com/channelpartnerassets/assets/restricted/restricted_1/MAPC-stage-worldwide.png',
         forbiddenAsset: 'https://partners.stage.adobe.com/channelpartnerassets/assets/restricted/restricted_7/MAPC-Education-Elite.pdf',
-        expectedToSeeInURL: '/channelpartners/error/404',
-        httpStatusCode: 200,
+        expectedToSeeInURL: '/assets/restricted/restricted_7/MAPC-Education-Elite.pdf',
+        httpStatusCode: 404,
       },
     },
     {
@@ -84,8 +84,8 @@ export default {
         signInButtonText: 'Sign In',
         assetURL: 'https://partners.stage.adobe.com/channelpartnerassets/assets/public/public_1/MAPC_public_stage.pdf',
         forbiddenAsset: 'https://partners.stage.adobe.com/channelpartnerassets/assets/restricted/restricted_1/MAPC-stage-education-government.zip',
-        expectedToSeeInURL: '/channelpartners/error/404',
-        httpStatusCode: 200,
+        expectedToSeeInURL: '/assets/restricted/restricted_1/MAPC-stage-education-government.zip',
+        httpStatusCode: 404,
       },
     },
     {
@@ -98,8 +98,8 @@ export default {
         signInButtonText: 'Sign In',
         assetURL: 'https://partners.stage.adobe.com/channelpartnerassets/assets/restricted/restricted_1/MAPC-stage-worldwide.png',
         forbiddenAsset: 'https://partners.stage.adobe.com/channelpartnerassets/assets/restricted/restricted_1/MAPC-stage-government.mp4',
-        expectedToSeeInURL: '/channelpartners/error/404',
-        httpStatusCode: 200,
+        expectedToSeeInURL: '/assets/restricted/restricted_1/MAPC-stage-government.mp4',
+        httpStatusCode: 404,
       },
     },
     {
