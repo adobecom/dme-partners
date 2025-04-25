@@ -558,4 +558,34 @@ test.describe('Smoke Tests', () => {
       await expect(smokeTest.cbcLearnMore.getAttribute('target')).resolves.toBe('_blank');
     });
   });
+
+  // @sso-integration-between-apc-and-finder
+  test(`${features[20].name}, ${features[20].tags}`, async ({ page, baseURL }) => {
+    const { data, path } = features[20];
+
+    await test.step('Go to home page and sign in', async () => {
+      await page.goto(`${baseURL}${path}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`);
+      await page.waitForLoadState('networkidle');
+    });
+
+    await test.step('Verify Find Distributor button and the URL opened in a new tab', async () => {
+      await expect(smokeTest.findDistributorBtn).toBeVisible();
+
+      const href = await smokeTest.findDistributorBtn.getAttribute('href');
+      await expect(href).toContain(data.expectedFindURL);
+      await expect(smokeTest.findDistributorBtn.getAttribute('target')).resolves.toBe('_blank');
+
+      await smokeTest.findDistributorBtn.click();
+
+      const [newTab] = await Promise.all([
+        page.waitForEvent('popup'),
+      ]);
+
+      await newTab.waitForLoadState();
+      expect(newTab.url()).toContain(`${data.expectedSalesForceURL}`);
+      expect(newTab.url()).toContain(`${data.expectedID}`);
+      newTab.close();
+    });
+  });
 });
