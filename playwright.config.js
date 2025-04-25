@@ -50,12 +50,14 @@ const config = {
       use: { ...devices['Desktop Chrome'] },
       bypassCSP: true,
       launchOptions: { args: ['--disable-web-security', '--disable-gpu'] },
+      grepInvert: /@mobile/, // EXCLUDES tests tagged with @mobile
     },
 
     {
       name: 'dme-partners-live-firefox',
       use: { ...devices['Desktop Firefox'] },
       bypassCSP: true,
+      grepInvert: /@mobile/, // EXCLUDES tests tagged with @mobile
     },
     //     {
     //       name: 'dme-partners-live-webkit',
