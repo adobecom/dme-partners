@@ -1,3 +1,5 @@
+import { expect } from '@playwright/test';
+
 export default class ProfileDropdownPage {
   constructor(page) {
     this.page = page;
@@ -32,5 +34,20 @@ export default class ProfileDropdownPage {
 
   getLogoutByText(text) {
     return this.page.locator(`a:has-text("${text}")`);
+  }
+
+  async verifyProfileDropdownAfterLogin(data) {
+    await this.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+    await this.toggleProfileDropdown();
+    const profileImage = await this.profileImage;
+    await expect(profileImage).toBeVisible();
+    const profileName = await this.profileName.textContent();
+    await expect(profileName).toBe(data.profileName);
+    const profileEmail = await this.profileEmail.textContent();
+    await expect(profileEmail).toBe(data.profileEmail);
+    const primaryContact = await this.primaryContact;
+    await expect(primaryContact).toBeVisible();
+    const profilePartnerLevel = await this.profilePartnerLevel.textContent();
+    await expect(profilePartnerLevel).toBe(data.profilePartnerLevel);
   }
 }

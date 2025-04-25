@@ -69,5 +69,21 @@ export default {
         targetAfterLogout: 'https://partners.stage.adobe.com/cn/channelpartners/#',
       },
     },
+    {
+      tcid: '5',
+      name: '@desc-profile-dropdown-user-with-sales-center-mobile',
+      path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
+      tags: '@dme-profile @regression @login @circleCi @mobile',
+      data: {
+        partnerLevel: 'cpp-distributor-apac:',
+        profileName: 'Stage CPP Distributor',
+        profileEmail: 'yugo-stage-c…@mailinator.com',
+        profilePartnerLevel: 'Distributor',
+        editProfileURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
+        accountManagementURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
+        salesCenterURL: 'https://channelpartners.stage2.adobe.com/s/salescenter/dashboard',
+        targetAfterLogout: 'https://partners.stage.adobe.com/apac/channelpartners/#',
+      },
+    },
   ],
 };
