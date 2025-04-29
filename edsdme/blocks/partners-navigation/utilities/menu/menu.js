@@ -20,6 +20,7 @@ import {
   hasActiveLink,
 } from '../utilities.js';
 
+import { personalizeMainNav } from "../../../../scripts/personalization.js";
 const decorateHeadline = (elem, index) => {
   if (!(elem instanceof HTMLElement)) return null;
 
@@ -383,6 +384,7 @@ const decorateMenu = (config) => logErrorFor(async () => {
   }
 
   config.template?.append(menuTemplate);
+  personalizeMainNav(document.querySelector('header')); //MWPW-170795
 }, 'Decorate menu failed', 'gnav-menu', 'info');
 
 export default { decorateMenu, decorateLinkGroup };

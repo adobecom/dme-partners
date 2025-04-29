@@ -121,7 +121,7 @@ function personalizeDropdownElements(profile) {
   });
 }
 
-function personalizeMainNav(gnav) {
+export function personalizeMainNav(gnav) {
   const personalizationXPath = `//*[contains(text(), "${PERSONALIZATION_MARKER}") and not(ancestor::*[contains(@class, "profile")])]`;
   const elements = getNodesByXPath(personalizationXPath, gnav);
   const processedElements = processGnavElements(elements);
