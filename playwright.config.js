@@ -50,12 +50,14 @@ const config = {
       use: { ...devices['Desktop Chrome'] },
       bypassCSP: true,
       launchOptions: { args: ['--disable-web-security', '--disable-gpu'] },
+      grepInvert: /@mobile/, // EXCLUDES tests tagged with @mobile
     },
 
     {
       name: 'dme-partners-live-firefox',
       use: { ...devices['Desktop Firefox'] },
       bypassCSP: true,
+      grepInvert: /@mobile/, // EXCLUDES tests tagged with @mobile
     },
     //     {
     //       name: 'dme-partners-live-webkit',
@@ -66,10 +68,11 @@ const config = {
     //       bypassCSP: true,
     //     },
     /* Test Against Mobile View ports */
-    // {
-    //   name: 'mobile-chrome-pixel5',
-    //   use: { ...devices['Pixel 5'] },
-    // },
+    {
+      name: 'mobile-chrome-pixel5',
+      use: { ...devices['Pixel 5'] },
+      grep: /@mobile/, // ⬅️ Only INCLUDE tests tagged with @mobile
+    },
     // {
     //   name: 'mobile-safari-iPhone12',
     //   use: { ...devices['iPhone 12'] },
