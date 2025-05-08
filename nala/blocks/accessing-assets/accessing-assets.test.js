@@ -22,7 +22,7 @@ test.describe('Validate popups', () => {
       });
     }
   });
-  // @accessing-restricted-asset-non-logged-in-user
+  //  @accessing-restricted-asset-non-logged-in-user
   test(`${features[0].name},${features[0].tags}`, async ({ page }) => {
     const { path } = features[0];
     await test.step('Try accessing restricted asset', async () => {
