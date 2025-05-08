@@ -260,8 +260,8 @@ test.describe('Smoke Tests', () => {
     });
 
     await test.step('Verify if the URL search query parameter does not exist after the logout', async () => {
-      page.locator('.feds-profile-button').click();
-      await profileDropdownPage.logoutButton.click();
+      await smokeTest.profileIcon.click();
+      await profileDropdownPage.getLogoutByText('Sign Out').click();
       expect(page.url()).not.toContain(data.searchText);
     });
   });
