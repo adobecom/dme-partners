@@ -20,6 +20,7 @@ import {
   hasActiveLink,
 } from '../utilities.js';
 
+import { personalizeMainNav } from "../../../../scripts/personalization.js";
 const decorateHeadline = (elem, index) => {
   if (!(elem instanceof HTMLElement)) return null;
 
@@ -334,7 +335,6 @@ const decorateMenu = (config) => logErrorFor(async () => {
     const content = await fetchAndProcessPlainHtml({ url: pathElement.href });
 
     if (!content) return;
-
     const menuContent = toFragment`<div class="feds-menu-content">${content.innerHTML}</div>`;
     menuTemplate = toFragment`<div class="feds-popup">
         <div class="feds-menu-container">
@@ -356,14 +356,13 @@ const decorateMenu = (config) => logErrorFor(async () => {
         config.template.classList.remove(selectors.deferredActiveNavItem.slice(1));
       };
 
+      config.template.classList.add(selectors.activeNavItem.slice(1));
       if (isDesktop.matches) {
         config.template.style.width = `${config.template.offsetWidth}px`;
         config.template.classList.add(selectors.deferredActiveNavItem.slice(1));
         isDesktop.addEventListener('change', resetActiveState, { once: true });
         window.addEventListener('feds:navOverflow', resetActiveState, { once: true });
       }
-
-      config.template.classList.add(selectors.activeNavItem.slice(1));
     }
 
     asyncDropDownCount += 1;
@@ -385,6 +384,7 @@ const decorateMenu = (config) => logErrorFor(async () => {
   }
 
   config.template?.append(menuTemplate);
-}, 'Decorate menu failed', 'errorType=info,module=gnav-menu');
+  personalizeMainNav(document.querySelector('header')); //MWPW-170795
+}, 'Decorate menu failed', 'gnav-menu', 'info');
 
 export default { decorateMenu, decorateLinkGroup };

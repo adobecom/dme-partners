@@ -1,3 +1,5 @@
+import { expect } from '@playwright/test';
+
 export default class ProfileDropdownPage {
   constructor(page) {
     this.page = page;
@@ -9,10 +11,9 @@ export default class ProfileDropdownPage {
     this.primaryContact = page.locator('.primary-contact-wrapper');
     this.profilePartnerLevel = page.locator('.level-placeholder');
     this.editProfileButton = page.locator('.feds-profile-account');
-    this.accountManagementButton = page.locator('a:has-text("Open account management")');
     this.salesCenterButton = page.locator('a:has-text("Go to Sales Center")');
     this.renewNowButton = page.locator('.intro.partner-expired.partner-renew.text a[target="_blank"]');
-    this.logoutButton = page.locator('[daa-ll="Sign Out"]');
+    this.profileMenu = page.locator('#feds-profile-menu');
   }
 
   async toggleProfileDropdown() {
@@ -25,5 +26,28 @@ export default class ProfileDropdownPage {
 
   async clickRenewNowButton(type) {
     await this.page.locator(`.intro.partner-${type}.partner-renew.text a[target="_blank"]`).click();
+  }
+
+  getAccountManagementByText(text) {
+    return this.page.locator(`a:has-text("${text}")`);
+  }
+
+  getLogoutByText(text) {
+    return this.page.locator(`a:has-text("${text}")`);
+  }
+
+  async verifyProfileDropdownAfterLogin(data) {
+    await this.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+    await this.toggleProfileDropdown();
+    const profileImage = await this.profileImage;
+    await expect(profileImage).toBeVisible();
+    const profileName = await this.profileName.textContent();
+    await expect(profileName).toBe(data.profileName);
+    const profileEmail = await this.profileEmail.textContent();
+    await expect(profileEmail).toBe(data.profileEmail);
+    const primaryContact = await this.primaryContact;
+    await expect(primaryContact).toBeVisible();
+    const profilePartnerLevel = await this.profilePartnerLevel.textContent();
+    await expect(profilePartnerLevel).toBe(data.profilePartnerLevel);
   }
 }

@@ -5,6 +5,7 @@ export default class SearchTest {
     this.page = page;
     this.searchField = page.getByRole('searchbox', { name: 'Search' });
     this.openPreview = page.getByLabel('Open in', { exact: true }).locator('#button');
+    this.download = page.getByLabel('Download', { exact: true }).locator('#button');
     this.cardDescription = page.locator('.card-description', { hasText: 'Asset Type: Advertising, Channel Copy, Language: English International (EI), Spanish, Product: Adobe Acrobat, Adobe Connect, Topic: Channel Authorization Letter, Onboarding' });
     this.filterType = page.getByLabel('Type');
     this.filterLanguage = page.getByLabel('Asset language');
@@ -20,10 +21,12 @@ export default class SearchTest {
     this.assetTabs = page.getByLabel('Assets');
     this.pagesTab = page.getByLabel('Pages');
     this.openPreviewPages = page.locator('search-card').filter({ hasText: 'Adobe Partner Connection Programme' }).locator('#button').nth(1);
+    this.searchCard = page.locator('.search-card');
+    this.showMoreLanguage = page.getByRole('link', { name: 'Show more' });
   }
 
   async cardTitle(text) {
-    return this.page.getByText(text);
+    return this.page.getByText(text).nth(0);
   }
 
   async fileIcon(fileType) {
@@ -46,7 +49,7 @@ export default class SearchTest {
 
   async searchAsset(searchKeyWord) {
     const { searchField } = this;
-    await this.page.locator('.search-card').first().waitFor({ state: 'visible' });
+    await this.searchCard.first().waitFor({ state: 'visible' });
     await searchField.fill(searchKeyWord);
     await searchField.press('Enter');
   }
@@ -70,6 +73,15 @@ export default class SearchTest {
   // eslint-disable-next-line class-methods-use-this
   async filterSearchAssets(filter, checkBoxName, exactMatch = false) {
     await filter.click();
+    const checkBox = await this.checkBox(checkBoxName, exactMatch);
+    await checkBox.click();
+    await filter.click();
+  }
+
+  async languageFilter(filter, checkBoxName, exactMatch = false) {
+    const { showMoreLanguage } = this;
+    await filter.click();
+    await showMoreLanguage.click();
     const checkBox = await this.checkBox(checkBoxName, exactMatch);
     await checkBox.click();
     await filter.click();

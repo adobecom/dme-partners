@@ -245,5 +245,30 @@ export default {
 
       },
     },
+
+    {
+      tcid: '20',
+      name: '@sso-integration-between-apc-and-cbc',
+      path: '/na/channelpartners/home/#?georouting=on&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-distributor-us:',
+        cbcConnectionDomain: 'cbconnection',
+        expectedURL: '/bin/fusion/modalImsLogin?resource=%2Fen%2Fnews%2Fenablement-news-partner-lock',
+      },
+    },
+
+    {
+      tcid: '21',
+      name: '@sso-integration-between-apc-and-finder',
+      path: '/na/channelpartners/home/#?georouting=on&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-distributor-us:',
+        expectedSalesForceURL: 'salesforce-sites.com/PartnerSearch',
+        expectedFindURL: '/api/v1/web/dx-partners-runtime/sfdc-redirect?program_type=channel&request_type=distributor_finder',
+        expectedID: 'tid',
+      },
+    },
   ],
 };

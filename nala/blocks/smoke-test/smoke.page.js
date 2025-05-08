@@ -39,6 +39,8 @@ export default class SmokeTest {
     this.apacRetailProgramGuid = page.locator('#apc-program-guides-1 a[href*="/p/Adobe_Partner_Connection_Distributor_Program_Guide_FY25_Asia_Pacific_v9.pdf"]');
     this.cal = page.locator('div.feds-menu-items a[href*="/sales-resources/cal/"]');
     this.geoModal = page.locator('#locale-modal-v2');
+    this.cbcLearnMore = page.locator('.media .media-row a[href*="/bin/fusion/modalImsLogin?resource=%2Fen%2Fnews%2Fenablement-news-partner-lock"]');
+    this.findDistributorBtn = page.locator('.feds-navItem .feds-cta-wrapper a[href*="/api/v1/web/dx-partners-runtime/sfdc-redirect?program_type=channel&request_type=distributor_finder"]');
   }
 
   async smokeSignIn(page, baseURL, partnerLevel) {
