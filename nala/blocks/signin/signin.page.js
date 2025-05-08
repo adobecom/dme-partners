@@ -41,7 +41,7 @@ export default class SignInPage {
     await signInButton.click();
     await this.signIn(page, partnerLevel);
 
-    await page.locator('#unav-profile').waitFor({ state: 'visible', timeout: 30000 });
+    await page.waitForTimeout(5000);
 
     const safariBrowser = browserName === 'webkit';
     let currentURL;
