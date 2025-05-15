@@ -121,7 +121,7 @@ test.describe('Validate popups', () => {
       await test.step('Sign in with member user', async () => {
         await signInPage.signIn(page, `${data.partnerLevel}`);
         await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
-      }); 
+      });
 
       await test.step('Open forbidden asset in a new tab', async () => {
         const newTab = await context.newPage();

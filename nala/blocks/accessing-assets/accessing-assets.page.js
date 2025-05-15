@@ -5,7 +5,7 @@ export default class AccessingAssetsPage {
   }
 
   async notFoundContentCheck() {
-   const { notFound404 } = this;
-   await notFound404.isVisible();
+    const { notFound404 } = this;
+    await notFound404.isVisible();
   }
 }

@@ -93,7 +93,6 @@ test.describe('Validate different Partner Levels accessing protected content', (
       await newTab.waitForLoadState();
       await expect(newTab.url()).toContain(`${data.nonMatchingRegionPageDistr}`);
 
-      const newTab2 = await context.newPage();
       await newTab.goto(`${data.nonMatchingPartnerLevelPage}`);
       await newTab.waitForLoadState();
       await expect(newTab.url()).toContain(`${data.contentNotFoundPagePlatinum}`);
