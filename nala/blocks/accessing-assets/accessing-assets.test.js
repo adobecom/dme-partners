@@ -1,14 +1,17 @@
 import { test, expect } from '@playwright/test';
 import SignInPage from '../signin/signin.page.js';
 import AccessingAssets from './accessing-assets.spec.js';
+import AccessingAssetPage from './accessing-assets.page.js';
 
 let signInPage;
+let accsessingAssetPage;
 const { features } = AccessingAssets;
 const localesAssetAccess = features.slice(3, 8);
 
 test.describe('Validate popups', () => {
   test.beforeEach(async ({ page, baseURL, browserName, context }) => {
     signInPage = new SignInPage(page);
+    accsessingAssetPage = new AccessingAssetPage(page);
     if (!baseURL.includes('partners.stage.adobe.com')) {
       await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
     }
@@ -118,7 +121,7 @@ test.describe('Validate popups', () => {
       await test.step('Sign in with member user', async () => {
         await signInPage.signIn(page, `${data.partnerLevel}`);
         await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
-      });
+      }); 
 
       await test.step('Open forbidden asset in a new tab', async () => {
         const newTab = await context.newPage();
@@ -127,6 +130,7 @@ test.describe('Validate popups', () => {
         const pages = await page.context().pages();
         await expect(pages[1].url())
           .toContain(`${data.expectedToSeeInURL}`);
+        await accsessingAssetPage.notFoundContentCheck();
       });
 
       const promise = new Promise((resolve) => {

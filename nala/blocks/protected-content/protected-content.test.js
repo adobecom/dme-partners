@@ -7,7 +7,7 @@ let protectedContentPage;
 let singInPage;
 
 const { features } = protectedContent;
-const memberUsersCases = features.slice(2, 7);
+const memberUsersCases = features.slice(3, 7);
 
 test.describe('Validate different Partner Levels accessing protected content', () => {
   test.beforeEach(async ({ page }) => {
@@ -54,7 +54,7 @@ test.describe('Validate different Partner Levels accessing protected content', (
       await newTab.goto(`${data.goldLevelPage}`);
       const pages = await page.context().pages();
       await expect(pages[1].url())
-        .toContain(`${data.contentNotFoundPage}`);
+        .toContain(`${data.contentNotFoundPageGold}`);
     });
 
     await test.step('Open protected content in a new tab - partner level matches required', async () => {
@@ -62,7 +62,41 @@ test.describe('Validate different Partner Levels accessing protected content', (
       await newTab.goto(`${data.platinumLevelPage}`);
       const pages = await page.context().pages();
       await expect(pages[2].url())
-        .toContain(`${data.contentNotFoundPage}`);
+        .toContain(`${data.contentNotFoundPagePlatinum}`);
+    });
+  });
+
+  test(`${features[2].name},${features[2].tags}`, async ({ page, context }) => {
+    const { data, path, matchingRegionCardText } = features[2];
+    await test.step('Go to the home page', async () => {
+      await page.goto(`${path}`);
+      await page.waitForLoadState('domcontentloaded');
+      await protectedContentPage.signInButton.click();
+    });
+
+    await test.step('Sign in', async () => {
+      await singInPage.signIn(page, `${data.partnerLevel}`);
+    });
+
+    await test.step('Open matching region page in a new tab - partner level matches required', async () => {
+      await protectedContentPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+      const newTab = await context.newPage();
+      const newTabPage = new ProtectedContentPage(newTab);
+      await newTab.goto(`${data.matchingRegionPage}`);
+      const cardTitle = await newTabPage.getCardTitle(matchingRegionCardText);
+      await expect(cardTitle).toBeVisible();
+    });
+
+    await test.step('Open non matching partner level page in a new tab', async () => {
+      const newTab = await context.newPage();
+      await newTab.goto(`${data.nonMatchingRegionPage}`);
+      await newTab.waitForLoadState();
+      await expect(newTab.url()).toContain(`${data.nonMatchingRegionPageDistr}`);
+
+      const newTab2 = await context.newPage();
+      await newTab.goto(`${data.nonMatchingPartnerLevelPage}`);
+      await newTab.waitForLoadState();
+      await expect(newTab.url()).toContain(`${data.contentNotFoundPagePlatinum}`);
     });
   });
 
