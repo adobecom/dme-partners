@@ -1,3 +1,5 @@
+import { expect } from '@playwright/test';
+
 export default class AccessingAssetsPage {
   constructor(page) {
     this.page = page;
@@ -5,7 +7,6 @@ export default class AccessingAssetsPage {
   }
 
   async notFoundContentCheck() {
-    const { notFound404 } = this;
-    await notFound404.isVisible();
+    await expect(this.notFound404).toBeVisible();
   }
 }
