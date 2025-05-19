@@ -4,14 +4,12 @@ import AccessingAssets from './accessing-assets.spec.js';
 import AccessingAssetPage from './accessing-assets.page.js';
 
 let signInPage;
-let accsessingAssetPage;
 const { features } = AccessingAssets;
 const localesAssetAccess = features.slice(3, 8);
 
 test.describe('Validate popups', () => {
   test.beforeEach(async ({ page, baseURL, browserName, context }) => {
     signInPage = new SignInPage(page);
-    accsessingAssetPage = new AccessingAssetPage(page);
     if (!baseURL.includes('partners.stage.adobe.com')) {
       await context.setExtraHTTPHeaders({ authorization: `token ${process.env.HLX_API_KEY}` });
     }
@@ -132,7 +130,8 @@ test.describe('Validate popups', () => {
           .toContain(`${data.expectedToSeeInURL}`);
 
         const accessingAssetPageNewTab = new AccessingAssetPage(newTab);
-        await accessingAssetPageNewTab.notFoundContentCheck();
+        await expect(await accessingAssetPageNewTab.notFoundContentCheck()).toBeVisible();
+
       });
 
       const promise = new Promise((resolve) => {
