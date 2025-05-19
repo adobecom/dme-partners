@@ -41,7 +41,9 @@ test.describe('Pricelist Page Validation', () => {
     await test.step('Filter Price Lists by Currency filter', async () => {
       await pricelistPage.filterPricelists(pricelistPage.currencyFilter, data.usdCheckBox, true);
       const usdNumberOFPriceLists = await pricelistPage.priceListsCount(page);
-      await pricelistPage.filterPricelists(pricelistPage.monthFilter, data.monthFirstCheckBox, true);
+      await pricelistPage.filterMonth(pricelistPage.monthFilter);
+      const date = await pricelistPage.monthChecBoxGet(0);
+      await pricelistPage.clickMonthCheckboxByDate(date);
       const monthFirstCheckBoxNumberOFPriceLists = await pricelistPage.priceListsCount(page);
       expect(monthFirstCheckBoxNumberOFPriceLists).toBeGreaterThan(usdNumberOFPriceLists);
 
@@ -75,7 +77,9 @@ test.describe('Pricelist Page Validation', () => {
     await test.step('Filter Price Lists by Currency filter', async () => {
       await pricelistPage.filterPricelists(pricelistPage.currencyFilter, data.jpyCheckBox, true);
       const jpyNumberOFPriceLists = await pricelistPage.priceListsCount(page);
-      await pricelistPage.filterPricelists(pricelistPage.monthFilter, data.monthSecondCheckBox, true);
+      await pricelistPage.filterMonth(pricelistPage.monthFilter);
+      const date = await pricelistPage.monthChecBoxGet(1);
+      await pricelistPage.clickMonthCheckboxByDate(date);
       const monthSecondCheckBoxNumberOFPriceLists = await pricelistPage.priceListsCount(page);
       expect(jpyNumberOFPriceLists).toBeGreaterThan(monthSecondCheckBoxNumberOFPriceLists);
 

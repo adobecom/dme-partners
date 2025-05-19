@@ -1,5 +1,5 @@
 export default {
-  FeatureName: 'Search Tests',
+  FeatureName: 'Pricelists Tests',
   features: [
     {
       tcid: '1',

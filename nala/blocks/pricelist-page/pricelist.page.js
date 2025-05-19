@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 
-export default class SearchTest {
+export default class PricelistshTest {
   constructor(page) {
     this.page = page;
     this.currencyFilter = page.getByLabel('Currency');
@@ -19,6 +19,20 @@ export default class SearchTest {
 
   async checkBox(checkBox, exact) {
     return this.page.getByRole('checkbox', { name: `${checkBox}`, exact });
+  }
+  async monthChecBoxGet(index) {
+    const checkbox = this.page.locator('ul.filter-list').nth(1).locator('sp-checkbox').nth(index);
+    const text = await checkbox.textContent();
+    return text.trim();
+  }
+
+  async filterMonth(filter) {
+    await filter.click();
+  }
+
+  async clickMonthCheckboxByDate(dateText) {
+    const checkbox = this.page.locator('ul.filter-list').nth(1).locator(`sp-checkbox:has-text("${dateText}")`);
+    await checkbox.click();
   }
 
   async filterPricelists(filter, checkBoxName, exactMatch = false) {
