@@ -3,8 +3,4 @@ export default class AccessingAssetsPage {
     this.page = page;
     this.notFound404 = page.locator('#not-found');
   }
-
-  async notFoundContentCheck() {
-    return this.notFound404;
-  }
 }

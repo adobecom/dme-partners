@@ -128,10 +128,8 @@ test.describe('Validate popups', () => {
         const pages = await page.context().pages();
         await expect(pages[1].url())
           .toContain(`${data.expectedToSeeInURL}`);
-
         const accessingAssetPageNewTab = new AccessingAssetPage(newTab);
-        await expect(await accessingAssetPageNewTab.notFoundContentCheck()).toBeVisible();
-
+        await expect(accessingAssetPageNewTab.notFound404).toBeVisible();
       });
 
       const promise = new Promise((resolve) => {
