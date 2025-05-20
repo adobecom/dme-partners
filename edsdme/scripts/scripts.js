@@ -33,9 +33,7 @@ const CONFIG = {
   codeRoot: '/edsdme',
   contentRoot: '/edsdme/partners-shared',
   imsClientId,
-  env: {
-    name: 'prod'
-  },
+  clientEnv: 'prod',
   geoRouting: enableGeoPopup(),
   // fallbackRouting: 'off',
   locales: {
