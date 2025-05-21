@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 
-export default class PricelistshTest {
+export default class PricelistsTest {
   constructor(page) {
     this.page = page;
     this.currencyFilter = page.getByLabel('Currency');
