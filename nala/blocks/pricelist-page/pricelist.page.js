@@ -20,12 +20,14 @@ export default class PricelistsTest {
   async checkBox(checkBox, exact) {
     return this.page.getByRole('checkbox', { name: `${checkBox}`, exact });
   }
+
   async monthChecBoxGet(index) {
     const checkbox = this.page.locator('ul.filter-list').nth(1).locator('sp-checkbox').nth(index);
     const text = await checkbox.textContent();
     return text.trim();
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async filterMonth(filter) {
     await filter.click();
   }
