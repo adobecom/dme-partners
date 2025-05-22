@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import SignInPage from '../signin/signin.page.js';
 import AccessingAssets from './accessing-assets.spec.js';
+import AccessingAssetPage from './accessing-assets.page.js';
 
 let signInPage;
 const { features } = AccessingAssets;
@@ -22,7 +23,7 @@ test.describe('Validate popups', () => {
       });
     }
   });
-  // @accessing-restricted-asset-non-logged-in-user
+  //  @accessing-restricted-asset-non-logged-in-user
   test(`${features[0].name},${features[0].tags}`, async ({ page }) => {
     const { path } = features[0];
     await test.step('Try accessing restricted asset', async () => {
@@ -127,6 +128,8 @@ test.describe('Validate popups', () => {
         const pages = await page.context().pages();
         await expect(pages[1].url())
           .toContain(`${data.expectedToSeeInURL}`);
+        const accessingAssetPageNewTab = new AccessingAssetPage(newTab);
+        await expect(accessingAssetPageNewTab.notFound404).toBeVisible();
       });
 
       const promise = new Promise((resolve) => {
