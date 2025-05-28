@@ -588,4 +588,82 @@ test.describe('Smoke Tests', () => {
       newTab.close();
     });
   });
+
+  // @na-foorter-and-gnav-validation
+  test(`${features[21].name}, ${features[21].tags}`, async ({ page, baseURL }) => {
+    const { data } = features[21];
+
+    await test.step('Go to home page', async () => {
+      await page.waitForLoadState('networkidle');
+    });
+
+    await test.step('Click on Change Region -> North America and verify the URL', async () => {
+      await smokeTest.regionPicker.waitFor({ state: 'visible' });
+      await smokeTest.regionPicker.click();
+
+      await smokeTest.naRegion.waitFor({ state: 'visible' });
+      await smokeTest.naRegion.click();
+
+      const urlRegex = new RegExp(`.*${data.defaultURL}.*`);
+      await page.waitForURL(urlRegex, { timeout: 5000 });
+
+      const pages = await page.context().pages();
+      expect(pages[0].url()).toContain(data.defaultURL);
+    });
+
+    await test.step('Click on the Program and verify the URL', async () => {
+      await smokeTest.programGnavOption.waitFor({ state: 'visible' });
+      await smokeTest.programGnavOption.click();
+
+      await page.waitForLoadState();
+      expect(page.url()).toContain(`${baseURL}${data.programURL}`);
+    });
+
+    await test.step('Click on the Support and verify the URL', async () => {
+      await smokeTest.supportGnavOption.waitFor({ state: 'visible' });
+      await smokeTest.supportGnavOption.click();
+
+      await page.waitForLoadState();
+      expect(page.url()).toContain(`${baseURL}${data.supportURL}`);
+    });
+  });
+
+  // @kr-foorter-and-gnav-validation
+  test(`${features[22].name}, ${features[22].tags}`, async ({ page, baseURL }) => {
+    const { data } = features[22];
+
+    await test.step('Go to home page', async () => {
+      await page.waitForLoadState('networkidle');
+    });
+
+    await test.step('Click on Change Region -> Korea and verify the URL', async () => {
+      await smokeTest.regionPicker.waitFor({ state: 'visible' });
+      await smokeTest.regionPicker.click();
+
+      await smokeTest.krRegion.waitFor({ state: 'visible' });
+      await smokeTest.krRegion.click();
+
+      const urlRegex = new RegExp(`.*${data.defaultURL}.*`);
+      await page.waitForURL(urlRegex, { timeout: 5000 });
+
+      const pages = await page.context().pages();
+      expect(pages[0].url()).toContain(data.defaultURL);
+    });
+
+    await test.step('Click on the Program and verify the URL', async () => {
+      await smokeTest.programGnavOption.waitFor({ state: 'visible' });
+      await smokeTest.programGnavOption.click();
+
+      await page.waitForLoadState();
+      expect(page.url()).toContain(`${baseURL}${data.programURL}`);
+    });
+
+    await test.step('Click on the Support and verify the URL', async () => {
+      await smokeTest.supportGnavOption.waitFor({ state: 'visible' });
+      await smokeTest.supportGnavOption.click();
+
+      await page.waitForLoadState();
+      expect(page.url()).toContain(`${baseURL}${data.supportURL}`);
+    });
+  });
 });
