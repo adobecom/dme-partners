@@ -589,7 +589,7 @@ test.describe('Smoke Tests', () => {
     });
   });
 
-  // @na-foorter-and-gnav-validation
+  // @na-footer-and-gnav-validation
   test(`${features[21].name}, ${features[21].tags}`, async ({ page, baseURL }) => {
     const { data } = features[21];
 
@@ -628,7 +628,7 @@ test.describe('Smoke Tests', () => {
     });
   });
 
-  // @kr-foorter-and-gnav-validation
+  // @kr-footer-and-gnav-validation
   test(`${features[22].name}, ${features[22].tags}`, async ({ page, baseURL }) => {
     const { data } = features[22];
 

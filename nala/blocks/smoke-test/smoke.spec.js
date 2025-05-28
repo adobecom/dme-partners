@@ -272,7 +272,7 @@ export default {
     },
     {
       tcid: '22',
-      name: '@na-foorter-and-gnav-validation',
+      name: '@na-footer-and-gnav-validation',
       path: '/channelpartners/#?georouting=off&martech=off',
       tags: '@dme-smoke-test',
       data: {
@@ -283,7 +283,7 @@ export default {
     },
     {
       tcid: '23',
-      name: '@kr-foorter-and-gnav-validation',
+      name: '@kr-footer-and-gnav-validation',
       path: '/channelpartners/#?georouting=off&martech=off',
       tags: '@dme-smoke-test',
       data: {
