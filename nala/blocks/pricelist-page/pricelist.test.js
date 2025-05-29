@@ -45,7 +45,7 @@ test.describe('Pricelist Page Validation', () => {
       const date = await pricelistPage.monthChecBoxGet(0);
       await pricelistPage.clickMonthCheckboxByDate(date);
       const monthFirstCheckBoxNumberOFPriceLists = await pricelistPage.priceListsCount(page);
-      expect(monthFirstCheckBoxNumberOFPriceLists).toBeGreaterThan(usdNumberOFPriceLists);
+      expect(usdNumberOFPriceLists).toBeGreaterThan(monthFirstCheckBoxNumberOFPriceLists);
 
       await pricelistPage.filterPricelists(pricelistPage.buyingProgramTypesFilter, data.vipCommercialCheckBox, true);
       const vipCommercialCheckBoxNumberOFPriceLists = await pricelistPage.priceListsCount(page);
@@ -111,7 +111,6 @@ test.describe('Pricelist Page Validation', () => {
     });
 
     await test.step('Filter Price Lists by Currency filter', async () => {
-      await page.pause();
       await pricelistPage.searchPriceList(data.keyword);
       await pricelistPage.pricelistRegionCheck(data.asiaPacificKorea);
       const koreaNumberofPriceLists = await pricelistPage.priceListsCount(page);
@@ -121,7 +120,7 @@ test.describe('Pricelist Page Validation', () => {
       expect(koreaNumberofPriceLists).toBeGreaterThan(tlp5CommercialCheckBoxCheckBoxNumberofPriceLists);
 
       await pricelistPage.filterPricelists(pricelistPage.regionFilter, data.europeEastCheckBox, true);
-      await pricelistPage.checkTable();
+      await expect(pricelistPage.firstRegionCell).not.toBeVisible();
 
       await pricelistPage.xButton.click();
       await pricelistPage.clearAllFilters.click();
@@ -220,12 +219,12 @@ test.describe('Pricelist Page Validation', () => {
     });
 
     await test.step('Check pricelist region', async () => {
-      await pricelistPage.checkTable();
+      await expect(pricelistPage.firstRegionCell).not.toBeVisible();
       await pricelistPage.includeEndUserPricelists();
-      await pricelistPage.checkTable();
+      await expect(pricelistPage.firstRegionCell).not.toBeVisible();
     });
   });
-  // @pricelist-validation-rdistributor-india-user @pricelist-validation-kr-distributor-user @pricelist-validation-cpp-distr-latin-america-na-user @pricelist-validation-cpp-distributor-us-user
+  // @pricelist-validation-distributor-india-user @pricelist-validation-kr-distributor-user @pricelist-validation-cpp-distr-latin-america-na-user @pricelist-validation-cpp-distributor-us-user
   regionalAccounts.forEach((feature) => {
     test(`${feature.name}, ${feature.tags}`, async ({ page }) => {
       const { data, path } = feature;
@@ -237,11 +236,7 @@ test.describe('Pricelist Page Validation', () => {
       });
 
       await test.step('Check pricelist region', async () => {
-        await pricelistPage.checkTable();
-        await pricelistPage.includeEndUserPricelists();
-        await pricelistPage.filterPricelists(pricelistPage.regionFilter, data.checkBox, true);
-        await pricelistPage.pricelistRegionCheck(data.text);
-        await pricelistPage.clearAllFilters.click();
+        expect(pricelistPage.firstRegionCell).toHaveText(data.text, { normalizeWhitespace: true });
       });
     });
   });

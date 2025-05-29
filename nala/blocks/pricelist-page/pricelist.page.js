@@ -1,5 +1,3 @@
-import { expect } from '@playwright/test';
-
 export default class PricelistsTest {
   constructor(page) {
     this.page = page;
@@ -55,18 +53,8 @@ export default class PricelistsTest {
     return cells.count();
   }
 
-  async pricelistRegionCheck(text) {
-    const { firstRegionCell } = this;
-    expect(firstRegionCell).toHaveText(text);
-  }
-
   async includeEndUserPricelists() {
     const { includeEndPricelists } = this;
     await includeEndPricelists.click();
-  }
-
-  async checkTable() {
-    const { firstRegionCell } = this;
-    await expect(firstRegionCell).not.toBeVisible();
   }
 }

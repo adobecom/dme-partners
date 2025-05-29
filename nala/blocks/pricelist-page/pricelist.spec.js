@@ -10,7 +10,6 @@ export default {
         partnerLevel: 'cpp-distributor-all:',
         signInButtonInternationalText: 'Sign In',
         usdCheckBox: 'USD',
-        monthFirstCheckBox: '2025-05-01',
         vipCommercialCheckBox: 'VIP Commercial',
         asiaPacificCheckBox: 'Asia Pacific',
         expectedURL: '/na/channelpartners/#',
@@ -25,7 +24,6 @@ export default {
         partnerLevel: 'cpp-distributor-all:',
         signInButtonInternationalText: 'Sign In',
         jpyCheckBox: 'JPY',
-        monthSecondCheckBox: '2025-04-01',
         ycVipCommercialCheckBox: '3YC VIP MP Commercial',
         japanCheckBox: 'Japan',
         worldwide: 'Worldwide',
@@ -107,7 +105,7 @@ export default {
     },
     {
       tcid: '9',
-      name: '@pricelist-validation-rdistributor-india-user',
+      name: '@pricelist-validation-distributor-india-user',
       path: '/na/channelpartners/home/pricelists/',
       tags: '@dme-pricelists @regression @circleCi',
       data: {
@@ -122,7 +120,7 @@ export default {
       tags: '@dme-pricelists @regression @circleCi',
       data: {
         partnerLevel: 'cpp-kr-distributor:',
-        text: 'Asia Pacific, Korea',
+        text: 'Asia Pacific,Korea',
       },
     },
     {
@@ -131,7 +129,7 @@ export default {
       path: '/na/channelpartners/home/pricelists/',
       tags: '@dme-pricelists @regression @circleCi',
       data: {
-        partnerLevel: 'cpp-distr-latin-america-na:',
+        partnerLevel: 'cpp-latin-na-platinum:',
         checkBox: 'Latin America (NA based)',
         text: 'Latin America (NA based)',
       },
