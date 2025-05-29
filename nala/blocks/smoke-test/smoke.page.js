@@ -24,8 +24,6 @@ export default class SmokeTest {
     this.retailProgram = page.locator('#retail-program');
     this.regionPicker = page.locator('.feds-regionPicker');
     this.apacRegion = page.locator('.tracking-header a[href*="/apac/channelpartners/"]');
-    this.naRegion = page.locator('.tracking-header a[href*="/na/channelpartners/"]');
-    this.krRegion = page.locator('a[href*="/kr/channelpartners/"]');
     this.salesGnavButton = page.locator('.feds-navItem:nth-of-type(2) button');
     this.specializationButton = page.locator('div.feds-menu-items a[href*="sales-resources/specializations/"]');
     this.vipMarketplace = page.locator('[tabindex]:has-text("VIP Marketplace")');
@@ -343,5 +341,9 @@ export default class SmokeTest {
 
     const membershiplevel = this.page.locator('#distributor');
     await membershiplevel.isVisible();
+  }
+
+  async getRegionOption(link) {
+    return this.page.locator(`.region-nav a[href*="${link}"]`);
   }
 }
