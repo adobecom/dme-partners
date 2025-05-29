@@ -5,7 +5,7 @@ export default {
       tcid: '1',
       name: '@redirects-for-na-locale',
       path: '/na/channelpartners/drafts/automation/regression/redirects/redirects-test?georouting=off&martech=off',
-      tags: '@dme-redirects @regression @login @circleCi',
+      tags: '@dme-redirects @regression @anonymous',
       data: {
         partnerLevel: 'cpp-distributor-us:',
         partnerData: {
@@ -29,7 +29,7 @@ export default {
       tcid: '2',
       name: '@redirects-for-emea-locale',
       path: '/emea/channelpartners/drafts/automation/regression/redirects/redirects-test?georouting=off&martech=off',
-      tags: '@dme-redirects @regression @login @circleCi',
+      tags: '@dme-redirects @regression @anonymous',
       data: {
         partnerLevel: 'cpp-europe-east-certified:',
         partnerData: {
@@ -53,7 +53,7 @@ export default {
       tcid: '3',
       name: '@redirects-for-cn-locale',
       path: '/cn/channelpartners/drafts/automation/regression/redirects/redirects-test?georouting=off&martech=off',
-      tags: '@dme-redirects @regression @login @circleCi',
+      tags: '@dme-redirects @regression @anonymous',
       data: {
         partnerLevel: 'cpp-china-registered:',
         partnerData: {
