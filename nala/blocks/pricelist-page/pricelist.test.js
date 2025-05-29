@@ -42,7 +42,7 @@ test.describe('Pricelist Page Validation', () => {
       await pricelistPage.filterPricelists(pricelistPage.currencyFilter, data.usdCheckBox, true);
       const usdNumberOFPriceLists = await pricelistPage.priceListsCount(page);
       await pricelistPage.filterMonth(pricelistPage.monthFilter);
-      const date = await pricelistPage.monthChecBoxGet(0);
+      const date = await pricelistPage.monthCheckBoxGet(0);
       await pricelistPage.clickMonthCheckboxByDate(date);
       const monthFirstCheckBoxNumberOFPriceLists = await pricelistPage.priceListsCount(page);
       expect(usdNumberOFPriceLists).toBeGreaterThan(monthFirstCheckBoxNumberOFPriceLists);
@@ -78,7 +78,7 @@ test.describe('Pricelist Page Validation', () => {
       await pricelistPage.filterPricelists(pricelistPage.currencyFilter, data.jpyCheckBox, true);
       const jpyNumberOFPriceLists = await pricelistPage.priceListsCount(page);
       await pricelistPage.filterMonth(pricelistPage.monthFilter);
-      const date = await pricelistPage.monthChecBoxGet(1);
+      const date = await pricelistPage.monthCheckBoxGet(1);
       await pricelistPage.clickMonthCheckboxByDate(date);
       const monthSecondCheckBoxNumberOFPriceLists = await pricelistPage.priceListsCount(page);
       expect(jpyNumberOFPriceLists).toBeGreaterThan(monthSecondCheckBoxNumberOFPriceLists);

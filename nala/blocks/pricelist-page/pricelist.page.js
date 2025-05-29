@@ -19,7 +19,7 @@ export default class PricelistsTest {
     return this.page.getByRole('checkbox', { name: `${checkBox}`, exact });
   }
 
-  async monthChecBoxGet(index) {
+  async monthCheckBoxGet(index) {
     const checkbox = this.page.locator('ul.filter-list').nth(1).locator('sp-checkbox').nth(index);
     const text = await checkbox.textContent();
     return text.trim();
