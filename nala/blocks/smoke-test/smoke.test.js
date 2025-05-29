@@ -9,6 +9,7 @@ let signInSmokeTest;
 let profileDropdownPage;
 
 const { features } = smokeSpec;
+const regionBasedFooterAndGnav = features.slice(21, 23);
 
 test.describe('Smoke Tests', () => {
   test.beforeEach(async ({ page, baseURL }) => {
@@ -586,6 +587,49 @@ test.describe('Smoke Tests', () => {
       expect(newTab.url()).toContain(`${data.expectedSalesForceURL}`);
       expect(newTab.url()).toContain(`${data.expectedID}`);
       newTab.close();
+    });
+  });
+
+  // @na-footer-and-gnav-validation
+  // @kr-footer-and-gnav-validation
+  regionBasedFooterAndGnav.forEach((feature) => {
+    test(`${feature.name},${feature.tags}`, async ({ page, baseURL }) => {
+      const { data } = feature;
+
+      await test.step('Go to home page', async () => {
+        await page.waitForLoadState('networkidle');
+      });
+
+      await test.step('Click on Change Region and verify the URL', async () => {
+        await smokeTest.regionPicker.waitFor({ state: 'visible' });
+        await smokeTest.regionPicker.click();
+
+        const regionOption = await smokeTest.getRegionOption(data.defaultURL);
+        await regionOption.waitFor({ state: 'visible' });
+        await regionOption.click();
+
+        const urlRegex = new RegExp(`.*${data.defaultURL}.*`);
+        await page.waitForURL(urlRegex, { timeout: 5000 });
+
+        const pages = await page.context().pages();
+        expect(pages[0].url()).toContain(data.defaultURL);
+      });
+
+      await test.step('Click on the Program and verify the URL', async () => {
+        await smokeTest.programGnavOption.waitFor({ state: 'visible' });
+        await smokeTest.programGnavOption.click();
+
+        await page.waitForLoadState();
+        expect(page.url()).toContain(`${baseURL}${data.programURL}`);
+      });
+
+      await test.step('Click on the Support and verify the URL', async () => {
+        await smokeTest.supportGnavOption.waitFor({ state: 'visible' });
+        await smokeTest.supportGnavOption.click();
+
+        await page.waitForLoadState();
+        expect(page.url()).toContain(`${baseURL}${data.supportURL}`);
+      });
     });
   });
 });

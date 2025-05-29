@@ -270,5 +270,27 @@ export default {
         expectedID: 'tid',
       },
     },
+    {
+      tcid: '22',
+      name: '@na-footer-and-gnav-validation',
+      path: '/channelpartners/#?georouting=off&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        defaultURL: '/na/channelpartners/',
+        programURL: '/na/channelpartners/program/',
+        supportURL: '/na/channelpartners/support/',
+      },
+    },
+    {
+      tcid: '23',
+      name: '@kr-footer-and-gnav-validation',
+      path: '/channelpartners/#?georouting=off&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        defaultURL: '/kr/channelpartners/',
+        programURL: '/kr/channelpartners/program/',
+        supportURL: '/kr/channelpartners/support/',
+      },
+    },
   ],
 };
