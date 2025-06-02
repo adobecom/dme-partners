@@ -155,7 +155,6 @@ export default class SmokeTest {
     await regionPickerButton.waitFor({ state: 'visible' });
     await regionPickerButton.click();
 
-    const asiaPacificOption = this.apacRegion;
     const asiaPacificOption = await this.getRegionOption('/apac/channelpartners/');
     await asiaPacificOption.waitFor({ state: 'visible' });
     await asiaPacificOption.click();
