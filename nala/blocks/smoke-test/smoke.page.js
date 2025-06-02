@@ -23,7 +23,6 @@ export default class SmokeTest {
     this.resellerProgram = page.locator('#reseller-program');
     this.retailProgram = page.locator('#retail-program');
     this.regionPicker = page.locator('.feds-regionPicker');
-    this.apacRegion = page.locator('.tracking-header a[href*="/apac/channelpartners/"]');
     this.salesGnavButton = page.locator('.feds-navItem:nth-of-type(2) button');
     this.specializationButton = page.locator('div.feds-menu-items a[href*="sales-resources/specializations/"]');
     this.vipMarketplace = page.locator('[tabindex]:has-text("VIP Marketplace")');
@@ -41,6 +40,8 @@ export default class SmokeTest {
     this.geoModal = page.locator('#locale-modal-v2');
     this.cbcLearnMore = page.locator('.media .media-row a[href*="/bin/fusion/modalImsLogin?resource=%2Fen%2Fnews%2Fenablement-news-partner-lock"]');
     this.findDistributorBtn = page.locator('.feds-navItem .feds-cta-wrapper a[href*="/api/v1/web/dx-partners-runtime/sfdc-redirect?program_type=channel&request_type=distributor_finder"]');
+    this.programGnavOption = page.locator('.feds-navItem a[href*="/channelpartners/program"]');
+    this.supportGnavOption = page.locator('.feds-navItem a[href*="/channelpartners/support"]');
   }
 
   async smokeSignIn(page, baseURL, partnerLevel) {
@@ -154,7 +155,7 @@ export default class SmokeTest {
     await regionPickerButton.waitFor({ state: 'visible' });
     await regionPickerButton.click();
 
-    const asiaPacificOption = this.apacRegion;
+    const asiaPacificOption = await this.getRegionOption('/apac/channelpartners/');
     await asiaPacificOption.waitFor({ state: 'visible' });
     await asiaPacificOption.click();
 
@@ -339,5 +340,9 @@ export default class SmokeTest {
 
     const membershiplevel = this.page.locator('#distributor');
     await membershiplevel.isVisible();
+  }
+
+  async getRegionOption(link) {
+    return this.page.locator(`.region-nav a[href*="${link}"]`);
   }
 }
