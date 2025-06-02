@@ -23,7 +23,6 @@ export default class SmokeTest {
     this.resellerProgram = page.locator('#reseller-program');
     this.retailProgram = page.locator('#retail-program');
     this.regionPicker = page.locator('.feds-regionPicker');
-    this.apacRegion = page.locator('.tracking-header a[href*="/apac/channelpartners/"]');
     this.salesGnavButton = page.locator('.feds-navItem:nth-of-type(2) button');
     this.specializationButton = page.locator('div.feds-menu-items a[href*="sales-resources/specializations/"]');
     this.vipMarketplace = page.locator('[tabindex]:has-text("VIP Marketplace")');
@@ -157,6 +156,7 @@ export default class SmokeTest {
     await regionPickerButton.click();
 
     const asiaPacificOption = this.apacRegion;
+    const asiaPacificOption = await this.getRegionOption('/apac/channelpartners/');
     await asiaPacificOption.waitFor({ state: 'visible' });
     await asiaPacificOption.click();
 
