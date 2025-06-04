@@ -108,7 +108,7 @@ export default {
         partnerLevel: 'tpp-platinum:',
         expectedPublicURL: 'https://partners.stage.adobe.com/channelpartners/',
         restrictedHomePath: 'https://partners.stage.adobe.com/channelpartners/home/?georouting=off&martech=off',
-        expectedToSeeInURL: 'https://partners.stage.adobe.com/channelpartners/error/404',
+        expectedToSeeInURL: 'https://partners.stage.adobe.com/channelpartners/home/',
         signInButtonText: 'Sign In',
       },
     },
