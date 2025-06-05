@@ -54,6 +54,7 @@ export const prodHosts = [
   'main--dme-partners--adobecom.aem.page',
   'main--dme-partners--adobecom.aem.live',
   'partners.adobe.com',
+  'partnerspreview.adobe.com',
 ];
 
 /*
