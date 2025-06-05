@@ -1,6 +1,6 @@
 {
   "previewHost": "main--dme-partners--adobecom.aem.page",
-  "liveHost": "main--dme-partners--adobecom.aem.live",
+  "liveHost": "partnerspreview.adobe.com",
   "plugins": [
     {
       "id": "library",
