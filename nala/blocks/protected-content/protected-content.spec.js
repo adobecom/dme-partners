@@ -84,7 +84,7 @@ export default {
       tags: '@dme-protected-content @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-china-registered:',
-        contentNotFoundPage: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/cards/cpp-certified-china?georouting=off&martech=off',
+        contentNotFoundPage: 'https://partners.stage.adobe.com/cn/channelpartners/drafts/automation/regression/cards/cpp-certified-china',
         matchingRegionPage: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/cards/cpp-registered-china?georouting=off&martech=off',
         nonMatchingPartnerLevelPage: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/cards/cpp-certified-china?georouting=off&martech=off',
       },
