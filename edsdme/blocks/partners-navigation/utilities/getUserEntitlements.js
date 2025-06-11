@@ -1,6 +1,6 @@
 // MWPW-159021
 /* eslint-disable */
-import { getConfig } from '../../../utils/utils.js';
+import { getConfig } from '../../../../scripts/utils.js';
 
 const API_WAIT_TIMEOUT = 10000;
 const FORMAT_RAW = 'raw';

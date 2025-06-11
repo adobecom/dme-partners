@@ -1,13 +1,5 @@
-import { getLocale, setLibs } from '../../scripts/utils.js';
+import { getLocale, getConfig, replaceText, getRuntimeActionUrl } from '../../scripts/utils.js';
 import { RT_SEARCH_ACTION_PATH } from './dmeConstants.js';
-
-const miloLibs = setLibs('/libs');
-
-const { createTag, localizeLink, getConfig } = await import(`${miloLibs}/utils/utils.js`);
-
-export { createTag, localizeLink, getConfig };
-const { replaceText } = await import(`${miloLibs}/features/placeholders.js`);
-export { replaceText };
 
 export function populateLocalizedTextFromListItems(el, localizedText) {
   const liList = Array.from(el.querySelectorAll('li'));
@@ -26,17 +18,6 @@ export async function localizationPromises(localizedText, config) {
       localizedText[key] = value;
     }
   }));
-}
-
-export function getRuntimeActionUrl(action) {
-  const { env } = getConfig();
-  let domain = 'https://io-partners-dx.stage.adobe.com';
-  if (env.name === 'prod') {
-    domain = 'https://io-partners-dx.adobe.com';
-  }
-  return new URL(
-    `${domain}${action}`,
-  );
 }
 
 export function generateRequestForSearchAPI(pageOptions, body) {

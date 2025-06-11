@@ -1,6 +1,6 @@
 import searchCardStyles from './SearchCardStyles.js';
-import { formatDate, getLibs } from '../scripts/utils.js';
-import { setDownloadParam, getConfig, replaceText } from '../blocks/utils/utils.js';
+import { formatDate, getLibs, getConfig, replaceText } from '../scripts/utils.js';
+import { setDownloadParam } from '../blocks/utils/utils.js';
 
 const miloLibs = getLibs();
 const config = getConfig();

@@ -9,7 +9,7 @@ const PERSONALIZATION_HIDE_CLASS = 'personalization-hide';
 function importModules() {
   // eslint-disable-next-line global-require
   const { applyPagePersonalization, applyGnavPersonalization } = require('../../edsdme/scripts/personalization.js');
-  jest.mock('../../edsdme/blocks/utils/utils.js', () => ({ getConfig: jest.fn(() => ({ env: { name: 'stage' } })) }));
+  jest.mock('../../edsdme/scripts/utils.js', () => ({ getConfig: jest.fn(() => ({ env: { name: 'stage' } })) }));
 
   return { applyPagePersonalization, applyGnavPersonalization };
 }

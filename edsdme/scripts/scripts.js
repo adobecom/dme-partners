@@ -1,6 +1,8 @@
 import { applyPagePersonalization } from './personalization.js';
 import {
   setLibs,
+  prodHosts,
+  previewHost,
   redirectLoggedinPartner,
   updateIMSConfig,
   preloadResources,
@@ -9,6 +11,7 @@ import {
   updateFooter,
   enableGeoPopup,
   PARTNER_LOGIN_QUERY,
+  sidekickListener,
 } from './utils.js';
 import { rewriteLinks } from './rewriteLinks.js';
 
@@ -17,14 +20,6 @@ const STYLES = '/edsdme/styles/styles.css';
 
 // Use 'https://milo.adobe.com/libs' if you cannot map '/libs' to milo's origin.
 const LIBS = '/libs';
-
-const prodHosts = [
-  'main--dme-partners--adobecom.hlx.page',
-  'main--dme-partners--adobecom.hlx.live',
-  'main--dme-partners--adobecom.aem.page',
-  'main--dme-partners--adobecom.aem.live',
-  'partners.adobe.com',
-];
 
 const imsClientId = prodHosts.includes(window.location.host) ? 'MILO_PARTNERS_PROD' : 'MILO_PARTNERS_STAGE';
 
@@ -110,12 +105,15 @@ function setUpPage() {
   setUpPage();
   redirectLoggedinPartner();
   updateIMSConfig();
-  await preloadResources(CONFIG.locales, miloLibs);
-  const { loadArea, setConfig, getConfig } = await import(`${miloLibs}/utils/utils.js`);
+  await preloadResources(CONFIG.locales);
+  const { loadArea, setConfig } = await import(`${miloLibs}/utils/utils.js`);
 
   setConfig({ ...CONFIG, miloLibs });
-  await getRenewBanner(getConfig);
+  await getRenewBanner();
   await loadArea();
   applyPagePersonalization();
   rewriteLinks(document);
+  if (previewHost.includes(window.location.host)) {
+    sidekickListener(CONFIG.locales);
+  }
 }());

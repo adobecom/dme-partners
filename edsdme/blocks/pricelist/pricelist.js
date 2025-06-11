@@ -1,11 +1,9 @@
 import PricelistBlock from './PricelistBlock.js';
 import {
-  getConfig,
-  getRuntimeActionUrl,
   localizationPromises,
   populateLocalizedTextFromListItems,
 } from '../utils/utils.js';
-import { getLibs } from '../../scripts/utils.js';
+import { getLibs, getConfig, getRuntimeActionUrl } from '../../scripts/utils.js';
 
 function declarePricelist() {
   if (customElements.get('pricelist-block')) return;

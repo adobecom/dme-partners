@@ -2,11 +2,10 @@
  * @jest-environment jsdom
  */
 import { getUpdatedHref, rewriteLinks } from '../../edsdme/scripts/rewriteLinks.js';
-import { getConfig } from '../../edsdme/blocks/utils/utils.js';
-import { partnerIsSignedIn } from '../../edsdme/scripts/utils.js';
+import { getConfig, partnerIsSignedIn } from '../../edsdme/scripts/utils.js';
 
-jest.mock('../../edsdme/blocks/utils/utils.js', () => ({ getConfig: jest.fn() }));
 jest.mock('../../edsdme/scripts/utils.js', () => ({
+  getConfig: jest.fn(),
   partnerIsSignedIn: jest.fn(() => ({ 'partner name': { company: 'test' } })),
   prodHosts: [
     'main--dme-partners--adobecom.hlx.page',
@@ -14,6 +13,7 @@ jest.mock('../../edsdme/scripts/utils.js', () => ({
     'main--dme-partners--adobecom.aem.page',
     'main--dme-partners--adobecom.aem.live',
     'partners.adobe.com',
+    'partnerspreview.adobe.com',
   ],
 }));
 

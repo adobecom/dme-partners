@@ -1,5 +1,5 @@
-import { getLibs, getCaasUrl } from '../../scripts/utils.js';
-import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
+import { getLibs, getCaasUrl, getConfig } from '../../scripts/utils.js';
+import { populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
 import Announcements from './AnnouncementsCards.js';
 
 function declareAnnouncements() {

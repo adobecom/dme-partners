@@ -329,14 +329,13 @@ describe('Test utils.js', () => {
       },
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-    const getConfig = () => ({ locale: '' });
     global.fetch = jest.fn(() => Promise.resolve({
       ok: true,
       text: () => Promise.resolve('<div class="notification">Test</div>'),
     }));
     const main = document.createElement('main');
     document.body.appendChild(main);
-    await getRenewBanner(getConfig);
+    await getRenewBanner();
     const banner = document.querySelector('.notification');
     expect(banner).toBeTruthy();
   });
@@ -352,7 +351,6 @@ describe('Test utils.js', () => {
       },
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-    const getConfig = () => ({ locale: '' });
     global.fetch = jest.fn(() => Promise.resolve({
       ok: true,
       text: () => Promise.resolve('<div class="notification">Test</div>'),
@@ -360,7 +358,7 @@ describe('Test utils.js', () => {
 
     const main = document.createElement('main');
     document.body.appendChild(main);
-    await getRenewBanner(getConfig);
+    await getRenewBanner();
     const banner = document.querySelector('.notification');
     expect(banner).toBeFalsy();
   });
@@ -376,11 +374,10 @@ describe('Test utils.js', () => {
       },
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-    const getConfig = () => ({ locale: '' });
     global.fetch = jest.fn(() => Promise.resolve({ ok: false }));
     const main = document.createElement('main');
     document.body.appendChild(main);
-    expect(await getRenewBanner(getConfig)).toEqual(null);
+    expect(await getRenewBanner()).toEqual(null);
   });
   it('Update ims config if user is signed in', () => {
     jest.useFakeTimers();
@@ -457,7 +454,7 @@ describe('Test utils.js', () => {
       path.resolve(__dirname, './mocks/announcements.html'),
       'utf8',
     );
-    await preloadResources(locales, '/libs');
+    await preloadResources(locales);
     const linkPreload = document.head.querySelectorAll('link[rel="preload"]');
     const linkModulepreload = document.head.querySelector('link[rel="modulepreload"]');
     expect(linkPreload[0].href).toContain('placeholders.json');

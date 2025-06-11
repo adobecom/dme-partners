@@ -1,5 +1,5 @@
-import { getCaasUrl } from '../../scripts/utils.js';
-import { getConfig, localizationPromises } from '../utils/utils.js';
+import { getCaasUrl, getConfig } from '../../scripts/utils.js';
+import { localizationPromises } from '../utils/utils.js';
 import AnnouncementsPreview from './AnnouncementsPreviewCards.js';
 
 function declareAnnouncementsPreview() {

@@ -1,5 +1,4 @@
-import { partnerIsSignedIn, prodHosts } from './utils.js';
-import { getConfig } from '../blocks/utils/utils.js';
+import { partnerIsSignedIn, prodHosts, getConfig } from './utils.js';
 
 /**
  * Default rewriters for handling URL locale modifications.

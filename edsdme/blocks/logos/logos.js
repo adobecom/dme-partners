@@ -1,5 +1,5 @@
-import { getLibs } from '../../scripts/utils.js';
-import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
+import { getLibs, getConfig } from '../../scripts/utils.js';
+import { populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
 import Logos from './LogosCards.js';
 
 function declareLogos() {

@@ -1,5 +1,4 @@
-import { formatDate } from '../../scripts/utils.js';
-import { createTag, getConfig } from '../utils/utils.js';
+import { formatDate, createTag, getConfig } from '../../scripts/utils.js';
 
 const CARD_METADATA_PROPERTY_CREATED = 'created';
 

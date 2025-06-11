@@ -1,6 +1,6 @@
 // MWPW-159021
 /* eslint-disable */
-import { getConfig } from '../../../utils/utils.js';
+import { getConfig } from '../../../../scripts/utils.js';
 
 let userEventHistory;
 const getUserEventHistory = async (id) => {
