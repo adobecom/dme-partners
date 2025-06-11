@@ -9,6 +9,9 @@ export { createTag, localizeLink, getConfig };
 const { replaceText } = await import(`${miloLibs}/features/placeholders.js`);
 export { replaceText };
 
+const previewURL = 'https://admin.hlx.page/preview/adobecom/dme-partners/main/*';
+const publishURL = 'https://admin.hlx.page/live/adobecom/dme-partners/main/*';
+
 export function populateLocalizedTextFromListItems(el, localizedText) {
   const liList = Array.from(el.querySelectorAll('li'));
   liList.forEach((liEl) => {
@@ -89,4 +92,136 @@ export function transformCardUrl(url) {
   newUrl.protocol = window.location.protocol;
   newUrl.host = window.location.host;
   return newUrl;
+}
+
+export async function sidekickListener(locales) {
+  const deps = await Promise.all([
+    import(`${miloLibs}/features/spectrum-web-components/dist/toast.js`),
+    import(`${miloLibs}/features/spectrum-web-components/dist/theme.js`),
+  ]);
+  await deps;
+
+  const initSidekickListener = () => {
+    const sidekick = document.querySelector('aem-sidekick, helix-sidekick');
+    if (sidekick) {
+      // eslint-disable-next-line no-use-before-define
+      sidekick.addEventListener('custom:publishtoallsites', publishToAllSites, { once: true });
+    }
+  };
+
+  // eslint-disable-next-line arrow-body-style
+  const showToast = async (message, variant = 'info') => {
+    return new Promise((resolve) => {
+      const header = document.querySelector('header');
+      const theme = document.createElement('sp-theme');
+      theme.setAttribute('theme', 'spectrum');
+      theme.setAttribute('color', 'light');
+      theme.setAttribute('scale', 'medium');
+
+      const toast = document.createElement('sp-toast');
+      toast.variant = variant;
+      toast.open = true;
+      toast.dismissible = true;
+      toast.setAttribute('style', 'width: 300px');
+      toast.textContent = message;
+
+      theme.appendChild(toast);
+      header.appendChild(theme);
+
+      customElements.whenDefined('sp-toast').then(() => {
+        requestAnimationFrame(() => {
+          const shadow = toast.shadowRoot;
+          if (shadow) {
+            const contentEl = shadow.querySelector('.content');
+            if (contentEl) {
+              contentEl.style.setProperty('word-break', 'break-word');
+            }
+          }
+        });
+      });
+
+      const cleanup = () => {
+        initSidekickListener();
+        toast.removeEventListener('close', cleanup);
+        theme.remove();
+        resolve();
+      };
+
+      toast.addEventListener('close', cleanup);
+    });
+  };
+  const runtimeSendToCaasUrl = getRuntimeActionUrl('/api/v1/web/dx-partners-runtime-tooling/publish-announcement-to-caas');
+
+  const publishToAllSites = async ({ detail: payload }) => {
+    try {
+      if (!window.adobeIMS.isSignedInUser()) {
+        await showToast(
+          'You are not logged in with an Adobe ID. Redirecting to login...',
+          'negative',
+        );
+        window.adobeIMS.adobeIdData.redirect_uri = window.location.href;
+        window.adobeIMS.signIn();
+        return;
+      }
+      const headers = new Headers();
+      headers.append('Accept', 'application/json');
+      headers.append('Content-Type', 'application/json');
+
+      // eslint-disable-next-line no-confusing-arrow
+      const paths = Object.keys(locales).map((locale) => locale ? `/${locale}${payload.location.pathname}` : payload.location.pathname);
+
+      const requestOptions = {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ paths }),
+      };
+
+      const previewRes = await fetch(previewURL, requestOptions);
+      if (!previewRes.ok) {
+        const errorText = previewRes.headers.get('X-Error') || await previewRes.text();
+        // eslint-disable-next-line no-console
+        console.error('Preview with Sidekick Failed:', previewRes.status, errorText);
+        await showToast(`Preview failed: ${errorText}`, 'negative');
+        return;
+      }
+
+      const publishRes = await fetch(publishURL, requestOptions);
+      if (!publishRes.ok) {
+        const errorText = publishRes.headers.get('X-Error') || await publishRes.text();
+        // eslint-disable-next-line no-console
+        console.error('Publish with Sidekick Failed:', publishRes.status, errorText);
+        await showToast(`Publish failed: ${errorText}`, 'negative');
+        return;
+      }
+
+      headers.append('Authorization', window.adobeIMS.getAccessToken().token);
+
+      const caasRes = await fetch(runtimeSendToCaasUrl, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ cardPath: window.location.pathname }),
+      });
+
+      if (!caasRes.ok) {
+        const errorText = await caasRes.text();
+        // eslint-disable-next-line no-console
+        console.error('CaaS Publish Failed:', caasRes.status, errorText);
+        await showToast(`CaaS publishing failed: ${errorText}`, 'negative');
+        return;
+      }
+
+      const caasData = await caasRes.json();
+
+      await showToast(
+        `Announcements published to CaaS:\n${caasData.successfulIds.join('\n')}`,
+        'positive',
+      );
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Unexpected Error:', error);
+      await showToast(`Unexpected error: ${error.message || error}`, 'negative');
+    }
+  };
+
+  initSidekickListener();
 }
