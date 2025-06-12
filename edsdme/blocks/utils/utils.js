@@ -122,7 +122,7 @@ export async function sidekickListener(locales) {
       toast.variant = variant;
       toast.open = true;
       toast.dismissible = true;
-      toast.setAttribute('style', 'width: 300px');
+      toast.setAttribute('style', 'width: 320px');
       toast.textContent = message;
 
       theme.appendChild(toast);
@@ -135,6 +135,8 @@ export async function sidekickListener(locales) {
             const contentEl = shadow.querySelector('.content');
             if (contentEl) {
               contentEl.style.setProperty('word-break', 'break-word');
+              contentEl.style.setProperty('overflow-x', 'hidden');
+              contentEl.style.setProperty('max-height', '500px');
             }
           }
         });
