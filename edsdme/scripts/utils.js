@@ -56,6 +56,7 @@ export const prodHosts = [
   'partners.adobe.com',
   'partnerspreview.adobe.com',
 ];
+export const previewHost = 'partnerspreview.adobe.com';
 
 /*
  * ------------------------------------------------------------

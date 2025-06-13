@@ -86,6 +86,21 @@
       "includePaths": [
         "**.docx**"
       ]
+    },
+    {
+      "containerId": "tools",
+      "title": "Publish to all sites",
+      "id": "publishtoallsites",
+      "event": "publishtoallsites",
+      "excludePaths": [
+        "/**"
+      ],
+      "includePaths": [
+        "/channelpartners/**"
+      ],
+      "environments": [
+        "live"
+      ]
     }
   ]
 }
