@@ -31,15 +31,23 @@ export async function localizationPromises(localizedText, config) {
   }));
 }
 
-export function getRuntimeActionUrl(action) {
+export function getRuntimeActionUrl(action, type = 'dx') {
   const { env } = getConfig();
-  let domain = 'https://io-partners-dx.stage.adobe.com';
-  if (env.name === 'prod') {
-    domain = 'https://io-partners-dx.adobe.com';
-  }
-  return new URL(
-    `${domain}${action}`,
-  );
+  const isProd = env.name === 'prod';
+
+  const domains = {
+    dx: {
+      stage: 'https://io-partners-dx.stage.adobe.com',
+      prod: 'https://io-partners-dx.adobe.com',
+    },
+    tooling: {
+      stage: 'https://io-partners-tooling.stage.adobe.com',
+      prod: 'https://io-partners-tooling.adobe.com',
+    },
+  };
+
+  const domain = isProd ? domains[type].prod : domains[type].stage;
+  return new URL(`${domain}${action}`);
 }
 
 export function generateRequestForSearchAPI(pageOptions, body) {
@@ -152,7 +160,7 @@ export async function sidekickListener(locales) {
       toast.addEventListener('close', cleanup);
     });
   };
-  const runtimeSendToCaasUrl = getRuntimeActionUrl('/api/v1/web/dx-partners-runtime-tooling/publish-announcement-to-caas');
+  const runtimeSendToCaasUrl = getRuntimeActionUrl('/api/v1/web/dx-partners-runtime-tooling/publish-announcement-to-caas', 'tooling');
 
   const publishToAllSites = async ({ detail: payload }) => {
     try {
