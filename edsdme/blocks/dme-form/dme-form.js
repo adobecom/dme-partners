@@ -212,14 +212,14 @@ async function submitForm(form) {
     }
   };
 
-  const action = 'https://partners.adobe.com/self-service-forms/definition/testautomation/promo-pricing-form-action.json';
+  const action = 'https://partners.stage.adobe.com/channelpartners/drafts/slobodanka/form-action.json';
 
   const resp = await fetch(constructSubmitUrl(action), {
     method: 'POST',
     cache: 'no-cache',
     headers: {
       'Content-Type': 'application/json',
-      'x-adobe-form-hostname': 'main--dx-partners--adobecom.aem.page',
+      'x-adobe-form-hostname': 'main--dme-partners--adobecom.aem.page',
     },
     body: JSON.stringify({ data: payload }),
   }).catch(() => false);
