@@ -11,7 +11,6 @@ export { replaceText };
 
 const previewURL = 'https://admin.hlx.page/preview/adobecom/dme-partners/main/*';
 const publishURL = 'https://admin.hlx.page/live/adobecom/dme-partners/main/*';
-const jobURL = 'https://admin.hlx.page/job/adobecom/dme-partners/main/';
 
 export function populateLocalizedTextFromListItems(el, localizedText) {
   const liList = Array.from(el.querySelectorAll('li'));
@@ -30,52 +29,6 @@ export async function localizationPromises(localizedText, config) {
       localizedText[key] = value;
     }
   }));
-}
-
-// eslint-disable-next-line func-names
-const wait = function (delay) {
-  // eslint-disable-next-line arrow-parens
-  return new Promise(resolve => {
-    setTimeout(resolve, delay);
-  });
-};
-
-// Polls a function until a specified condition is met or maximum attempts are exceeded
-async function poll(fn, condition, interval = 2000, maxAttempts = 60) {
-  let attempts = 0;
-  let result = await fn();
-  while (!condition(result)) {
-    // eslint-disable-next-line no-plusplus
-    if (++attempts >= maxAttempts) {
-      throw new Error(`Polling exceeded maximum number of (${maxAttempts}) attempts.`);
-    }
-    // eslint-disable-next-line no-await-in-loop
-    await wait(interval);
-    // eslint-disable-next-line no-await-in-loop
-    result = await fn();
-  }
-  return result;
-}
-
-const JobStates = Object.freeze({
-  CREATED: 'created',
-  RUNNING: 'running',
-  STOPPED: 'stopped',
-});
-
-async function adminApiResponse(response) {
-  const responseJson = await response.json();
-  const { topic: jobTopic, name: jobName } = responseJson?.job || {};
-  await poll(
-    async () => {
-      const res = await fetch(`${jobURL}${jobTopic}/${jobName}`);
-      // eslint-disable-next-line no-return-await
-      return await res.json();
-    },
-    (result) => result.state === JobStates.STOPPED,
-    2000,
-    120,
-  );
 }
 
 export function getRuntimeActionUrl(action, type = 'dx') {
@@ -165,7 +118,7 @@ export async function sidekickListener(locales) {
   };
 
   // eslint-disable-next-line arrow-body-style
-  const showToast = async (message, variant = 'info') => {
+  const showToast = async (messages, variant = 'info') => {
     return new Promise((resolve) => {
       const header = document.querySelector('header');
       const theme = document.createElement('sp-theme');
@@ -177,8 +130,12 @@ export async function sidekickListener(locales) {
       toast.variant = variant;
       toast.open = true;
       toast.dismissible = true;
-      toast.setAttribute('style', 'width: 320px');
-      toast.textContent = message;
+      toast.setAttribute('style', 'min-width: 90%');
+      messages.forEach(msg => {
+        const divElem = document.createElement('div');
+        divElem.textContent = msg;
+        toast.append(divElem)
+      })
 
       theme.appendChild(toast);
       header.appendChild(theme);
@@ -213,13 +170,14 @@ export async function sidekickListener(locales) {
     try {
       if (!window.adobeIMS.isSignedInUser()) {
         await showToast(
-          'You are not logged in with an Adobe ID. Redirecting to login...',
-          'negative',
+          ['You are not logged in with an Adobe ID. Redirecting to login...'],
+          'info',
         );
         window.adobeIMS.adobeIdData.redirect_uri = window.location.href;
         window.adobeIMS.signIn();
         return;
       }
+      showToast([`Starting the publishing process`], 'info');
       const headers = new Headers();
       headers.append('Accept', 'application/json');
       headers.append('Content-Type', 'application/json');
@@ -238,20 +196,20 @@ export async function sidekickListener(locales) {
         const errorText = previewRes.headers.get('X-Error') || await previewRes.text();
         // eslint-disable-next-line no-console
         console.error('Preview with Sidekick Failed:', previewRes.status, errorText);
-        await showToast(`Preview failed: ${errorText}`, 'negative');
+        await showToast([`Preview failed: ${errorText}`], 'negative');
         return;
       }
-      await adminApiResponse(previewRes);
+      showToast([`Preview Successful`], 'info');
 
       const publishRes = await fetch(publishURL, requestOptions);
       if (!publishRes.ok) {
         const errorText = publishRes.headers.get('X-Error') || await publishRes.text();
         // eslint-disable-next-line no-console
         console.error('Publish with Sidekick Failed:', publishRes.status, errorText);
-        await showToast(`Publish failed: ${errorText}`, 'negative');
+        await showToast([`Publish failed: ${errorText}`], 'negative');
         return;
       }
-      await adminApiResponse(publishRes);
+      showToast([`Publishing Successful`], 'info');
 
       headers.append('Authorization', window.adobeIMS.getAccessToken().token);
 
@@ -265,20 +223,26 @@ export async function sidekickListener(locales) {
         const errorText = await caasRes.text();
         // eslint-disable-next-line no-console
         console.error('CaaS Publish Failed:', caasRes.status, errorText);
-        await showToast(`CaaS publishing failed: ${errorText}`, 'negative');
+        await showToast([`CaaS publishing failed: ${errorText}`], 'negative');
         return;
       }
 
       const caasData = await caasRes.json();
+      const contentItems = ['Publish to CaaS:', 'The following announcements were successfully published:'];
+      contentItems.push(...caasData.successfulIds);
+      if (caasData.errors) {
+        contentItems.push('The following errors occured:');
+        contentItems.push(...caasData.errors);
+      }
+      const variant = caasData.errors ? (caasData.successfulIds ? 'info' : 'negative') : 'positive';
 
-      await showToast(
-        `Announcements published to CaaS:\n${caasData.successfulIds.join('\n')}`,
-        'positive',
+      await showToast(contentItems,
+        variant,
       );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Unexpected Error:', error);
-      await showToast(`Unexpected error: ${error.message || error}`, 'negative');
+      await showToast([`Unexpected error: ${error.message || error}`], 'negative');
     }
   };
 
