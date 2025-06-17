@@ -234,7 +234,8 @@ export async function sidekickListener(locales) {
         contentItems.push('The following errors occured:');
         contentItems.push(...caasData.errors);
       }
-      const variant = caasData.errors ? (caasData.successfulIds ? 'info' : 'negative') : 'positive';
+      const variantWhenErrors = caasData.successfulIds ? 'info' : 'negative';
+      const variant = caasData.errors ? variantWhenErrors : 'positive';
 
       await showToast(
         contentItems,
