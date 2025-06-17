@@ -1,16 +1,30 @@
-import { getCurrentProgramType, getPartnerDataCookieValue } from '../../scripts/utils.js';
+import { getLibs } from '../../scripts/utils.js';
+import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
 
-function createInput(fd, partnerFirstName, partnerLastName) {
+async function replacePlaceholders(template) {
+  if (!window.adobeIMS?.isSignedInUser()) return Promise.reject(new Error('User is not signed in'));
+  const profile = await window.adobeIMS.getProfile();
+
+  return template.replace(/\$\{(displayName|email)\s*\|\|\s*'([^']*)'\}/g, (match, key, fallback) => {
+    const value = profile[key];
+    return value ?? fallback;
+  });
+}
+
+function createInput(fd) {
   const input = document.createElement('input');
   input.type = fd.Type;
   input.id = fd.Field;
+
+  if (fd.Placeholder) {
+    const placeholder = replacePlaceholders(fd.Placeholder);
+
+    input.value = placeholder;
+  }
+
   input.setAttribute('placeholder', fd.Placeholder);
   if (fd.Mandatory === 'x') {
     input.classList.add('mandatory');
-  }
-
-  if (input.id === 'partnerName' && (partnerFirstName && partnerLastName)) {
-    input.value = `${partnerFirstName} ${partnerLastName}`;
   }
   return input;
 }
@@ -212,9 +226,7 @@ async function submitForm(form) {
     }
   };
 
-  const action = 'https://partners.stage.adobe.com/channelpartners/drafts/slobodanka/form-action.json';
-
-  const resp = await fetch(constructSubmitUrl(action), {
+  const resp = await fetch(constructSubmitUrl(form.dataset.action), {
     method: 'POST',
     cache: 'no-cache',
     headers: {
@@ -340,7 +352,7 @@ function fill(form) {
   }
 }
 
-async function createForm(formURL, submitURL, disclaimer, partnerFirstName, partnerLastName) {
+async function createForm(formURL, submitURL, disclaimer) {
   const { href } = new URL(formURL);
   const resp = await fetch(href);
   const json = await resp.json();
@@ -394,7 +406,7 @@ async function createForm(formURL, submitURL, disclaimer, partnerFirstName, part
       default:
         fieldWrapper.classList.add('textfield');
         fieldWrapper.append(createLabel(fd));
-        fieldWrapper.append(createInput(fd, partnerFirstName, partnerLastName));
+        fieldWrapper.append(createInput(fd));
         fieldWrapper.append(createErrorBlock(fd));
     }
 
@@ -428,27 +440,24 @@ async function createForm(formURL, submitURL, disclaimer, partnerFirstName, part
 }
 
 export default async function init(el) {
-  // const miloLibs = getLibs();
-  // const config = getConfig();
-  // const sectionIndex = el.parentNode.getAttribute('data-idx');
+  const miloLibs = getLibs();
+  const config = getConfig();
 
-  // const deps = await Promise.all([
-  //   localizationPromises(localizedText, config),
-  //   import(`${miloLibs}/features/spectrum-web-components/dist/theme.js`),
-  //   import(`${miloLibs}/features/spectrum-web-components/dist/search.js`),
-  //   import(`${miloLibs}/features/spectrum-web-components/dist/checkbox.js`),
-  //   import(`${miloLibs}/features/spectrum-web-components/dist/switch.js`),
-  //   import(`${miloLibs}/features/spectrum-web-components/dist/button.js`),
-  //   import(`${miloLibs}/features/spectrum-web-components/dist/field-label.js`),
-  //   import(`${miloLibs}/features/spectrum-web-components/dist/progress-circle.js`),
-  //   import(`${miloLibs}/features/spectrum-web-components/dist/action-button.js`),
-  // ]);
+  const localizedText = {
+    '{{partner-name}}': 'Partner Name',
+    '{{customer-vip-mp-id}}': 'Customer VIP MP ID',
+    '{{customer-country}}': 'Customer Country',
+    '{{adobe-sales-order}}': 'Adobe Sales Order',
+    '{{submit}}': 'Submit',
+  };
+  populateLocalizedTextFromListItems(el, localizedText);
 
-  const programType = getCurrentProgramType();
-
-  // Autopopulate partner name when the form loads
-  const partnerFirstName = getPartnerDataCookieValue(programType, 'firstName');
-  const partnerLastName = getPartnerDataCookieValue(programType, 'lastName');
+  const deps = await Promise.all([
+    localizationPromises(localizedText, config),
+    import(`${miloLibs}/features/spectrum-web-components/dist/theme.js`),
+    import(`${miloLibs}/features/spectrum-web-components/dist/button.js`),
+    import(`${miloLibs}/features/spectrum-web-components/dist/field-label.js`),
+  ]);
 
   const form = document.querySelector('.dme-form a[href$="form-definition.json"]');
   const actionElement = document.querySelector('.dme-form a[href$="form-action.json"]');
@@ -459,8 +468,6 @@ export default async function init(el) {
       form.href,
       actionURL,
       form.dataset.disclaimer,
-      partnerFirstName,
-      partnerLastName,
     ).then((result) => {
       form.replaceWith(result);
     });
@@ -474,5 +481,6 @@ export default async function init(el) {
     actionElement.remove();
   }
 
+  await deps;
   return el;
 }
