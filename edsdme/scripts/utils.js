@@ -32,7 +32,7 @@ export const [setLibs, getLibs] = (() => {
   return [
     (prodLibs, location) => {
       libs = (() => {
-        const {hostname, search, origin} = location || window.location;
+        const { hostname, search, origin } = location || window.location;
         if (origin.endsWith('adobe.com')) {
           return origin + prodLibs;
         }
@@ -150,7 +150,7 @@ export function getPartnerDataCookieObject(programType) {
 }
 
 export function isMember() {
-  const {status} = getPartnerDataCookieObject(getCurrentProgramType());
+  const { status } = getPartnerDataCookieObject(getCurrentProgramType());
   return status === 'MEMBER';
 }
 
@@ -167,7 +167,7 @@ export function isReseller(level) {
 }
 
 export function hasSalesCenterAccess() {
-  const {salesCenterAccess} = getPartnerDataCookieObject(getCurrentProgramType());
+  const { salesCenterAccess } = getPartnerDataCookieObject(getCurrentProgramType());
   return !!salesCenterAccess;
 }
 
@@ -228,13 +228,13 @@ export function isRenew() {
     return;
   }
   // eslint-disable-next-line consistent-return
-  return {accountStatus, daysNum};
+  return { accountStatus, daysNum };
 }
 
 export async function getRenewBanner(getConfig) {
   const renew = isRenew();
   if (!renew) return;
-  const {accountStatus, daysNum} = renew;
+  const { accountStatus, daysNum } = renew;
   const bannerFragments = {
     expired: 'banner-account-expires',
     suspended: 'banner-account-suspended',
@@ -242,7 +242,7 @@ export async function getRenewBanner(getConfig) {
   const metadataKey = bannerFragments[accountStatus];
 
   const config = getConfig();
-  const {prefix} = config.locale;
+  const { prefix } = config.locale;
   const defaultPath = `${prefix}/edsdme/partners-shared/fragments/${metadataKey}`;
   const path = getMetadataContent(metadataKey) ?? defaultPath;
   const url = new URL(path, window.location.origin);
@@ -301,7 +301,7 @@ export function updateIMSConfig() {
 
 export function getLocale(locales, pathname = window.location.pathname) {
   if (!locales) {
-    return {ietf: 'en-US', tk: 'hah7vzn.css', prefix: ''};
+    return { ietf: 'en-US', tk: 'hah7vzn.css', prefix: '' };
   }
   const LANGSTORE = 'langstore';
   const split = pathname.split('/');
@@ -406,7 +406,7 @@ function getComplexQueryParams(el, collectionTag) {
 }
 
 function setApiParams(api, block) {
-  const {el, collectionTag, ietf} = block;
+  const { el, collectionTag, ietf } = block;
   const complexQueryParams = getComplexQueryParams(el, collectionTag);
   if (complexQueryParams) api.searchParams.set('complexQuery', complexQueryParams);
 
@@ -462,8 +462,8 @@ export async function preloadResources(locales, miloLibs) {
 export function updateNavigation(locales) {
   const gnavMeta = getMetadata('gnav-source');
   if (!gnavMeta) return;
-  const {prefix} = getLocale(locales);
-  let {content} = gnavMeta;
+  const { prefix } = getLocale(locales);
+  let { content } = gnavMeta;
   if (isMember()) {
     content = getMetadataContent('gnav-loggedin-source') ?? `${prefix}/edsdme/partners-shared/loggedin-gnav`;
   }
@@ -473,8 +473,8 @@ export function updateNavigation(locales) {
 export function updateFooter(locales) {
   const footerMeta = getMetadata('footer-source');
   if (!footerMeta) return;
-  const {prefix} = getLocale(locales);
-  let {content} = footerMeta;
+  const { prefix } = getLocale(locales);
+  let { content } = footerMeta;
   if (isMember()) {
     content = getMetadataContent('footer-loggedin-source') ?? `${prefix}/edsdme/partners-shared/loggedin-footer`;
   }
@@ -493,7 +493,7 @@ export function getNodesByXPath(query, context = document) {
 }
 
 export function enableGeoPopup() {
-  const {hostname, search} = window.location;
+  const { hostname, search } = window.location;
   const enableWithParam = new URLSearchParams(search).get('georouting') === 'on';
   if (hostname === 'partnerspreview.adobe.com') {
     return 'off';

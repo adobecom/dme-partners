@@ -131,11 +131,11 @@ export async function sidekickListener(locales) {
       toast.open = true;
       toast.dismissible = true;
       toast.setAttribute('style', 'min-width: 90%');
-      messages.forEach(msg => {
+      messages.forEach((msg) => {
         const divElem = document.createElement('div');
         divElem.textContent = msg;
-        toast.append(divElem)
-      })
+        toast.append(divElem);
+      });
 
       theme.appendChild(toast);
       header.appendChild(theme);
@@ -177,7 +177,7 @@ export async function sidekickListener(locales) {
         window.adobeIMS.signIn();
         return;
       }
-      showToast([`Starting the publishing process`], 'info');
+      showToast(['Starting the publishing process'], 'info');
       const headers = new Headers();
       headers.append('Accept', 'application/json');
       headers.append('Content-Type', 'application/json');
@@ -199,7 +199,7 @@ export async function sidekickListener(locales) {
         await showToast([`Preview failed: ${errorText}`], 'negative');
         return;
       }
-      showToast([`Preview Successful`], 'info');
+      showToast(['Preview Successful'], 'info');
 
       const publishRes = await fetch(publishURL, requestOptions);
       if (!publishRes.ok) {
@@ -209,7 +209,7 @@ export async function sidekickListener(locales) {
         await showToast([`Publish failed: ${errorText}`], 'negative');
         return;
       }
-      showToast([`Publishing Successful`], 'info');
+      showToast(['Publishing Successful'], 'info');
 
       headers.append('Authorization', window.adobeIMS.getAccessToken().token);
 
@@ -236,7 +236,8 @@ export async function sidekickListener(locales) {
       }
       const variant = caasData.errors ? (caasData.successfulIds ? 'info' : 'negative') : 'positive';
 
-      await showToast(contentItems,
+      await showToast(
+        contentItems,
         variant,
       );
     } catch (error) {
