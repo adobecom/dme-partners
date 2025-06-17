@@ -83,21 +83,31 @@ export function formatDate(cardDate, locale = 'en-US') {
 
 export function getProgramType(path) {
   switch (true) {
-    case /solutionpartners/.test(path): return 'spp';
-    case /technologypartners/.test(path): return 'tpp';
-    case /channelpartners/.test(path): return 'cpp';
-    case /channelpartnerassets/.test(path): return 'cpp';
-    default: return '';
+    case /solutionpartners/.test(path):
+      return 'spp';
+    case /technologypartners/.test(path):
+      return 'tpp';
+    case /channelpartners/.test(path):
+      return 'cpp';
+    case /channelpartnerassets/.test(path):
+      return 'cpp';
+    default:
+      return '';
   }
 }
 
 export function getProgramHomePage(path) {
   switch (true) {
-    case /solutionpartners/.test(path): return '/solutionpartners/';
-    case /technologypartners/.test(path): return '/technologypartners/';
-    case /channelpartners/.test(path): return '/channelpartners/';
-    case /channelpartnerassets/.test(path): return '/channelpartners/';
-    default: return '';
+    case /solutionpartners/.test(path):
+      return '/solutionpartners/';
+    case /technologypartners/.test(path):
+      return '/technologypartners/';
+    case /channelpartners/.test(path):
+      return '/channelpartners/';
+    case /channelpartnerassets/.test(path):
+      return '/channelpartners/';
+    default:
+      return '';
   }
 }
 
@@ -485,6 +495,9 @@ export function getNodesByXPath(query, context = document) {
 export function enableGeoPopup() {
   const { hostname, search } = window.location;
   const enableWithParam = new URLSearchParams(search).get('georouting') === 'on';
+  if (hostname === 'partnerspreview.adobe.com') {
+    return 'off';
+  }
   if ((hostname.endsWith('.adobe.com') && !partnerIsSignedIn()) || enableWithParam) {
     return 'on';
   }
