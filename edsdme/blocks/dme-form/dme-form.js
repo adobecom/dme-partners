@@ -1,14 +1,22 @@
 import { getLibs } from '../../scripts/utils.js';
 import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
 
-async function replacePlaceholders(template) {
-  if (!window.adobeIMS?.isSignedInUser()) return Promise.reject(new Error('User is not signed in'));
-  const profile = await window.adobeIMS.getProfile();
+async function resolvePlaceholderFromProfile(placeholder) {
+  const placeholderPattern = /\$\{(.+?)\}/g;
 
-  return template.replace(/\$\{(displayName|email)\s*\|\|\s*'([^']*)'\}/g, (match, key, fallback) => {
-    const value = profile[key];
-    return value ?? fallback;
-  });
+  if (placeholderPattern.test(placeholder)) {
+    const isSignedIn = await window.adobeIMS.isSignedInUser();
+    if (isSignedIn) {
+      const profile = await window.adobeIMS.getProfile();
+      if (profile) {
+        return placeholder.replace(placeholderPattern, (_, key) => (
+          key in profile ? profile[key] : ''
+        ));
+      }
+    }
+  }
+
+  return '';
 }
 
 function createInput(fd) {
@@ -16,16 +24,12 @@ function createInput(fd) {
   input.type = fd.Type;
   input.id = fd.Field;
 
-  if (fd.Placeholder) {
-    const placeholder = replacePlaceholders(fd.Placeholder);
+  input.setAttribute('placeholder', !fd.Placeholder.includes('${') ? fd.Placeholder : '');
 
-    input.value = placeholder;
-  }
-
-  input.setAttribute('placeholder', fd.Placeholder);
   if (fd.Mandatory === 'x') {
     input.classList.add('mandatory');
   }
+
   return input;
 }
 
@@ -34,7 +38,10 @@ function createErrorBlock(fd) {
   wrapper.classList.add('error-wrapper');
   const error = document.createElement('div');
   error.classList.add('errorMessage');
-  error.textContent = `${fd.Label} cannot be blank.`;
+
+  if (fd.Mandatory === 'x') {
+    error.textContent = `${fd.Label} cannot be blank.`;
+  }
   wrapper.append(error);
   return wrapper;
 }
@@ -361,7 +368,7 @@ async function createForm(formURL, submitURL, disclaimer) {
   const rules = [];
   const branching = [];
   form.dataset.action = submitURL;
-  json.data.forEach((fd, idx) => {
+  json.data.forEach(async (fd, idx) => {
     fd.Type = fd.Type || 'text';
     const fieldWrapper = document.createElement('div');
     const style = fd.Style ? ` form-${fd.Style}` : '';
@@ -403,11 +410,24 @@ async function createForm(formURL, submitURL, disclaimer) {
         }
         fieldWrapper.append(createButton(fd));
         break;
-      default:
+      default: {
+        const input = createInput(fd);
+
         fieldWrapper.classList.add('textfield');
         fieldWrapper.append(createLabel(fd));
-        fieldWrapper.append(createInput(fd));
+        fieldWrapper.append(input);
         fieldWrapper.append(createErrorBlock(fd));
+
+        if (fd.Placeholder) {
+          resolvePlaceholderFromProfile(fd.Placeholder).then((resolved) => {
+            if (resolved) {
+              input.setAttribute('placeholder', resolved);
+              input.value = resolved;
+            }
+          });
+        }
+        break;
+      }
     }
 
     if (fd.Rules) {
