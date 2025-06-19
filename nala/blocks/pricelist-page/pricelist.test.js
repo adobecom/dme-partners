@@ -112,7 +112,7 @@ test.describe('Pricelist Page Validation', () => {
 
     await test.step('Filter Price Lists by Currency filter', async () => {
       await pricelistPage.searchPriceList(data.keyword);
-      await pricelistPage.pricelistRegionCheck(data.asiaPacificKorea);
+      await expect(pricelistPage.firstRegionCell).toHaveText(data.asiaPacificKorea);
       const koreaNumberofPriceLists = await pricelistPage.priceListsCount(page);
 
       await pricelistPage.filterPricelists(pricelistPage.buyingProgramTypesFilter, data.tlp5CommercialCheckBox, true);
@@ -124,7 +124,7 @@ test.describe('Pricelist Page Validation', () => {
 
       await pricelistPage.xButton.click();
       await pricelistPage.clearAllFilters.click();
-      await pricelistPage.pricelistRegionCheck(data.asiaPacificKorea);
+      await expect(pricelistPage.firstRegionCell).toHaveText(data.asiaPacificKorea);
     });
   });
   // @pricelist-validation-filter-combination-four
@@ -167,19 +167,19 @@ test.describe('Pricelist Page Validation', () => {
 
     await test.step('Check pricelist region', async () => {
       await pricelistPage.filterPricelists(pricelistPage.regionFilter, data.europeEast, true);
-      await pricelistPage.pricelistRegionCheck(data.europeEast);
+      await expect(pricelistPage.firstRegionCell).toHaveText(data.europeEast);
       await pricelistPage.clearAllFilters.click();
 
       await pricelistPage.filterPricelists(pricelistPage.regionFilter, data.europeWest, true);
-      await pricelistPage.pricelistRegionCheck(data.europeWest);
+      await expect(pricelistPage.firstRegionCell).toHaveText(data.europeWest);
       await pricelistPage.clearAllFilters.click();
 
       await pricelistPage.filterPricelists(pricelistPage.regionFilter, data.worldwide, true);
-      await pricelistPage.pricelistRegionCheck(data.worldwide);
+      await expect(pricelistPage.firstRegionCell).toHaveText(data.worldwide);
       await pricelistPage.clearAllFilters.click();
 
       await pricelistPage.filterPricelists(pricelistPage.regionFilter, data.northAmerica, true);
-      await pricelistPage.pricelistRegionCheck(data.northAmerica);
+      await expect(pricelistPage.firstRegionCell).toHaveText(data.northAmerica);
       await pricelistPage.clearAllFilters.click();
     });
   });
@@ -195,16 +195,16 @@ test.describe('Pricelist Page Validation', () => {
       });
 
       await test.step('Check pricelist region', async () => {
-        await pricelistPage.checkTable();
+        await expect(pricelistPage.firstRegionCell).not.toBeVisible();
         await pricelistPage.includeEndUserPricelists();
         await pricelistPage.filterPricelists(pricelistPage.regionFilter, data.europeEast, true);
-        await pricelistPage.pricelistRegionCheck(data.europeEast);
+        expect(pricelistPage.firstRegionCell).toHaveText(data.europeEast, { normalizeWhitespace: true });
         await pricelistPage.clearAllFilters.click();
         await pricelistPage.filterPricelists(pricelistPage.regionFilter, data.europeWest, true);
-        await pricelistPage.pricelistRegionCheck(data.europeWest);
+        expect(pricelistPage.firstRegionCell).toHaveText(data.europeWest, { normalizeWhitespace: true });
         await pricelistPage.clearAllFilters.click();
         await pricelistPage.filterPricelists(pricelistPage.regionFilter, data.northAmerica, true);
-        await pricelistPage.pricelistRegionCheck(data.northAmerica);
+        expect(pricelistPage.firstRegionCell).toHaveText(data.northAmerica, { normalizeWhitespace: true });
         await pricelistPage.clearAllFilters.click();
       });
     });
