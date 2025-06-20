@@ -1,8 +1,5 @@
-import { getLibs } from '../../scripts/utils.js';
-import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
-
 async function resolvePlaceholderFromProfile(placeholder) {
-  const placeholderPattern = /\$\{(.+?)\}/g;
+  const placeholderPattern = /\$\{profile\.(.+?)\}/g;
 
   if (placeholderPattern.test(placeholder)) {
     const isSignedIn = await window.adobeIMS.isSignedInUser();
@@ -460,25 +457,6 @@ async function createForm(formURL, submitURL, disclaimer) {
 }
 
 export default async function init(el) {
-  const miloLibs = getLibs();
-  const config = getConfig();
-
-  const localizedText = {
-    '{{partner-name}}': 'Partner Name',
-    '{{customer-vip-mp-id}}': 'Customer VIP MP ID',
-    '{{customer-country}}': 'Customer Country',
-    '{{adobe-sales-order}}': 'Adobe Sales Order',
-    '{{submit}}': 'Submit',
-  };
-  populateLocalizedTextFromListItems(el, localizedText);
-
-  const deps = await Promise.all([
-    localizationPromises(localizedText, config),
-    import(`${miloLibs}/features/spectrum-web-components/dist/theme.js`),
-    import(`${miloLibs}/features/spectrum-web-components/dist/button.js`),
-    import(`${miloLibs}/features/spectrum-web-components/dist/field-label.js`),
-  ]);
-
   const form = document.querySelector('.dme-form a[href$="form-definition.json"]');
   const actionElement = document.querySelector('.dme-form a[href$="form-action.json"]');
   const actionURL = actionElement.href;
@@ -501,6 +479,5 @@ export default async function init(el) {
     actionElement.remove();
   }
 
-  await deps;
   return el;
 }
