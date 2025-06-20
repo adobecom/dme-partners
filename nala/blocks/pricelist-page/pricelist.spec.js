@@ -110,7 +110,7 @@ export default {
       tags: '@dme-pricelists @regression @circleCi',
       data: {
         partnerLevel: 'cpp-distributor-india:',
-        text: 'Asia Pacific, Korea',
+        text: 'Asia Pacific,Korea',
       },
     },
     {
