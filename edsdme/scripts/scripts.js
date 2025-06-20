@@ -10,7 +10,7 @@ import {
   enableGeoPopup,
   PARTNER_LOGIN_QUERY,
   prodHosts,
-  previewHost,
+  previewHosts
 } from './utils.js';
 import { rewriteLinks } from './rewriteLinks.js';
 import { sidekickListener } from '../blocks/utils/utils.js';
@@ -112,7 +112,7 @@ function setUpPage() {
   await loadArea();
   applyPagePersonalization();
   rewriteLinks(document);
-  if (previewHost.includes(window.location.host)) {
+  if (previewHosts.includes(window.location.host)) {
     sidekickListener(CONFIG.locales);
   }
 }());
