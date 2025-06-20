@@ -236,7 +236,9 @@ test.describe('Pricelist Page Validation', () => {
       });
 
       await test.step('Check pricelist region', async () => {
-        expect(pricelistPage.firstRegionCell).toHaveText(data.text, { normalizeWhitespace: true });
+        await expect(pricelistPage.firstRegionCell).toBeVisible({ timeout: 30000 });
+        await expect(pricelistPage.firstRegionCell).not.toHaveText('', { timeout: 30000 });
+        await expect(pricelistPage.firstRegionCell).toContainText(data.text);
       });
     });
   });
