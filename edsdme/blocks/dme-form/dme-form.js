@@ -34,7 +34,7 @@ function createErrorBlock(fd) {
   const wrapper = document.createElement('div');
   wrapper.classList.add('error-wrapper');
   const error = document.createElement('div');
-  error.classList.add('errorMessage');
+  error.classList.add('error-message');
 
   if (fd.Mandatory === 'x') {
     error.textContent = `${fd.Label} cannot be blank.`;
@@ -361,7 +361,6 @@ async function createForm(formURL, submitURL, disclaimer) {
   const resp = await fetch(href);
   const json = await resp.json();
   const form = document.createElement('form');
-  form.classList.add('faas-form');
   const rules = [];
   const branching = [];
   form.dataset.action = submitURL;
@@ -457,9 +456,9 @@ async function createForm(formURL, submitURL, disclaimer) {
 }
 
 export default async function init(el) {
-  const form = document.querySelector('.dme-form a[href$="form-definition.json"]');
-  const actionElement = document.querySelector('.dme-form a[href$="form-action.json"]');
-  const actionURL = actionElement.href;
+  const form = el.querySelector('a[href$="form-definition.json"]');
+  const actionElement = el.querySelector('a[href$="form-action.json"]');
+  const actionURL = actionElement?.href;
 
   if (form && actionURL) {
     createForm(
@@ -470,7 +469,7 @@ export default async function init(el) {
       form.replaceWith(result);
     });
 
-    document.querySelectorAll('.dme-form div').forEach((div) => {
+    el.querySelectorAll('div').forEach((div) => {
       if (div.textContent.trim() === 'form-definition' || div.textContent.trim() === 'form-action') {
         div.remove(); // Remove the matching div
       }
