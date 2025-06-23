@@ -191,7 +191,7 @@
 	color: var(--color-input-error);
 }
 
-.dme-form div:nth-of-type(2) a {
+.dme-form div a {
 	display: none;
 }
 

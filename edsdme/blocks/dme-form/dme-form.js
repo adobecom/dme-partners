@@ -471,7 +471,7 @@ export default async function init(el) {
 
     el.querySelectorAll('div').forEach((div) => {
       if (div.textContent.trim() === 'form-definition' || div.textContent.trim() === 'form-action') {
-        div.remove(); // Remove the matching div
+        div.remove();
       }
     });
 
