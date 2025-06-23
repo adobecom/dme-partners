@@ -10,7 +10,7 @@ import {
   enableGeoPopup,
   PARTNER_LOGIN_QUERY,
   prodHosts,
-  previewHosts
+  previewHosts,
 } from './utils.js';
 import { rewriteLinks } from './rewriteLinks.js';
 import { sidekickListener } from '../blocks/utils/utils.js';

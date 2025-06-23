@@ -22,6 +22,7 @@ export function populateLocalizedTextFromListItems(el, localizedText) {
     localizedText[`{{${liContent}}}`] = liContent;
   });
 }
+
 export async function localizationPromises(localizedText, config) {
   return Promise.all(Object.keys(localizedText).map(async (key) => {
     const value = await replaceText(key, config);
@@ -176,8 +177,7 @@ export async function sidekickListener(locales) {
         window.setTimeout(() => {
           window.adobeIMS.adobeIdData.redirect_uri = window.location.href;
           window.adobeIMS.signIn();
-          }, 1000
-        )
+        }, 1000);
         return;
       }
       showToast(['Starting the publishing process'], 'info');
