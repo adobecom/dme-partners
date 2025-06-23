@@ -56,7 +56,7 @@ test.describe('Validate redirects flow', () => {
         const href = await cbcEnablementLink.getAttribute('href');
 
         expect(href).toContain(data.cbcEnablementLinkSignInUser);
-        expect(cbcEnablementLink.getAttribute('target')).resolves.toBe('_blank');
+        await expect(cbcEnablementLink.getAttribute('target')).resolves.toBe('_blank');
       });
 
       await test.step('Verify helpx.adobe.com link', async () => {
@@ -64,14 +64,14 @@ test.describe('Validate redirects flow', () => {
         const href = await helpXAdobeLink.getAttribute('href');
 
         expect(href).toContain(data.helpXAdobeLink);
-        expect(helpXAdobeLink.getAttribute('target')).resolves.toBe('_blank');
+        await expect(helpXAdobeLink.getAttribute('target')).resolves.toBe('_blank');
       });
 
       await test.step('Verify old portal link', async () => {
         const href = await redirectsPage.getLinkByText(data.oldPortalMainLink).getAttribute('href');
 
         expect(href).toContain(data.oldPortalLink);
-        expect(redirectsPage.getLinkByText(data.oldPortalMainLink).getAttribute('target')).resolves.toBe('_blank');
+        await expect(redirectsPage.getLinkByText(data.oldPortalMainLink).getAttribute('target')).resolves.toBe('_blank');
       });
 
       await test.step('Verify Access Sales Center link from the GNav', async () => {
@@ -82,7 +82,7 @@ test.describe('Validate redirects flow', () => {
         const href = await salesCenterLinkEl.getAttribute('href');
 
         expect(href).toContain(data.salesCenterLink);
-        expect(salesCenterLinkEl.getAttribute('target')).resolves.toBe('_blank');
+        await expect(salesCenterLinkEl.getAttribute('target')).resolves.toBe('_blank');
       });
 
       await test.step('Verify adobe.com link from the GNav', async () => {
@@ -93,7 +93,7 @@ test.describe('Validate redirects flow', () => {
         const href = await adobeLinkEl.getAttribute('href');
 
         expect(href).toContain(data.adobeLink);
-        expect(adobeLinkEl.getAttribute('target')).resolves.toBe('_blank');
+        await expect(adobeLinkEl.getAttribute('target')).resolves.toBe('_blank');
       });
 
       await test.step('Verify business.adobe.com link from the GNav', async () => {
@@ -104,7 +104,7 @@ test.describe('Validate redirects flow', () => {
         const href = await businessAdobeLinkEl.getAttribute('href');
 
         expect(href).toContain(data.businessAdobeLink);
-        expect(businessAdobeLinkEl.getAttribute('target')).resolves.toBe('_blank');
+        await expect(businessAdobeLinkEl.getAttribute('target')).resolves.toBe('_blank');
       });
     });
   });
