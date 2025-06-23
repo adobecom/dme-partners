@@ -23,7 +23,7 @@ function createInput(fd) {
 
   input.setAttribute('placeholder', !fd.Placeholder.includes('${') ? fd.Placeholder : '');
 
-  if (fd.Mandatory === 'x') {
+  if (fd.Mandatory.trim() === 'x') {
     input.classList.add('mandatory');
   }
 
@@ -36,7 +36,7 @@ function createErrorBlock(fd) {
   const error = document.createElement('div');
   error.classList.add('error-message');
 
-  if (fd.Mandatory === 'x') {
+  if (fd.Mandatory.trim() === 'x') {
     error.textContent = `${fd.Label} cannot be blank.`;
   }
   wrapper.append(error);
@@ -80,7 +80,7 @@ function createSelect(fd) {
         document.querySelector(`#${select.id}`).insertAdjacentElement('afterend', other);
         const br = document.createElement('br');
         other.insertAdjacentElement('beforebegin', br);
-        if (fd.Mandatory === 'x') {
+        if (fd.Mandatory.trim() === 'x') {
           other.classList.add('mandatory');
         }
       } else {
@@ -92,7 +92,7 @@ function createSelect(fd) {
     });
   }
 
-  if (fd.Mandatory === 'x') {
+  if (fd.Mandatory.trim() === 'x') {
     select.classList.add('mandatory');
   }
   wrapper.append(select);
@@ -113,7 +113,7 @@ function createRadio(fd) {
     radio.id = `${fd.Field}-${idx}`;
     radio.name = fd.Field;
     radio.value = value.trim();
-    if (fd.Mandatory === 'x' && idx === 0) {
+    if (fd.Mandatory.trim() === 'x' && idx === 0) {
       radio.classList.add('mandatory');
     }
     group.append(radio);
@@ -138,7 +138,7 @@ function createRadio(fd) {
     const other = createInput({ Field: `${radio.id}-text`, Placeholder: fd.OtherOption, Type: 'text' });
     other.classList.add('radio-other-input');
     other.setAttribute('data-other', '');
-    if (fd.Mandatory === 'x') {
+    if (fd.Mandatory.trim() === 'x') {
       other.classList.add('mandatory');
     }
     group.append(other);
@@ -149,9 +149,9 @@ function createRadio(fd) {
 function constructPayload(form) {
   const payload = {};
   [...form.elements].forEach((fe) => {
-    if (fe.type === 'checkbox') {
+    if (fe.type.trim() === 'checkbox') {
       if (fe.checked) payload[fe.id] = fe.value;
-    } else if (fe.type === 'radio') {
+    } else if (fe.type.trim() === 'radio') {
       if (Object.prototype.hasOwnProperty.call(payload, fe.name)) {
         return;
       }
@@ -161,12 +161,12 @@ function constructPayload(form) {
         value = form.querySelector(`#${fe.name}-other-text`).value;
       }
       payload[fe.name] = value;
-    } else if (fe.type === 'select-one') {
+    } else if (fe.type.trim() === 'select-one') {
       payload[fe.id] = fe.value;
       const placeholder = fe.firstElementChild;
       if (placeholder.textContent === fe.value) {
         payload[fe.id] = '';
-      } else if (fe.value === 'other') {
+      } else if (fe.value.trim() === 'other') {
         payload[fe.id] = form.querySelector(`#${fe.id}-other-text`).value;
       }
     } else if (fe.id && !fe.hasAttribute('data-other')) {
@@ -187,16 +187,16 @@ function validate(form, submit, e) {
       return;
     }
     let value = '';
-    if (fe.type === 'text' || fe.type === 'email') {
+    if (fe.type.trim() === 'text' || fe.type.trim() === 'email') {
       if (fe.id.indexOf('-other-text') !== -1) {
         const id = fe.id.split('-other-text')[0];
         value = payload[id];
       } else {
         value = payload[fe.id];
       }
-    } else if (fe.type === 'radio') {
+    } else if (fe.type.trim() === 'radio') {
       value = payload[fe.name];
-    } else if (fe.type === 'select-one') {
+    } else if (fe.type.trim() === 'select-one') {
       value = payload[fe.id];
     }
 
@@ -276,7 +276,7 @@ function createButton(fd) {
   const button = document.createElement('button');
   button.textContent = fd.Label;
   button.classList.add('spectrum-Button', 'spectrum-Button--cta');
-  if (fd.Type === 'submit') {
+  if (fd.Type.trim() === 'submit') {
     button.addEventListener('click', (event) => submitHandler(event, button, fd));
   }
   return button;
@@ -292,7 +292,7 @@ function createTextArea(fd) {
   const input = document.createElement('textarea');
   input.id = fd.Field;
   input.setAttribute('placeholder', fd.Placeholder);
-  if (fd.Mandatory === 'x') {
+  if (fd.Mandatory.trim() === 'x') {
     input.classList.add('mandatory');
   }
   return input;
@@ -302,10 +302,10 @@ function createLabel(fd) {
   const label = document.createElement('label');
   label.setAttribute('for', fd.Field);
   label.textContent = fd.Label;
-  if (fd.Mandatory === 'x') {
+  if (fd.Mandatory.trim() === 'x') {
     label.classList.add('required');
   }
-  if (fd.Type === 'checkbox') {
+  if (fd.Type.trim() === 'checkbox') {
     label.classList.add('checkbox-label');
   }
   return label;
@@ -365,14 +365,14 @@ async function createForm(formURL, submitURL, disclaimer) {
   const branching = [];
   form.dataset.action = submitURL;
   json.data.forEach(async (fd, idx) => {
-    fd.Type = fd.Type || 'text';
+    fd.Type = fd.Type.trim() || 'text';
     const fieldWrapper = document.createElement('div');
     const style = fd.Style ? ` form-${fd.Style}` : '';
     const fieldId = `form-${fd.Type}-wrapper${style}`;
     fieldWrapper.className = fieldId;
     fieldWrapper.id = `${fieldId}-${idx}`;
     fieldWrapper.classList.add('field-wrapper', 'row');
-    switch (fd.Type) {
+    switch (fd.Type.trim()) {
       case 'select':
         fieldWrapper.classList.add('dropdownlist');
         fieldWrapper.append(createLabel(fd));
@@ -414,8 +414,8 @@ async function createForm(formURL, submitURL, disclaimer) {
         fieldWrapper.append(input);
         fieldWrapper.append(createErrorBlock(fd));
 
-        if (fd.Placeholder) {
-          resolvePlaceholderFromProfile(fd.Placeholder).then((resolved) => {
+        if (fd.Placeholder.trim()) {
+          resolvePlaceholderFromProfile(fd.Placeholder.trim()).then((resolved) => {
             if (resolved) {
               input.setAttribute('placeholder', resolved);
               input.value = resolved;
