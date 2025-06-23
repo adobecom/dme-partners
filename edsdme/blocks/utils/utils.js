@@ -11,6 +11,7 @@ export { replaceText };
 
 const previewURL = 'https://admin.hlx.page/preview/adobecom/dme-partners/main/*';
 const publishURL = 'https://admin.hlx.page/live/adobecom/dme-partners/main/*';
+const jobURL = 'https://admin.hlx.page/job/adobecom/dme-partners/main/';
 
 export function populateLocalizedTextFromListItems(el, localizedText) {
   const liList = Array.from(el.querySelectorAll('li'));
@@ -30,6 +31,52 @@ export async function localizationPromises(localizedText, config) {
       localizedText[key] = value;
     }
   }));
+}
+
+// eslint-disable-next-line func-names
+const wait = function (delay) {
+  // eslint-disable-next-line arrow-parens
+  return new Promise(resolve => {
+    setTimeout(resolve, delay);
+  });
+};
+
+// Polls a function until a specified condition is met or maximum attempts are exceeded
+async function poll(fn, condition, interval = 2000, maxAttempts = 60) {
+  let attempts = 0;
+  let result = await fn();
+  while (!condition(result)) {
+    // eslint-disable-next-line no-plusplus
+    if (++attempts >= maxAttempts) {
+      throw new Error(`Polling exceeded maximum number of (${maxAttempts}) attempts.`);
+    }
+    // eslint-disable-next-line no-await-in-loop
+    await wait(interval);
+    // eslint-disable-next-line no-await-in-loop
+    result = await fn();
+  }
+  return result;
+}
+
+const JobStates = Object.freeze({
+  CREATED: 'created',
+  RUNNING: 'running',
+  STOPPED: 'stopped',
+});
+
+async function adminApiResponse(response) {
+  const responseJson = await response.json();
+  const { topic: jobTopic, name: jobName } = responseJson?.job || {};
+  await poll(
+    async () => {
+      const res = await fetch(`${jobURL}${jobTopic}/${jobName}`);
+      // eslint-disable-next-line no-return-await
+      return await res.json();
+    },
+    (result) => result.state === JobStates.STOPPED,
+    2000,
+    120,
+  );
 }
 
 export function getRuntimeActionUrl(action, type = 'dx') {
@@ -110,11 +157,19 @@ export async function sidekickListener(locales) {
   ]);
   await deps;
 
-  const initSidekickListener = () => {
-    const sidekick = document.querySelector('aem-sidekick, helix-sidekick');
-    if (sidekick) {
+  const initSidekickListener = async () => {
+    try {
+      const sidekick = await poll(
+        () => Promise.resolve(document.querySelector('aem-sidekick, helix-sidekick')),
+        (el) => el !== null,
+        500,
+        20,
+      );
       // eslint-disable-next-line no-use-before-define
       sidekick.addEventListener('custom:publishtoallsites', publishToAllSites, { once: true });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Sidekick not found within timeout.', error);
     }
   };
 
@@ -202,6 +257,7 @@ export async function sidekickListener(locales) {
         await showToast([`Preview failed: ${errorText}`], 'negative');
         return;
       }
+      await adminApiResponse(previewRes);
       showToast(['Preview Successful'], 'info');
 
       const publishRes = await fetch(publishURL, requestOptions);
@@ -212,6 +268,7 @@ export async function sidekickListener(locales) {
         await showToast([`Publish failed: ${errorText}`], 'negative');
         return;
       }
+      await adminApiResponse(publishRes);
       showToast(['Publishing Successful'], 'info');
 
       headers.append('Authorization', window.adobeIMS.getAccessToken().token);
@@ -233,12 +290,12 @@ export async function sidekickListener(locales) {
       const caasData = await caasRes.json();
       const contentItems = ['Publish to CaaS:', 'The following announcements were successfully published:'];
       contentItems.push(...caasData.successfulIds);
-      if (caasData.errors) {
+      if (caasData.errors.length > 0) {
         contentItems.push('The following errors occured:');
         contentItems.push(...caasData.errors);
       }
       const variantWhenErrors = caasData.successfulIds ? 'info' : 'negative';
-      const variant = caasData.errors ? variantWhenErrors : 'positive';
+      const variant = caasData.errors.length > 0 ? variantWhenErrors : 'positive';
 
       await showToast(
         contentItems,
