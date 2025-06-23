@@ -26,7 +26,7 @@ export default {
         partnerLevel: 'cpp-us-registered:',
         profileName: 'CPP Stage Registered Reseller Renew',
         profileEmail: 'yugo-stage-c…@mailinator.com',
-        profilePartnerLevel: 'Registered',
+        profilePartnerLevel: 'REGISTERED',
         type: 'expired',
         profileRenewText: 'Your account is going to expire soon.',
         editProfileURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
