@@ -22,6 +22,7 @@ export function populateLocalizedTextFromListItems(el, localizedText) {
     localizedText[`{{${liContent}}}`] = liContent;
   });
 }
+
 export async function localizationPromises(localizedText, config) {
   return Promise.all(Object.keys(localizedText).map(async (key) => {
     const value = await replaceText(key, config);
@@ -169,12 +170,14 @@ export async function sidekickListener(locales) {
   const publishToAllSites = async ({ detail: payload }) => {
     try {
       if (!window.adobeIMS.isSignedInUser()) {
-        await showToast(
-          ['You are not logged in with an Adobe ID. Redirecting to login...'],
+        showToast(
+          ['You are not logged in with an Adobe ID. Redirecting to login, please "publish to all sites again" after signing in with your @adobe.com account.'],
           'info',
         );
-        window.adobeIMS.adobeIdData.redirect_uri = window.location.href;
-        window.adobeIMS.signIn();
+        window.setTimeout(() => {
+          window.adobeIMS.adobeIdData.redirect_uri = window.location.href;
+          window.adobeIMS.signIn();
+        }, 1000);
         return;
       }
       showToast(['Starting the publishing process'], 'info');
