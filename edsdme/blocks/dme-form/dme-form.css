@@ -191,6 +191,10 @@
 	color: var(--color-input-error);
 }
 
+.dme-form div:nth-of-type(2) a {
+	display: none;
+}
+
 @media screen and (min-width: 600px) {
   .dme-form :is(.form-submit-wrapper:last-child, .form-heading-wrapper, .form-full-width) {
     grid-column: 1 / 3;

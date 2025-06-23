@@ -459,7 +459,6 @@ export default async function init(el) {
   const form = el.querySelector('a[href$="form-definition.json"]');
   const actionElement = el.querySelector('a[href$="form-action.json"]');
   const actionURL = actionElement?.href;
-  actionElement.remove();
 
   if (form && actionURL) {
     createForm(
@@ -476,7 +475,7 @@ export default async function init(el) {
       }
     });
 
-
+    actionElement.remove();
   }
 
   return el;
