@@ -1,19 +1,20 @@
+import { getCurrentProgramType, getPartnerDataCookieObject } from '../../scripts/utils.js';
+
 async function resolvePlaceholderFromProfile(placeholder) {
-  const placeholderPattern = /\$\{profile\.(.+?)\}/g;
+  const placeholderPattern = /\$\{(.+?)\}/g;
 
-  if (placeholderPattern.test(placeholder)) {
-    const isSignedIn = await window.adobeIMS.isSignedInUser();
-    if (isSignedIn) {
-      const profile = await window.adobeIMS.getProfile();
-      if (profile) {
-        return placeholder.replace(placeholderPattern, (_, key) => (
-          key in profile ? profile[key] : ''
-        ));
-      }
-    }
+  if (!placeholderPattern.test(placeholder)) return '';
+
+  try {
+    const profileData = getPartnerDataCookieObject(getCurrentProgramType());
+
+    // Replace all placeholders with matching values from profileData
+    return placeholder.replace(placeholderPattern, (_, key) => (
+      key in profileData ? profileData[key] : ''
+    ));
+  } catch (error) {
+    throw new Error(`Failed to parse CPP cookie:: ${error}`);
   }
-
-  return '';
 }
 
 function createInput(fd) {
@@ -254,17 +255,17 @@ function createSubmitError() {
   submitWrapper.insertBefore(msg, submitWrapper.lastChild);
 }
 
-async function submitHandler(event, button, fd) {
+async function submitHandler(event, button, fd, thankYouPageURL) {
   const form = button.closest('form');
   if (fd.Placeholder) form.dataset.action = fd.Placeholder;
   if (validate(form, true)) {
     event.preventDefault();
     button.setAttribute('disabled', '');
     const result = await submitForm(form);
-    const redirectUrl = fd.ThankYouPage;
+
     if (result) {
-      if (redirectUrl && redirectUrl.match('adobe.com')) {
-        window.location.assign(redirectUrl);
+      if (thankYouPageURL) {
+        window.location.assign(thankYouPageURL);
       }
     } else {
       createSubmitError();
@@ -272,12 +273,12 @@ async function submitHandler(event, button, fd) {
   }
 }
 
-function createButton(fd) {
+function createButton(fd, thankYouPageURL) {
   const button = document.createElement('button');
   button.textContent = fd.Label;
   button.classList.add('spectrum-Button', 'spectrum-Button--cta');
   if (fd.Type.trim() === 'submit') {
-    button.addEventListener('click', (event) => submitHandler(event, button, fd));
+    button.addEventListener('click', (event) => submitHandler(event, button, fd, thankYouPageURL));
   }
   return button;
 }
@@ -356,7 +357,7 @@ function fill(form) {
   }
 }
 
-async function createForm(formURL, submitURL, disclaimer) {
+async function createForm(formURL, submitURL, disclaimer, thankYouPageURL) {
   const { href } = new URL(formURL);
   const resp = await fetch(href);
   const json = await resp.json();
@@ -404,7 +405,7 @@ async function createForm(formURL, submitURL, disclaimer) {
         if (disclaimer) {
           fieldWrapper.append(createDisclaimer(disclaimer));
         }
-        fieldWrapper.append(createButton(fd));
+        fieldWrapper.append(createButton(fd, thankYouPageURL));
         break;
       default: {
         const input = createInput(fd);
@@ -457,25 +458,37 @@ async function createForm(formURL, submitURL, disclaimer) {
 
 export default async function init(el) {
   const form = el.querySelector('a[href$="form-definition.json"]');
-  const actionElement = el.querySelector('a[href$="form-action.json"]');
-  const actionURL = actionElement?.href;
+  let thankYouPageURL = '';
+  let actionURL = '';
+
+  el.querySelectorAll('div').forEach((div) => {
+    const elementContent = div.textContent.toLowerCase();
+
+    if (elementContent.includes('form-action.json')) {
+      const domain = window.location.origin;
+      actionURL = domain + div.textContent;
+      div.remove();
+    }
+
+    if (elementContent.includes('thank-you-page')) {
+      const parent = div.parentElement;
+      thankYouPageURL = parent.querySelector('a').href;
+    }
+
+    if (elementContent.trim() === 'form-definition' || elementContent.trim() === 'form-action' || elementContent.trim() === 'thank-you-page') {
+      div.remove();
+    }
+  });
 
   if (form && actionURL) {
     createForm(
       form.href,
       actionURL,
       form.dataset.disclaimer,
+      thankYouPageURL,
     ).then((result) => {
       form.replaceWith(result);
     });
-
-    el.querySelectorAll('div').forEach((div) => {
-      if (div.textContent.trim() === 'form-definition' || div.textContent.trim() === 'form-action') {
-        div.remove();
-      }
-    });
-
-    actionElement.remove();
   }
 
   return el;
