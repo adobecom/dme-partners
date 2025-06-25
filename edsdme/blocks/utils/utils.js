@@ -68,8 +68,9 @@ async function getJobStatusDetails(topic, jobName) {
   const url = `${jobURL}/${topic}/${jobName}/details`;
   const jobRes = await fetch(url);
   const jsonRes = await jobRes.json();
-  // eslint-disable-next-line max-len
-  const previewed = jsonRes.data.resources.filter((res) => res.status === 200 || res.status === 304);
+  const previewed = jsonRes?.data?.resources?.filter(
+    (res) => res?.status === 200 || res?.status === 304,
+  ) || [];
   const paths = previewed.map((resource) => `https://main--dme-partners--adobecom.aem.page${resource.path}`);
   return paths;
 }
