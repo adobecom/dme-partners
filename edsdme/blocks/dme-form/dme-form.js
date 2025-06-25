@@ -1,61 +1,20 @@
+import { getCurrentProgramType, getPartnerDataCookieObject } from '../../scripts/utils.js';
+
 async function resolvePlaceholderFromProfile(placeholder) {
-  const placeholderPattern = /\$\{profile\.(.+?)\}/;
+  const placeholderPattern = /\$\{(.+?)\}/g;
 
-  if (!placeholderPattern.test(placeholder)) {
-    return '';
+  if (!placeholderPattern.test(placeholder)) return '';
+
+  try {
+    const profileData = getPartnerDataCookieObject(getCurrentProgramType());
+
+    // Replace all placeholders with matching values from profileData
+    return placeholder.replace(placeholderPattern, (_, key) => (
+      key in profileData ? profileData[key] : ''
+    ));
+  } catch (error) {
+    throw new Error(`Failed to parse CPP cookie:: ${error}`);
   }
-
-  if (window.adobeIMS) {
-    window.adobeIMS.initialize();
-  }
-
-  const maxRetries = 10;
-  const interval = 500;
-  let isSignedIn = false;
-  let attempts = 0;
-
-  const wait = (ms) => new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-
-  while (attempts < maxRetries) {
-    const ims = window.adobeIMS;
-    const hasMethod = ims && typeof ims.isSignedInUser === 'function';
-
-    if (hasMethod) {
-      // eslint-disable-next-line no-await-in-loop
-      const signedIn = await ims.isSignedInUser();
-      if (signedIn) {
-        isSignedIn = true;
-        break;
-      }
-    }
-
-    // eslint-disable-next-line no-await-in-loop
-    await wait(interval);
-    attempts += 1;
-  }
-
-  if (!isSignedIn) {
-    // eslint-disable-next-line no-console
-    console.warn('User not signed in or IMS not ready');
-    return '';
-  }
-
-  const profile = await window.adobeIMS.getProfile();
-
-  if (!profile) {
-    // eslint-disable-next-line no-console
-    console.warn('Failed to retrieve profile');
-    return '';
-  }
-
-  return placeholder.replace(/\$\{profile\.(.+?)\}/g, (match, key) => {
-    if (Object.prototype.hasOwnProperty.call(profile, key)) {
-      return profile[key];
-    }
-    return '';
-  });
 }
 
 function createInput(fd) {
