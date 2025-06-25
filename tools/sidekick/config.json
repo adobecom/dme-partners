@@ -89,6 +89,21 @@
     },
     {
       "containerId": "tools",
+      "title": "Preview to all sites",
+      "id": "previewtoallsites",
+      "event": "previewtoallsites",
+      "excludePaths": [
+        "/**"
+      ],
+      "includePaths": [
+        "/channelpartners/**"
+      ],
+      "environments": [
+        "live"
+      ]
+    },
+    {
+      "containerId": "tools",
       "title": "Publish to all sites",
       "id": "publishtoallsites",
       "event": "publishtoallsites",
