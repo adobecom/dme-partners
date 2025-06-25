@@ -1,19 +1,59 @@
 async function resolvePlaceholderFromProfile(placeholder) {
-  const placeholderPattern = /\$\{profile\.(.+?)\}/g;
+  const placeholderPattern = /\$\{profile\.(.+?)\}/;
 
-  window.addEventListener('feds.events.profileDataReady', async () => {
-    if (placeholderPattern.test(placeholder)) {
-      const isSignedIn = await window.adobeIMS?.isSignedInUser();
-      if (isSignedIn) {
-        const profile = await window.adobeIMS.getProfile();
-        if (profile) {
-          return placeholder.replace(placeholderPattern, (_, key) => (
-            key in profile ? profile[key] : ''
-          ));
-        }
+  if (!placeholderPattern.test(placeholder)) {
+    return '';
+  }
+
+  if (window.adobeIMS) {
+    window.adobeIMS.initialize();
+  }
+
+  const maxRetries = 10;
+  const interval = 500;
+  let isSignedIn = false;
+  let attempts = 0;
+
+  const wait = (ms) => new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+
+  while (attempts < maxRetries) {
+    const ims = window.adobeIMS;
+    const hasMethod = ims && typeof ims.isSignedInUser === 'function';
+
+    if (hasMethod) {
+      // eslint-disable-next-line no-await-in-loop
+      const signedIn = await ims.isSignedInUser();
+      if (signedIn) {
+        isSignedIn = true;
+        break;
       }
     }
 
+    // eslint-disable-next-line no-await-in-loop
+    await wait(interval);
+    attempts += 1;
+  }
+
+  if (!isSignedIn) {
+    // eslint-disable-next-line no-console
+    console.warn('User not signed in or IMS not ready');
+    return '';
+  }
+
+  const profile = await window.adobeIMS.getProfile();
+
+  if (!profile) {
+    // eslint-disable-next-line no-console
+    console.warn('Failed to retrieve profile');
+    return '';
+  }
+
+  return placeholder.replace(/\$\{profile\.(.+?)\}/g, (match, key) => {
+    if (Object.prototype.hasOwnProperty.call(profile, key)) {
+      return profile[key];
+    }
     return '';
   });
 }
@@ -463,18 +503,20 @@ export default async function init(el) {
   let actionURL = '';
 
   el.querySelectorAll('div').forEach((div) => {
-    if (div.textContent.includes('form-action.json')) {
+    const elementContent = div.textContent.toLowerCase();
+
+    if (elementContent.includes('form-action.json')) {
       const domain = window.location.origin;
       actionURL = domain + div.textContent;
       div.remove();
     }
 
-    if (div.textContent.includes('thank-you-page')) {
+    if (elementContent.includes('thank-you-page')) {
       const parent = div.parentElement;
       thankYouPageURL = parent.querySelector('a').href;
     }
 
-    if (div.textContent.trim() === 'form-definition' || div.textContent.trim() === 'form-action' || div.textContent.trim() === 'thank-you-page') {
+    if (elementContent.trim() === 'form-definition' || elementContent.trim() === 'form-action' || elementContent.trim() === 'thank-you-page') {
       div.remove();
     }
   });
