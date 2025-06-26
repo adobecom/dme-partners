@@ -366,6 +366,18 @@ async function createForm(formURL, submitURL, disclaimer, thankYouPageURL) {
   const branching = [];
   form.dataset.action = submitURL;
   json.data.forEach(async (fd, idx) => {
+    const placeholderPattern = /^\{(.+?)\}$/;
+
+    // Override the values in-place,
+    // by checking if each value matches the {value} pattern and updating it accordingly
+    Object.entries(fd).forEach(([key, value]) => {
+      const match = typeof value === 'string' && value.match(placeholderPattern);
+      if (match) {
+        const [, extracted] = match;
+        fd[key] = extracted;
+      }
+    });
+
     fd.Type = fd.Type.trim() || 'text';
     const fieldWrapper = document.createElement('div');
     const style = fd.Style ? ` form-${fd.Style}` : '';
