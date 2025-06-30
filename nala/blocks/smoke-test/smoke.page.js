@@ -42,7 +42,7 @@ export default class SmokeTest {
     this.findDistributorBtn = page.locator('.feds-navItem .feds-cta-wrapper a[href*="/api/v1/web/dx-partners-runtime/sfdc-redirect?program_type=channel&request_type=distributor_finder"]');
     this.programGnavOption = page.locator('.feds-navItem a[href*="/channelpartners/program"]');
     this.supportGnavOption = page.locator('.feds-navItem a[href*="/channelpartners/support"]');
-    this.announcementCardTitle = page.locator('#announcement-title')
+    this.announcementCardTitle = page.locator('#announcement-title');
   }
 
   async smokeSignIn(page, baseURL, partnerLevel) {
