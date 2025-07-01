@@ -97,26 +97,14 @@ test.describe('Validate DME Form block', () => {
     });
   });
 
-  test(`${features[1].name},${features[1].tags}`, async ({ page, context, baseURL }) => {
-    const { data, path, publicPath } = features[1];
+  test(`${features[1].name},${features[1].tags}`, async ({ page, baseURL }) => {
+    const { data, path } = features[1];
 
-    await test.step('Go to Promo Pricing page and authorize', async () => {
-      if (baseURL.includes('adobe.com')) {
-        await page.goto(`${baseURL}${path}`, { waitUntil: 'networkidle' });
+    await test.step('Go to Promo Pricing page and sign in', async () => {
+      await page.goto(`${baseURL}${path}`, { waitUntil: 'networkidle' });
 
-        await singInPage.signIn(page, `${data.partnerLevel}`);
-        await page.waitForLoadState();
-      } else {
-        await page.goto(`${baseURL}${publicPath}`, { waitUntil: 'networkidle' });
-
-        await singInPage.addCookie(
-          data.partnerData,
-          `${baseURL}${publicPath}`,
-          context,
-        );
-
-        await page.reload({ waitUntil: 'networkidle' });
-      }
+      await singInPage.signIn(page, `${data.partnerLevel}`);
+      await page.waitForLoadState();
 
       await expect(dmeFormPage.notFound404).toBeVisible({ timeout: 30000 });
     });

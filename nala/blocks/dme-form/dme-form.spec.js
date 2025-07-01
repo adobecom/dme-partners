@@ -25,16 +25,10 @@ export default {
       tcid: '2',
       name: '@desc-dme-form-gold-user',
       path: '/na/channelpartners/drafts/automation/regression/dme-form/promo-pricing-rebate-request-form?georouting=off&martech=off',
-      publicPath: '/na/channelpartners/drafts/automation/regression/dme-form/promo-pricing-rebate-request-form-public?georouting=off&martech=off,',
-      tags: '@dme-form @regression @anonymous @circleCi',
+      tags: '@dme-form @circleCi',
       data: {
         partnerLevel: 'cpp-gold-all:',
         signInButton: 'Sign In',
-        partnerData: {
-          partnerPortal: 'CPP',
-          partnerLevel: 'Gold',
-          permissionRegion: 'Latin America',
-        },
       },
     },
   ],
