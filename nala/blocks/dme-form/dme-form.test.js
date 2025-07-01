@@ -85,6 +85,7 @@ test.describe('Validate DME Form block', () => {
       await dmeFormPage.durationField.fill('12');
 
       await dmeFormPage.formSubmitButton.click();
+      await page.waitForLoadState('networkidle');
     });
 
     await test.step('Post-submission validation', async () => {
