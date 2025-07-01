@@ -32,12 +32,10 @@ test.describe('Validate DME Form block', () => {
     let emailValue = '';
     let partnerNameValue = '';
 
-    await test.step('Go to Promo Pricing page', async () => {
-      await page.goto(`${baseURL}${path}`, { waitUntil: 'networkidle' });
-    });
-
-    await test.step('Set partner_data cookie', async () => {
+    await test.step('Go to Promo Pricing page and authorize', async () => {
       if (baseURL.includes('adobe.com')) {
+        await page.goto(`${baseURL}${path}`, { waitUntil: 'networkidle' });
+
         await singInPage.signIn(page, `${data.partnerLevel}`);
         await page.waitForLoadState();
       } else {
@@ -102,12 +100,10 @@ test.describe('Validate DME Form block', () => {
   test(`${features[1].name},${features[1].tags}`, async ({ page, context, baseURL }) => {
     const { data, path, publicPath } = features[1];
 
-    await test.step('Go to Promo Pricing page', async () => {
-      await page.goto(`${baseURL}${path}`, { waitUntil: 'networkidle' });
-    });
-
-    await test.step('Set partner_data cookie', async () => {
+    await test.step('Go to Promo Pricing page and authorize', async () => {
       if (baseURL.includes('adobe.com')) {
+        await page.goto(`${baseURL}${path}`, { waitUntil: 'networkidle' });
+
         await singInPage.signIn(page, `${data.partnerLevel}`);
         await page.waitForLoadState();
       } else {
