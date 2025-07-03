@@ -6,6 +6,7 @@ export default class SignInPage {
     this.userNameDisplay = page.locator('.user-name');
     this.adobeProfile = page.locator('[data-test-id="unav-profile"]');
     this.joinNowButton = page.locator('#feds-nav-wrapper .feds-cta--primary:has-text("Join Now")');
+    this.adobeTopBar = page.locator('#top-app-bar');
 
     this.emailField = page.locator('#EmailPage-EmailField');
     this.emailPageContinueButton = page.locator('//button[@data-id="EmailPage-ContinueButton"]');
