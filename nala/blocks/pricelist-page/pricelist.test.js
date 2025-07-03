@@ -217,7 +217,6 @@ test.describe('Pricelist Page Validation', () => {
         await page.goto(`${path}`);
         const signInButtonInt = await pricelistSignIn.getSignInButton(`${features[0].data.signInButtonInternationalText}`);
         await signInButtonInt.click();
-  
         await pricelistSignIn.signIn(page, `${data.partnerLevel}`);
         await pricelistPage.priceListGNav.waitFor({ state: 'visible', timeout: 30000 });
       });
