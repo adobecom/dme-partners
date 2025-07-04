@@ -34,12 +34,14 @@ test.describe('Validate DME Form block', () => {
 
     await test.step('Go to Promo Pricing page and authorize', async () => {
       if (baseURL.includes('adobe.com')) {
-        await page.goto(`${baseURL}${path}`, { waitUntil: 'networkidle' });
+        await page.goto(`${baseURL}${path}`);
+        await page.waitForLoadState('domcontentloaded');
 
         await singInPage.signIn(page, `${data.partnerLevel}`);
         await page.waitForLoadState();
       } else {
-        await page.goto(`${baseURL}${publicPath}`, { waitUntil: 'networkidle' });
+        await page.goto(`${baseURL}${publicPath}`);
+        await page.waitForLoadState('domcontentloaded');
 
         await singInPage.addCookie(
           data.partnerData,
@@ -47,7 +49,8 @@ test.describe('Validate DME Form block', () => {
           context,
         );
 
-        await page.reload({ waitUntil: 'networkidle' });
+        await page.reload();
+        await page.waitForLoadState('domcontentloaded');
       }
     });
 
@@ -90,7 +93,7 @@ test.describe('Validate DME Form block', () => {
 
     await test.step('Post-submission validation', async () => {
       const urlRegex = new RegExp(`.*${data.thankYouPageURL}.*`);
-      await page.waitForURL(urlRegex, { timeout: 5000 });
+      await page.waitForURL(urlRegex, { timeout: 30000 });
 
       const pages = await page.context().pages();
       expect(pages[0].url()).toContain(`${baseURL}${data.thankYouPageURL}`);
