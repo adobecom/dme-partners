@@ -4,7 +4,7 @@ export default {
     {
       tcid: '1',
       name: '@pricelist-validation-filter-combination-one',
-      path: '/na/channelpartners/home/pricelists/',
+      path: '/na/channelpartners/?georouting=off&martech=off',
       tags: '@dme-pricelists @regression @circleCi',
       data: {
         partnerLevel: 'cpp-distributor-all:',
@@ -18,7 +18,7 @@ export default {
     {
       tcid: '2',
       name: '@pricelist-validation-filter-combination-two',
-      path: '/na/channelpartners/home/pricelists/',
+      path: '/na/channelpartners/?georouting=off&martech=off',
       tags: '@dme-pricelists @regression @circleCi',
       data: {
         partnerLevel: 'cpp-distributor-all:',
@@ -33,7 +33,7 @@ export default {
     {
       tcid: '3',
       name: '@pricelist-validation-filter-combination-three',
-      path: '/na/channelpartners/home/pricelists/',
+      path: '/na/channelpartners/?georouting=off&martech=off',
       tags: '@dme-pricelists @regression @circleCi',
       data: {
         partnerLevel: 'cpp-distributor-all:',
@@ -48,7 +48,7 @@ export default {
     {
       tcid: '4',
       name: '@pricelist-validation-filter-combination-four',
-      path: '/na/channelpartners/home/pricelists/',
+      path: '/na/channelpartners/?georouting=off&martech=off',
       tags: '@dme-pricelists @regression @circleCi',
       data: {
         partnerLevel: 'cpp-distributor-all:',
@@ -62,7 +62,7 @@ export default {
     {
       tcid: '5',
       name: '@pricelist-validation-platinum-user',
-      path: '/na/channelpartners/home/pricelists/',
+      path: '/na/channelpartners/?georouting=off&martech=off',
       tags: '@dme-pricelists @regression @circleCi',
       data: {
         partnerLevel: 'cpp-platinum-all:',
@@ -75,7 +75,7 @@ export default {
     {
       tcid: '6',
       name: '@pricelist-validation-gold-user',
-      path: '/na/channelpartners/home/pricelists/',
+      path: '/na/channelpartners/?georouting=off&martech=off',
       tags: '@dme-pricelists @regression @circleCi',
       data: {
         partnerLevel: 'cpp-gold-all:',
@@ -87,7 +87,7 @@ export default {
     {
       tcid: '7',
       name: '@pricelist-validation-certified-user',
-      path: '/na/channelpartners/home/pricelists/',
+      path: '/na/channelpartners/?georouting=off&martech=off',
       tags: '@dme-pricelists @regression @circleCi',
       data: {
         partnerLevel: 'cpp-certified-all:',
@@ -99,14 +99,14 @@ export default {
     {
       tcid: '8',
       name: '@pricelist-validation-registered-user',
-      path: '/na/channelpartners/home/pricelists/',
+      path: '/na/channelpartners/?georouting=off&martech=off',
       tags: '@dme-pricelists @regression @circleCi',
       data: { partnerLevel: 'cpp-registered-all:' },
     },
     {
       tcid: '9',
       name: '@pricelist-validation-distributor-india-user',
-      path: '/na/channelpartners/home/pricelists/',
+      path: '/na/channelpartners/?georouting=off&martech=off',
       tags: '@dme-pricelists @regression @circleCi',
       data: {
         partnerLevel: 'cpp-distributor-india:',
@@ -116,7 +116,7 @@ export default {
     {
       tcid: '10',
       name: '@pricelist-validation-kr-distributor-user',
-      path: '/na/channelpartners/home/pricelists/',
+      path: '/na/channelpartners/?georouting=off&martech=off',
       tags: '@dme-pricelists @regression @circleCi',
       data: {
         partnerLevel: 'cpp-kr-distributor:',
@@ -126,7 +126,7 @@ export default {
     {
       tcid: '11',
       name: '@pricelist-validation-cpp-distr-latin-america-na-user',
-      path: '/na/channelpartners/home/pricelists/',
+      path: '/na/channelpartners/?georouting=off&martech=off',
       tags: '@dme-pricelists @regression @circleCi',
       data: {
         partnerLevel: 'cpp-latin-na-platinum:',
@@ -137,7 +137,7 @@ export default {
     {
       tcid: '12',
       name: '@pricelist-validation-cpp-distributor-us-user',
-      path: '/na/channelpartners/home/pricelists/',
+      path: '/na/channelpartners/?georouting=off&martech=off',
       tags: '@dme-pricelists @regression @circleCi',
       data: {
         partnerLevel: 'cpp-distributor-us:',

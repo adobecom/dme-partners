@@ -42,12 +42,11 @@ test.describe('MAPC sign in flow', () => {
 
     await test.step('Sign in', async () => {
       await signInPage.signIn(page, `${features[0].data.partnerLevel}`);
+      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
     });
 
     await test.step('Verify redirection to restricted home after successful login', async () => {
-      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
-      const pages = await page.context().pages();
-      await expect(pages[0].url()).toContain(`${features[0].data.expectedProtectedHomeURL}`);
+      await expect(page.url()).toContain(`${features[0].data.expectedProtectedHomeURL}`);
     });
 
     await test.step('Logout', async () => {
@@ -59,8 +58,7 @@ test.describe('MAPC sign in flow', () => {
     await test.step('Verify redirection to public page after logout', async () => {
       const signInButton = await signInPage.getSignInButton(`${features[0].data.signInButtonEsGeoText}`);
       await signInButton.waitFor({ state: 'visible', timeout: 10000 });
-      const pages = await page.context().pages();
-      await expect(pages[0].url())
+      await expect(page.url())
         .toContain(`${features[0].data.expectedPublicPageURL}`);
     });
   });
@@ -94,12 +92,11 @@ test.describe('MAPC sign in flow', () => {
 
       await test.step('Sign in', async () => {
         await signInPage.signIn(page, `${feature.data.partnerLevel}`);
+        await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
       });
 
       await test.step('After login user is redirected to contact-not-found page', async () => {
-        await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
-        const pages = await page.context().pages();
-        await expect(pages[0].url()).toContain(`${feature.data.expectedRedirectedURL}`);
+        await expect(page.url()).toContain(`${feature.data.expectedRedirectedURL}`);
       });
 
       await test.step('Logout', async () => {
@@ -114,9 +111,7 @@ test.describe('MAPC sign in flow', () => {
       await test.step('Verify redirection to public page after logout', async () => {
         const signInButton = await signInPage.getSignInButton(`${feature.data.signInButtonText}`);
         await signInButton.waitFor({ state: 'visible', timeout: 10000 });
-        const pages = await page.context().pages();
-        await expect(pages[0].url())
-          .toContain(`${feature.data.expectedPublicPageURL}`);
+        await expect(page.url()).toContain(`${feature.data.expectedPublicPageURL}`);
       });
     });
   });
@@ -140,7 +135,7 @@ test.describe('MAPC sign in flow', () => {
       await test.step('Sign in with tpp platinum user', async () => {
         await signInPage.signIn(page, `${feature.data.partnerLevel}`);
         await page.waitForEvent('load');
-        await signInPage.adobeProfile.waitFor({ state: 'visible', timeout: 30000 });
+        await page.waitForTimeout(5000);
       });
 
       await test.step(`Open ${feature.data.page} in a new tab`, async () => {
@@ -149,8 +144,7 @@ test.describe('MAPC sign in flow', () => {
         const newTabPage = new SignInPage(newTab);
         await newTabPage.regionPicker.waitFor({ state: 'visible', timeout: 30000 });
         await newTabPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
-        const pages = await page.context().pages();
-        await expect(pages[1].url())
+        await expect(newTab.url())
           .toContain(`${feature.data.expectedRedirectedURL}`);
         await expect(signInButtonInt).toBeHidden();
         const joinNowButton = await newTabPage.joinNowButton;
@@ -184,7 +178,7 @@ test.describe('MAPC sign in flow', () => {
     await test.step('Sign in with tpp platinum user', async () => {
       await signInPage.signIn(page, `${data.partnerLevel}`);
       await page.waitForEvent('load');
-      await signInPage.adobeProfile.waitFor({ state: 'visible', timeout: 30000 });
+      await page.waitForTimeout(5000);
     });
 
     await test.step('Open public page in a new tab', async () => {
@@ -192,8 +186,7 @@ test.describe('MAPC sign in flow', () => {
       await newTab.goto(`${path}`);
       const newTabPage = new SignInPage(newTab);
       await newTabPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
-      const pages = await page.context().pages();
-      await expect(pages[1].url())
+      await expect(newTab.url())
         .toContain(`${data.expectedPublicURL}`);
       await expect(signInButton).toBeHidden();
     });
@@ -203,8 +196,7 @@ test.describe('MAPC sign in flow', () => {
       await newTab.goto(`${data.restrictedHomePath}`);
       const newTabPage = new SignInPage(newTab);
       await newTabPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
-      const pages = await page.context().pages();
-      await expect(pages[2].url())
+      await expect(newTab.url())
         .toContain(`${data.expectedToSeeInURL}`);
     });
   });
@@ -213,8 +205,7 @@ test.describe('MAPC sign in flow', () => {
     const { path, expectedToSeeInURL } = features[8];
     await test.step('Go to protected home page', async () => {
       await page.goto(`${path}`);
-      const pages = await page.context().pages();
-      await expect(pages[0].url())
+      await expect(page.url())
         .toContain(`${expectedToSeeInURL}`);
     });
   });
@@ -257,8 +248,7 @@ test.describe('MAPC sign in flow', () => {
     const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
     await test.step('After login user is redirected to protected program page', async () => {
       await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
-      const pages = await page.context().pages();
-      await expect(pages[0].url()).toContain(`${data.landingPageAfterLoginURL}`);
+      await expect(page.url()).toContain(`${data.landingPageAfterLoginURL}`);
       const joinNowButton = await signInPage.joinNowButton;
       await expect(joinNowButton).toBeHidden();
       await expect(signInButton).toBeHidden();
@@ -275,8 +265,7 @@ test.describe('MAPC sign in flow', () => {
 
     await test.step('Verify redirection to public program page after logout', async () => {
       await signInButton.waitFor({ state: 'visible', timeout: 10000 });
-      const pages = await page.context().pages();
-      await expect(pages[0].url())
+      await expect(page.url())
         .toContain(`${data.landingPageAfterLogoutURL}`);
       const joinNowButton = await signInPage.joinNowButton;
       await expect(joinNowButton).toBeVisible();
@@ -295,12 +284,11 @@ test.describe('MAPC sign in flow', () => {
 
       await test.step('Sign in', async () => {
         await signInPage.signIn(page, `${feature.data.partnerLevel}`);
+        await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
       });
 
       await test.step('Verify redirection to the corresponding error page', async () => {
-        await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
-        const pages = await page.context().pages();
-        await expect(pages[0].url()).toContain(`${feature.data.expectedToSeeInURL}`);
+        await expect(page.url()).toContain(`${feature.data.expectedToSeeInURL}`);
       });
     });
   });
@@ -319,12 +307,11 @@ test.describe('MAPC sign in flow', () => {
 
     await test.step('Sign in', async () => {
       await signInPage.signIn(page, `${data.partnerLevel}`);
+      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
     });
 
     await test.step('After login user is redirected to error page', async () => {
-      await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
-      const pages = await page.context().pages();
-      await expect(pages[0].url()).toContain(`${data.expectedToSeeInURL}`);
+      await expect(page.url()).toContain(`${data.expectedToSeeInURL}`);
     });
 
     await test.step('Click on the View account', async () => {

@@ -13,6 +13,7 @@ export default class PricelistsTest {
     this.searchField = page.getByRole('searchbox', { name: 'Search' });
     this.xButton = page.getByLabel('Reset');
     this.cells = page.locator('td[headers="type"]');
+    this.priceListGNav = page.locator('a.feds-navLink[href*="/channelpartners/home/pricelists/"]');
   }
 
   async checkBox(checkBox, exact) {

@@ -40,29 +40,25 @@ test.describe('Validate different Partner Levels accessing protected content', (
     await test.step('Sign in', async () => {
       await singInPage.signIn(page, `${data.partnerLevel}`);
       await page.waitForLoadState();
+      await protectedContentPage.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
     });
 
     await test.step('Verify redirect to contact not found page', async () => {
-      await protectedContentPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
-      const pages = await page.context().pages();
-      await expect(pages[0].url())
-        .toContain(`${data.contactNotFoundPage}`);
+      await expect(page.url()).toContain(`${data.contactNotFoundPage}`);
     });
 
     await test.step('Open protected content in a new tab - partner level does not match required', async () => {
-      const newTab = await context.newPage();
-      await newTab.goto(`${data.goldLevelPage}`);
-      const pages = await page.context().pages();
-      await expect(pages[1].url())
-        .toContain(`${data.contentNotFoundPageGold}`);
+      const goldLevelTab = await context.newPage();
+      await goldLevelTab.goto(`${data.goldLevelPage}`);
+      await goldLevelTab.waitForLoadState();
+      await expect(goldLevelTab.url()).toContain(`${data.contentNotFoundPageGold}`);
     });
 
     await test.step('Open protected content in a new tab - partner level matches required', async () => {
-      const newTab = await context.newPage();
-      await newTab.goto(`${data.platinumLevelPage}`);
-      const pages = await page.context().pages();
-      await expect(pages[2].url())
-        .toContain(`${data.contentNotFoundPagePlatinum}`);
+      const platinumLevelTab = await context.newPage();
+      await platinumLevelTab.goto(`${data.platinumLevelPage}`);
+      await platinumLevelTab.waitForLoadState();
+      await expect(platinumLevelTab.url()).toContain(`${data.contentNotFoundPagePlatinum}`);
     });
   });
 

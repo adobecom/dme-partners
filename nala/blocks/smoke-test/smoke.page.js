@@ -116,6 +116,9 @@ export default class SmokeTest {
     const readMoreBtn = await firstCard.$('.card-btn');
     await readMoreBtn.click();
 
+    const { profileIcon } = this;
+    await profileIcon.waitFor({ state: 'visible', timeout: 30000 });
+
     await this.page.waitForLoadState();
 
     const { announcementCardTitle } = this;
