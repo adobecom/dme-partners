@@ -19,7 +19,7 @@ export default {
       tcid: '2',
       name: '@login-accessing-public-home-page-with-member-user-logged-in-to-adobe',
       path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off',
-      newTabUrl: 'https://partners.stage.adobe.com/channelpartners/',
+      newTabUrl: 'http://partners.stage.adobe.com/channelpartners/',
       baseURL: 'https://www.stage.adobe.com?akamaiLocale=us',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
@@ -34,7 +34,7 @@ export default {
       tcid: '3',
       name: '@login-accessing-restricted-home-page-with-member-user-logged-in-to-adobe',
       path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/protected-home?georouting=off',
-      newTabUrl: 'https://partners.stage.adobe.com/channelpartners/',
+      newTabUrl: 'http://partners.stage.adobe.com/channelpartners/',
       baseURL: 'https://www.stage.adobe.com?akamaiLocale=us',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
@@ -76,7 +76,7 @@ export default {
       tcid: '6',
       name: '@login-accessing-restricted-home-page-with-non-member-user-logged-in-to-adobe',
       path: 'https://partners.stage.adobe.com/na/channelpartners/home/?georouting=off&martech=off',
-      baseURL: 'https://www.stage.adobe.com?akamaiLocale=us',
+      baseURL: 'http://www.stage.adobe.com?akamaiLocale=us',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
         partnerLevel: 'tpp-platinum:',
@@ -89,7 +89,7 @@ export default {
       tcid: '7',
       name: '@login-accessing-public-page-with-non-member-user-logged-in-to-adobe',
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
-      baseURL: 'https://www.stage.adobe.com?akamaiLocale=us',
+      baseURL: 'http://www.stage.adobe.com?akamaiLocale=us',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
         partnerLevel: 'tpp-platinum:',
@@ -102,7 +102,7 @@ export default {
       tcid: '8',
       name: '@login-accessing-public-page-and-restricted-home-with-non-member-user-logged-in-to-adobe',
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
-      baseURL: 'https://www.stage.adobe.com?akamaiLocale=us',
+      baseURL: 'http://www.stage.adobe.com?akamaiLocale=us',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
         partnerLevel: 'tpp-platinum:',

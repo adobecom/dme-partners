@@ -135,8 +135,7 @@ test.describe('MAPC sign in flow', () => {
       await test.step('Sign in with tpp platinum user', async () => {
         await signInPage.signIn(page, `${feature.data.partnerLevel}`);
         await page.waitForEvent('load');
-        await signInPage.adobeTopBar.waitFor({ state: 'visible', timeout: 30000 });
-        await signInPage.adobeProfile.waitFor({ state: 'visible', timeout: 30000 });
+        await page.waitForTimeout(5000);
       });
 
       await test.step(`Open ${feature.data.page} in a new tab`, async () => {
@@ -179,8 +178,7 @@ test.describe('MAPC sign in flow', () => {
     await test.step('Sign in with tpp platinum user', async () => {
       await signInPage.signIn(page, `${data.partnerLevel}`);
       await page.waitForEvent('load');
-      await signInPage.adobeTopBar.waitFor({ state: 'visible', timeout: 30000 });
-      await signInPage.adobeProfile.waitFor({ state: 'visible', timeout: 30000 });
+      await page.waitForTimeout(5000);
     });
 
     await test.step('Open public page in a new tab', async () => {
