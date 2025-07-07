@@ -128,7 +128,6 @@ export default class SmokeTest {
     await profileIcon.waitFor({ state: 'visible', timeout: 30000 });
 
     await this.page.waitForLoadState();
-    const { profileIcon } = this;
     await profileIcon.waitFor({ state: 'visible', timeout: 30000 });
 
     const cleanHref = href.endsWith('#') ? href.slice(0, -1) : href;
