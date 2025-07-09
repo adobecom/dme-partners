@@ -44,6 +44,7 @@ export default class SmokeTest {
     this.supportGnavOption = page.locator('.feds-navItem a[href*="/channelpartners/support"]');
     this.announcementCardTitle = page.locator('#announcement-title');
     this.firstCardMetadata = page.locator('.card-metadata').first().locator('div[data-valign="middle"]').nth(1);
+    this.apcLogo = page.getByRole('link', { name: 'Adobe Partner Connection', exact: true });
   }
 
   async smokeSignIn(page, baseURL, partnerLevel) {
