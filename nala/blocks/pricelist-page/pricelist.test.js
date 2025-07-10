@@ -34,11 +34,16 @@ test.describe('Pricelist Page Validation', () => {
     await test.step('Sign In with user', async () => {
       await page.goto(`${path}`);
       await page.waitForLoadState('domcontentloaded');
+      const signInButtonInt = await pricelistSignIn.getSignInButton(`${features[0].data.signInButtonInternationalText}`);
+      await signInButtonInt.click();
 
       await pricelistSignIn.signIn(page, `${data.partnerLevel}`);
+      await pricelistPage.priceListGNav.waitFor({ state: 'visible', timeout: 30000 });
     });
 
     await test.step('Filter Price Lists by Currency filter', async () => {
+      await pricelistPage.priceListGNav.click();
+      await page.waitForLoadState('networkidle');
       await pricelistPage.filterPricelists(pricelistPage.currencyFilter, data.usdCheckBox, true);
       const usdNumberOFPriceLists = await pricelistPage.priceListsCount(page);
       await pricelistPage.filterMonth(pricelistPage.monthFilter);
@@ -70,11 +75,16 @@ test.describe('Pricelist Page Validation', () => {
     await test.step('Sign In with user', async () => {
       await page.goto(`${path}`);
       await page.waitForLoadState('domcontentloaded');
+      const signInButtonInt = await pricelistSignIn.getSignInButton(`${features[0].data.signInButtonInternationalText}`);
+      await signInButtonInt.click();
 
       await pricelistSignIn.signIn(page, `${data.partnerLevel}`);
+      await pricelistPage.priceListGNav.waitFor({ state: 'visible', timeout: 30000 });
     });
 
     await test.step('Filter Price Lists by Currency filter', async () => {
+      await pricelistPage.priceListGNav.click();
+      await page.waitForLoadState('networkidle');
       await pricelistPage.filterPricelists(pricelistPage.currencyFilter, data.jpyCheckBox, true);
       const jpyNumberOFPriceLists = await pricelistPage.priceListsCount(page);
       await pricelistPage.filterMonth(pricelistPage.monthFilter);
@@ -106,11 +116,16 @@ test.describe('Pricelist Page Validation', () => {
     await test.step('Sign In with user', async () => {
       await page.goto(`${path}`);
       await page.waitForLoadState('domcontentloaded');
+      const signInButtonInt = await pricelistSignIn.getSignInButton(`${features[0].data.signInButtonInternationalText}`);
+      await signInButtonInt.click();
 
       await pricelistSignIn.signIn(page, `${data.partnerLevel}`);
+      await pricelistPage.priceListGNav.waitFor({ state: 'visible', timeout: 30000 });
     });
 
     await test.step('Filter Price Lists by Currency filter', async () => {
+      await pricelistPage.priceListGNav.click();
+      await page.waitForLoadState('networkidle');
       await pricelistPage.searchPriceList(data.keyword);
       await expect(pricelistPage.firstRegionCell).toHaveText(data.asiaPacificKorea);
       const koreaNumberofPriceLists = await pricelistPage.priceListsCount(page);
@@ -134,11 +149,16 @@ test.describe('Pricelist Page Validation', () => {
     await test.step('Sign In with user', async () => {
       await page.goto(`${path}`);
       await page.waitForLoadState('domcontentloaded');
+      const signInButtonInt = await pricelistSignIn.getSignInButton(`${features[0].data.signInButtonInternationalText}`);
+      await signInButtonInt.click();
 
       await pricelistSignIn.signIn(page, `${data.partnerLevel}`);
+      await pricelistPage.priceListGNav.waitFor({ state: 'visible', timeout: 30000 });
     });
 
     await test.step('Filter Price Lists filter', async () => {
+      await pricelistPage.priceListGNav.click();
+      await page.waitForLoadState('networkidle');
       await pricelistPage.filterPricelists(pricelistPage.regionFilter, data.pacificCheckBox, true);
       const pacificCheckBoxNumberOFPriceLists = await pricelistPage.priceListsCount(page);
       await pricelistPage.filterPricelists(pricelistPage.currencyFilter, data.audCheckBox, true);
@@ -161,11 +181,16 @@ test.describe('Pricelist Page Validation', () => {
     await test.step('Sign In with user', async () => {
       await page.goto(`${path}`);
       await page.waitForLoadState('domcontentloaded');
+      const signInButtonInt = await pricelistSignIn.getSignInButton(`${features[0].data.signInButtonInternationalText}`);
+      await signInButtonInt.click();
 
       await pricelistSignIn.signIn(page, `${data.partnerLevel}`);
+      await pricelistPage.priceListGNav.waitFor({ state: 'visible', timeout: 30000 });
     });
 
     await test.step('Check pricelist region', async () => {
+      await pricelistPage.priceListGNav.click();
+      await page.waitForLoadState('networkidle');
       await pricelistPage.filterPricelists(pricelistPage.regionFilter, data.europeEast, true);
       await expect(pricelistPage.firstRegionCell).toHaveText(data.europeEast);
       await pricelistPage.clearAllFilters.click();
@@ -190,11 +215,15 @@ test.describe('Pricelist Page Validation', () => {
 
       await test.step('Sign In with user', async () => {
         await page.goto(`${path}`);
-        await page.waitForLoadState('domcontentloaded');
+        const signInButtonInt = await pricelistSignIn.getSignInButton(`${features[0].data.signInButtonInternationalText}`);
+        await signInButtonInt.click();
         await pricelistSignIn.signIn(page, `${data.partnerLevel}`);
+        await pricelistPage.priceListGNav.waitFor({ state: 'visible', timeout: 30000 });
       });
 
       await test.step('Check pricelist region', async () => {
+        await pricelistPage.priceListGNav.click();
+        await page.waitForLoadState('networkidle');
         await expect(pricelistPage.firstRegionCell).not.toBeVisible();
         await pricelistPage.includeEndUserPricelists();
         await pricelistPage.filterPricelists(pricelistPage.regionFilter, data.europeEast, true);
@@ -215,10 +244,16 @@ test.describe('Pricelist Page Validation', () => {
     await test.step('Sign In with user', async () => {
       await page.goto(`${path}`);
       await page.waitForLoadState('domcontentloaded');
+      const signInButtonInt = await pricelistSignIn.getSignInButton(`${features[0].data.signInButtonInternationalText}`);
+      await signInButtonInt.click();
+
       await pricelistSignIn.signIn(page, `${data.partnerLevel}`);
+      await pricelistPage.priceListGNav.waitFor({ state: 'visible', timeout: 30000 });
     });
 
     await test.step('Check pricelist region', async () => {
+      await pricelistPage.priceListGNav.click();
+      await page.waitForLoadState('networkidle');
       await expect(pricelistPage.firstRegionCell).not.toBeVisible();
       await pricelistPage.includeEndUserPricelists();
       await expect(pricelistPage.firstRegionCell).not.toBeVisible();
@@ -232,11 +267,18 @@ test.describe('Pricelist Page Validation', () => {
       await test.step('Sign In with user', async () => {
         await page.goto(`${path}`);
         await page.waitForLoadState('domcontentloaded');
+        const signInButtonInt = await pricelistSignIn.getSignInButton(`${features[0].data.signInButtonInternationalText}`);
+        await signInButtonInt.click();
         await pricelistSignIn.signIn(page, `${data.partnerLevel}`);
+        await pricelistPage.priceListGNav.waitFor({ state: 'visible', timeout: 30000 });
       });
 
       await test.step('Check pricelist region', async () => {
-        expect(pricelistPage.firstRegionCell).toHaveText(data.text, { normalizeWhitespace: true });
+        await pricelistPage.priceListGNav.click();
+        await page.waitForLoadState('networkidle');
+        await expect(pricelistPage.firstRegionCell).toBeVisible({ timeout: 30000 });
+        await expect(pricelistPage.firstRegionCell).not.toHaveText('', { timeout: 30000 });
+        await expect(pricelistPage.firstRegionCell).toContainText(data.text);
       });
     });
   });

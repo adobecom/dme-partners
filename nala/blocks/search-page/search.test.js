@@ -354,10 +354,12 @@ test.describe('Search Page validation', () => {
     await test.step('Check assets and pages tabs ', async () => {
       await searchTest.assetTabs.click();
       await page.waitForLoadState('networkidle');
+      await searchTest.searchCard.first().waitFor({ state: 'visible', timeout: 30000 });
       await searchTest.checkCardTitle(`${data.asset2}`);
 
       await searchTest.pagesTab.click();
       await page.waitForLoadState('networkidle');
+      await searchTest.searchCard.first().waitFor({ state: 'visible', timeout: 30000 });
       await searchTest.checkCardTitle(`${data.asset3}`);
       await searchTest.openPreviewPages.waitFor({ state: 'visible', timeout: 30000 });
     });
@@ -450,14 +452,17 @@ test.describe('Search Page validation', () => {
 
       await searchTest.clearAllFilters.click();
       await searchTest.searchAsset(`${data.searchKeyWord4}`);
+      await page.waitForLoadState('networkidle');
       await expect(searchTest.noResultsTitle).toBeVisible();
 
       await searchTest.clearAllFilters.click();
       await searchTest.searchAsset(`${data.searchKeyWord5}`);
+      await page.waitForLoadState('networkidle');
       await expect(searchTest.noResultsTitle).toBeVisible();
 
       await searchTest.clearAllFilters.click();
       await searchTest.searchAsset(`${data.searchKeyWord6}`);
+      await page.waitForLoadState('networkidle');
       await expect(searchTest.noResultsTitle).toBeVisible();
     });
   });

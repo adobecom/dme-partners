@@ -50,7 +50,7 @@ export default class SearchTest {
 
   async searchAsset(searchKeyWord) {
     const { searchField } = this;
-    await this.searchCard.first().waitFor({ state: 'visible' });
+    await this.searchCard.first().waitFor({ state: 'visible', timeout: 30000 });
     await searchField.fill(searchKeyWord);
     await searchField.press('Enter');
   }

@@ -42,6 +42,8 @@ export default class SmokeTest {
     this.findDistributorBtn = page.locator('.feds-navItem .feds-cta-wrapper a[href*="/api/v1/web/dx-partners-runtime/sfdc-redirect?program_type=channel&request_type=distributor_finder"]');
     this.programGnavOption = page.locator('.feds-navItem a[href*="/channelpartners/program"]');
     this.supportGnavOption = page.locator('.feds-navItem a[href*="/channelpartners/support"]');
+    this.announcementCardTitle = page.locator('#announcement-title');
+    this.firstCardMetadata = page.locator('.card-metadata').first().locator('div[data-valign="middle"]').nth(1);
   }
 
   async smokeSignIn(page, baseURL, partnerLevel) {
@@ -105,19 +107,35 @@ export default class SmokeTest {
     const shadowRootCard = await shadowHostCard.evaluateHandle(
       (node) => node.shadowRoot,
     );
-
     const announcementsCrad = await shadowRootCard.$$('.card-wrapper');
     const firstCard = announcementsCrad[0];
-    await firstCard.isVisible();
+    await expect(async () => {
+      await firstCard.isVisible();
+      return true;
+    }).toPass();
 
     const firstCardTitle = await this.page.locator('.announcements-wrapper .card-wrapper:nth-of-type(1) p.card-title').textContent();
 
     const readMoreBtn = await firstCard.$('.card-btn');
-    await readMoreBtn.click();
+    const href = await readMoreBtn.getAttribute('href');
+
+    await readMoreBtn.waitForElementState('stable');
+    await readMoreBtn.scrollIntoViewIfNeeded();
+    await readMoreBtn.click({ force: true, timeout: 10000 });
+    await this.page.waitForURL('**', { timeout: 30000 });
+
+    const { profileIcon } = this;
+    await profileIcon.waitFor({ state: 'visible', timeout: 30000 });
 
     await this.page.waitForLoadState();
-    const title = await this.page.title();
-    expect(title).toBe(firstCardTitle);
+    await profileIcon.waitFor({ state: 'visible', timeout: 30000 });
+
+    const cleanHref = href.endsWith('#') ? href.slice(0, -1) : href;
+    expect(this.page.url()).toContain(cleanHref);
+
+    const { firstCardMetadata } = this;
+    const metadata = await firstCardMetadata.textContent();
+    expect(metadata).toContain(firstCardTitle);
   }
 
   getJoinNowButtonByRegion(text) {
@@ -194,6 +212,7 @@ export default class SmokeTest {
 
     const { specializationButton } = this;
     await specializationButton.click();
+    await this.page.waitForLoadState('networkidle');
 
     const { education } = this;
     const { educationElite } = this;

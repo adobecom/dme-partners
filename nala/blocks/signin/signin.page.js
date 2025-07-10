@@ -4,7 +4,9 @@ export default class SignInPage {
     this.profileIconButton = page.locator('.feds-profile-button');
     this.profileIconButtonAdobe = page.getByLabel('Profile button');
     this.userNameDisplay = page.locator('.user-name');
+    this.adobeProfile = page.locator('[data-test-id="unav-profile"]');
     this.joinNowButton = page.locator('#feds-nav-wrapper .feds-cta--primary:has-text("Join Now")');
+    this.adobeTopBar = page.locator('#top-app-bar');
 
     this.emailField = page.locator('#EmailPage-EmailField');
     this.emailPageContinueButton = page.locator('//button[@data-id="EmailPage-ContinueButton"]');
@@ -64,7 +66,8 @@ export default class SignInPage {
     await this.context.addCookies([{
       name: 'partner_data',
       value: `{"${partnerData.partnerPortal}":{"accountAnniversary":"${partnerData.anniversaryDate ? partnerData.anniversaryDate : '2040-08-22T00:00:00.000Z'}"%2C"company":"Company"%2C`
-      + `"firstName":"${partnerData.firstName !== undefined && partnerData.firstName !== null ? partnerData.firstName : 'Name'}"%2C"lastName":"LastName"%2C`
+      + `"email":"${partnerData.email !== undefined && partnerData.email !== null ? partnerData.email : 'email@test.com'}"%2C`
+      + `"firstName":"${partnerData.firstName !== undefined && partnerData.firstName !== null ? partnerData.firstName : 'Name'}"%2C"lastName":"${partnerData.lastName !== undefined && partnerData.lastName !== null ? partnerData.lastName : 'lastName'}"%2C`
       + `"level":"${partnerData.partnerLevel}"%2C"permissionRegion":"${partnerData.permissionRegion}"%2C"primaryContact":true%2C"salesCenterAccess":true%2C"status":"MEMBER"}}`,
       url: `${page}`,
     }]);

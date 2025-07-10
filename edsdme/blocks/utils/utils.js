@@ -11,6 +11,7 @@ export { replaceText };
 
 const previewURL = 'https://admin.hlx.page/preview/adobecom/dme-partners/main/*';
 const publishURL = 'https://admin.hlx.page/live/adobecom/dme-partners/main/*';
+const jobURL = 'https://admin.hlx.page/job/adobecom/dme-partners/main/';
 
 export function populateLocalizedTextFromListItems(el, localizedText) {
   const liList = Array.from(el.querySelectorAll('li'));
@@ -22,6 +23,7 @@ export function populateLocalizedTextFromListItems(el, localizedText) {
     localizedText[`{{${liContent}}}`] = liContent;
   });
 }
+
 export async function localizationPromises(localizedText, config) {
   return Promise.all(Object.keys(localizedText).map(async (key) => {
     const value = await replaceText(key, config);
@@ -29,6 +31,68 @@ export async function localizationPromises(localizedText, config) {
       localizedText[key] = value;
     }
   }));
+}
+
+// eslint-disable-next-line func-names
+const wait = function (delay) {
+  // eslint-disable-next-line arrow-parens
+  return new Promise(resolve => {
+    setTimeout(resolve, delay);
+  });
+};
+
+// Polls a function until a specified condition is met or maximum attempts are exceeded
+async function poll(fn, condition, interval = 2000, maxAttempts = 60) {
+  let attempts = 0;
+  let result = await fn();
+  while (!condition(result)) {
+    // eslint-disable-next-line no-plusplus
+    if (++attempts >= maxAttempts) {
+      throw new Error(`Polling exceeded maximum number of (${maxAttempts}) attempts.`);
+    }
+    // eslint-disable-next-line no-await-in-loop
+    await wait(interval);
+    // eslint-disable-next-line no-await-in-loop
+    result = await fn();
+  }
+  return result;
+}
+
+const JobStates = Object.freeze({
+  CREATED: 'created',
+  RUNNING: 'running',
+  STOPPED: 'stopped',
+});
+
+async function getJobStatusDetails(topic, jobName) {
+  const url = `${jobURL}/${topic}/${jobName}/details`;
+  const jobRes = await fetch(url);
+  const jsonRes = await jobRes.json();
+  const previewed = jsonRes?.data?.resources?.filter(
+    (res) => res?.status === 200 || res?.status === 304,
+  ) || [];
+  const paths = previewed.map((resource) => `https://main--dme-partners--adobecom.aem.page${resource.path}`);
+  return paths;
+}
+
+// eslint-disable-next-line consistent-return
+async function adminApiResponse(response, preview = false) {
+  const responseJson = await response.json();
+  const { topic: jobTopic, name: jobName } = responseJson?.job || {};
+  await poll(
+    async () => {
+      const res = await fetch(`${jobURL}${jobTopic}/${jobName}`);
+      // eslint-disable-next-line no-return-await
+      return await res.json();
+    },
+    (result) => result.state === JobStates.STOPPED,
+    2000,
+    120,
+  );
+  if (preview) {
+    const urls = await getJobStatusDetails(responseJson.job.topic, responseJson.job.name);
+    return urls;
+  }
 }
 
 export function getRuntimeActionUrl(action, type = 'dx') {
@@ -109,11 +173,21 @@ export async function sidekickListener(locales) {
   ]);
   await deps;
 
-  const initSidekickListener = () => {
-    const sidekick = document.querySelector('aem-sidekick, helix-sidekick');
-    if (sidekick) {
+  const initSidekickListener = async () => {
+    try {
+      const sidekick = await poll(
+        () => Promise.resolve(document.querySelector('aem-sidekick, helix-sidekick')),
+        (el) => el !== null,
+        500,
+        20,
+      );
+      // eslint-disable-next-line no-use-before-define
+      sidekick.addEventListener('custom:previewtoallsites', previewToAllSites, { once: true });
       // eslint-disable-next-line no-use-before-define
       sidekick.addEventListener('custom:publishtoallsites', publishToAllSites, { once: true });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Sidekick not found within timeout.', error);
     }
   };
 
@@ -131,10 +205,23 @@ export async function sidekickListener(locales) {
       toast.open = true;
       toast.dismissible = true;
       toast.setAttribute('style', 'min-width: 90%');
+      // if message contains url make them <a> element
       messages.forEach((msg) => {
-        const divElem = document.createElement('div');
-        divElem.textContent = msg;
-        toast.append(divElem);
+        if (typeof msg === 'string' && msg.startsWith('http')) {
+          const linkElem = document.createElement('a');
+          // if message element contains card url and id make href be just card url
+          linkElem.href = msg.split(':').length > 2 ? `${msg.split(':')[0]}:${msg.split(':')[1]}` : msg;
+          linkElem.textContent = msg;
+          linkElem.target = '_blank';
+          linkElem.rel = 'noopener noreferrer';
+          linkElem.style.display = 'block';
+          linkElem.style.color = 'white';
+          toast.append(linkElem);
+        } else {
+          const divElem = document.createElement('div');
+          divElem.textContent = msg;
+          toast.append(divElem);
+        }
       });
 
       theme.appendChild(toast);
@@ -166,30 +253,38 @@ export async function sidekickListener(locales) {
   };
   const runtimeSendToCaasUrl = getRuntimeActionUrl('/api/v1/web/dx-partners-runtime-tooling/publish-announcement-to-caas', 'tooling');
 
-  const publishToAllSites = async ({ detail: payload }) => {
-    try {
-      if (!window.adobeIMS.isSignedInUser()) {
-        await showToast(
-          ['You are not logged in with an Adobe ID. Redirecting to login...'],
-          'info',
-        );
+  const isUserAdobeSignIn = () => {
+    if (!window.adobeIMS.isSignedInUser()) {
+      showToast(
+        ['You are not logged in with an Adobe ID. Redirecting to login, please "publish to all sites again" after signing in with your @adobe.com account.'],
+        'info',
+      );
+      window.setTimeout(() => {
         window.adobeIMS.adobeIdData.redirect_uri = window.location.href;
         window.adobeIMS.signIn();
-        return;
-      }
-      showToast(['Starting the publishing process'], 'info');
-      const headers = new Headers();
-      headers.append('Accept', 'application/json');
-      headers.append('Content-Type', 'application/json');
+      }, 1000);
+      return false;
+    }
+    return true;
+  };
 
-      // eslint-disable-next-line no-confusing-arrow
-      const paths = Object.keys(locales).map((locale) => locale ? `/${locale}${payload.location.pathname}` : payload.location.pathname);
+  const headers = new Headers();
+  headers.append('Accept', 'application/json');
+  headers.append('Content-Type', 'application/json');
 
-      const requestOptions = {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ paths }),
-      };
+  // eslint-disable-next-line no-confusing-arrow
+  const paths = Object.keys(locales).map((locale) => locale ? `/${locale}${window.location.pathname}` : window.location.pathname);
+
+  const requestOptions = {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ paths }),
+  };
+
+  const previewToAllSites = async () => {
+    try {
+      if (!isUserAdobeSignIn()) return;
+      showToast(['Starting the previewing process'], 'info');
 
       const previewRes = await fetch(previewURL, requestOptions);
       if (!previewRes.ok) {
@@ -199,7 +294,19 @@ export async function sidekickListener(locales) {
         await showToast([`Preview failed: ${errorText}`], 'negative');
         return;
       }
-      showToast(['Preview Successful'], 'info');
+      const previewedPaths = await adminApiResponse(previewRes, true);
+      showToast(['Preview Successful', ...previewedPaths], 'positive');
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Unexpected Error:', error);
+      await showToast([`Unexpected error: ${error.message || error}`], 'negative');
+    }
+  };
+
+  const publishToAllSites = async () => {
+    try {
+      if (!isUserAdobeSignIn()) return;
+      showToast(['Starting the publishing process'], 'info');
 
       const publishRes = await fetch(publishURL, requestOptions);
       if (!publishRes.ok) {
@@ -209,6 +316,7 @@ export async function sidekickListener(locales) {
         await showToast([`Publish failed: ${errorText}`], 'negative');
         return;
       }
+      await adminApiResponse(publishRes);
       showToast(['Publishing Successful'], 'info');
 
       headers.append('Authorization', window.adobeIMS.getAccessToken().token);
@@ -230,12 +338,12 @@ export async function sidekickListener(locales) {
       const caasData = await caasRes.json();
       const contentItems = ['Publish to CaaS:', 'The following announcements were successfully published:'];
       contentItems.push(...caasData.successfulIds);
-      if (caasData.errors) {
+      if (caasData.errors.length > 0) {
         contentItems.push('The following errors occured:');
         contentItems.push(...caasData.errors);
       }
       const variantWhenErrors = caasData.successfulIds ? 'info' : 'negative';
-      const variant = caasData.errors ? variantWhenErrors : 'positive';
+      const variant = caasData.errors.length > 0 ? variantWhenErrors : 'positive';
 
       await showToast(
         contentItems,
