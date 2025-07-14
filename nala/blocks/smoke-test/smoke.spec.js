@@ -292,5 +292,17 @@ export default {
         supportURL: '/kr/channelpartners/support/',
       },
     },
+    {
+      tcid: '24',
+      name: '@logo-redirection-validation-smoke-test',
+      path: '/na/channelpartners/?georouting=off&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-distributor-us:',
+        signInButtonInternationalText: 'Sign In',
+        logoRedirectionURLProtected: '/na/channelpartners/home/',
+        logoRedirectionURLPublic: '/na/channelpartners/',
+      },
+    },
   ],
 };
