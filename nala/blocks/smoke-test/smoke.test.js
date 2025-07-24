@@ -632,4 +632,34 @@ test.describe('Smoke Tests', () => {
       });
     });
   });
+
+  // @logo-redirection-validation-smoke-test
+  test(`${features[23].name}, ${features[23].tags}`, async ({ page, baseURL }) => {
+    const { data, path } = features[23];
+
+    await test.step('Verify logo redirection for public page', async () => {
+      await page.goto(`${baseURL}${path}`);
+      await smokeTest.supportGnavOption.click();
+      await page.waitForLoadState('networkidle');
+      await smokeTest.apcLogo.click();
+      await page.waitForURL('**', { timeout: 30000 });
+      await page.waitForLoadState('networkidle');
+      await expect(page.url()).toContain(data.logoRedirectionURLPublic);
+    });
+
+    await test.step('Verify logo redirection for protected page', async () => {
+      const signInButtonInt = await signInSmokeTest.getSignInButton(`${features[23].data.signInButtonInternationalText}`);
+      await signInButtonInt.click();
+      await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`);
+      await page.waitForLoadState('networkidle');
+      await smokeTest.profileIcon.waitFor({ state: 'visible', timeout: 10000 });
+
+      await smokeTest.announcemnts.click();
+      await page.waitForLoadState('networkidle');
+      await smokeTest.apcLogo.click();
+      await page.waitForURL('**', { timeout: 30000 });
+      await page.waitForLoadState('networkidle');
+      await expect(page.url()).toContain(data.logoRedirectionURLProtected);
+    });
+  });
 });
