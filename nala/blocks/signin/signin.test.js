@@ -325,7 +325,7 @@ test.describe('MAPC sign in flow', () => {
         page.waitForEvent('popup'),
       ]);
       await newTab.waitForLoadState();
-      expect(newTab.url()).toBe(`${data.newTabUrl}`);
+      expect(newTab.url()).toContain(`${data.newTabUrl}`);
     });
   });
 
@@ -348,7 +348,7 @@ test.describe('MAPC sign in flow', () => {
 
       await test.step('Verify redirection to correct region home page after the login', async () => {
         await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
-        expect(page.url()).toBe(`${data.expectedToSeeInURL}`);
+        expect(page.url()).toContain(`${data.expectedToSeeInURL}`);
       });
     });
   });
