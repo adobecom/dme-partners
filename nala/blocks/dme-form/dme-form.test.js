@@ -104,7 +104,8 @@ test.describe('Validate DME Form block', () => {
     const { data, path } = features[1];
 
     await test.step('Go to Promo Pricing page and sign in', async () => {
-      await page.goto(`${baseURL}${path}`, { waitUntil: 'networkidle' });
+      await page.goto(`${baseURL}${path}`);
+      await page.waitForLoadState('domcontentloaded');
 
       await singInPage.signIn(page, `${data.partnerLevel}`);
       await page.waitForLoadState();
