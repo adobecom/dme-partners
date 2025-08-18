@@ -1,7 +1,7 @@
 export default class SignInPage {
   constructor(page) {
     this.page = page;
-    this.profileIconButton = page.locator('.feds-profile-button');
+    this.profileIconButton = page.locator('.feds-profile');
     this.profileIconButtonAdobe = page.getByLabel('Profile button');
     this.userNameDisplay = page.locator('.user-name');
     this.adobeProfile = page.locator('[data-test-id="unav-profile"]');
@@ -33,31 +33,29 @@ export default class SignInPage {
   }
 
   async verifyRedirectAfterLogin({
-    page, expect, path, newTabPath, partnerLevel, expectedLandingPageURL, buttonText, browserName,
+    page, expect, path, newTabPath, partnerLevel, expectedLandingPageURL, buttonText,
   }) {
     await page.goto(path);
     await page.waitForLoadState('domcontentloaded');
 
-    await this.page.getByRole('button', { name: 'Sign In' }).waitFor({ state: 'visible', timeout: 30000 });
     const signInButton = await this.getSignInButton(buttonText);
+    await signInButton.waitFor({ state: 'visible', timeout: 30000 });
     await signInButton.click();
+
     await this.signIn(page, partnerLevel);
 
-    await page.waitForTimeout(5000);
+    await this.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
 
-    const safariBrowser = browserName === 'webkit';
-    let currentURL;
-    if (safariBrowser) {
-      await page.goto(newTabPath);
-      await page.locator('.feds-profile-button').waitFor({ state: 'visible', timeout: 30000 });
-      currentURL = page.url();
-    } else {
-      const newTab = await page.context().newPage();
-      await newTab.goto(newTabPath);
-      await newTab.locator('.feds-profile-button').waitFor({ state: 'visible', timeout: 30000 });
+    const newTab = await page.context().newPage();
+    await newTab.goto(newTabPath);
 
-      currentURL = newTab.url();
-    }
+    await newTab.waitForLoadState('networkidle');
+    await newTab.locator('.feds-profile-button').waitFor({
+      state: 'visible',
+      timeout: 30000,
+    });
+
+    const currentURL = newTab.url();
     expect(currentURL).toContain(expectedLandingPageURL);
   }
 
