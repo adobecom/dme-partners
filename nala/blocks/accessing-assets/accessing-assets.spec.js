@@ -66,7 +66,7 @@ export default {
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-accessing-assets @regression @login @circleCi',
       data: {
-        partnerLevel: 'cpp-china-registered:',
+        partnerLevel: 'cpp-japan-distributor:',
         signInButtonText: 'Sign In',
         assetURL: 'https://partners.stage.adobe.com/channelpartnerassets/assets/restricted/restricted_1/MAPC-stage-worldwide.png',
         forbiddenAsset: 'https://partners.stage.adobe.com/channelpartnerassets/assets/restricted/restricted_7/MAPC-Education-Elite.pdf',

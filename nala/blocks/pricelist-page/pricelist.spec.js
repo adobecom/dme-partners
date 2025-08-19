@@ -129,7 +129,7 @@ export default {
       path: '/na/channelpartners/?georouting=off&martech=off',
       tags: '@dme-pricelists @regression @circleCi',
       data: {
-        partnerLevel: 'cpp-latin-na-platinum:',
+        partnerLevel: 'cpp-latam-distributor:',
         checkBox: 'Latin America (NA based)',
         text: 'Latin America (NA based)',
       },

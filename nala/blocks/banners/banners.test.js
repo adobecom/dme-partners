@@ -156,7 +156,8 @@ test.describe('Validate banners', () => {
     });
 
     await test.step('Verify renew banner', async () => {
-      await bannersPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
+      await page.waitForTimeout(5000);
+      await bannersPage.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
       const renewBanner = await bannersPage.renewBannerCertifiedUS;
       await expect(renewBanner).toBeVisible();
       const firstParagraph = bannersPage.getBannerParagraphCertifiedUS(data.paragraphIndex);

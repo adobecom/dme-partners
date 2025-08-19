@@ -79,6 +79,7 @@ test.describe('Validate different Partner Levels accessing protected content', (
       const newTab = await context.newPage();
       const newTabPage = new ProtectedContentPage(newTab);
       await newTab.goto(`${data.matchingRegionPage}`);
+      await newTab.waitForLoadState();
       const cardTitle = await newTabPage.getCardTitle(matchingRegionCardText);
       await expect(cardTitle).toBeVisible();
     });
@@ -112,6 +113,7 @@ test.describe('Validate different Partner Levels accessing protected content', (
         const newTab = await context.newPage();
         const newTabPage = new ProtectedContentPage(newTab);
         await newTab.goto(`${feature.data.matchingRegionPage}`);
+        await newTab.waitForLoadState();
         const cardTitle = await newTabPage.getCardTitle(feature.matchingRegionCardText);
         await expect(cardTitle).toBeVisible();
       });
