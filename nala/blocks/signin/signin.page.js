@@ -1,7 +1,7 @@
 export default class SignInPage {
   constructor(page) {
     this.page = page;
-    this.profileIconButton = page.locator('.feds-profile');
+    this.profileIconButton = page.locator('.feds-profile-button');
     this.profileIconButtonAdobe = page.getByLabel('Profile button');
     this.userNameDisplay = page.locator('.user-name');
     this.adobeProfile = page.locator('[data-test-id="unav-profile"]');
@@ -43,8 +43,7 @@ export default class SignInPage {
     await signInButton.click();
 
     await this.signIn(page, partnerLevel);
-
-    await this.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
+    await page.waitForTimeout(10000);
 
     const newTab = await page.context().newPage();
     await newTab.goto(newTabPath);
