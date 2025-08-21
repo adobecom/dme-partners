@@ -52,7 +52,7 @@ export default {
       data: {
         partnerLevel: 'cpp-distributor-india:',
         expectedPublicPageURL:
-          '/apac/channelpartners/home/#',
+          '/apac/channelpartners/home/',
         signInButtonInternationalText: 'Sign In',
       },
     },
@@ -65,7 +65,7 @@ export default {
       data: {
         partnerLevel: 'cpp-emea-platinum:',
         expectedPublicPageURL:
-          '/emea/channelpartners/home/#',
+          '/emea/channelpartners/home/',
         signInButtonInternationalText: 'Sign In',
       },
     },
@@ -78,7 +78,7 @@ export default {
       data: {
         partnerLevel: 'cpp-distributor-japan:',
         expectedPublicPageURL:
-          '/jp/channelpartners/home/#',
+          '/jp/channelpartners/home/',
         signInButtonInternationalText: 'Sign In',
       },
     },
@@ -91,7 +91,7 @@ export default {
       data: {
         partnerLevel: 'cpp-latin-america-na-platinum:',
         expectedPublicPageURL:
-          '/latam/channelpartners/home/#',
+          '/latam/channelpartners/home/',
         signInButtonInternationalText: 'Sign In',
       },
     },
@@ -104,7 +104,7 @@ export default {
       data: {
         partnerLevel: 'cpp-na-certified:',
         expectedPublicPageURL:
-          '/latam/channelpartners/home/#',
+          '/latam/channelpartners/home/',
         signInButtonInternationalText: 'Sign In',
       },
     },
