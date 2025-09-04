@@ -95,8 +95,8 @@ export default class SmokeTest {
   }
 
   async searchPageDownloadButton() {
-    const downloadButton = this.page.locator('.button.anchor.hidden').first();
-    await downloadButton.click();
+    const downloadButton = this.page.locator('a[href*=".pdf?download"]').first();
+    await downloadButton.click({ force: true });
   }
 
   async announcmentCardVerification() {

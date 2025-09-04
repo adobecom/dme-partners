@@ -1,7 +1,7 @@
 export default class BannersPage {
   constructor(page) {
     this.page = page;
-    this.renewBanner = page.locator('div.aside.notification.dark.extra-small.con-block.no-media');
+    this.renewBanner = page.locator('.con-button.outline.button-m');
     this.renewBannerCertifiedUS = page.locator('div.notification.ribbon');
     this.bannerLink = page.locator('.notification p.body-m.action-area > a.con-button.outline');
     this.profileIconButton = page.locator('.feds-profile-button');
