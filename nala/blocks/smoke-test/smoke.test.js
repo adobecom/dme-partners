@@ -626,6 +626,7 @@ test.describe('Smoke Tests', () => {
       await test.step('Click on the Support and verify the URL', async () => {
         await smokeTest.supportGnavOption.waitFor({ state: 'visible' });
         await smokeTest.supportGnavOption.click();
+        await smokeTest.supportResources.click();
 
         await page.waitForLoadState();
         expect(page.url()).toContain(`${baseURL}${data.supportURL}`);
@@ -640,6 +641,7 @@ test.describe('Smoke Tests', () => {
     await test.step('Verify logo redirection for public page', async () => {
       await page.goto(`${baseURL}${path}`);
       await smokeTest.supportGnavOption.click();
+      await smokeTest.supportResources.click();
       await page.waitForLoadState('networkidle');
       await smokeTest.apcLogo.click();
       await page.waitForURL('**', { timeout: 30000 });

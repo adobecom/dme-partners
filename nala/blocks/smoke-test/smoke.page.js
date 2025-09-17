@@ -41,7 +41,8 @@ export default class SmokeTest {
     this.cbcLearnMore = page.locator('.media .media-row a[href*="/bin/fusion/modalImsLogin?resource=%2Fen%2Fnews%2Fenablement-news-partner-lock"]');
     this.findDistributorBtn = page.locator('.feds-navItem .feds-cta-wrapper a[href*="/api/v1/web/dx-partners-runtime/sfdc-redirect?program_type=channel&request_type=distributor_finder"]');
     this.programGnavOption = page.locator('.feds-navItem a[href*="/channelpartners/program"]');
-    this.supportGnavOption = page.locator('.feds-navItem a[href*="/channelpartners/support"]');
+    this.supportGnavOption = page.locator('.feds-navLink.feds-navLink--hoverCaret');
+    this.supportResources = page.locator('.feds-navItem a[href*="/channelpartners/support"]');
     this.announcementCardTitle = page.locator('#announcement-title');
     this.firstCardMetadata = page.locator('.card-metadata').first().locator('div[data-valign="middle"]').nth(1);
     this.apcLogo = page.getByRole('link', { name: 'Adobe Partner Connection', exact: true });
