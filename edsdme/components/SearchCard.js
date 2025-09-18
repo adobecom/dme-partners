@@ -1,6 +1,6 @@
 import searchCardStyles from './SearchCardStyles.js';
 import { formatDate, getLibs } from '../scripts/utils.js';
-import { setDownloadParam, getConfig, replaceText } from '../blocks/utils/utils.js';
+import { setDownloadParam, getConfig, replaceText, PARTNER_LEVELS } from '../blocks/utils/utils.js';
 
 const miloLibs = getLibs();
 const config = getConfig();
@@ -18,9 +18,18 @@ class SearchCard extends LitElement {
   get cardTags() {
     const tags = this.data.arbitrary;
     if (!tags.length) return;
+    
+    // Filter out tags that match partner levels
+    const filteredTags = tags.filter((tag) => {
+      const tagValue = Object.values(tag)[0];
+      return !PARTNER_LEVELS.includes(tagValue?.toLowerCase());
+    });
+    
+    if (!filteredTags.length) return;
+    
     // eslint-disable-next-line consistent-return
     return html`${repeat(
-      tags,
+      filteredTags,
       (tag) => tag.key,
       (tag) => {
         const key = Object.values(tag)[0];

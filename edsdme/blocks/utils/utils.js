@@ -13,6 +13,8 @@ const previewURL = 'https://admin.hlx.page/preview/adobecom/dme-partners/main/*'
 const publishURL = 'https://admin.hlx.page/live/adobecom/dme-partners/main/*';
 const jobURL = 'https://admin.hlx.page/job/adobecom/dme-partners/main/';
 
+export const PARTNER_LEVELS = ['gold', 'silver', 'platinum', 'community'];
+
 export function populateLocalizedTextFromListItems(el, localizedText) {
   const liList = Array.from(el.querySelectorAll('li'));
   liList.forEach((liEl) => {
