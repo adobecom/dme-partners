@@ -61,12 +61,10 @@ class SearchCard extends LitElement {
   handleDownload(event, url, filename) {
     event.stopPropagation();
     event.preventDefault();
-    
     const downloadLink = document.createElement('a');
     downloadLink.href = setDownloadParam(url);
     downloadLink.download = filename || '';
     downloadLink.style.display = 'none';
-    
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
