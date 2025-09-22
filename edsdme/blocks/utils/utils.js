@@ -143,9 +143,9 @@ export function setDownloadParam(url) {
   try {
     if (!url) return '';
     const urlWithParam = new URL(url);
-    urlWithParam.search = 'download';
+    urlWithParam.searchParams.set('download', '');
     // eslint-disable-next-line consistent-return
-    return urlWithParam;
+    return urlWithParam.toString();
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Invalid URL provided:', url, error.message);

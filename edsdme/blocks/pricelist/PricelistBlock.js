@@ -141,8 +141,7 @@ export default class Pricelist extends PartnerCards {
                 <sp-theme theme="spectrum" color="light" scale="medium">
                     <sp-action-button
                             size="m"
-                            href="${setDownloadParam(rowData.contentArea?.url)}"
-                            download="${rowData.contentArea?.filename}"
+                            @click=${(e) => this.handleDownload(e, rowData.contentArea?.url, rowData.contentArea?.filename)}
                             aria-label="${this.blockData.localizedText['{{download}}']}">
                         <sp-icon-download slot="icon"></sp-icon-download>
                         ${this.blockData.localizedText['{{download}}']}
@@ -185,6 +184,21 @@ export default class Pricelist extends PartnerCards {
   // eslint-disable-next-line class-methods-use-this
   getFetchOptions() {
     return { credentials: 'include' };
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  handleDownload(event, url, filename) {
+    event.stopPropagation();
+    event.preventDefault();
+    
+    const downloadLink = document.createElement('a');
+    downloadLink.href = setDownloadParam(url);
+    downloadLink.download = filename || '';
+    downloadLink.style.display = 'none';
+    
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
   }
 
   get partnerCards() {
