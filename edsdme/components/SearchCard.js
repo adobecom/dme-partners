@@ -18,14 +18,8 @@ class SearchCard extends LitElement {
   get cardTags() {
     const tags = this.data.arbitrary;
     if (!tags.length) return;
-    
-    // Filter out tags that have the key 'partnerlevel'
-    const filteredTags = tags.filter((tag) => {
-      return !tag.hasOwnProperty('partnerlevel');
-    });
-    
+    const filteredTags = tags.filter((tag) => !Object.prototype.hasOwnProperty.call(tag, 'partnerlevel'));
     if (!filteredTags.length) return;
-    
     // eslint-disable-next-line consistent-return
     return html`${repeat(
       filteredTags,
