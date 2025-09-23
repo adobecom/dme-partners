@@ -123,21 +123,6 @@ export function generateRequestForSearchAPI(pageOptions, body) {
 }
 
 // eslint-disable-next-line class-methods-use-this
-export function setDownloadParam(url) {
-  try {
-    if (!url) return '';
-    const urlWithParam = new URL(url);
-    urlWithParam.search = 'download';
-    // eslint-disable-next-line consistent-return
-    return urlWithParam;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Invalid URL provided:', url, error.message);
-    return '';
-  }
-}
-
-// eslint-disable-next-line class-methods-use-this
 export function transformCardUrl(url) {
   if (!url) {
     // eslint-disable-next-line no-console
