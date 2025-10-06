@@ -21,6 +21,23 @@ export function filterRestrictedCardsByCurrentSite(cards) {
   });
 }
 
+export function filterExpiredAnnouncements(cards, blockData) {
+  const startDate = new Date();
+  startDate.setHours(0, 0, 0, 0);
+  startDate.setDate(startDate.getDate() - 180);
+  return cards.filter((card) => {
+    const isNeverExpires = card.tags.some((tag) => tag.id === 'caas:adobe-partners/collections/announcements/never-expires');
+    if (isNeverExpires) return !blockData.isArchive;
+    const cardDate = new Date(card.cardDate);
+    const cardEndDate = card.endDate ? new Date(card.endDate) : null;
+    const now = Date.now();
+    if (blockData.isArchive) {
+      return cardEndDate ? cardEndDate < now : cardDate <= startDate;
+    }
+    return cardEndDate ? cardEndDate >= now : cardDate > startDate;
+  });
+}
+
 export default class Announcements extends PartnerCards {
   static styles = [
     PartnerCards.styles,
@@ -38,21 +55,7 @@ export default class Announcements extends PartnerCards {
   }
 
   additionalFirstUpdated() {
-    const startDate = new Date();
-    startDate.setHours(0, 0, 0, 0);
-    startDate.setDate(startDate.getDate() - 180);
-
-    this.allCards = this.allCards.filter((card) => {
-      const isNeverExpires = card.tags.some((tag) => tag.id === 'caas:adobe-partners/collections/announcements/never-expires');
-      if (isNeverExpires) return !this.blockData.isArchive;
-      const cardDate = new Date(card.cardDate);
-      const cardEndDate = card.endDate ? new Date(card.endDate) : null;
-      const now = Date.now();
-      if (this.blockData.isArchive) {
-        return cardEndDate ? cardEndDate < now : cardDate <= startDate;
-      }
-      return cardEndDate ? cardEndDate >= now : cardDate > startDate;
-    });
+    this.allCards = filterExpiredAnnouncements(this.allCards, this.blockData);
 
     if (this.blockData.dateFilter) {
       const [firstDateFilter] = this.blockData.dateFilter.tags;
@@ -99,14 +102,9 @@ export default class Announcements extends PartnerCards {
             <div class="filter-header-content-mobile">
               <h3 class="filter-header-name-mobile">${filter.value}</h3>
                 ${this.selectedDateFilter.default
-                  ? ''
-                  : html`
-                     <div class="filter-header-selected-tags-mobile">
-                       <span class="filter-header-selected-tags-text-mobile">${this.selectedDateFilter.value}</span>
-                       <span class="filter-header-selected-tags-count-mobile">+ 1</span>
-                     </div>
-                  `
-                }
+        ? ''
+        : html`<span class="filter-header-selected-tags-count-mobile">1</span>`
+      }
             </div>
             <sp-icon-chevron-down class="filter-header-chevron-icon" />
           </button>
@@ -148,7 +146,7 @@ export default class Announcements extends PartnerCards {
 
     if (!this.selectedDateFilter.default && Object.keys(this.selectedDateFilter).length) {
       htmlContent = html`
-        <button class="sidebar-chosen-filter-btn" @click="${() => this.handleResetDateTags(this.blockData.dateFilter.tags)}" aria-label="${this.selectedDateFilter.value}">
+        <button class="${this.mobileView ? 'chosen-filter-btn-mobile' : 'sidebar-chosen-filter-btn'}" @click="${() => this.handleResetDateTags(this.blockData.dateFilter.tags)}" aria-label="${this.selectedDateFilter.value}">
           ${this.selectedDateFilter.value}
         </button>
         ${htmlContent}

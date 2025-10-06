@@ -1,23 +1,23 @@
-import { toFragment, getFedsPlaceholderConfig, trigger, closeAllDropdowns, logErrorFor } from '../../utilities/utilities.js';
+import { toFragment, trigger, closeAllDropdowns, logErrorFor } from '../../utilities/utilities.js';
 
 // MWPW-157751
-import { getLibs } from '../../../../scripts/utils.js';
+import { getLibs, isMember } from '../../../../scripts/utils.js';
 
 const miloLibs = getLibs();
 const { replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
-const { getConfig } = await import(`${miloLibs}/utils/utils.js`);
 
-// const getLanguage = (ietfLocale) => {
-//   if (!ietfLocale.length) return 'en';
+const { getConfig, getFedsPlaceholderConfig } = await import(`${miloLibs}/utils/utils.js`);
+const getLanguage = (ietfLocale) => {
+  if (!ietfLocale.length) return 'en';
 
-//   const nonStandardLocaleMap = { 'no-NO': 'nb' };
+  const nonStandardLocaleMap = { 'no-NO': 'nb' };
 
-//   if (nonStandardLocaleMap[ietfLocale]) {
-//     return nonStandardLocaleMap[ietfLocale];
-//   }
+  if (nonStandardLocaleMap[ietfLocale]) {
+    return nonStandardLocaleMap[ietfLocale];
+  }
 
-//   return ietfLocale.split('-')[0];
-// };
+  return ietfLocale.split('-')[0];
+};
 
 const decorateEditProfileLink = () => {
   const { env } = getConfig();
@@ -38,16 +38,27 @@ const decorateProfileLink = (service, path = '') => {
 
   let serviceUrl;
   const { env } = getConfig();
-
   if (!env?.[service]) {
     serviceUrl = defaultServiceUrls[service];
   } else {
     serviceUrl = new URL(defaultServiceUrls[service]);
     serviceUrl.hostname = env[service];
   }
-
   return `${serviceUrl}${path}`;
 };
+
+// MWPW-166173
+function getProfileLinkFunction(isUserActiveMember) {
+  return (...args) => {
+    if (isUserActiveMember) {
+      return decorateEditProfileLink();
+    }
+    return decorateProfileLink(...args);
+  };
+}
+const isUserActiveMember = isMember();
+const decorateProfileLinkBasedOnAccountStatus = getProfileLinkFunction(isUserActiveMember);
+// end of MWPW-166173
 
 const decorateAction = (label, path) => toFragment`<li><a class="feds-profile-action" href="${decorateProfileLink('adminconsole', path)}">${label}</a></li>`;
 
@@ -68,7 +79,7 @@ class ProfileDropdown {
     this.sections = sections;
     this.openOnInit = openOnInit;
     this.localMenu = rawElem.querySelector('h5')?.parentElement;
-    logErrorFor(this.init.bind(this), 'ProfileDropdown.init()', 'errorType=error,module=gnav-profile');
+    logErrorFor(this.init.bind(this), 'ProfileDropdown.init()', 'gnav-profile', 'error');
   }
 
   async init() {
@@ -117,8 +128,8 @@ class ProfileDropdown {
 
   decorateDropdown() {
     // MWPW-157751
-    // const { locale } = getConfig();
-    // const lang = getLanguage(locale.ietf);
+    const { locale } = getConfig();
+    const lang = getLanguage(locale.ietf);
     // End
 
     // TODO: the account name and email might need a bit of adaptive behavior;
@@ -126,25 +137,26 @@ class ProfileDropdown {
     // the email had some special logic as well;
     // for MVP, we took a simpler approach ("Some very long name, very l...")
     this.avatarElem = toFragment`<img
+      data-cs-mask
       class="feds-profile-img"
       src="${this.avatar}"
       tabindex="0"
       alt="${this.placeholders.profileAvatar}"
-      data-url="${decorateEditProfileLink()}"></img>`;
+      data-url="${decorateProfileLinkBasedOnAccountStatus('account', `?lang=${lang}`)}"></img>`;
     // MWPW-157753 - only Edit user profile link should be clickable
     return toFragment`
       <div id="feds-profile-menu" class="feds-profile-menu">
         <div class="feds-profile-header">
           ${this.avatarElem}
           <div class="feds-profile-details">
-            <p class="feds-profile-name">${this.profileData.displayName}</p>
-            <p class="feds-profile-email">${this.decorateEmail(this.profileData.email)}</p>
-            <a href="${decorateEditProfileLink()}"
+            <p data-cs-mask class="feds-profile-name">${this.profileData.displayName}</p>
+            <p data-cs-mask class="feds-profile-email">${this.decorateEmail(this.profileData.email)}</p>
+            <a  href="${decorateProfileLinkBasedOnAccountStatus('account', `?lang=${lang}`)}"
                 target="_blank" 
                 daa-ll="${this.placeholders.viewAccount}"
-                aria-label="${this.placeholders.editProfile}" 
+                aria-label="${isUserActiveMember ? this.placeholders.editProfile : this.placeholders.viewAccount}" 
                 class="feds-profile-account">
-                    ${this.placeholders.editProfile}
+                    ${isUserActiveMember ? this.placeholders.editProfile : this.placeholders.viewAccount}
             </a>
           </div>
         </div>

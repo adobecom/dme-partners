@@ -4,17 +4,15 @@ export default {
     {
       tcid: '1',
       name: '@lending-page-validation-smoke-test',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off',
+      path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',
-      baseURL: 'https://www.stage.adobe.com?akamaiLocale=us',
     },
 
     {
       tcid: '2',
       name: '@home-page-validation-smoke-test',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off',
+      path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',
-      baseURL: 'https://www.stage.adobe.com?akamaiLocale=us',
       data: {
         partnerLevel: 'cpp-latin-na-platinum:',
         signInButtonInternationalText: 'Sign In',
@@ -24,40 +22,37 @@ export default {
     {
       tcid: '3',
       name: '@price-list-validation-smoke-test',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off',
+      path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',
-      basedURL: 'https://www.stage.adobe.com?akamaiLocale=us',
       data: {
         partnerLevel: 'cpp-distributor-us:',
         signInButtonInternationalText: 'Sign In',
         expectedPublicPageURL:
-          'https://partners.stage.adobe.com/na/channelpartners/home/pricelists/',
+          '/na/channelpartners/home/pricelists/',
       },
     },
 
     {
       tcid: '4',
       name: '@search-page-validation-smoke-test',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off',
+      path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',
-      basedURL: 'https://www.stage.adobe.com?akamaiLocale=us',
       data: {
         partnerLevel: 'cpp-distributor-us:',
         signInButtonInternationalText: 'Sign In',
-        searchText: 'pdf',
+        searchText: 'automationregressionkeyword',
       },
     },
 
     {
       tcid: '5',
       name: '@user-redirection-apac-smoke-test',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off',
+      path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',
-      basedURL: 'https://www.stage.adobe.com?akamaiLocale=us',
       data: {
         partnerLevel: 'cpp-distributor-india:',
         expectedPublicPageURL:
-          'https://partners.stage.adobe.com/apac/channelpartners/drafts/automation/regression/protected-home#',
+          '/apac/channelpartners/home/',
         signInButtonInternationalText: 'Sign In',
       },
     },
@@ -65,13 +60,12 @@ export default {
     {
       tcid: '6',
       name: '@user-redirection-emea-smoke-test',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off',
+      path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',
-      basedURL: 'https://www.stage.adobe.com?akamaiLocale=us',
       data: {
         partnerLevel: 'cpp-emea-platinum:',
         expectedPublicPageURL:
-          'https://partners.stage.adobe.com/emea/channelpartners/drafts/automation/regression/protected-home#',
+          '/emea/channelpartners/home/',
         signInButtonInternationalText: 'Sign In',
       },
     },
@@ -79,13 +73,12 @@ export default {
     {
       tcid: '7',
       name: '@user-redirection-jp-smoke-test',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off',
+      path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',
-      basedURL: 'https://www.stage.adobe.com?akamaiLocale=us',
       data: {
         partnerLevel: 'cpp-distributor-japan:',
         expectedPublicPageURL:
-          'https://partners.stage.adobe.com/jp/channelpartners/drafts/automation/regression/protected-home#',
+          '/jp/channelpartners/home/',
         signInButtonInternationalText: 'Sign In',
       },
     },
@@ -93,13 +86,12 @@ export default {
     {
       tcid: '8',
       name: '@user-redirection-latam-smoke-test',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off',
+      path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',
-      basedURL: 'https://www.stage.adobe.com?akamaiLocale=us',
       data: {
         partnerLevel: 'cpp-latin-america-na-platinum:',
         expectedPublicPageURL:
-          'https://partners.stage.adobe.com/latam/channelpartners/drafts/automation/regression/protected-home#',
+          '/latam/channelpartners/home/',
         signInButtonInternationalText: 'Sign In',
       },
     },
@@ -107,14 +99,209 @@ export default {
     {
       tcid: '9',
       name: '@announcement-page-validation-smoke-test',
-      path: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/public-page?georouting=off',
+      path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',
-      baseURL: 'https://www.stage.adobe.com?akamaiLocale=us',
       data: {
         partnerLevel: 'cpp-na-certified:',
         expectedPublicPageURL:
-          'https://partners.stage.adobe.com/latam/channelpartners/drafts/automation/regression/protected-home#',
+          '/latam/channelpartners/home/',
         signInButtonInternationalText: 'Sign In',
+      },
+    },
+
+    {
+      tcid: '10',
+      name: '@search-page-query-param-validation-smoke-test',
+      path: '/na/channelpartners/home/search/?term=Logo&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-na-certified:',
+        signInButtonInternationalText: 'Sign In',
+        searchText: 'Logo',
+      },
+    },
+
+    {
+      tcid: '11',
+      name: '@retail-program-validation-smoke-test',
+      path: '/channelpartners/?georouting=off&martech=off',
+      tags: '@dme-smoke-test',
+    },
+
+    {
+      tcid: '12',
+      name: '@apac-specialization-validation-smoke-test',
+      path: '/channelpartners/?georouting=off&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-distributor-india:',
+        signInButtonInternationalText: 'Sign In',
+      },
+    },
+
+    {
+      tcid: '13',
+      name: '@latam-specialization-validation-smoke-test',
+      path: '/channelpartners/?georouting=off&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-latin-america-gold:',
+        signInButtonInternationalText: 'Sign In',
+      },
+    },
+
+    {
+      tcid: '14',
+      name: '@emea-specialization-validation-smoke-test',
+      path: '/channelpartners/?georouting=off&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-spain-platinum:',
+        signInButtonInternationalText: 'Sign In',
+      },
+    },
+
+    {
+      tcid: '15',
+      name: '@korea-specialization-validation-smoke-test',
+      path: '/channelpartners/?georouting=off&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-kr-gold:',
+        signInButtonInternationalText: 'Sign In',
+      },
+    },
+
+    {
+      tcid: '16',
+      name: '@uplevel-info-validation-smoke-test',
+      path: '/channelpartners/?georouting=off&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-de-gold:',
+        signInButtonInternationalText: 'Sign In',
+        expectedResellerProgramURL:
+          '/Reseller_Program_Guide_EMEA.pdf',
+        expectedRetailProgramURL:
+          '/EMEA_Retail_Program_Guide.pdf',
+      },
+    },
+
+    {
+      tcid: '17',
+      name: '@cal-links-apac-validation-smoke-test',
+      path: '/channelpartners/?georouting=off&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-distributor-india:',
+        signInButtonInternationalText: 'Sign In',
+        expectedApacEmail:
+          'apacpm@adobe.com',
+      },
+    },
+
+    {
+      tcid: '18',
+      name: '@join-now-button-validation-smoke-test',
+      path: '/channelpartners/#?martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        joinNowButtonText: 'Join Now',
+        joinNowButtonFrenchText: 'Adhérer',
+        joinNowButtonGermanText: 'Mitglied werden',
+        joinNowButtonItalianText: 'Iscriviti',
+        joinNowButtonSpanishText: 'Unirse ahora',
+        joinNowButtonKorianText: '가입하기',
+        joinNowButtonChinaText: '立即加入',
+        joinNowButtonJapanText: '参加する',
+        naLocaleSwitchUrl: '/na/channelpartners/#?martech=off',
+        latamLocaleSwitchUrl: '/latam/channelpartners/#?martech=off',
+        emeaLocaleSwitchUrl: '/emea/channelpartners/#?martech=off',
+        frLocaleSwitchUrl: '/fr/channelpartners/#?martech=off',
+        deLocaleSwitchUrl: '/de/channelpartners/#?martech=off',
+        itLocaleSwitchUrl: '/it/channelpartners/#?martech=off',
+        esLocaleSwitchUrl: '/es/channelpartners/#?martech=off',
+        apacLocaleSwitchUrl: '/apac/channelpartners/#?martech=off',
+        krLocaleSwitchUrl: '/kr/channelpartners/#?martech=off',
+        cnLocaleSwitchUrl: '/cn/channelpartners/#?martech=off',
+        jpLocaleSwitchUrl: '/jp/channelpartners/#?martech=off',
+      },
+    },
+
+    {
+      tcid: '19',
+      name: '@find-partner-validation-smoke-test',
+      path: '/na/channelpartners/?akamaiLocale=es&georouting=on&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        findPartnerLinkText: 'Find a Partner',
+        findPartnerGermanLinkText: 'Adobe-Partner suchen',
+        findPartnerJapanLinkText: 'パートナーを見つける',
+        deLocalePartnerUrl: '/de/channelpartners/?akamaiLocale=es&georouting=on&martech=off',
+        jpLocalePartnerUrl: '/jp/channelpartners/?akamaiLocale=es&georouting=on&martech=off',
+        geoModalLinkNA: 'North America',
+        geoModalLinkGerman: 'Deutschland',
+        geoModalLinkJapan: '日本',
+
+      },
+    },
+
+    {
+      tcid: '20',
+      name: '@sso-integration-between-apc-and-cbc',
+      path: '/na/channelpartners/home/#?georouting=on&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-distributor-us:',
+        cbcConnectionDomain: 'cbconnection',
+        expectedURL: '/bin/fusion/modalImsLogin?resource=%2Fen%2Fnews%2Fenablement-news-partner-lock',
+      },
+    },
+
+    {
+      tcid: '21',
+      name: '@sso-integration-between-apc-and-finder',
+      path: '/na/channelpartners/home/#?georouting=on&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-distributor-us:',
+        expectedSalesForceURL: 'salesforce-sites.com/PartnerSearch',
+        expectedFindURL: '/api/v1/web/dx-partners-runtime/sfdc-redirect?program_type=channel&request_type=distributor_finder',
+        expectedID: 'tid',
+      },
+    },
+    {
+      tcid: '22',
+      name: '@na-footer-and-gnav-validation',
+      path: '/channelpartners/#?georouting=off&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        defaultURL: '/na/channelpartners/',
+        programURL: '/na/channelpartners/program/',
+        supportURL: '/na/channelpartners/support/',
+      },
+    },
+    {
+      tcid: '23',
+      name: '@kr-footer-and-gnav-validation',
+      path: '/channelpartners/#?georouting=off&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        defaultURL: '/kr/channelpartners/',
+        programURL: '/kr/channelpartners/program/',
+        supportURL: '/kr/channelpartners/support/',
+      },
+    },
+    {
+      tcid: '24',
+      name: '@logo-redirection-validation-smoke-test',
+      path: '/na/channelpartners/?georouting=off&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-distributor-us:',
+        signInButtonInternationalText: 'Sign In',
+        logoRedirectionURLProtected: '/na/channelpartners/home/',
+        logoRedirectionURLPublic: '/na/channelpartners/',
       },
     },
   ],

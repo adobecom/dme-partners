@@ -1,4 +1,6 @@
 {
+  "previewHost": "main--dme-partners--adobecom.aem.page",
+  "liveHost": "partnerspreview.adobe.com",
   "plugins": [
     {
       "id": "library",
@@ -24,7 +26,7 @@
       "id": "localize-2",
       "title": "Localize (V2)",
       "environments": [ "edit" ],
-      "url": "https://main--dme-partners--adobecom.hlx.page/tools/loc?milolibs=locui",
+      "url": "https://main--dme-partners--adobecom.aem.page/tools/loc?milolibs=locui",
       "passReferrer": true,
       "passConfig": true,
       "includePaths": [ "**.xlsx**" ]
@@ -83,6 +85,36 @@
       "url": "https://milo.adobe.com/tools/locale-nav",
       "includePaths": [
         "**.docx**"
+      ]
+    },
+    {
+      "containerId": "tools",
+      "title": "Preview to all sites",
+      "id": "previewtoallsites",
+      "event": "previewtoallsites",
+      "excludePaths": [
+        "/**"
+      ],
+      "includePaths": [
+        "/channelpartners/**"
+      ],
+      "environments": [
+        "live"
+      ]
+    },
+    {
+      "containerId": "tools",
+      "title": "Publish to all sites",
+      "id": "publishtoallsites",
+      "event": "publishtoallsites",
+      "excludePaths": [
+        "/**"
+      ],
+      "includePaths": [
+        "/channelpartners/**"
+      ],
+      "environments": [
+        "live"
       ]
     }
   ]

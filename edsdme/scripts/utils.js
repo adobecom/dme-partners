@@ -24,6 +24,9 @@ export const LEVELS = {
 
 export const RESSELER_LEVELS = [LEVELS.REGISTERED, LEVELS.CERTIFIED, LEVELS.GOLD, LEVELS.PLATINUM];
 
+const MAX_PARTNER_ERROR_REDIRECTS_COUNT = 3;
+const PARTNER_ERROR_REDIRECTS_COUNT_COOKIE = 'partner_redirects_count';
+
 export const [setLibs, getLibs] = (() => {
   let libs;
   return [
@@ -31,14 +34,14 @@ export const [setLibs, getLibs] = (() => {
       libs = (() => {
         const { hostname, search, origin } = location || window.location;
         if (origin.endsWith('adobe.com')) {
-          return origin.replace('partners', 'milo') + prodLibs;
+          return origin + prodLibs;
         }
         const partnerBranch = hostname.startsWith('main') ? 'main' : 'stage';
         const branch = new URLSearchParams(search).get('milolibs') || partnerBranch;
         if (branch === 'local') {
           return 'http://localhost:6456/libs';
         }
-        return branch.includes('--') ? `https://${branch}.hlx.live/libs` : `https://${branch}--milo--adobecom.hlx.live/libs`;
+        return branch.includes('--') ? `https://${branch}.aem.live/libs` : `https://${branch}--milo--adobecom.aem.live/libs`;
       })();
       return libs;
     }, () => libs,
@@ -48,8 +51,12 @@ export const [setLibs, getLibs] = (() => {
 export const prodHosts = [
   'main--dme-partners--adobecom.hlx.page',
   'main--dme-partners--adobecom.hlx.live',
+  'main--dme-partners--adobecom.aem.page',
+  'main--dme-partners--adobecom.aem.live',
   'partners.adobe.com',
+  'partnerspreview.adobe.com',
 ];
+export const previewHosts = ['partnerspreview.adobe.com', 'stage--dme-partners--adobecom.aem.live'];
 
 /*
  * ------------------------------------------------------------
@@ -76,19 +83,31 @@ export function formatDate(cardDate, locale = 'en-US') {
 
 export function getProgramType(path) {
   switch (true) {
-    case /solutionpartners/.test(path): return 'spp';
-    case /technologypartners/.test(path): return 'tpp';
-    case /channelpartners/.test(path): return 'cpp';
-    default: return '';
+    case /solutionpartners/.test(path):
+      return 'spp';
+    case /technologypartners/.test(path):
+      return 'tpp';
+    case /channelpartners/.test(path):
+      return 'cpp';
+    case /channelpartnerassets/.test(path):
+      return 'cpp';
+    default:
+      return '';
   }
 }
 
 export function getProgramHomePage(path) {
   switch (true) {
-    case /solutionpartners/.test(path): return '/solutionpartners/';
-    case /technologypartners/.test(path): return '/technologypartners/';
-    case /channelpartners/.test(path): return '/channelpartners/';
-    default: return '';
+    case /solutionpartners/.test(path):
+      return '/solutionpartners/';
+    case /technologypartners/.test(path):
+      return '/technologypartners/';
+    case /channelpartners/.test(path):
+      return '/channelpartners/';
+    case /channelpartnerassets/.test(path):
+      return '/channelpartners/';
+    default:
+      return '';
   }
 }
 
@@ -100,6 +119,10 @@ export function getCookieValue(key) {
   const cookies = document.cookie.split(';').map((cookie) => cookie.trim());
   const cookie = cookies.find((el) => el.startsWith(`${key}=`));
   return cookie?.substring((`${key}=`).length);
+}
+
+export function deleteCookieValue(key) {
+  document.cookie = `${key}=; Path=/; Max-Age=0;`;
 }
 
 export function getPartnerDataCookieValue(programType, key) {
@@ -158,6 +181,14 @@ export function getMetadata(name) {
 
 export function redirectLoggedinPartner() {
   if (!isMember()) return;
+  const partnerErrorRedirectsCount = getCookieValue(PARTNER_ERROR_REDIRECTS_COUNT_COOKIE);
+  if (partnerErrorRedirectsCount) {
+    const count = Number(partnerErrorRedirectsCount);
+    if (count && Number.isInteger(count) && count >= MAX_PARTNER_ERROR_REDIRECTS_COUNT) {
+      deleteCookieValue(PARTNER_ERROR_REDIRECTS_COUNT_COOKIE);
+      return;
+    }
+  }
   const target = getMetadataContent('adobe-target-after-login');
   if (!target || target === 'NONE') return;
   document.body.style.display = 'none';
@@ -177,21 +208,22 @@ export function isRenew() {
   if (!accountExpiration) return;
 
   const expirationDate = new Date(accountExpiration);
+  expirationDate.setHours(0, 0, 0, 0);
   const now = new Date();
+  now.setHours(0, 0, 0, 0);
 
   let accountStatus;
   let daysNum;
 
   const differenceInMilliseconds = expirationDate - now;
   const differenceInDays = Math.abs(differenceInMilliseconds) / (1000 * 60 * 60 * 24);
-  const differenceInDaysRounded = Math.floor(differenceInDays);
 
   if (differenceInMilliseconds > 0 && differenceInDays < 31) {
     accountStatus = 'expired';
-    daysNum = differenceInDaysRounded;
+    daysNum = differenceInDays - 1;
   } else if (differenceInMilliseconds < 0 && differenceInDays <= 90) {
     accountStatus = 'suspended';
-    daysNum = 90 - differenceInDaysRounded;
+    daysNum = Math.floor(90 - differenceInDays);
   } else {
     return;
   }
@@ -257,7 +289,12 @@ export function updateIMSConfig() {
     partnerLogin && targetUrl.searchParams.set(PARTNER_LOGIN_QUERY, true);
     if (target && target !== 'NONE') {
       targetUrl.pathname = target;
+
+      if (!partnerLogin) {
+        targetUrl.search = '';
+      }
     }
+
     window.adobeIMS.adobeIdData.redirect_uri = targetUrl.toString();
   }, 500);
 }
@@ -373,7 +410,8 @@ function setApiParams(api, block) {
   const complexQueryParams = getComplexQueryParams(el, collectionTag);
   if (complexQueryParams) api.searchParams.set('complexQuery', complexQueryParams);
 
-  const [language, country] = ietf.split('-');
+  const langCode = ietf === 'en-GB' ? 'en-US' : ietf;
+  const [language, country] = langCode.split('-');
   if (language && country) {
     api.searchParams.set('language', language);
     api.searchParams.set('country', country);
@@ -393,13 +431,21 @@ export async function preloadResources(locales, miloLibs) {
     announcements: '"caas:adobe-partners/collections/announcements"',
     'announcements-preview': '"caas:adobe-partners/collections/announcements"',
   };
-
+  const blockWithPlaceholders = ['announcements', 'search-full', 'logos', 'pricelist'];
+  let isPreloadCalled = false;
+  blockWithPlaceholders.forEach(async (item) => {
+    const el = document.querySelector(`.${item}`);
+    if (!el) return;
+    if (!isPreloadCalled) {
+      preloadPlaceholders(locale);
+      isPreloadCalled = true;
+    }
+  });
   Object.entries(cardBlocks).forEach(async ([key, value]) => {
     const el = document.querySelector(`.${key}`);
     if (!el) return;
 
     if (key !== 'announcements-preview') {
-      preloadPlaceholders(locale);
       preloadLit(miloLibs);
     }
 
@@ -449,6 +495,9 @@ export function getNodesByXPath(query, context = document) {
 export function enableGeoPopup() {
   const { hostname, search } = window.location;
   const enableWithParam = new URLSearchParams(search).get('georouting') === 'on';
+  if (hostname === 'partnerspreview.adobe.com') {
+    return 'off';
+  }
   if ((hostname.endsWith('.adobe.com') && !partnerIsSignedIn()) || enableWithParam) {
     return 'on';
   }

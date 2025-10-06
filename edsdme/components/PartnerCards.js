@@ -1,4 +1,4 @@
-import { getLibs } from '../scripts/utils.js';
+import { getLibs, prodHosts } from '../scripts/utils.js';
 import { partnerCardsLoadMoreStyles, partnerCardsPaginationStyles, partnerCardsStyles } from './PartnerCardsStyles.js';
 import './SinglePartnerCard.js';
 
@@ -82,10 +82,24 @@ export default class PartnerCards extends LitElement {
         const [filterKeyEl, filterTagsKeysEl] = cols;
         const filterKey = filterKeyEl.innerText.trim().toLowerCase().replace(/ /g, '-');
 
+        function createTag(tagKey, initialHidden, blockData) {
+          return {
+            key: tagKey,
+            parentKey: filterKey,
+            value: blockData.localizedText[`{{${tagKey}}}`],
+            checked: false,
+            initialHidden,
+          };
+        }
         const filterTagsKeys = [];
-        filterTagsKeysEl.querySelectorAll('li').forEach((li) => {
+        filterTagsKeysEl.querySelectorAll('ul')[0].querySelectorAll('li').forEach((li) => {
           const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
-          if (key !== '') filterTagsKeys.push(key);
+          if (key !== '') filterTagsKeys.push(createTag(key, false, this.blockData));
+        });
+
+        filterTagsKeysEl.querySelectorAll('ul')[1]?.querySelectorAll('li').forEach((li) => {
+          const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
+          if (key !== '') filterTagsKeys.push(createTag(key, true, this.blockData));
         });
 
         if (!filterKey || !filterTagsKeys.length) return;
@@ -93,12 +107,9 @@ export default class PartnerCards extends LitElement {
         const filterObj = {
           key: filterKey,
           value: this.blockData.localizedText[`{{${filterKey}}}`],
-          tags: filterTagsKeys.map((tagKey) => ({
-            key: tagKey,
-            parentKey: filterKey,
-            value: this.blockData.localizedText[`{{${tagKey}}}`],
-            checked: false,
-          })),
+          tags: filterTagsKeys,
+          hideTags: true,
+          hasHiddenTags: filterTagsKeys.some((tag) => tag.initialHidden),
         };
         this.blockData.filters.push(filterObj);
       },
@@ -220,7 +231,7 @@ export default class PartnerCards extends LitElement {
       const cardsEvent = new Event('partner-cards-loaded');
       document.dispatchEvent(cardsEvent);
       if (apiData?.cards) {
-        if (window.location.hostname === 'partners.adobe.com') {
+        if (prodHosts.includes(window.location.host)) {
           apiData.cards = apiData.cards.filter((card) => !card.contentArea.url?.includes('/drafts/'));
         }
         // eslint-disable-next-line no-return-assign
@@ -370,6 +381,18 @@ export default class PartnerCards extends LitElement {
     return `${firstElOrderNum} - ${lastElOrderNum}`;
   }
 
+  toggleHideTags(filter) {
+    this.blockData = {
+      ...this.blockData,
+      filters: this.blockData.filters.map((filterItem) => {
+        if (filterItem.key === filter.key) {
+          filterItem.hideTags = !filterItem.hideTags;
+        }
+        return filterItem;
+      }),
+    };
+  }
+
   get filters() {
     if (!this.blockData.filters.length) return;
 
@@ -397,6 +420,12 @@ export default class PartnerCards extends LitElement {
     : ''}
               <sp-theme theme="spectrum" color="light" scale="medium">
                 ${this.getTagsByFilter(filter)}
+                <a class="hide-filter-option" 
+                   href="#" 
+                   @click=${(event) => { event.preventDefault(); this.toggleHideTags(filter); }}
+                   ?hidden=${!filter.hasHiddenTags}>
+                  ${filter.hideTags ? this.blockData.localizedText['{{show-more}}']
+    : this.blockData.localizedText['{{show-less}}']}</a>
               </sp-theme>
             </ul>
           </div>`;
@@ -417,7 +446,6 @@ export default class PartnerCards extends LitElement {
       (filter) => filter.key,
       (filter) => {
         const selectedTagsData = this.countSelectedTags(filter.key);
-        const { tagsString } = selectedTagsData;
         const { tagsCount } = selectedTagsData;
 
         /* eslint-disable indent */
@@ -428,14 +456,9 @@ export default class PartnerCards extends LitElement {
                 <div class="filter-header-content-mobile">
                   <h3 class="filter-header-name-mobile">${filter.value}</h3>
                   ${tagsCount
-                    ? html`
-                      <div class="filter-header-selected-tags-mobile">
-                        <span class="filter-header-selected-tags-text-mobile">${tagsString}</span>
-                        <span class="filter-header-selected-tags-count-mobile">+ ${tagsCount}</span>
-                      </div>
-                    `
-                    : ''
-                  }
+            ? html`<div class="filter-header-selected-tags-count-mobile">${tagsCount}</div>`
+            : ''
+          }
                 </div>
                 <span class="filter-header-chevron-icon"></span>
               </button>
@@ -475,7 +498,7 @@ export default class PartnerCards extends LitElement {
       extractedTags.sort((a, b) => a.value.localeCompare(b.value)),
       (tag) => tag.key,
       (tag) => html`
-        <button class="sidebar-chosen-filter-btn" @click="${() => this.handleRemoveTag(tag)}" aria-label="${tag.value}">
+        <button class="${this.mobileView ? 'chosen-filter-btn-mobile' : 'sidebar-chosen-filter-btn'}" @click="${() => this.handleRemoveTag(tag)}" aria-label="${tag.value}">
           ${tag.value}
         </button>`,
     )}`;
@@ -488,7 +511,9 @@ export default class PartnerCards extends LitElement {
     const { tags } = filter;
 
     return html`${repeat(
-      tags,
+      tags.filter(
+        (tag) => (this.mobileView || (tag.initialHidden && !filter.hideTags) || !tag.initialHidden),
+      ),
       (tag) => tag.key,
       (tag) => html`<li><sp-checkbox
         size="m" emphasized
@@ -869,6 +894,10 @@ export default class PartnerCards extends LitElement {
               <button class="all-filters-header-back-btn-mobile" @click="${this.closeFiltersMobile}" aria-label="${this.blockData.localizedText['{{back}}']}"></button>
               <span class="all-filters-header-title-mobile">${this.blockData.localizedText['{{filter-by}}']}</span>
             </div>
+            ${this.chosenFilters
+        ? html`<div class="all-filter-chosen-filters-wrapper-mobile">
+              ${this.chosenFilters.htmlContent}
+            </div>` : ''}
             <div class="all-filters-list-mobile">
               ${this.filtersMobile}
             </div>

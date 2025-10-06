@@ -1,7 +1,6 @@
 import PartnerCards from '../../components/PartnerCards.js';
 import { getLibs } from '../../scripts/utils.js';
 import { pricelistBlockStyles } from './PricelistBlockStyles.js';
-import { setDownloadParam } from '../utils/utils.js';
 
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
@@ -141,9 +140,10 @@ export default class Pricelist extends PartnerCards {
                 <sp-theme theme="spectrum" color="light" scale="medium">
                     <sp-action-button
                             size="m"
-                            href="${setDownloadParam(rowData.contentArea?.url)}"
+                            href="${rowData.contentArea?.url}"
                             download="${rowData.contentArea?.filename}"
-                            aria-label="${this.blockData.localizedText['{{download}}']}">
+                            aria-label="${this.blockData.localizedText['{{download}}']}"
+                            @click=${(e) => { if (e.isTrusted) { e.preventDefault(); } }}>
                         <sp-icon-download slot="icon"></sp-icon-download>
                         ${this.blockData.localizedText['{{download}}']}
                     </sp-action-button>

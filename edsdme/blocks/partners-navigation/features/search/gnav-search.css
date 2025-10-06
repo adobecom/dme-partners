@@ -105,13 +105,15 @@
   border-color: #d3d3d3;
   border-radius: 0 0 3px 3px;
 }
-
+/*MWPW-154138*/
 .feds-search-result,
 .feds-search-view-all-results {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 5px 10px;
   font-size: 13px;
-  line-height: 1;
+  line-height: 1.5; /* MWPW-162729 */
   font-weight: 700;
   color: #2d2d2d;
 }
@@ -121,10 +123,12 @@
   background: #f5f5f5;
 }
 
-.feds-search-result span {
+/* MWPW-162729 */
+.feds-search-result-prefix {
   font-weight: 400;
 }
 
+/*MWPW-154138*/
 .feds-search-view-all-results {
   color: var(--link-color);
 }

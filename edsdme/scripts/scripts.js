@@ -8,21 +8,17 @@ import {
   updateNavigation,
   updateFooter,
   enableGeoPopup,
-  PARTNER_LOGIN_QUERY, partnerIsSignedIn,
+  PARTNER_LOGIN_QUERY,
+  prodHosts,
+  previewHosts,
 } from './utils.js';
 import { rewriteLinks } from './rewriteLinks.js';
-
+import { sidekickListener } from '../blocks/utils/utils.js';
 // Add project-wide style path here.
 const STYLES = '/edsdme/styles/styles.css';
 
 // Use 'https://milo.adobe.com/libs' if you cannot map '/libs' to milo's origin.
 const LIBS = '/libs';
-
-const prodHosts = [
-  'main--dme-partners--adobecom.hlx.page',
-  'main--dme-partners--adobecom.hlx.live',
-  'partners.adobe.com',
-];
 
 const imsClientId = prodHosts.includes(window.location.host) ? 'MILO_PARTNERS_PROD' : 'MILO_PARTNERS_STAGE';
 
@@ -31,6 +27,7 @@ const CONFIG = {
   codeRoot: '/edsdme',
   contentRoot: '/edsdme/partners-shared',
   imsClientId,
+  clientEnv: prodHosts.includes(window.location.host) ? 'prod' : null,
   geoRouting: enableGeoPopup(),
   // fallbackRouting: 'off',
   locales: {
@@ -113,8 +110,9 @@ function setUpPage() {
   setConfig({ ...CONFIG, miloLibs });
   await getRenewBanner(getConfig);
   await loadArea();
-  partnerIsSignedIn();
-  if (partnerIsSignedIn()) {
-    rewriteLinks();
+  applyPagePersonalization();
+  rewriteLinks(document);
+  if (previewHosts.includes(window.location.host)) {
+    sidekickListener(CONFIG.locales);
   }
 }());

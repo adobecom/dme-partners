@@ -14,8 +14,13 @@ import {
   trigger,
   yieldToMain,
   addMepHighlightAndTargetId,
+  getAsyncDropdownCount,
+  setActiveLink,
+  getDisableAEDState,
+  hasActiveLink,
 } from '../utilities.js';
 
+import { personalizeMainNav } from "../../../../scripts/personalization.js";
 const decorateHeadline = (elem, index) => {
   if (!(elem instanceof HTMLElement)) return null;
 
@@ -127,6 +132,17 @@ const decorateElements = ({ elem, className = 'feds-navLink', itemIndex = { posi
   return elem;
 };
 
+const decorateGnavImage = (elem) => {
+  const linkElem = elem.querySelector('a');
+  const imageElem = elem.querySelector('picture');
+  const promoImageElem = linkElem instanceof HTMLElement
+    ? toFragment`<a class="feds-image" href="${linkElem.href}" daa-ll="gnav-image">${imageElem}</a>`
+    : toFragment`<div class="feds-image">${imageElem}</div>`;
+
+  elem.replaceChildren(promoImageElem);
+  return toFragment`<div class="feds-image-wrapper">${elem}</div>`;
+};
+
 // Current limitation: we can only add one link
 const decoratePromo = (elem, index) => {
   const isDarkTheme = elem.matches('.dark');
@@ -147,7 +163,7 @@ const decoratePromo = (elem, index) => {
     let promoImageElem;
 
     if (linkElem instanceof HTMLElement) {
-      promoImageElem = toFragment`<a class="feds-promo-image" href="${linkElem.href}">
+      promoImageElem = toFragment`<a class="feds-promo-image" href="${linkElem.href}" daa-ll="promo-image">
           ${imageElem}
         </a>`;
     } else {
@@ -178,7 +194,7 @@ const decoratePromo = (elem, index) => {
     elem.classList.add('feds-promo--dark');
   }
 
-  return toFragment`<div class="feds-promo-wrapper">
+  return toFragment`<div class="feds-promo-wrapper" daa-lh="promo-card">
       ${elem}
     </div>`;
 };
@@ -253,6 +269,12 @@ const decorateColumns = async ({ content, separatorTagName = 'H5' } = {}) => {
         const promoElem = decoratePromo(columnElem, itemIndex);
 
         itemDestination.append(promoElem);
+      } else if (columnElem.matches('.gnav-image')) {
+        resetDestination();
+        itemIndex.position = 0;
+        const imageElem = decorateGnavImage(columnElem, itemIndex);
+
+        itemDestination.append(imageElem);
       } else {
         const decoratedElem = decorateElements({ elem: columnElem, itemIndex });
         columnElem.remove();
@@ -289,6 +311,7 @@ const decorateCrossCloudMenu = (content) => {
 
 // Current limitation: after an h5 (or h2 in the case of the footer)
 // is found in a menu column, no new sections can be created without a heading
+let asyncDropDownCount = 0;
 const decorateMenu = (config) => logErrorFor(async () => {
   let menuTemplate;
   if (config.type === 'syncDropdownTrigger') {
@@ -312,7 +335,6 @@ const decorateMenu = (config) => logErrorFor(async () => {
     const content = await fetchAndProcessPlainHtml({ url: pathElement.href });
 
     if (!content) return;
-
     const menuContent = toFragment`<div class="feds-menu-content">${content.innerHTML}</div>`;
     menuTemplate = toFragment`<div class="feds-popup">
         <div class="feds-menu-container">
@@ -334,17 +356,27 @@ const decorateMenu = (config) => logErrorFor(async () => {
         config.template.classList.remove(selectors.deferredActiveNavItem.slice(1));
       };
 
+      config.template.classList.add(selectors.activeNavItem.slice(1));
       if (isDesktop.matches) {
         config.template.style.width = `${config.template.offsetWidth}px`;
         config.template.classList.add(selectors.deferredActiveNavItem.slice(1));
         isDesktop.addEventListener('change', resetActiveState, { once: true });
         window.addEventListener('feds:navOverflow', resetActiveState, { once: true });
       }
-
-      config.template.classList.add(selectors.activeNavItem.slice(1));
     }
 
+    asyncDropDownCount += 1;
     config.template.classList.add('feds-navItem--megaMenu');
+    if (getAsyncDropdownCount() === asyncDropDownCount) {
+      if (!hasActiveLink()) {
+        const sections = document.querySelectorAll('.feds-nav .feds-navItem--megaMenu');
+        const disableAED = getDisableAEDState();
+        if (!disableAED && sections.length === 1) {
+          sections[0].classList.add(selectors.activeNavItem.slice(1));
+          setActiveLink(true);
+        }
+      }
+    }
   }
 
   if (config.type === 'footerMenu') {
@@ -352,6 +384,7 @@ const decorateMenu = (config) => logErrorFor(async () => {
   }
 
   config.template?.append(menuTemplate);
-}, 'Decorate menu failed', 'errorType=info,module=gnav-menu');
+  personalizeMainNav(document.querySelector('header')); //MWPW-170795
+}, 'Decorate menu failed', 'gnav-menu', 'info');
 
 export default { decorateMenu, decorateLinkGroup };

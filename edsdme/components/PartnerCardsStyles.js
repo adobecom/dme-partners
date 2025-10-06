@@ -24,7 +24,7 @@ export const partnerCardsStyles = css`
     width: 100%;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 269px auto;
+    grid-template-columns: 204px auto;
     gap: 32px;
   }
   
@@ -40,8 +40,8 @@ export const partnerCardsStyles = css`
   .partner-cards-sidebar {
     display: flex;
     flex-direction: column;
-    width: 269px;
-    max-width: 269px;
+    width: 204px;
+    max-width: 204px;
     margin-right: 32px;
     padding: 8px 16px 16px;
     border-radius: 4px;
@@ -98,6 +98,7 @@ export const partnerCardsStyles = css`
     width: 100%;
     order: 3;
   }
+
   .partner-cards-sidebar .sidebar-info-box {
     order: 4;
     background-color: ${grayColor};
@@ -629,7 +630,50 @@ export const partnerCardsStyles = css`
   .all-filters-wrapper-mobile .all-filters-header-title-mobile:first-letter {
     text-transform: uppercase;
   }
+
+  .all-filters-wrapper-mobile .all-filter-chosen-filters-wrapper-mobile {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #eaeaea;
+  }
+
+  .all-filters-wrapper-mobile .chosen-filter-btn-mobile {
+    background-color: transparent;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    font-size: .75rem;
+    line-height: 1.375rem;
+    color: #747474;
+    margin-right: 7px;
+    margin-bottom: 5px;
+    padding: 0 20px 0 8px;
+    word-break: break-word;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    max-width: 100%;
+    cursor: pointer;
+  }
+
+  .all-filters-wrapper-mobile .chosen-filter-btn-mobile:focus {
+    border-color: ${blueColor};
+  }
   
+  .all-filters-wrapper-mobile .chosen-filter-btn-mobile:after {
+    padding-left: 3px;
+    content: "\\00d7";
+    font-size: .875rem;
+    position: absolute;
+    right: 7px;
+    top: 0;
+    width: 10px;
+  }
+
   .all-filters-wrapper-mobile .all-filters-list-mobile {
     display: flex;
     flex-direction: column;
@@ -704,12 +748,15 @@ export const partnerCardsStyles = css`
   }
   
   .filter-wrapper-mobile .filter-header-content-mobile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: calc(100% - 24px);
   }
   
   .filter-wrapper-mobile .filter-header-name-mobile {
     font-size: 1rem;
-    line-height: 1.1875rem;
+    line-height: 24px;
     font-weight: 700;
     color: #505050;
     word-break: break-word;
@@ -718,39 +765,24 @@ export const partnerCardsStyles = css`
     text-decoration: none;
   }
   
-  .filter-wrapper-mobile .filter-header-selected-tags-mobile {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 4px;
-    padding-right: 18px;
+  .filter-wrapper-mobile .filter-header-selected-tags-count-mobile {
+    min-width: 24px;
+    min-height: 24px;
+    max-width: 34px;
+    padding: 0 4px;
+    background-color: ${blueColor};
+    color: #fff;
     font-size: .875rem;
-    line-height: 1rem;
-    color: #959595;
-  }
-  
-  .filter-wrapper-mobile.expanded .filter-header-selected-tags-mobile {
-    display: none;
-  }
-  
-  .filter-wrapper-mobile .filter-header-selected-tags-text-mobile {
-    margin-top: 4px;
-    padding-right: 12px;
-    font-size: .875rem;
-    line-height: 1rem;
-    font-weight: 400;
-    color: #959595;
+    line-height: 24px;
+    font-weight: 700;
     word-break: break-word;
-    text-align: left;
+    text-align: center;
     white-space: nowrap;
     text-overflow: ellipsis;
+    border-radius: 16px;
     overflow: hidden;
   }
-  
-  .filter-wrapper-mobile .filter-header-selected-tags-count-mobile {
-    min-width: 30px;
-  }
-  
+
   .filter-wrapper-mobile .filter-header-chevron-icon {
     border: solid #bcbcbc;
     border-width: 0 2px 2px 0;
@@ -759,10 +791,14 @@ export const partnerCardsStyles = css`
     transform: rotate(-45deg);
   }
 
+  .filter-wrapper-mobile.expanded .filter-header-content-mobile {
+    width: 100%;
+  }
+
   .filter-wrapper-mobile.expanded .filter-header-chevron-icon {
     display: none;
   }
-  
+
   .filter-wrapper-mobile .filter-tags-mobile {
     display: none;
   }
@@ -893,6 +929,19 @@ export const partnerCardsStyles = css`
   .filter-wrapper-mobile.expanded .info-icon {
     margin-top: 0;
     margin-left: 0;
+  }
+
+  a.hide-filter-option {
+    padding: 0 3px;
+  }
+  a.hide-filter-option:visited {
+    color: blue;
+  }
+  a.hide-filter-option:hover {
+    color: blue;
+  }
+  a.hide-filter-option:active {
+    color: blue;
   }
 `;
 
@@ -1166,4 +1215,82 @@ export const singlePartnerCardStyles = css`
     max-height: 3.9375rem;
     padding: 0;
   }
+`;
+
+export const horizontalPartnerCardStyles = css`
+  .horizontal-partner-card,
+  .link-wrapper {
+    display: flex;
+    align-items: center;
+    margin: 26px 0px;
+    background-color: white;
+    width: 100%;
+    height: 130px;
+    max-width: 600px;
+    text-decoration: none;
+  }
+
+  horizontal-cards:not(:has(> h3)) .link-wrapper:first-of-type,
+  horizontal-cards:not(:has(> h3)) .horizontal-partner-card:first-of-type{
+    margin-top: 0;
+  }
+
+  .card-image {
+    min-width: 100px;
+    width: 20%;
+    height: 100%;
+    margin-right: 20px;
+    overflow: hidden;
+  }
+
+  .card-image picture,
+  .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card-content {
+    height: 100%;
+    width: 80%;
+    overflow: hidden;
+    margin-right: 20px;
+  }
+
+  .card-content .card-title {
+    margin: 25px 0px 15px 0px;
+    padding: 0;
+    line-height: 1.2;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    text-overflow: ellipsis;
+    color: black;
+  }
+
+  .card-description {
+    margin: 10px 0px;
+    padding: 0;
+    line-height: 1.2;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    color: var(--color-gray-600);
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+  }
+
+  .announcements-preview {
+    width: 100%;
+  }
+
+  .horizontal-partner-card:hover {
+    box-shadow: 0px 2px 4px #00000029;
+  }
+
+  .partner-cards {
+      grid-template-columns: auto;
+    }
+
 `;

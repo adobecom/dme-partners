@@ -155,7 +155,7 @@ export default {
         paragraphIndex: 1,
         bannerText: 'Your account is suspended. You need to renew your membership to be able to continue using your benefits with Adobe in the next 55 days.',
         renewButtonText: 'Renew now',
-        renewLinkPath: 'https://channelpartners.adobe.com/s/renewal/',
+        renewLinkPath: 'https://channelpartners.stage2.adobe.com/s/renewal/',
       },
     },
     {
@@ -173,7 +173,7 @@ export default {
         paragraphIndex: 1,
         bannerText: 'Your account is suspended. You need to renew your membership to be able to continue using your benefits with Adobe in the next 55 days.',
         renewButtonText: 'Renew now',
-        renewLinkPath: 'https://channelpartners.adobe.com/s/renewal/',
+        renewLinkPath: 'https://channelpartners.stage2.adobe.com/s/renewal/',
       },
     },
     {
@@ -191,7 +191,7 @@ export default {
         paragraphIndex: 1,
         bannerText: 'Your account is suspended. You need to renew your membership to be able to continue using your benefits with Adobe in the next 55 days.',
         renewButtonText: 'Renew now',
-        renewLinkPath: 'https://channelpartners.adobe.com/s/renewal/',
+        renewLinkPath: 'https://channelpartners.stage2.adobe.com/s/renewal/',
       },
     },
     {
@@ -209,7 +209,7 @@ export default {
         paragraphIndex: 1,
         bannerText: 'Your membership will expire in 9 days. Make sure to renew so that you don’t lose your benefits with Adobe.',
         renewButtonText: 'Renew now',
-        renewLinkPath: 'https://channelpartners.adobe.com/s/renewal/',
+        renewLinkPath: 'https://channelpartners.stage2.adobe.com/s/renewal/',
       },
     },
     {
@@ -227,7 +227,7 @@ export default {
         paragraphIndex: 1,
         bannerText: 'Your membership will expire in 9 days. Make sure to renew so that you don’t lose your benefits with Adobe.',
         renewButtonText: 'Renew now',
-        renewLinkPath: 'https://channelpartners.adobe.com/s/renewal/',
+        renewLinkPath: 'https://channelpartners.stage2.adobe.com/s/renewal/',
       },
     },
     {
@@ -258,7 +258,7 @@ export default {
         paragraphIndex: 1,
         bannerText: 'Your membership will expire',
         renewButtonText: 'Renew now',
-        renewLinkPath: 'https://channelpartners.adobe.com/s/renewal/',
+        renewLinkPath: 'https://channelpartners.stage2.adobe.com/s/renewal/',
         signInButtonInternationalText: 'Sign In',
       },
     },
@@ -272,7 +272,7 @@ export default {
         paragraphIndex: 1,
         bannerText: 'Your account is suspended',
         renewButtonText: 'Renew now',
-        renewLinkPath: 'https://channelpartners.adobe.com/s/renewal/',
+        renewLinkPath: 'https://channelpartners.stage2.adobe.com/s/renewal/',
         signInButtonInternationalText: 'Sign In',
       },
     },
@@ -284,6 +284,7 @@ export default {
       data: {
         partnerLevel: 'cpp-us-gold:',
         signInButtonInternationalText: 'Sign In',
+        enrollmentURL: '/na/channelpartners/enrollment/',
       },
     },
   ],

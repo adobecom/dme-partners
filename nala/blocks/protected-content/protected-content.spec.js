@@ -16,7 +16,8 @@ export default {
       data: {
         partnerLevel: 'spp-platinum:',
         contactNotFoundPage: '/error/contact-not-found',
-        contentNotFoundPage: '/error/404',
+        contentNotFoundPagePlatinum: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/cards/cpp-platinum-spain?georouting=off&martech=off',
+        contentNotFoundPageGold: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/cards/cpp-gold-spain?georouting=off&martech=off',
         goldLevelPage: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/cards/cpp-gold-spain?georouting=off&martech=off',
         platinumLevelPage: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/cards/cpp-platinum-spain?georouting=off&martech=off',
       },
@@ -28,10 +29,11 @@ export default {
       tags: '@dme-protected-content @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-distributor-japan:',
-        contentNotFoundPage: '/error/404',
         matchingRegionPage: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/cards/cpp-distr-japan?georouting=off&martech=off',
-        nonMatchingRegionPage: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/cards/cpp-distr-north-america?georouting=off&martech=off',
+        nonMatchingRegionPage: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/cards/cpp-distr-north-america',
+        nonMatchingRegionPageDistr: 'https://partners.stage.adobe.com/jp/channelpartners/drafts/automation/regression/cards/cpp-distr-north-america',
         nonMatchingPartnerLevelPage: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/cards/cpp-platinum-spain',
+        contentNotFoundPagePlatinum: 'https://partners.stage.adobe.com/jp/channelpartners/drafts/automation/regression/cards/cpp-platinum-spain',
       },
       matchingRegionCardText: 'CPP Distributor Japan Announcement',
       nonMatchingRegionCardText: 'CPP Distributor North America Announcement',
@@ -43,7 +45,7 @@ export default {
       tags: '@dme-protected-content @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-spain-platinum:',
-        contentNotFoundPage: '/error/404',
+        contentNotFoundPage: 'https://partners.stage.adobe.com/es/channelpartners/drafts/automation/regression/cards/cpp-gold-anuncio-de-espana?georouting=off&martech=off',
         matchingRegionPage: 'https://partners.stage.adobe.com/es/channelpartners/drafts/automation/regression/cards/cpp-platinum-anuncio-de-espana?georouting=off&martech=off',
         nonMatchingPartnerLevelPage: 'https://partners.stage.adobe.com/es/channelpartners/drafts/automation/regression/cards/cpp-gold-anuncio-de-espana?georouting=off&martech=off',
       },
@@ -56,7 +58,7 @@ export default {
       tags: '@dme-protected-content @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-uk-gold:',
-        contentNotFoundPage: '/error/404',
+        contentNotFoundPage: 'https://partners.stage.adobe.com/emea/channelpartners/drafts/automation/regression/cards/cpp-certified-emea?georouting=off&martech=off',
         matchingRegionPage: 'https://partners.stage.adobe.com/emea/channelpartners/drafts/automation/regression/cards/cpp-gold-emea-uk-eur-west?georouting=off&martech=off',
         nonMatchingPartnerLevelPage: 'https://partners.stage.adobe.com/emea/channelpartners/drafts/automation/regression/cards/cpp-certified-emea?georouting=off&martech=off',
       },
@@ -69,7 +71,7 @@ export default {
       tags: '@dme-protected-content @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-pacific-certified:',
-        contentNotFoundPage: '/error/404',
+        contentNotFoundPage: 'https://partners.stage.adobe.com/apac/channelpartners/drafts/automation/regression/cards/cpp-gold-pacific?georouting=off&martech=off',
         matchingRegionPage: 'https://partners.stage.adobe.com/apac/channelpartners/drafts/automation/regression/cards/cpp-certified-pacific?georouting=off&martech=off',
         nonMatchingPartnerLevelPage: 'https://partners.stage.adobe.com/apac/channelpartners/drafts/automation/regression/cards/cpp-gold-pacific?georouting=off&martech=off',
       },
@@ -82,7 +84,7 @@ export default {
       tags: '@dme-protected-content @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-china-registered:',
-        contentNotFoundPage: '/error/404',
+        contentNotFoundPage: 'https://partners.stage.adobe.com/cn/channelpartners/drafts/automation/regression/cards/cpp-certified-china',
         matchingRegionPage: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/cards/cpp-registered-china?georouting=off&martech=off',
         nonMatchingPartnerLevelPage: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/cards/cpp-certified-china?georouting=off&martech=off',
       },

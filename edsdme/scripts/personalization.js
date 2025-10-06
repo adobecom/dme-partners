@@ -1,38 +1,18 @@
 import {
-  getCurrentProgramType,
-  getPartnerDataCookieValue,
   isMember,
-  partnerIsSignedIn,
-  getPartnerDataCookieObject,
-  signedInNonMember,
-  isReseller,
-  hasSalesCenterAccess,
   getNodesByXPath,
   isRenew,
 }
   from './utils.js';
-import { getConfig } from '../blocks/utils/utils.js';
-
-const PAGE_PERSONALIZATION_PLACEHOLDERS = { firstName: '//*[contains(text(), "$firstName")]' };
-const GNAV_PERSONALIZATION_PLACEHOLDERS = {
-  company: '//*[contains(text(), "$company")]',
-  level: '//*[contains(text(), "$level")]',
-};
-
-const LEVEL_CONDITION = 'partner-level';
-const PERSONALIZATION_MARKER = 'partner-personalization';
-const PERSONALIZATION_HIDE = 'personalization-hide';
-const PROGRAM = getCurrentProgramType();
-const PARTNER_LEVEL = getPartnerDataCookieValue(PROGRAM, 'level');
-const COOKIE_OBJECT = getPartnerDataCookieObject(PROGRAM);
-
-const PERSONALIZATION_CONDITIONS = {
-  'partner-not-member': signedInNonMember(),
-  'partner-not-signed-in': !partnerIsSignedIn(),
-  'partner-all-levels': isMember(),
-  'partner-reseller': isReseller(PARTNER_LEVEL),
-  'partner-level': (level) => PARTNER_LEVEL === level,
-};
+import {
+  PERSONALIZATION_PLACEHOLDERS,
+  PERSONALIZATION_MARKER,
+  PROCESSED_MARKER,
+  PERSONALIZATION_CONDITIONS,
+  PROFILE_PERSONALIZATION_ACTIONS,
+  LEVEL_CONDITION,
+} from './personalizationConfig.js';
+import { COOKIE_OBJECT, PERSONALIZATION_HIDE } from './personalizationUtils.js';
 
 function personalizePlaceholders(placeholders, context = document) {
   Object.entries(placeholders).forEach(([key, value]) => {
@@ -92,30 +72,19 @@ function personalizePage(page) {
   blocks.forEach((el) => {
     const conditions = Object.values(el.classList);
     hideElement(el, conditions);
+    el.classList.remove(PERSONALIZATION_MARKER);
+    el.classList.add(`${PERSONALIZATION_MARKER}${PROCESSED_MARKER}`);
   });
   hideSections(page);
 }
 
 export function applyPagePersonalization() {
   const main = document.querySelector('main') ?? document;
-  personalizePlaceholders(PAGE_PERSONALIZATION_PLACEHOLDERS, main);
+  personalizePlaceholders(PERSONALIZATION_PLACEHOLDERS, main);
   personalizePage(main);
 }
 
-function processPrimaryContact(el) {
-  const isPrimary = COOKIE_OBJECT.primaryContact;
-  el.classList.add(PERSONALIZATION_HIDE);
-  if (!isPrimary) return;
-  const primaryContactWrapper = document.createElement('div');
-  const primaryContact = document.createElement('p');
-  primaryContact.textContent = el.textContent;
-  primaryContactWrapper.classList.add('primary-contact-wrapper');
-  primaryContactWrapper.appendChild(primaryContact);
-  el.replaceWith(primaryContactWrapper);
-}
-
 function processRenew(profile) {
-  const { env } = getConfig();
   const renew = isRenew();
   const renewElements = Array.from(profile.querySelectorAll('.partner-renew'));
   renewElements.forEach((el) => {
@@ -125,53 +94,21 @@ function processRenew(profile) {
     if (el.classList.contains(`partner-${accountStatus}`)) {
       el.classList.remove(PERSONALIZATION_HIDE);
     }
-    if (env.name !== 'prod') {
-      const anchor = el.querySelector('a');
-      const url = new URL(anchor.href);
-      url.hostname = 'channelpartners.stage2.adobe.com';
-      anchor.href = url;
-    }
   });
 }
 
-function processSalesAccess(el) {
-  const salesAccess = hasSalesCenterAccess();
-  const element = el.parentElement;
-  if (!salesAccess) {
-    element.classList.add(PERSONALIZATION_HIDE);
-    return;
-  }
-  const divider = document.createElement('hr');
-  element.insertBefore(divider, el);
-}
-
-function processAccountManagement(el) {
-  const { env } = getConfig();
-  if (env.name !== 'prod') {
-    const url = new URL(el.href);
-    url.hostname = 'channelpartners.stage2.adobe.com';
-    el.href = url;
-  }
-}
-
 function processGnavElements(elements) {
-  const regex = /(?<=\().*?(?=\))/g;
+  const regex = /\((.*?)\)/g;
   return elements.map((el) => {
-    const matches = el.textContent.match(regex);
-    if (!matches?.length) return {};
-    const match = matches[0];
+    const matches = [...el.textContent.matchAll(regex)];
+    if (!matches?.length || !matches[0][1]) return {};
+    const match = matches[0][1];
     el.textContent = el.textContent.replace(`(${match})`, '');
     const conditions = match.split(',').map((condition) => condition.trim());
     if (!conditions.length) return {};
     return { el, conditions };
   });
 }
-
-const PROFILE_PERSONALIZATION_ACTIONS = {
-  'partner-primary': (el) => processPrimaryContact(el),
-  'partner-sales-access': (el) => processSalesAccess(el),
-  'partner-account-management': (el) => processAccountManagement(el),
-};
 
 function personalizeDropdownElements(profile) {
   const personalizationXPath = `//*[contains(text(), "${PERSONALIZATION_MARKER}")]`;
@@ -184,12 +121,7 @@ function personalizeDropdownElements(profile) {
   });
 }
 
-const MAIN_NAV_PERSONALIZATION_CONDITIONS = {
-  ...PERSONALIZATION_CONDITIONS,
-  'partner-sales-access': hasSalesCenterAccess(),
-};
-
-function personalizeMainNav(gnav) {
+export function personalizeMainNav(gnav) {
   const personalizationXPath = `//*[contains(text(), "${PERSONALIZATION_MARKER}") and not(ancestor::*[contains(@class, "profile")])]`;
   const elements = getNodesByXPath(personalizationXPath, gnav);
   const processedElements = processGnavElements(elements);
@@ -201,27 +133,27 @@ function personalizeMainNav(gnav) {
     if (el.tagName.toLowerCase() === separatorSelector) {
       // main nav dropdown menu group separators
       const { nextElementSibling } = el;
-      const hide = shouldHide(conditions, MAIN_NAV_PERSONALIZATION_CONDITIONS);
+      const hide = shouldHide(conditions, PERSONALIZATION_CONDITIONS);
       if (nextElementSibling?.tagName.toLowerCase() !== separatorSelector && hide) {
         nextElementSibling.remove();
       }
     }
 
     const wrapperEl = el.closest('h2, li');
-    hideElement(wrapperEl || el, conditions, MAIN_NAV_PERSONALIZATION_CONDITIONS, true);
+    hideElement(wrapperEl || el, conditions, PERSONALIZATION_CONDITIONS, true);
   });
 
   // link group blocks
   const linkGroups = gnav.querySelectorAll('.link-group.partner-personalization');
   Array.from(linkGroups).forEach((el) => {
     const conditions = Object.values(el.classList);
-    hideElement(el, conditions, MAIN_NAV_PERSONALIZATION_CONDITIONS, true);
+    hideElement(el, conditions, PERSONALIZATION_CONDITIONS, true);
   });
 }
 
 function personalizeProfile(gnav) {
   const profile = gnav.querySelector('.profile');
-  personalizePlaceholders(GNAV_PERSONALIZATION_PLACEHOLDERS, profile);
+  personalizePlaceholders(PERSONALIZATION_PLACEHOLDERS, profile);
   personalizeDropdownElements(profile);
   processRenew(profile);
 }
