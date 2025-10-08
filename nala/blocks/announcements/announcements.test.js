@@ -186,6 +186,8 @@ test.describe('Validate announcements block', () => {
     await test.step('Test date filter', async () => {
       await announcementsPage.expandFilterOptions(data.filterDate);
       await announcementsPage.clickDateFilterOptions(data.filterLastNinetyDays);
+      await announcementsPage.clickFilterOptions(data.filterLastNinetyDays);
+      await page.waitForNetworkIdle({ timeout: 10000 });
       const resultAfterDateFilter = await announcementsPage.resultNumber.textContent();
       await expect(parseInt(resultAfterDateFilter.split(' ')[0], 10)).toBe(data.cardsWithLastNinetyDays);
       const firstCardTitle = await announcementsPage.firstCardTitle.textContent();
@@ -261,7 +263,9 @@ test.describe('Validate announcements block', () => {
       });
 
       await test.step(`Verify card titled ${feature.data.partnerLevelCardTitle} is present on page`, async () => {
+        await page.waitForLoadState('domcontentloaded');
         const resultTotal = await announcementsPage.resultNumber.textContent();
+        console.log(resultTotal);
         await expect(parseInt(resultTotal.split(' ')[0], 10)).toBe(feature.data.totalNumberOfCards);
         await announcementsPage.searchField.fill(`${feature.data.partnerLevelCardTitle}`);
         const resultSearch = await announcementsPage.resultNumber.textContent();
