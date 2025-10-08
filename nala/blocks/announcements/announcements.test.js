@@ -263,6 +263,34 @@ test.describe('Validate announcements block', () => {
       });
 
       await test.step(`Verify card titled ${feature.data.partnerLevelCardTitle} is present on page`, async () => {
+        const cardN1 = page.getByText('card-metadata | Adobe Partner');
+        await expect(cardN1).toBeVisible();
+        const cardN2 = page.getByText('Automation regression').first();
+        await expect(cardN2).toBeVisible();
+        const loadMoreButton = page.getByLabel('Load more');
+        await loadMoreButton.click();
+        const cardN3 = page.getByText('Automation regression announcements card Worldwide too long title too long').first();
+        await expect(cardN3).toBeVisible();
+        const cardN4 = page.getByText('Automation regression announcements card Worldwide no3', { exact: true });
+        await expect(cardN4).toBeVisible();
+        await loadMoreButton.click();
+        const cardN5 = page.getByText('Automation regression announcements card Worldwide no3', { exact: true });
+        await expect(cardN5).toBeVisible();
+        const cardN6 = page.getByText('Automation regression announcements card Worldwide no1', { exact: true });
+        await expect(cardN6).toBeVisible();
+        await loadMoreButton.click();
+        const cardN7 = page.getByText('CPP Gold Europe East');
+        await expect(cardN7).toBeVisible();
+        const cardN8 = page.getByText('CPP Gold UK, Europe West');
+        await expect(cardN8).toBeVisible();
+        await loadMoreButton.click();
+        const cardN9 = page.getByText('CPP Gold Latin America');
+        await expect(cardN9).toBeVisible();
+        const cardN10 = page.getByText('CPP Gold Spain Announcement');
+        await expect(cardN10).toBeVisible();
+        await loadMoreButton.click();
+        const cardN11 = page.getByText('Automation regression announcements card Worldwide no4', { exact: true });
+        await expect(cardN11).toBeVisible();
         await page.waitForTimeout(10000);
         const resultTotal = await announcementsPage.resultNumber.textContent();
         await expect(parseInt(resultTotal.split(' ')[0], 10)).toBe(feature.data.totalNumberOfCards);
