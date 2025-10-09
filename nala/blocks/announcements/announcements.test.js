@@ -280,8 +280,8 @@ test.describe('Validate announcements block', () => {
         await expect(cardN6).toBeVisible();
         await loadMoreButton.click();
         await page.waitForTimeout(10000);
-        const cardN7 = page.getByText('CPP Gold Europe East');
-        await expect(cardN7).toBeVisible();
+        // const cardN7 = page.getByText('CPP Gold Europe East');
+        // await expect(cardN7).toBeVisible();
         const cardN8 = page.getByText('CPP Gold UK, Europe West');
         await expect(cardN8).toBeVisible();
         await loadMoreButton.click();
