@@ -224,12 +224,13 @@ export default class PartnerCards extends LitElement {
         this.blockData.caasUrl,
         this.getFetchOptions(),
       );
-      console.log('Block Data: ', this.blockData.caasUrl);
+      const executionID = Math.floor(Math.random() * 10000);
+      console.log('Block Data: ', this.blockData.caasUrl, executionID);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       apiData = await response.json();
-      console.log('API Cards are test: ', JSON.stringify(apiData));
+      console.log('API Cards are test: ', JSON.stringify(apiData), executionID);
       const cardsEvent = new Event('partner-cards-loaded');
       document.dispatchEvent(cardsEvent);
       if (apiData?.cards) {
@@ -240,8 +241,8 @@ export default class PartnerCards extends LitElement {
         apiData.cards.forEach((card, index) => card.orderNum = index + 1);
         this.onDataFetched(apiData);
         this.allCards = apiData.cards;
-        console.log('Print all cards:', JSON.stringify(this.allCards));
-        console.log('Lenght of cards:', this.allCards.length);
+        console.log('Print all cards:', JSON.stringify(this.allCards), executionID);
+        console.log('Lenght of cards:', this.allCards.length, executionID);
         this.cards = apiData.cards;
         this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
         this.hasResponseData = !!apiData.cards;
