@@ -224,11 +224,12 @@ export default class PartnerCards extends LitElement {
         this.blockData.caasUrl,
         this.getFetchOptions(),
       );
+      console.log('Block Data: ', this.blockData.caasUrl);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       apiData = await response.json();
-      console.log('API Cards are: ', JSON.stringify(apiData));
+      console.log('API Cards are test: ', JSON.stringify(apiData));
       const cardsEvent = new Event('partner-cards-loaded');
       document.dispatchEvent(cardsEvent);
       if (apiData?.cards) {
