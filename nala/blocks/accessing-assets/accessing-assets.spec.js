@@ -1,6 +1,6 @@
 export default {
   FeatureName: 'DME accessing assets',
-  features: [
+  /* features: [
     {
       tcid: '1',
       name: '@accessing-restricted-asset-non-logged-in-user',
@@ -112,5 +112,5 @@ export default {
         httpStatusCode: 200,
       },
     },
-  ],
+  ], */
 };

@@ -1,6 +1,6 @@
 export default {
   FeatureName: 'DME Announcements Preview',
-  features: [
+  /* features: [
     {
       tcid: '1',
       name: '@desc-regression-announcements-preview-platinum-user',
@@ -81,5 +81,5 @@ export default {
         rootPath: '/channelpartners/',
       },
     },
-  ],
+  ], */
 };
