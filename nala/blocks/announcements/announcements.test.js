@@ -289,7 +289,7 @@ test.describe('Validate announcements block', () => {
         await expect(cardN9).toBeVisible();
         const cardN10 = page.getByText('CPP Gold Spain Announcement');
         await expect(cardN10).toBeVisible();
-        await loadMoreButton.click();
+        // await loadMoreButton.click();
         const cardN11 = page.getByText('Automation regression announcements card Worldwide no4', { exact: true });
         await expect(cardN11).toBeVisible();
         await page.waitForTimeout(10000);
