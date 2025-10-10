@@ -1,6 +1,6 @@
 export default {
   FeatureName: 'DME Renew Banners',
-  /* features: [
+  features: [
     {
       tcid: '1',
       name: '@desc-regression-banners-logged-in-non-member-user',
@@ -287,5 +287,5 @@ export default {
         enrollmentURL: '/na/channelpartners/enrollment/',
       },
     },
-  ], */
+  ],
 };

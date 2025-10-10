@@ -1,6 +1,6 @@
 export default {
   FeatureName: 'DME Gnav',
-  /* features: [
+  features: [
     {
       tcid: '1',
       name: '@desc-public-gnav',
@@ -192,5 +192,5 @@ export default {
         signInButton: 'Sign In',
       },
     },
-  ], */
+  ],
 };

@@ -1,6 +1,6 @@
 export default {
   FeatureName: 'DME Region Selectors',
-  /* features: [
+  features: [
     {
       tcid: '1',
       name: '@desc-regression-region-selectors-north-america',
@@ -141,5 +141,5 @@ export default {
 
       },
     },
-  ], */
+  ],
 };

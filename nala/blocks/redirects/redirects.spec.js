@@ -1,6 +1,6 @@
 export default {
   FeatureName: 'DME redirects flow',
-  /* features: [
+  features: [
     {
       tcid: '1',
       name: '@redirects-for-na-locale',
@@ -73,5 +73,5 @@ export default {
         businessAdobeLink: 'https://business.adobe.com/cn/',
       },
     },
-  ], */
+  ],
 };

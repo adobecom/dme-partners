@@ -1,6 +1,6 @@
 export default {
   FeatureName: 'DME Form page',
-  /* features: [
+  features: [
     {
       tcid: '1',
       name: '@desc-dme-form-distributor-user',
@@ -31,5 +31,5 @@ export default {
         signInButton: 'Sign In',
       },
     },
-  ], */
+  ],
 };
