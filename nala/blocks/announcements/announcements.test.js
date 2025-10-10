@@ -13,6 +13,9 @@ test.describe('Validate announcements block', () => {
   test.beforeEach(async ({ page, browserName, baseURL, context }) => {
     announcementsPage = new AnnouncementsPage(page);
     singInPage = new SignInPage(page);
+    page.on('console', (msg) => {
+      console.log(`${msg.type()}: ${msg.text()}`, msg.type() === 'error' ? msg.location().url : null);
+    });
     if (!baseURL.includes('partners.stage.adobe.com')) {
       await context.setExtraHTTPHeaders({ authorization: `token ${process.env.MILO_AEM_API_KEY}` });
     }

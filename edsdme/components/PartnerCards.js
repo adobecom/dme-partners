@@ -228,6 +228,7 @@ export default class PartnerCards extends LitElement {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       apiData = await response.json();
+      console.log('API Cards are: ', apiData);
       const cardsEvent = new Event('partner-cards-loaded');
       document.dispatchEvent(cardsEvent);
       if (apiData?.cards) {
@@ -238,6 +239,7 @@ export default class PartnerCards extends LitElement {
         apiData.cards.forEach((card, index) => card.orderNum = index + 1);
         this.onDataFetched(apiData);
         this.allCards = apiData.cards;
+        console.log('Print all cards:', this.allCards);
         this.cards = apiData.cards;
         this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
         this.hasResponseData = !!apiData.cards;
