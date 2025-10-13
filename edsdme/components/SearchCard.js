@@ -74,7 +74,7 @@ class SearchCard extends LitElement {
               <sp-action-button @click=${(e) => { e.stopPropagation(); if (e.isTrusted) { e.preventDefault(); } }} ?disabled=${this.isDownloadDisabled(this.data.contentArea?.type)} href="${this.data.contentArea?.url}" download="${this.data.contentArea?.title}" aria-label="${this.localizedText['{{download}}']}"><sp-icon-download /></sp-action-button>
               ${this.isPreviewEnabled(this.data.contentArea?.type)
                 ? html`
-                  <sp-action-button @click=${(e) => e.stopPropagation()} href="${this.data.contentArea?.url}"
+                  <sp-action-button @click=${(e) => { e.stopPropagation(); if (e.isTrusted) { e.preventDefault(); } }} href="${this.data.contentArea?.url}"
                                     target="_blank" aria-label="${this.localizedText['{{open-in}}']}">
                     <sp-icon-open-in/>
                   </sp-action-button>`
