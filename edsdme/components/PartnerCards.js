@@ -243,7 +243,7 @@ export default class PartnerCards extends LitElement {
         apiData.cards.forEach((card, index) => card.orderNum = index + 1);
         this.onDataFetched(apiData);
         this.allCards = apiData.cards;
-        console.log('Print all cards:', JSON.stringify(this.allCards));
+        console.log('Print all cards:', JSON.stringify(this.allCards), executionID);
         console.log('Lenght of cards:', this.allCards.length);
         this.cards = apiData.cards;
         this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
