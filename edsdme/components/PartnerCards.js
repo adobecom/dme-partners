@@ -186,8 +186,8 @@ export default class PartnerCards extends LitElement {
     if (this.blockData.sort.items.length) this.selectedSortOrder = this.blockData.sort.default;
     if (this.blockData.cardsPerPage) this.cardsPerPage = this.blockData.cardsPerPage;
     this.additionalFirstUpdated();
-    console.log('All Cards after first update:', this.allCards);
-    console.log('Cards after first update:', this.cards);
+    console.log('All Cards after first update:', JSON.stringify(this.allCards));
+    console.log('Cards after first update:', JSON.stringify(this.cards));
     this.initUrlSearchParams();
     this.handleActions();
   }
@@ -243,7 +243,7 @@ export default class PartnerCards extends LitElement {
         apiData.cards.forEach((card, index) => card.orderNum = index + 1);
         this.onDataFetched(apiData);
         this.allCards = apiData.cards;
-        console.log('Print all cards:', JSON.stringify(this.allCards));
+        console.log('Print all cards:', JSON.stringify(this.allCards), executionID);
         console.log('Lenght of cards:', this.allCards.length);
         this.cards = apiData.cards;
         this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
