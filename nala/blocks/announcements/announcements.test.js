@@ -19,31 +19,14 @@ test.describe('Validate announcements block', () => {
     if (!baseURL.includes('partners.stage.adobe.com')) {
       await context.setExtraHTTPHeaders({ authorization: `token ${process.env.MILO_AEM_API_KEY}` });
     }
-    // if (browserName === 'chromium' && !baseURL.includes('partners.stage.adobe.com')) {
-    //   await page.route('https://www.adobe.com/chimera-api/**', async (route, request) => {
-    //     const newUrl = request.url().replace(
-    //       'https://www.adobe.com/chimera-api',
-    //       'https://14257-chimera.adobeioruntime.net/api/v1/web/chimera-0.0.1',
-    //     );
-    //     console.log('Reruting to new url: ', newUrl);
-    //     route.continue({ url: newUrl });
-    //   });
-    // }
     if (browserName === 'chromium' && !baseURL.includes('partners.stage.adobe.com')) {
-      await page.route('**/*chimera-api*/**', async (route, request) => {
-        const url = request.url();
-        console.log('Intercepted URL:', url);
-        
-        if (url.includes('chimera-api')) {
-          const newUrl = url.replace(
-            'https://www.adobe.com/chimera-api',
-            'https://14257-chimera.adobeioruntime.net/api/v1/web/chimera-0.0.1',
-          );
-          console.log('Rerouting to new url:', newUrl);
-          await route.continue({ url: newUrl }); // ← Added await here
-        } else {
-          await route.continue();
-        }
+      await page.route('https://www.adobe.com/chimera-api/**', async (route, request) => {
+        const newUrl = request.url().replace(
+          'https://www.adobe.com/chimera-api',
+          'https://14257-chimera.adobeioruntime.net/api/v1/web/chimera-0.0.1',
+        );
+        console.log('Reruting to new url: ', newUrl);
+        route.continue({ url: newUrl });
       });
     }
   });
