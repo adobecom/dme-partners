@@ -228,6 +228,7 @@ export default class PartnerCards extends LitElement {
       );
       const executionID = Math.floor(Math.random() * 10000);
       console.log('Block Data: ', this.blockData.caasUrl, executionID);
+      console.log('Fetch actual URL: ', response.url, executionID);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
