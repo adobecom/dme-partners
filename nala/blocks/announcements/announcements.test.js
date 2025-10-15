@@ -23,7 +23,7 @@ test.describe('Validate announcements block', () => {
       await page.route('https://www.adobe.com/chimera-api/**', async (route, request) => {
         const newUrl = request.url().replace(
           'https://www.adobe.com/chimera-api',
-          'https://www.adobe.com/chimera-api',
+          'https://14257-chimera.adobeioruntime.net/api/v1/web/chimera-0.0.1',
         );
         console.log('Rerouting to new url: ', newUrl);
         route.continue({ url: newUrl });
