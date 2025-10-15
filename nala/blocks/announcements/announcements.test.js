@@ -25,10 +25,18 @@ test.describe('Validate announcements block', () => {
           'https://www.adobe.com/chimera-api',
           'https://14257-chimera.adobeioruntime.net/api/v1/web/chimera-0.0.1',
         );
-        console.log('Rerouting to new url: ', newUrl);
         route.continue({ url: newUrl });
+        // console.log('Rerouting to new url: ', newUrl);
       });
     }
+
+    // Print the exact API URL used to fetch cards
+    page.on('request', (req) => {
+      const url = req.url();
+      if (url.includes('/collection')) {
+        console.log('[CARDS API URL]:', url);
+      }
+    });
   });
 
   test(`${features[0].name},${features[0].tags}`, async ({ page, baseURL }) => {
