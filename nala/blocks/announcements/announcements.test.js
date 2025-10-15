@@ -25,7 +25,7 @@ test.describe('Validate announcements block', () => {
     //       'https://www.adobe.com/chimera-api',
     //       'https://14257-chimera.adobeioruntime.net/api/v1/web/chimera-0.0.1',
     //     );
-    //     console.log('Reruting to new url: ', newUrl);
+    //     console.log('Rerouting to new url: ', newUrl);
     //     route.continue({ url: newUrl });
     //   });
     // }
