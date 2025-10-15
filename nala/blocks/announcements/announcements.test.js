@@ -19,16 +19,16 @@ test.describe('Validate announcements block', () => {
     if (!baseURL.includes('partners.stage.adobe.com')) {
       await context.setExtraHTTPHeaders({ authorization: `token ${process.env.MILO_AEM_API_KEY}` });
     }
-    if (browserName === 'chromium' && !baseURL.includes('partners.stage.adobe.com')) {
-      await page.route('https://www.adobe.com/chimera-api/**', async (route, request) => {
-        const newUrl = request.url().replace(
-          'https://www.adobe.com/chimera-api',
-          'https://14257-chimera.adobeioruntime.net/api/v1/web/chimera-0.0.1',
-        );
-        console.log('Reruting to new url: ', newUrl);
-        route.continue({ url: newUrl });
-      });
-    }
+    // if (browserName === 'chromium' && !baseURL.includes('partners.stage.adobe.com')) {
+    //   await page.route('https://www.adobe.com/chimera-api/**', async (route, request) => {
+    //     const newUrl = request.url().replace(
+    //       'https://www.adobe.com/chimera-api',
+    //       'https://14257-chimera.adobeioruntime.net/api/v1/web/chimera-0.0.1',
+    //     );
+    //     console.log('Reruting to new url: ', newUrl);
+    //     route.continue({ url: newUrl });
+    //   });
+    // }
   });
 
   test(`${features[0].name},${features[0].tags}`, async ({ page, baseURL }) => {
