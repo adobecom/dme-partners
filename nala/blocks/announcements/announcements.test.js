@@ -13,6 +13,9 @@ test.describe('Validate announcements block', () => {
   test.beforeEach(async ({ page, browserName, baseURL, context }) => {
     announcementsPage = new AnnouncementsPage(page);
     singInPage = new SignInPage(page);
+    page.on('console', (msg) => {
+      console.log(`${msg.type()}: ${msg.text()}`, msg.type() === 'error' ? msg.location().url : null);
+    });
     if (!baseURL.includes('partners.stage.adobe.com')) {
       await context.setExtraHTTPHeaders({ authorization: `token ${process.env.MILO_AEM_API_KEY}` });
     }
@@ -22,9 +25,18 @@ test.describe('Validate announcements block', () => {
           'https://www.adobe.com/chimera-api',
           'https://14257-chimera.adobeioruntime.net/api/v1/web/chimera-0.0.1',
         );
+        console.log('Rerouting to new url: ', newUrl);
         route.continue({ url: newUrl });
       });
     }
+
+    // Print the exact API URL used to fetch cards
+    page.on('request', (req) => {
+      const url = req.url();
+      if (url.includes('/collection')) {
+        console.log('[CARDS API URL]:', url);
+      }
+    });
   });
 
   test(`${features[0].name},${features[0].tags}`, async ({ page, baseURL }) => {
@@ -186,6 +198,8 @@ test.describe('Validate announcements block', () => {
     await test.step('Test date filter', async () => {
       await announcementsPage.expandFilterOptions(data.filterDate);
       await announcementsPage.clickDateFilterOptions(data.filterLastNinetyDays);
+      await announcementsPage.clickFilterOptions(data.filterLastNinetyDays);
+      await page.waitForNetworkIdle({ timeout: 10000 });
       const resultAfterDateFilter = await announcementsPage.resultNumber.textContent();
       await expect(parseInt(resultAfterDateFilter.split(' ')[0], 10)).toBe(data.cardsWithLastNinetyDays);
       const firstCardTitle = await announcementsPage.firstCardTitle.textContent();
@@ -261,6 +275,36 @@ test.describe('Validate announcements block', () => {
       });
 
       await test.step(`Verify card titled ${feature.data.partnerLevelCardTitle} is present on page`, async () => {
+        // const cardN1 = page.getByText('card-metadata | Adobe Partner');
+        // await expect(cardN1).toBeVisible();
+        // const cardN2 = page.getByText('Automation regression').first();
+        // await expect(cardN2).toBeVisible();
+        // const loadMoreButton = page.getByLabel('Load more');
+        // await loadMoreButton.click();
+        // const cardN3 = page.getByText('Automation regression announcements card Worldwide too long title too long').first();
+        // await expect(cardN3).toBeVisible();
+        // const cardN4 = page.getByText('Automation regression announcements card Worldwide no3', { exact: true });
+        // await expect(cardN4).toBeVisible();
+        // await loadMoreButton.click();
+        // const cardN5 = page.getByText('Automation regression announcements card Worldwide no3', { exact: true });
+        // await expect(cardN5).toBeVisible();
+        // const cardN6 = page.getByText('Automation regression announcements card Worldwide no1', { exact: true });
+        // await expect(cardN6).toBeVisible();
+        // await loadMoreButton.click();
+        // await page.waitForTimeout(10000);
+        // // const cardN7 = page.getByText('CPP Gold Europe East');
+        // // await expect(cardN7).toBeVisible();
+        // const cardN8 = page.getByText('CPP Gold UK, Europe West');
+        // await expect(cardN8).toBeVisible();
+        // await loadMoreButton.click();
+        // const cardN9 = page.getByText('CPP Gold Latin America');
+        // await expect(cardN9).toBeVisible();
+        // const cardN10 = page.getByText('CPP Gold Spain Announcement');
+        // await expect(cardN10).toBeVisible();
+        // // await loadMoreButton.click();
+        // const cardN11 = page.getByText('Automation regression announcements card Worldwide no4', { exact: true });
+        // await expect(cardN11).toBeVisible();
+        // // await page.waitForTimeout(10000);
         const resultTotal = await announcementsPage.resultNumber.textContent();
         await expect(parseInt(resultTotal.split(' ')[0], 10)).toBe(feature.data.totalNumberOfCards);
         await announcementsPage.searchField.fill(`${feature.data.partnerLevelCardTitle}`);
