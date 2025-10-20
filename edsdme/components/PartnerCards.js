@@ -231,7 +231,7 @@ export default class PartnerCards extends LitElement {
       console.log('Fetch actual URL: ', response.url, executionID);
       console.log(
         'Fetch API Headers New Log:',
-        Object.fromEntries(response.headers.entries()),
+        JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2)
       );
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
