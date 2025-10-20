@@ -40,7 +40,7 @@ export default {
       data: {
         partnerLevel: 'cpp-distributor-us:',
         signInButtonInternationalText: 'Sign In',
-        searchText: 'Adobe Partner Connection Enrollment',
+        searchText: 'Adobe',
       },
     },
 

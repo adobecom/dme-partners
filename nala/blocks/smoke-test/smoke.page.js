@@ -46,6 +46,7 @@ export default class SmokeTest {
     this.announcementCardTitle = page.locator('#announcement-title');
     this.firstCardMetadata = page.locator('.card-metadata').first().locator('div[data-valign="middle"]').nth(1);
     this.apcLogo = page.getByRole('link', { name: 'Adobe Partner Connection', exact: true });
+    this.assetTabs = page.getByLabel('Assets');
   }
 
   async smokeSignIn(page, baseURL, partnerLevel) {
