@@ -96,7 +96,7 @@ export default class SmokeTest {
   }
 
   async searchPageDownloadButton() {
-    const downloadButton = this.page.locator('a[href*=".pdf?download"]').first();
+    const downloadButton = this.page.locator('a[href*=".pdf"]').first();
     await downloadButton.click({ force: true });
   }
 
