@@ -503,3 +503,42 @@ export function enableGeoPopup() {
   }
   return 'off';
 }
+
+export async function setFeedback(getConfig) {
+  const feedback = getMetadataContent('feedback');
+  if (!feedback || feedback === 'false') return;
+    const config = getConfig();
+
+  const { prefix } = config.locale;
+  const fragmentPath = `${prefix}/edsdme/partners-shared/fragments/feedback`;
+  const fragLink = document.createElement('a');
+  fragLink.href = fragmentPath;
+  fragLink.textContent = fragmentPath;
+  
+  const wrapper = document.createElement('p');
+  wrapper.appendChild(fragLink);
+ 
+  const main = document.querySelector('main');
+  if (main) {
+    main.appendChild(wrapper);
+    const miloLibs = getLibs();
+    const { decorateAutoBlock, loadBlock } = await import(`${miloLibs}/utils/utils.js`);
+    
+    decorateAutoBlock(fragLink);
+    
+    if (fragLink.classList.contains('fragment')) {
+      await loadBlock(fragLink);
+      
+      const fragmentBlock = main.querySelector('.fragment[data-path*="feedback"]');
+      if (fragmentBlock) {
+        const parentDiv = fragmentBlock.parentElement;
+        if (parentDiv && parentDiv.tagName === 'DIV') {
+          parentDiv.classList.add('section');
+        }
+      }
+    } else {
+      console.error('Fragment link was not added properly');
+    }
+    
+  }
+}

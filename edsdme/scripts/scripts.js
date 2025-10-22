@@ -11,6 +11,7 @@ import {
   PARTNER_LOGIN_QUERY,
   prodHosts,
   previewHosts,
+  setFeedback,
 } from './utils.js';
 import { rewriteLinks } from './rewriteLinks.js';
 import { sidekickListener } from '../blocks/utils/utils.js';
@@ -110,6 +111,7 @@ function setUpPage() {
   setConfig({ ...CONFIG, miloLibs });
   await getRenewBanner(getConfig);
   await loadArea();
+  await setFeedback(getConfig);
   applyPagePersonalization();
   rewriteLinks(document);
   if (previewHosts.includes(window.location.host)) {
