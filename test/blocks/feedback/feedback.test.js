@@ -5,10 +5,8 @@ import { setLibs } from '../../../edsdme/scripts/utils.js';
 
 describe('feedback block', () => {
   let fetchStub;
-  
   beforeEach(async () => {
     setLibs('/libs');
-    
     fetchStub = sinon.stub(window, 'fetch').callsFake((url) => {
       if (url.includes('.plain.html')) {
         return Promise.resolve({
@@ -41,7 +39,6 @@ describe('feedback block', () => {
 
       document.body.innerHTML = await readFile({ path: './mocks/body.html' });
       const block = document.querySelector('.feedback');
-      
       const { default: init } = await import('../../../edsdme/blocks/feedback/feedback.js');
       await init(block);
 
@@ -60,9 +57,7 @@ describe('feedback block', () => {
 
       const { getMetadataContent } = await import('../../../edsdme/scripts/utils.js');
       const feedbackMeta = getMetadataContent('feedback');
-      
       expect(feedbackMeta).to.equal('false');
-      
       const feedbackMechanism = document.querySelector('.feedback-mechanism');
       expect(feedbackMechanism).to.not.exist;
     });
@@ -73,9 +68,7 @@ describe('feedback block', () => {
 
       const { getMetadataContent } = await import('../../../edsdme/scripts/utils.js');
       const feedbackMeta = getMetadataContent('feedback');
-      
       expect(feedbackMeta).to.not.exist;
-      
       const feedbackMechanism = document.querySelector('.feedback-mechanism');
       expect(feedbackMechanism).to.not.exist;
     });
@@ -93,9 +86,7 @@ describe('feedback block', () => {
 
       const stickyButton = document.querySelector('.sticky-feedback-button');
       expect(stickyButton).to.exist;
-      
       stickyButton.click();
-      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const dialog = document.querySelector('.feedback-dialog');
       expect(dialog).to.exist;
@@ -108,18 +99,17 @@ describe('feedback block', () => {
 
       const stickyButton = document.querySelector('.sticky-feedback-button');
       stickyButton.click();
-      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const stars = document.querySelectorAll('sp-action-button[data-rating]');
       stars[3].click();
 
       const sendButton = document.querySelector('.feedback-dialog-button.cta');
       sendButton.click();
+      // eslint-disable-next-line no-promise-executor-return
       await new Promise((resolve) => setTimeout(resolve, 50));
 
       expect(fetchStub.called).to.be.true;
       expect(document.querySelector('.feedback-dialog')).to.not.exist;
-      
       const toast = document.querySelector('.feedback-toast.spectrum-Toast--positive');
       expect(toast).to.exist;
     });
@@ -134,13 +124,13 @@ describe('feedback block', () => {
 
       const stickyButton = document.querySelector('.sticky-feedback-button');
       stickyButton.click();
-      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const stars = document.querySelectorAll('sp-action-button[data-rating]');
       stars[3].click();
 
       const sendButton = document.querySelector('.feedback-dialog-button.cta');
       sendButton.click();
+      // eslint-disable-next-line no-promise-executor-return
       await new Promise((resolve) => setTimeout(resolve, 50));
 
       const toast = document.querySelector('.feedback-toast.spectrum-Toast--negative');
