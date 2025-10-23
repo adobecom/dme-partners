@@ -87,7 +87,7 @@ async function renderDialog(feedbackButton, formDefinitionUrl, config) {
   const updateStars = (rating) => {
     starContainer.querySelectorAll('sp-action-button').forEach((btn, idx) => {
       const iconSlot = btn.querySelector('[slot="icon"]');
-      const img = document.createElement('img');
+      const img = iconSlot.querySelector('img');
       if (idx < rating) {
         btn.setAttribute('selected', '');
         img.src = '/edsdme/img/icons/star.svg';
@@ -95,8 +95,6 @@ async function renderDialog(feedbackButton, formDefinitionUrl, config) {
         btn.removeAttribute('selected');
         img.src = '/edsdme/img/icons/outline-star.svg';
       }
-      iconSlot.innerHTML = '';
-      iconSlot.appendChild(img);
     });
   };
   const sendButton = document.createElement('button');
@@ -281,6 +279,8 @@ export default async function init(el) {
         config.toastNegative = value;
       } else if (key === 'toast-positive') {
         config.toastPositive = value;
+      } else if (key === 'try-again') {
+        config.tryAgain = value;
       }
     }
   });

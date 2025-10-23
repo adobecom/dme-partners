@@ -109,9 +109,9 @@ function setUpPage() {
   const { loadArea, setConfig, getConfig } = await import(`${miloLibs}/utils/utils.js`);
 
   setConfig({ ...CONFIG, miloLibs });
+  await setFeedback(getConfig);
   await getRenewBanner(getConfig);
   await loadArea();
-  await setFeedback(getConfig);
   applyPagePersonalization();
   rewriteLinks(document);
   if (previewHosts.includes(window.location.host)) {

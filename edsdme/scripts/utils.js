@@ -511,29 +511,24 @@ export async function setFeedback(getConfig) {
 
   const { prefix } = config.locale;
   const fragmentPath = `${prefix}/edsdme/partners-shared/fragments/feedback`;
-  const fragLink = document.createElement('a');
-  fragLink.href = fragmentPath;
-  fragLink.textContent = fragmentPath;
-  const wrapper = document.createElement('p');
-  wrapper.appendChild(fragLink);
-  const main = document.querySelector('main');
-  if (main) {
-    main.appendChild(wrapper);
-    const miloLibs = getLibs();
-    const { decorateAutoBlock, loadBlock } = await import(`${miloLibs}/utils/utils.js`);
-    decorateAutoBlock(fragLink);
-    if (fragLink.classList.contains('fragment')) {
-      await loadBlock(fragLink);
-      const fragmentBlock = main.querySelector('.fragment[data-path*="feedback"]');
-      if (fragmentBlock) {
-        const parentDiv = fragmentBlock.parentElement;
-        if (parentDiv && parentDiv.tagName === 'DIV') {
-          parentDiv.classList.add('section');
-        }
-      }
-    } else {
-      // eslint-disable-next-line no-console
-      console.error('Fragment link was not added properly');
-    }
+  const url = new URL(fragmentPath, window.location.origin);
+
+  try {
+    const response = await fetch(`${url}.plain.html`);
+    if (!response.ok) throw new Error(`Response was not ok ${response.statusText}`);
+
+    const data = await response.text();
+    const parser = new DOMParser();
+    const page = parser.parseFromString(data, 'text/html');
+    const main = document.querySelector('main');
+    const block = page.querySelector('.feedback');
+    const div = document.createElement('div');
+    div.appendChild(block);
+    if (main) main.insertBefore(div, main.firstChild);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching plain html of feedback fragment:', error);
+    // eslint-disable-next-line consistent-return
+    return null;
   }
 }
