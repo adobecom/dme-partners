@@ -176,6 +176,9 @@ async function renderDialog(feedbackButton, formDefinitionUrl, config) {
     }
   });
   const submitFeedback = async () => {
+    document.querySelectorAll('.feedback-dialog-button').forEach((button) => {
+      button.disabled = true;
+    });
     const constructSubmitUrl = (formDefUrl) => {
       try {
         const url = new URL(formDefUrl);
