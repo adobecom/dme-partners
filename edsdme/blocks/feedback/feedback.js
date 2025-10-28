@@ -1,4 +1,4 @@
-import { getLibs, prodHosts } from '../../scripts/utils.js';
+import { getCurrentProgramType, getPartnerDataCookieObject, partnerIsSignedIn, getLibs, prodHosts } from '../../scripts/utils.js';
 
 function showToast(success, onTryAgain, config) {
   const existingToast = document.querySelector('.feedback-toast');
@@ -192,11 +192,24 @@ async function renderDialog(feedbackButton, formDefinitionUrl, config) {
     const comment = textarea.value;
     const page = window.location.pathname;
     const timestamp = new Date().toISOString();
+    let userName = '';
+    let userEmail = '';
+    if (partnerIsSignedIn()) {
+      try {
+        const profileData = getPartnerDataCookieObject(getCurrentProgramType());
+        userName = `${profileData.firstName} ${profileData.lastName}`;
+        userEmail = profileData.email;
+      } catch (error) {
+        throw new Error(`Failed to parse CPP cookie:: ${error}`);
+      }
+    }
     const payload = {
       rating,
       comment,
       page,
       timestamp,
+      userName,
+      userEmail,
     };
 
     const resp = await fetch(constructSubmitUrl(formDefinitionUrl), {
