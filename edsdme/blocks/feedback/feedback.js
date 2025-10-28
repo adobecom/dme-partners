@@ -200,7 +200,7 @@ async function renderDialog(feedbackButton, formDefinitionUrl, config) {
         userName = `${profileData.firstName} ${profileData.lastName}`;
         userEmail = profileData.email;
       } catch (error) {
-        throw new Error(`Failed to parse CPP cookie:: ${error}`);
+        console.info('Failed to parse profileData from cookie:', error);
       }
     }
     const payload = {
