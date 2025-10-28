@@ -202,6 +202,7 @@ async function renderDialog(feedbackButton, formDefinitionUrl, config) {
       } catch (error) {
         userName = 'invalid';
         userEmail = 'invalid';
+        // eslint-disable-next-line no-console
         console.info('Failed to parse profileData from cookie:', error);
       }
     }
