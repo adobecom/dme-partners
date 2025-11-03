@@ -31,46 +31,70 @@ describe('feedback block', () => {
   });
 
   describe('metadata-based loading', () => {
-    it('should load feedback block when metadata feedback is set to true', async () => {
+    beforeEach(() => {
+      const main = document.createElement('main');
+      document.body.appendChild(main);
+    });
+
+    it('should load feedback fragment when metadata is true', async () => {
       const meta = document.createElement('meta');
       meta.name = 'feedback';
       meta.content = 'true';
       document.head.appendChild(meta);
 
-      document.body.innerHTML = await readFile({ path: './mocks/body.html' });
-      const block = document.querySelector('.feedback');
-      const { default: init } = await import('../../../edsdme/blocks/feedback/feedback.js');
-      await init(block);
+      const { setFeedback } = await import('../../../edsdme/scripts/utils.js');
+      const getConfig = () => ({ locale: { prefix: '' } });
+      await setFeedback(getConfig);
 
-      const feedbackMechanism = document.querySelector('.feedback-mechanism');
-      expect(feedbackMechanism).to.exist;
+      expect(fetchStub.calledOnce).to.be.true;
+      const feedbackBlock = document.querySelector('.feedback');
+      expect(feedbackBlock).to.exist;
     });
 
-    it('should not load feedback block when metadata feedback is set to false', async () => {
+    it('should not load feedback when metadata is false or missing', async () => {
       const meta = document.createElement('meta');
       meta.name = 'feedback';
       meta.content = 'false';
       document.head.appendChild(meta);
 
-      const main = document.createElement('main');
-      document.body.appendChild(main);
+      const { setFeedback } = await import('../../../edsdme/scripts/utils.js');
+      const getConfig = () => ({ locale: { prefix: '' } });
+      await setFeedback(getConfig);
 
-      const { getMetadataContent } = await import('../../../edsdme/scripts/utils.js');
-      const feedbackMeta = getMetadataContent('feedback');
-      expect(feedbackMeta).to.equal('false');
-      const feedbackMechanism = document.querySelector('.feedback-mechanism');
-      expect(feedbackMechanism).to.not.exist;
+      expect(fetchStub.called).to.be.false;
     });
 
-    it('should not load feedback block when metadata feedback is missing', async () => {
-      const main = document.createElement('main');
-      document.body.appendChild(main);
+    it('should load feedback with locale prefix', async () => {
+      const meta = document.createElement('meta');
+      meta.name = 'feedback';
+      meta.content = 'true';
+      document.head.appendChild(meta);
 
-      const { getMetadataContent } = await import('../../../edsdme/scripts/utils.js');
-      const feedbackMeta = getMetadataContent('feedback');
-      expect(feedbackMeta).to.not.exist;
-      const feedbackMechanism = document.querySelector('.feedback-mechanism');
-      expect(feedbackMechanism).to.not.exist;
+      const { setFeedback } = await import('../../../edsdme/scripts/utils.js');
+      const getConfig = () => ({ locale: { prefix: '/de' } });
+      await setFeedback(getConfig);
+
+      expect(fetchStub.calledOnce).to.be.true;
+      expect(fetchStub.firstCall.args[0]).to.include('/de/edsdme/partners-shared/fragments/feedback.plain.html');
+    });
+
+    it('should handle fetch errors gracefully', async () => {
+      const meta = document.createElement('meta');
+      meta.name = 'feedback';
+      meta.content = 'true';
+      document.head.appendChild(meta);
+
+      fetchStub.restore();
+      fetchStub = sinon.stub(window, 'fetch').resolves({
+        ok: false,
+        statusText: 'Not Found',
+      });
+
+      const { setFeedback } = await import('../../../edsdme/scripts/utils.js');
+      const getConfig = () => ({ locale: { prefix: '' } });
+      const result = await setFeedback(getConfig);
+
+      expect(result).to.be.null;
     });
   });
 
