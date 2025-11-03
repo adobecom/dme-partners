@@ -142,7 +142,7 @@ describe('feedback block', () => {
       expect(charCount.textContent).to.equal('487');
     });
 
-    it('should close dialog when cancel button is clicked or clicking outside', async () => {
+    it('should close dialog and save rating when cancel is clicked or clicking outside', async () => {
       const { default: init } = await import('../../../edsdme/blocks/feedback/feedback.js');
       const block = document.querySelector('.feedback');
       await init(block);
@@ -150,12 +150,18 @@ describe('feedback block', () => {
       const stickyButton = document.querySelector('.sticky-feedback-button');
       stickyButton.click();
 
+      const stars = document.querySelectorAll('sp-action-button[data-rating]');
+      stars[2].click();
+
       const cancelButton = document.querySelector('.feedback-dialog-button.secondary-cta');
       cancelButton.click();
 
       expect(document.querySelector('.feedback-dialog')).to.not.exist;
 
       stickyButton.click();
+
+      const selectedStars = document.querySelectorAll('sp-action-button[selected]');
+      expect(selectedStars.length).to.equal(3);
 
       const dialog = document.querySelector('.feedback-dialog');
       dialog.click();
@@ -233,26 +239,6 @@ describe('feedback block', () => {
 
       const dialog = document.querySelector('.feedback-dialog');
       expect(dialog).to.exist;
-    });
-
-    it('should load dialog with saved rating', async () => {
-      const { default: init } = await import('../../../edsdme/blocks/feedback/feedback.js');
-      const block = document.querySelector('.feedback');
-      await init(block);
-
-      const stickyButton = document.querySelector('.sticky-feedback-button');
-      stickyButton.click();
-
-      const stars = document.querySelectorAll('sp-action-button[data-rating]');
-      stars[2].click();
-
-      const cancelButton = document.querySelector('.feedback-dialog-button.secondary-cta');
-      cancelButton.click();
-
-      stickyButton.click();
-
-      const selectedStars = document.querySelectorAll('sp-action-button[selected]');
-      expect(selectedStars.length).to.equal(3);
     });
   });
 });
