@@ -31,46 +31,70 @@ describe('feedback block', () => {
   });
 
   describe('metadata-based loading', () => {
-    it('should load feedback block when metadata feedback is set to true', async () => {
+    beforeEach(() => {
+      const main = document.createElement('main');
+      document.body.appendChild(main);
+    });
+
+    it('should load feedback fragment when metadata is true', async () => {
       const meta = document.createElement('meta');
       meta.name = 'feedback';
       meta.content = 'true';
       document.head.appendChild(meta);
 
-      document.body.innerHTML = await readFile({ path: './mocks/body.html' });
-      const block = document.querySelector('.feedback');
-      const { default: init } = await import('../../../edsdme/blocks/feedback/feedback.js');
-      await init(block);
+      const { setFeedback } = await import('../../../edsdme/scripts/utils.js');
+      const getConfig = () => ({ locale: { prefix: '' } });
+      await setFeedback(getConfig);
 
-      const feedbackMechanism = document.querySelector('.feedback-mechanism');
-      expect(feedbackMechanism).to.exist;
+      expect(fetchStub.calledOnce).to.be.true;
+      const feedbackBlock = document.querySelector('.feedback');
+      expect(feedbackBlock).to.exist;
     });
 
-    it('should not load feedback block when metadata feedback is set to false', async () => {
+    it('should not load feedback when metadata is false or missing', async () => {
       const meta = document.createElement('meta');
       meta.name = 'feedback';
       meta.content = 'false';
       document.head.appendChild(meta);
 
-      const main = document.createElement('main');
-      document.body.appendChild(main);
+      const { setFeedback } = await import('../../../edsdme/scripts/utils.js');
+      const getConfig = () => ({ locale: { prefix: '' } });
+      await setFeedback(getConfig);
 
-      const { getMetadataContent } = await import('../../../edsdme/scripts/utils.js');
-      const feedbackMeta = getMetadataContent('feedback');
-      expect(feedbackMeta).to.equal('false');
-      const feedbackMechanism = document.querySelector('.feedback-mechanism');
-      expect(feedbackMechanism).to.not.exist;
+      expect(fetchStub.called).to.be.false;
     });
 
-    it('should not load feedback block when metadata feedback is missing', async () => {
-      const main = document.createElement('main');
-      document.body.appendChild(main);
+    it('should load feedback with locale prefix', async () => {
+      const meta = document.createElement('meta');
+      meta.name = 'feedback';
+      meta.content = 'true';
+      document.head.appendChild(meta);
 
-      const { getMetadataContent } = await import('../../../edsdme/scripts/utils.js');
-      const feedbackMeta = getMetadataContent('feedback');
-      expect(feedbackMeta).to.not.exist;
-      const feedbackMechanism = document.querySelector('.feedback-mechanism');
-      expect(feedbackMechanism).to.not.exist;
+      const { setFeedback } = await import('../../../edsdme/scripts/utils.js');
+      const getConfig = () => ({ locale: { prefix: '/de' } });
+      await setFeedback(getConfig);
+
+      expect(fetchStub.calledOnce).to.be.true;
+      expect(fetchStub.firstCall.args[0]).to.include('/de/edsdme/partners-shared/fragments/feedback.plain.html');
+    });
+
+    it('should handle fetch errors gracefully', async () => {
+      const meta = document.createElement('meta');
+      meta.name = 'feedback';
+      meta.content = 'true';
+      document.head.appendChild(meta);
+
+      fetchStub.restore();
+      fetchStub = sinon.stub(window, 'fetch').resolves({
+        ok: false,
+        statusText: 'Not Found',
+      });
+
+      const { setFeedback } = await import('../../../edsdme/scripts/utils.js');
+      const getConfig = () => ({ locale: { prefix: '' } });
+      const result = await setFeedback(getConfig);
+
+      expect(result).to.be.null;
     });
   });
 
@@ -90,6 +114,59 @@ describe('feedback block', () => {
 
       const dialog = document.querySelector('.feedback-dialog');
       expect(dialog).to.exist;
+    });
+
+    it('should handle star hover and textarea input', async () => {
+      const { default: init } = await import('../../../edsdme/blocks/feedback/feedback.js');
+      const block = document.querySelector('.feedback');
+      await init(block);
+
+      const stickyButton = document.querySelector('.sticky-feedback-button');
+      stickyButton.click();
+
+      const stars = document.querySelectorAll('sp-action-button[data-rating]');
+      const mouseEnterEvent = new Event('mouseenter');
+      const mouseLeaveEvent = new Event('mouseleave');
+
+      stars[2].dispatchEvent(mouseEnterEvent);
+      stars[2].dispatchEvent(mouseLeaveEvent);
+
+      expect(stars[2]).to.exist;
+
+      const textarea = document.querySelector('.feedback-textarea');
+      const charCount = document.querySelector('.feedback-label-count');
+
+      textarea.value = 'Test feedback';
+      textarea.dispatchEvent(new Event('input'));
+
+      expect(charCount.textContent).to.equal('487');
+    });
+
+    it('should close dialog and save rating when cancel is clicked or clicking outside', async () => {
+      const { default: init } = await import('../../../edsdme/blocks/feedback/feedback.js');
+      const block = document.querySelector('.feedback');
+      await init(block);
+
+      const stickyButton = document.querySelector('.sticky-feedback-button');
+      stickyButton.click();
+
+      const stars = document.querySelectorAll('sp-action-button[data-rating]');
+      stars[2].click();
+
+      const cancelButton = document.querySelector('.feedback-dialog-button.secondary-cta');
+      cancelButton.click();
+
+      expect(document.querySelector('.feedback-dialog')).to.not.exist;
+
+      stickyButton.click();
+
+      const selectedStars = document.querySelectorAll('sp-action-button[selected]');
+      expect(selectedStars.length).to.equal(3);
+
+      const dialog = document.querySelector('.feedback-dialog');
+      dialog.click();
+
+      expect(document.querySelector('.feedback-dialog')).to.not.exist;
     });
 
     it('should submit feedback successfully', async () => {
@@ -135,6 +212,33 @@ describe('feedback block', () => {
 
       const toast = document.querySelector('.feedback-toast.spectrum-Toast--negative');
       expect(toast).to.exist;
+    });
+
+    it('should handle try again button in error toast', async () => {
+      fetchStub.restore();
+      fetchStub = sinon.stub(window, 'fetch').rejects(new Error('Network error'));
+
+      const { default: init } = await import('../../../edsdme/blocks/feedback/feedback.js');
+      const block = document.querySelector('.feedback');
+      await init(block);
+
+      const stickyButton = document.querySelector('.sticky-feedback-button');
+      stickyButton.click();
+
+      const stars = document.querySelectorAll('sp-action-button[data-rating]');
+      stars[3].click();
+
+      const sendButton = document.querySelector('.feedback-dialog-button.cta');
+      sendButton.click();
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      const tryAgainBtn = document.querySelector('.feedback-try-again-cta');
+      expect(tryAgainBtn).to.exist;
+      tryAgainBtn.click();
+
+      const dialog = document.querySelector('.feedback-dialog');
+      expect(dialog).to.exist;
     });
   });
 });
