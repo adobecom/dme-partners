@@ -92,6 +92,53 @@ describe('feedback block', () => {
       expect(dialog).to.exist;
     });
 
+    it('should handle star hover and textarea input', async () => {
+      const { default: init } = await import('../../../edsdme/blocks/feedback/feedback.js');
+      const block = document.querySelector('.feedback');
+      await init(block);
+
+      const stickyButton = document.querySelector('.sticky-feedback-button');
+      stickyButton.click();
+
+      const stars = document.querySelectorAll('sp-action-button[data-rating]');
+      const mouseEnterEvent = new Event('mouseenter');
+      const mouseLeaveEvent = new Event('mouseleave');
+
+      stars[2].dispatchEvent(mouseEnterEvent);
+      stars[2].dispatchEvent(mouseLeaveEvent);
+
+      expect(stars[2]).to.exist;
+
+      const textarea = document.querySelector('.feedback-textarea');
+      const charCount = document.querySelector('.feedback-label-count');
+
+      textarea.value = 'Test feedback';
+      textarea.dispatchEvent(new Event('input'));
+
+      expect(charCount.textContent).to.equal('487');
+    });
+
+    it('should close dialog when cancel button is clicked or clicking outside', async () => {
+      const { default: init } = await import('../../../edsdme/blocks/feedback/feedback.js');
+      const block = document.querySelector('.feedback');
+      await init(block);
+
+      const stickyButton = document.querySelector('.sticky-feedback-button');
+      stickyButton.click();
+
+      const cancelButton = document.querySelector('.feedback-dialog-button.secondary-cta');
+      cancelButton.click();
+
+      expect(document.querySelector('.feedback-dialog')).to.not.exist;
+
+      stickyButton.click();
+
+      const dialog = document.querySelector('.feedback-dialog');
+      dialog.click();
+
+      expect(document.querySelector('.feedback-dialog')).to.not.exist;
+    });
+
     it('should submit feedback successfully', async () => {
       const { default: init } = await import('../../../edsdme/blocks/feedback/feedback.js');
       const block = document.querySelector('.feedback');
@@ -135,6 +182,53 @@ describe('feedback block', () => {
 
       const toast = document.querySelector('.feedback-toast.spectrum-Toast--negative');
       expect(toast).to.exist;
+    });
+
+    it('should handle try again button in error toast', async () => {
+      fetchStub.restore();
+      fetchStub = sinon.stub(window, 'fetch').rejects(new Error('Network error'));
+
+      const { default: init } = await import('../../../edsdme/blocks/feedback/feedback.js');
+      const block = document.querySelector('.feedback');
+      await init(block);
+
+      const stickyButton = document.querySelector('.sticky-feedback-button');
+      stickyButton.click();
+
+      const stars = document.querySelectorAll('sp-action-button[data-rating]');
+      stars[3].click();
+
+      const sendButton = document.querySelector('.feedback-dialog-button.cta');
+      sendButton.click();
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      const tryAgainBtn = document.querySelector('.feedback-try-again-cta');
+      expect(tryAgainBtn).to.exist;
+      tryAgainBtn.click();
+
+      const dialog = document.querySelector('.feedback-dialog');
+      expect(dialog).to.exist;
+    });
+
+    it('should load dialog with saved rating', async () => {
+      const { default: init } = await import('../../../edsdme/blocks/feedback/feedback.js');
+      const block = document.querySelector('.feedback');
+      await init(block);
+
+      const stickyButton = document.querySelector('.sticky-feedback-button');
+      stickyButton.click();
+
+      const stars = document.querySelectorAll('sp-action-button[data-rating]');
+      stars[2].click();
+
+      const cancelButton = document.querySelector('.feedback-dialog-button.secondary-cta');
+      cancelButton.click();
+
+      stickyButton.click();
+
+      const selectedStars = document.querySelectorAll('sp-action-button[selected]');
+      expect(selectedStars.length).to.equal(3);
     });
   });
 });
