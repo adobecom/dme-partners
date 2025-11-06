@@ -503,3 +503,32 @@ export function enableGeoPopup() {
   }
   return 'off';
 }
+
+export async function setFeedback(getConfig) {
+  const feedback = getMetadataContent('feedback');
+  if (!feedback || feedback === 'false') return;
+  const config = getConfig();
+
+  const { prefix } = config.locale;
+  const fragmentPath = `${prefix}/edsdme/partners-shared/fragments/feedback`;
+  const url = new URL(fragmentPath, window.location.origin);
+
+  try {
+    const response = await fetch(`${url}.plain.html`);
+    if (!response.ok) throw new Error(`Response was not ok ${response.statusText}`);
+
+    const data = await response.text();
+    const parser = new DOMParser();
+    const page = parser.parseFromString(data, 'text/html');
+    const main = document.querySelector('main');
+    const block = page.querySelector('.feedback');
+    const div = document.createElement('div');
+    div.appendChild(block);
+    if (main) main.insertBefore(div, main.firstChild);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching plain html of feedback fragment:', error);
+    // eslint-disable-next-line consistent-return
+    return null;
+  }
+}
