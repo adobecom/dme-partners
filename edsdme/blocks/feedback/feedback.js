@@ -1,4 +1,5 @@
 import { getCurrentProgramType, getPartnerDataCookieObject, partnerIsSignedIn, getLibs, prodHosts } from '../../scripts/utils.js';
+import { getConfig } from '../utils/utils.js';
 
 function showToast(success, onTryAgain, config) {
   const existingToast = document.querySelector('.feedback-toast');
@@ -305,6 +306,11 @@ export default async function init(el) {
   });
 
   const url = new URL(formDefinitionUrl);
+  const configs = getConfig();
+  const { prefix } = configs?.locale || { prefix: '' };
+  if (url.pathname.startsWith(prefix)) {
+    url.pathname = url.pathname.slice(prefix.length);
+  }
   if (!isProd) {
     url.pathname = '/feedback/stage/feedback-definition.json';
   }
