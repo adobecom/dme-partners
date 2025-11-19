@@ -58,6 +58,10 @@ export const prodHosts = [
 ];
 export const previewHosts = ['partnerspreview.adobe.com', 'stage--dme-partners--adobecom.aem.live'];
 
+export const aemAuthor = {
+  stage: 'http://dx-partner-author.stage2.corp.adobe.com',
+  prod: 'http://dx-partner-author.prod.corp.adobe.com',
+};
 /*
  * ------------------------------------------------------------
  * Edit above at your own risk.
