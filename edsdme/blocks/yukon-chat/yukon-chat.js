@@ -1,5 +1,4 @@
-import { getCurrentProgramType, getPartnerDataCookieObject, partnerIsSignedIn, aemAuthor } from '../../scripts/utils.js';
-import { getConfig } from '../utils/utils.js';
+import { getCurrentProgramType, getPartnerDataCookieObject, partnerIsSignedIn, aemPublish } from '../../scripts/utils.js';
 
 export default async function init(el) {
   const app = document.createElement('div');
@@ -66,20 +65,14 @@ export default async function init(el) {
         { key: level, value: level },
         { key: region, value: region },
       ];
-      const { env } = getConfig();
-      let origin = '';
-      if (env.name === 'prod') {
-        origin = aemAuthor.prod;
-      } else {
-        origin = aemAuthor.stage;
-      }
+      const origin = aemPublish;
       const url = new URL(`${origin}/services/gravity/yukonAIAssistant`);
       url.searchParams.append('question', question);
       url.searchParams.append('tags', JSON.stringify(tags));
       url.searchParams.append('requestId', requestId);
 
       const resp = await fetch(url, {
-        method: 'POST',
+        method: 'GET',
         credentials: 'include',
       });
       if (!resp || !resp.ok) {
