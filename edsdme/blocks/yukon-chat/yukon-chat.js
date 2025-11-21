@@ -50,6 +50,7 @@ export default async function init(el) {
     referencesContainer.innerHTML = '';
     let level = 'public';
     let region = 'worldwide';
+    // TODO: the partner data must be sent to the servlet and parsed there
     if (partnerIsSignedIn()) {
       try {
         const profileData = getPartnerDataCookieObject(getCurrentProgramType());
