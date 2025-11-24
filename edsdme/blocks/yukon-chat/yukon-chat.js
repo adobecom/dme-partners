@@ -120,10 +120,12 @@ export default async function init(el) {
                 responseArea.value += generatedText;
               }
 
-              if (!sourcesProcessed && source && Object.keys(source).length > 0) {
-                sourcesProcessed = true;
-                referencesLabel.style.display = 'block';
-                referencesContainer.style.display = 'block';
+              if (source && Object.keys(source).length > 0) {
+                if (!sourcesProcessed) {
+                  sourcesProcessed = true;
+                  referencesLabel.style.display = 'block';
+                  referencesContainer.style.display = 'block';
+                }
 
                 Object.entries(source).forEach(([refNumber, sourceData]) => {
                   const refItem = document.createElement('div');
