@@ -85,8 +85,8 @@ const domainConfigs = {
   'io-partners-dx.adobe.com': {
     stage: {
       domain: 'io-partners-dx.stage.adobe.com',
-      originAndPathMappings: { '/api/v1/web/dx-partners-runtime/sfdc-redirect': '/s/directory/channel'},
-      queryParam: { 'view' : 'distributor' },
+      originAndPathMappings: { '/api/v1/web/dx-partners-runtime/sfdc-redirect': '/s/directory/channel' },
+      queryParam: { view: 'distributor' },
       localeMap: {
         apac: 'en',
         cn: 'cn',
@@ -100,7 +100,7 @@ const domainConfigs = {
         latam: 'en',
         na: 'en',
       },
-    }
+    },
   },
   'channelpartners.adobe.com': { stage: { domain: 'channelpartners.stage2.adobe.com' } },
   'www.adobe.com': acomDomainConfig,
@@ -229,7 +229,6 @@ export function rewriteUrlOnNonProd(url) {
       if (url.pathname.includes(key)) {
         url.hostname = 'partners.stage.adobe.com';
         url.pathname = value;
-        
         // remove all existing query parameters and apply new ones for sfdc distributor find link
         if (stageQueryParam && Object.keys(stageQueryParam).length) {
           url.search = '';
@@ -237,7 +236,6 @@ export function rewriteUrlOnNonProd(url) {
           Object.entries(stageQueryParam).forEach(([paramKey, paramValue]) => {
             params.set(paramKey, paramValue);
           });
-          
           // add lang query param based on current page locale
           if (stageLocaleMap) {
             const currentPageLocale = window.location.pathname.split('/')?.[1];
@@ -246,7 +244,6 @@ export function rewriteUrlOnNonProd(url) {
               params.set('lang', mappedLang);
             }
           }
-          
           url.search = `?${params.toString()}`;
         }
       }
