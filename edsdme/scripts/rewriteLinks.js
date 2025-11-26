@@ -82,7 +82,26 @@ const domainConfigs = {
       pathMappings: { '/app/services/auth/sso/apc': '/s/salescenter/dashboard' },
     },
   },
-  'io-partners-dx.adobe.com': { stage: { domain: 'io-partners-dx.stage.adobe.com' } },
+  'io-partners-dx.adobe.com': {
+    stage: {
+      domain: 'io-partners-dx.stage.adobe.com',
+      originAndPathMappings: { '/api/v1/web/dx-partners-runtime/sfdc-redirect': '/s/directory/channel'},
+      queryParam: { 'view' : 'distributor' },
+      localeMap: {
+        apac: 'en',
+        cn: 'cn',
+        de: 'de',
+        emea: 'en',
+        es: 'es',
+        fr: 'fr',
+        it: 'it',
+        jp: 'ja',
+        kr: 'ko',
+        latam: 'en',
+        na: 'en',
+      },
+    }
+  },
   'channelpartners.adobe.com': { stage: { domain: 'channelpartners.stage2.adobe.com' } },
   'www.adobe.com': acomDomainConfig,
   'adobe.com': acomDomainConfig,
@@ -187,6 +206,9 @@ export function rewriteUrlOnNonProd(url) {
   if (env.name === 'prod' || prodHosts.includes(codeRootUrl.host)) return;
 
   const stagePathMappings = domainConfigs[url.hostname]?.stage?.pathMappings;
+  const stageOriginAndPathMappings = domainConfigs[url.hostname]?.stage?.originAndPathMappings;
+  const stageQueryParam = domainConfigs[url.hostname]?.stage?.queryParam;
+  const stageLocaleMap = domainConfigs[url.hostname]?.stage?.localeMap;
 
   if (stagePathMappings && Object.keys(stagePathMappings).length) {
     Object.entries(stagePathMappings).forEach(([key, value]) => {
@@ -200,6 +222,35 @@ export function rewriteUrlOnNonProd(url) {
 
   if (stageDomain) {
     url.hostname = stageDomain;
+  }
+
+  if (stageOriginAndPathMappings && Object.keys(stageOriginAndPathMappings).length) {
+    Object.entries(stageOriginAndPathMappings).forEach(([key, value]) => {
+      if (url.pathname.includes(key)) {
+        url.hostname = 'partners.stage.adobe.com';
+        url.pathname = value;
+        
+        // remove all existing query parameters and apply new ones for sfdc distributor find link
+        if (stageQueryParam && Object.keys(stageQueryParam).length) {
+          url.search = '';
+          const params = new URLSearchParams();
+          Object.entries(stageQueryParam).forEach(([paramKey, paramValue]) => {
+            params.set(paramKey, paramValue);
+          });
+          
+          // add lang query param based on current page locale
+          if (stageLocaleMap) {
+            const currentPageLocale = window.location.pathname.split('/')?.[1];
+            const mappedLang = stageLocaleMap[currentPageLocale];
+            if (mappedLang) {
+              params.set('lang', mappedLang);
+            }
+          }
+          
+          url.search = `?${params.toString()}`;
+        }
+      }
+    });
   }
 }
 
