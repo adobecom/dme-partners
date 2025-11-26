@@ -89,7 +89,23 @@ const domainConfigs = {
   'helpx.adobe.com': acomDomainConfig,
   'business.adobe.com': acomDomainConfig,
   'adobe.my.salesforce-sites.com': {
-    stage: { domain: 'adobe--sfstage1.sandbox.my.salesforce-sites.com' },
+    stage: {
+      domain: 'partners.stage.adobe.com',
+      pathMappings: { '/PartnerSearch': '/s/directory/channel' },
+      localeMap: {
+        apac: 'en',
+        cn: 'cn',
+        de: 'de',
+        emea: 'en',
+        es: 'es',
+        fr: 'fr',
+        it: 'it',
+        jp: 'ja',
+        kr: 'ko',
+        latam: 'en',
+        na: 'en',
+      },
+    },
     localeMap: {
       apac: 'en',
       cn: 'zh_CN',
@@ -141,6 +157,14 @@ function setLocale(url) {
   if (window.location.pathname === '/' || window.location.pathname === '') return;
   const currentPageLocale = window.location.pathname.split('/')?.[1];
   const domainConfig = domainConfigs[url.hostname];
+  const { env } = getConfig();
+  // Add new locale mapping for Stage SFDC links
+  if (env.name === 'stage' && url.hostname === 'adobe.my.salesforce-sites.com') {
+    if (domainConfig.stage?.localeMap) {
+      domainConfig.localeMap = domainConfig.stage.localeMap;
+    }
+  }
+
   if (!domainConfig?.localeMap) return;
   const localeFromMap = domainConfig.localeMap[currentPageLocale];
   if (!localeFromMap) return;
