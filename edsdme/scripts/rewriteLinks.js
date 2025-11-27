@@ -82,14 +82,53 @@ const domainConfigs = {
       pathMappings: { '/app/services/auth/sso/apc': '/s/salescenter/dashboard' },
     },
   },
-  'io-partners-dx.adobe.com': { stage: { domain: 'io-partners-dx.stage.adobe.com' } },
+  'io-partners-dx.adobe.com': {
+    stage: {
+      domain: 'partners.stage.adobe.com',
+      pathMappings: { '/api/v1/web/dx-partners-runtime/sfdc-redirect': '/s/directory/channel' },
+      queryParam: { view: 'distributor' },
+      localeMap: {
+        apac: 'en',
+        cn: 'cn',
+        de: 'de',
+        emea: 'en',
+        es: 'es',
+        fr: 'fr',
+        it: 'it',
+        jp: 'jp',
+        kr: 'kr',
+        latam: 'en',
+        na: 'en',
+      },
+      localeRewriter: defaultLocaleRewriters.queryParam,
+      queryParamKey: 'lang',
+    },
+  },
   'channelpartners.adobe.com': { stage: { domain: 'channelpartners.stage2.adobe.com' } },
   'www.adobe.com': acomDomainConfig,
   'adobe.com': acomDomainConfig,
   'helpx.adobe.com': acomDomainConfig,
   'business.adobe.com': acomDomainConfig,
   'adobe.my.salesforce-sites.com': {
-    stage: { domain: 'adobe--sfstage1.sandbox.my.salesforce-sites.com' },
+    stage: {
+      domain: 'partners.stage.adobe.com',
+      pathMappings: { '/PartnerSearch': '/s/directory/channel' },
+      localeMap: {
+        apac: 'en',
+        cn: 'cn',
+        de: 'de',
+        emea: 'en',
+        es: 'es',
+        fr: 'fr',
+        it: 'it',
+        jp: 'jp',
+        kr: 'kr',
+        latam: 'en',
+        na: 'en',
+      },
+      localeRewriter: defaultLocaleRewriters.queryParam,
+      queryParamKey: 'lang',
+    },
     localeMap: {
       apac: 'en',
       cn: 'zh_CN',
@@ -107,6 +146,17 @@ const domainConfigs = {
     queryParamKey: 'lang',
   },
 };
+
+if (!prodHosts.includes(window.location.host)) {
+  Object.keys(domainConfigs).forEach((key) => {
+    if (domainConfigs[key].stage) {
+      domainConfigs[key] = {
+        ...domainConfigs[key],
+        ...domainConfigs[key].stage,
+      };
+    }
+  });
+}
 
 /**
  * Modifies the given URL object by updating its search params
@@ -150,6 +200,15 @@ function setLocale(url) {
   }
 }
 
+// if there are new query params, remove old ones
+function applyQueryParamOverrides(url) {
+  if (!domainConfigs[url.hostname]?.queryParam) return;
+  url.search = '';
+  Object.entries(domainConfigs[url.hostname].queryParam).forEach(([key, value]) => {
+    url.searchParams.set(key, value);
+  });
+}
+
 /**
  * Rewrite a link href domain based on production to stage domain mappings.
  * As well as the pathname if pathname mappings are defined and there's a match.
@@ -162,7 +221,7 @@ export function rewriteUrlOnNonProd(url) {
 
   if (env.name === 'prod' || prodHosts.includes(codeRootUrl.host)) return;
 
-  const stagePathMappings = domainConfigs[url.hostname]?.stage?.pathMappings;
+  const stagePathMappings = domainConfigs[url.hostname]?.pathMappings;
 
   if (stagePathMappings && Object.keys(stagePathMappings).length) {
     Object.entries(stagePathMappings).forEach(([key, value]) => {
@@ -172,7 +231,7 @@ export function rewriteUrlOnNonProd(url) {
     });
   }
 
-  const stageDomain = domainConfigs[url.hostname]?.stage?.domain;
+  const stageDomain = domainConfigs[url.hostname]?.domain;
 
   if (stageDomain) {
     url.hostname = stageDomain;
@@ -192,6 +251,7 @@ export function getUpdatedHref(href) {
   } catch {
     return href;
   }
+  applyQueryParamOverrides(url);
   setLocale(url);
   setLoginPathIfSignedIn(url);
   // always as last step since we need original domains for mappings

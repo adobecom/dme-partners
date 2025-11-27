@@ -256,7 +256,7 @@ describe('Test rewrite links', () => {
     const href = 'https://io-partners-dx.adobe.com/path';
     const result = getUpdatedHref(href);
 
-    expect(result).toBe('https://io-partners-dx.stage.adobe.com/path');
+    expect(result).toBe('https://partners.stage.adobe.com/path?view=distributor&lang=cn');
   });
 
   test('should return unchanged link hrefs if invalid', () => {
@@ -283,6 +283,15 @@ describe('Test rewrite links', () => {
   gnav.innerHTML = gnavHTML;
 
   test('should not rewrite links in the production environment', () => {
+    delete window.location;
+    window.location = new URL('https://partners.adobe.com/');
+
+    jest.resetModules();
+    // eslint-disable-next-line no-shadow,global-require
+    const { rewriteLinks } = require('../../edsdme/scripts/rewriteLinks.js');
+    // eslint-disable-next-line no-shadow,global-require
+    const { getConfig } = require('../../edsdme/blocks/utils/utils.js');
+
     getConfig.mockReturnValue({ env: { name: 'prod' }, codeRoot: 'https://stage--dme-partners--adobecom.aem.page/edsdme' });
 
     rewriteLinks(gnav);
@@ -296,7 +305,7 @@ describe('Test rewrite links', () => {
     expect(result.innerHTML).toBe(`
         <a href="https://channelpartners.stage2.adobe.com/s/salescenter/dashboard"></a>
         <a href="https://channelpartners.stage2.adobe.com/path"></a>
-        <a href="https://io-partners-dx.stage.adobe.com/path"></a>
+        <a href="https://partners.stage.adobe.com/path?view=distributor&amp;lang=cn"></a>
         <a href="https://unmapped-domain.com/path"></a>
       `);
   });
