@@ -84,8 +84,8 @@ const domainConfigs = {
   },
   'io-partners-dx.adobe.com': {
     stage: {
-      domain: 'io-partners-dx.stage.adobe.com',
-      originAndPathMappings: { '/api/v1/web/dx-partners-runtime/sfdc-redirect': '/s/directory/channel' },
+      domain: 'partners.stage.adobe.com',
+      pathMappings: { '/api/v1/web/dx-partners-runtime/sfdc-redirect': '/s/directory/channel' },
       queryParam: { view: 'distributor' },
       localeMap: {
         apac: 'en',
@@ -95,11 +95,13 @@ const domainConfigs = {
         es: 'es',
         fr: 'fr',
         it: 'it',
-        jp: 'ja',
-        kr: 'ko',
+        jp: 'jp',
+        kr: 'kr',
         latam: 'en',
         na: 'en',
       },
+      localeRewriter: defaultLocaleRewriters.queryParam,
+      queryParamKey: 'lang',
     },
   },
   'channelpartners.adobe.com': { stage: { domain: 'channelpartners.stage2.adobe.com' } },
@@ -119,11 +121,13 @@ const domainConfigs = {
         es: 'es',
         fr: 'fr',
         it: 'it',
-        jp: 'ja',
-        kr: 'ko',
+        jp: 'jp',
+        kr: 'kr',
         latam: 'en',
         na: 'en',
       },
+      localeRewriter: defaultLocaleRewriters.queryParam,
+      queryParamKey: 'lang',
     },
     localeMap: {
       apac: 'en',
@@ -142,6 +146,17 @@ const domainConfigs = {
     queryParamKey: 'lang',
   },
 };
+
+if (!prodHosts.includes(window.location.host)) {
+  Object.keys(domainConfigs).forEach((key) => {
+    if (domainConfigs[key].stage) {
+      domainConfigs[key] = {
+        ...domainConfigs[key],
+        ...domainConfigs[key].stage,
+      };
+    }
+  });
+}
 
 /**
  * Modifies the given URL object by updating its search params
@@ -176,14 +191,6 @@ function setLocale(url) {
   if (window.location.pathname === '/' || window.location.pathname === '') return;
   const currentPageLocale = window.location.pathname.split('/')?.[1];
   const domainConfig = domainConfigs[url.hostname];
-  const { env } = getConfig();
-  // Add new locale mapping for Stage SFDC links
-  if (env.name === 'stage' && url.hostname === 'adobe.my.salesforce-sites.com') {
-    if (domainConfig.stage?.localeMap) {
-      domainConfig.localeMap = domainConfig.stage.localeMap;
-    }
-  }
-
   if (!domainConfig?.localeMap) return;
   const localeFromMap = domainConfig.localeMap[currentPageLocale];
   if (!localeFromMap) return;
@@ -191,6 +198,15 @@ function setLocale(url) {
   if (localeRewriter && typeof localeRewriter === 'function') {
     localeRewriter(url, localeFromMap, domainConfig);
   }
+}
+
+// if there are new query params, remove old ones
+function applyQueryParamOverrides(url) {
+  if (!domainConfigs[url.hostname]?.queryParam) return;
+  url.search = '';
+  Object.entries(domainConfigs[url.hostname].queryParam).forEach(([key, value]) => {
+    url.searchParams.set(key, value);
+  });
 }
 
 /**
@@ -205,10 +221,7 @@ export function rewriteUrlOnNonProd(url) {
 
   if (env.name === 'prod' || prodHosts.includes(codeRootUrl.host)) return;
 
-  const stagePathMappings = domainConfigs[url.hostname]?.stage?.pathMappings;
-  const stageOriginAndPathMappings = domainConfigs[url.hostname]?.stage?.originAndPathMappings;
-  const stageQueryParam = domainConfigs[url.hostname]?.stage?.queryParam;
-  const stageLocaleMap = domainConfigs[url.hostname]?.stage?.localeMap;
+  const stagePathMappings = domainConfigs[url.hostname]?.pathMappings;
 
   if (stagePathMappings && Object.keys(stagePathMappings).length) {
     Object.entries(stagePathMappings).forEach(([key, value]) => {
@@ -218,36 +231,10 @@ export function rewriteUrlOnNonProd(url) {
     });
   }
 
-  const stageDomain = domainConfigs[url.hostname]?.stage?.domain;
+  const stageDomain = domainConfigs[url.hostname]?.domain;
 
   if (stageDomain) {
     url.hostname = stageDomain;
-  }
-
-  if (stageOriginAndPathMappings && Object.keys(stageOriginAndPathMappings).length) {
-    Object.entries(stageOriginAndPathMappings).forEach(([key, value]) => {
-      if (url.pathname.includes(key)) {
-        url.hostname = 'partners.stage.adobe.com';
-        url.pathname = value;
-        // remove all existing query parameters and apply new ones for sfdc distributor find link
-        if (stageQueryParam && Object.keys(stageQueryParam).length) {
-          url.search = '';
-          const params = new URLSearchParams();
-          Object.entries(stageQueryParam).forEach(([paramKey, paramValue]) => {
-            params.set(paramKey, paramValue);
-          });
-          // add lang query param based on current page locale
-          if (stageLocaleMap) {
-            const currentPageLocale = window.location.pathname.split('/')?.[1];
-            const mappedLang = stageLocaleMap[currentPageLocale];
-            if (mappedLang) {
-              params.set('lang', mappedLang);
-            }
-          }
-          url.search = `?${params.toString()}`;
-        }
-      }
-    });
   }
 }
 
@@ -264,6 +251,7 @@ export function getUpdatedHref(href) {
   } catch {
     return href;
   }
+  applyQueryParamOverrides(url);
   setLocale(url);
   setLoginPathIfSignedIn(url);
   // always as last step since we need original domains for mappings
