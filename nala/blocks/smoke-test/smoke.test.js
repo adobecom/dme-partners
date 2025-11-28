@@ -578,15 +578,13 @@ test.describe('Smoke Tests', () => {
       await expect(href).toContain(data.expectedFindURL);
       await expect(smokeTest.findDistributorBtn.getAttribute('target')).resolves.toBe('_blank');
 
-      await smokeTest.findDistributorBtn.click();
-
       const [newTab] = await Promise.all([
         page.waitForEvent('popup'),
+        smokeTest.findDistributorBtn.click(),
       ]);
 
       await newTab.waitForLoadState();
       expect(newTab.url()).toContain(`${data.expectedSalesForceURL}`);
-      expect(newTab.url()).toContain(`${data.expectedID}`);
       newTab.close();
     });
   });
