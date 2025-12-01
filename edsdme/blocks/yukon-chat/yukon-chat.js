@@ -68,7 +68,7 @@ export default async function init(el) {
       ];
       const origin = aemPublish;
       const url = new URL(`${origin}/services/gravity/yukonAIAssistant`);
-      url.searchParams.append('question', question);
+      url.searchParams.append('question', encodeURIComponent(question));
       url.searchParams.append('tags', JSON.stringify(tags));
       url.searchParams.append('requestId', requestId);
 
