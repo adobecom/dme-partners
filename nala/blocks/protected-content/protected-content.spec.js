@@ -14,7 +14,7 @@ export default {
       path: '/channelpartners/drafts/automation/regression/public-page?georouting=off&martech=off',
       tags: '@dme-protected-content @regression @login @circleCi',
       data: {
-        partnerLevel: 'spp-platinum:',
+        partnerLevel: 'dxp-platinum:',
         contactNotFoundPage: '/error/contact-not-found',
         contentNotFoundPagePlatinum: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/cards/cpp-platinum-spain?georouting=off&martech=off',
         contentNotFoundPageGold: 'https://partners.stage.adobe.com/channelpartners/drafts/automation/regression/cards/cpp-gold-spain?georouting=off&martech=off',
