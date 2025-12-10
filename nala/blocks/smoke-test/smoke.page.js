@@ -59,6 +59,7 @@ export default class SmokeTest {
     await this.emailField.fill(email);
     await this.emailPageContinueButton.click();
     await page.waitForLoadState('networkidle');
+    console.log('Page URL:', await page.url());
     const currentUrl = await this.page.url();
     expect(currentUrl).toMatch(/\/password$/);
     await this.passwordField.fill(process.env.IMS_PASS);
