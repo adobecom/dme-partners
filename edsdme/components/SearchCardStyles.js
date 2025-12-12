@@ -110,7 +110,7 @@ const searchCardStyles = css`
     font-size: 14px;
     color: #505050;
     margin: 0 0 6px;
-    whitespace: pre-line;
+    white-space: pre-line;
   }
   
   .card-text .card-tags-wrapper {
