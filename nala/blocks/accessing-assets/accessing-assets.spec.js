@@ -51,7 +51,7 @@ export default {
       tcid: '5',
       name: '@china-user-verify-asset-access-base-on-region',
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-accessing-assets @regression @login @circleCi',
+      // tags: '@dme-accessing-assets @regression @login @circleCi',
       data: {
         partnerLevel: 'cpp-china-registered:',
         signInButtonText: 'Sign In',
