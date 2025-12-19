@@ -130,8 +130,18 @@ export function getPartnerDataCookieValue(programType, key) {
   try {
     const partnerDataCookie = getCookieValue('partner_data');
     if (!partnerDataCookie) return '';
+
+    const partnerInfoCookie = getCookieValue('partner_info');
+    if (!partnerInfoCookie) return '';
+
     const partnerDataObj = JSON.parse(decodeURIComponent(partnerDataCookie.toLowerCase()));
-    const portalData = partnerDataObj?.[programType];
+    const partnerInfoObj = JSON.parse(decodeURIComponent(partnerInfoCookie.toLowerCase()));
+    
+    const portalData = {
+      ...(partnerDataObj?.[programType] ?? {}),
+      ...partnerInfoObj
+    };
+
     // eslint-disable-next-line consistent-return
     return portalData?.[key] || '';
   } catch (error) {
@@ -145,8 +155,18 @@ export function getPartnerDataCookieValue(programType, key) {
 export function getPartnerDataCookieObject(programType) {
   const partnerDataCookie = getCookieValue('partner_data');
   if (!partnerDataCookie) return {};
+
+  const partnerInfoCookie = getCookieValue('partner_info');
+  if (!partnerInfoCookie) return {};
+
   const partnerDataObj = JSON.parse(decodeURIComponent(partnerDataCookie));
-  const portalData = partnerDataObj?.[programType.toUpperCase()] ?? {};
+  const partnerInfoObj = JSON.parse(decodeURIComponent(partnerInfoCookie));
+  
+  const portalData = {
+    ...(partnerDataObj?.[programType.toUpperCase()] ?? {}),
+    ...partnerInfoObj
+  };
+  
   return portalData;
 }
 

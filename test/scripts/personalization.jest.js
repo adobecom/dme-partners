@@ -38,14 +38,15 @@ describe('Test personalization.js', () => {
       const cookieObject = {
         CPP: {
           status: 'MEMBER',
-          firstName: 'Test user',
         },
       };
+      const partnerInfo = { firstName: 'Test user' };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      document.cookie = `partner_info=${JSON.stringify(partnerInfo)}`;
       const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const placeholderElementAfter = document.querySelector('#welcome-firstname');
-      expect(placeholderElementAfter.textContent.includes(cookieObject.CPP.firstName)).toBe(true);
+      expect(placeholderElementAfter.textContent.includes(partnerInfo.firstName)).toBe(true);
     });
   });
   it('Remove placeholder if user is not a member', () => {
@@ -53,9 +54,9 @@ describe('Test personalization.js', () => {
       const cookieObject = {
         SPP: {
           status: 'MEMBER',
-          firstName: 'Test use',
         },
       };
+      document.cookie = 'partner_info=; Max-Age=0;';
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
@@ -77,10 +78,10 @@ describe('Test personalization.js', () => {
       const cookieObject = {
         SPP: {
           status: 'MEMBER',
-          firstName: 'Test use',
         },
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      document.cookie = `partner_info=${JSON.stringify({ firstName: 'Test use' })}`;
       const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const notMemberBlock = document.querySelector('.partner-not-member');
@@ -92,11 +93,11 @@ describe('Test personalization.js', () => {
       const cookieObject = {
         CPP: {
           status: 'MEMBER',
-          firstName: 'Test use',
           level: 'Gold',
         },
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      document.cookie = `partner_info=${JSON.stringify({ firstName: 'Test use' })}`;
       const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const allLevelsBlock = document.querySelector('.partner-all-levels');
@@ -108,11 +109,11 @@ describe('Test personalization.js', () => {
       const cookieObject = {
         CPP: {
           status: 'MEMBER',
-          firstName: 'Test use',
           level: 'Gold',
         },
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      document.cookie = `partner_info=${JSON.stringify({ firstName: 'Test use' })}`;
       const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const goldBlock = document.querySelector('.partner-level-gold');
@@ -124,11 +125,11 @@ describe('Test personalization.js', () => {
       const cookieObject = {
         CPP: {
           status: 'MEMBER',
-          firstName: 'Test use',
           level: 'Platinum',
         },
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      document.cookie = `partner_info=${JSON.stringify({ firstName: 'Test use' })}`;
       const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const goldBlock = document.querySelector('.partner-level-gold');
@@ -142,11 +143,11 @@ describe('Test personalization.js', () => {
       const cookieObject = {
         CPP: {
           status: 'MEMBER',
-          firstName: 'Test use',
           level: 'Platinum',
         },
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      document.cookie = `partner_info=${JSON.stringify({ firstName: 'Test use' })}`;
       const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const platinumBlock = document.querySelector('#platinum-section');
@@ -172,12 +173,15 @@ describe('Test personalization.js', () => {
         const cookieObject = {
           CPP: {
             status: 'MEMBER',
-            firstName: 'Test Name',
             level: 'Platinum',
-            company: 'Test Company',
           },
         };
+        const partnerInfo = {
+          firstName: 'Test Name',
+          company: 'Test Company',
+        };
         document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+        document.cookie = `partner_info=${JSON.stringify(partnerInfo)}`;
         const companyPlaceholder = gnav.querySelector('#test-company-placeholder');
         const levelPlaceholder = gnav.querySelector('#test-level-placeholder');
         expect(companyPlaceholder.textContent).toEqual('$company');
@@ -195,13 +199,16 @@ describe('Test personalization.js', () => {
         const cookieObject = {
           CPP: {
             status: 'MEMBER',
-            firstName: 'Test Name',
             level: 'Platinum',
-            company: 'Test Company',
             primaryContact: true,
           },
         };
+        const partnerInfo = {
+          firstName: 'Test Name',
+          company: 'Test Company',
+        };
         document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+        document.cookie = `partner_info=${JSON.stringify(partnerInfo)}`;
         const { applyGnavPersonalization } = importModules();
         const personalizedGnav = applyGnavPersonalization(gnav);
         const primaryContact = personalizedGnav.querySelector('.primary-contact-wrapper');
@@ -215,14 +222,17 @@ describe('Test personalization.js', () => {
         const cookieObject = {
           CPP: {
             status: 'MEMBER',
-            firstName: 'Test Name',
             level: 'Gold',
-            company: 'Test Company',
             primaryContact: true,
             accountAnniversary: expiredDate,
           },
         };
+        const partnerInfo = {
+          firstName: 'Test Name',
+          company: 'Test Company',
+        };
         document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+        document.cookie = `partner_info=${JSON.stringify(partnerInfo)}`;
         const { applyGnavPersonalization } = importModules();
         const personalizedGnav = applyGnavPersonalization(gnav);
         const renewExpired = personalizedGnav.querySelector('.partner-expired');
@@ -236,14 +246,17 @@ describe('Test personalization.js', () => {
         const cookieObject = {
           CPP: {
             status: 'MEMBER',
-            firstName: 'Test Name',
             level: 'Gold',
-            company: 'Test Company',
             primaryContact: true,
             accountAnniversary: expiredDate,
           },
         };
+        const partnerInfo = {
+          firstName: 'Test Name',
+          company: 'Test Company',
+        };
         document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+        document.cookie = `partner_info=${JSON.stringify(partnerInfo)}`;
         const { applyGnavPersonalization } = importModules();
         const personalizedGnav = applyGnavPersonalization(gnav);
         const renewExpired = personalizedGnav.querySelector('.partner-suspended');
@@ -255,14 +268,17 @@ describe('Test personalization.js', () => {
         const cookieObject = {
           CPP: {
             status: 'MEMBER',
-            firstName: 'Test Name',
             level: 'Gold',
-            company: 'Test Company',
             primaryContact: true,
             salesCenterAccess: true,
           },
         };
+        const partnerInfo = {
+          firstName: 'Test Name',
+          company: 'Test Company',
+        };
         document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+        document.cookie = `partner_info=${JSON.stringify(partnerInfo)}`;
         const salesCenterLink = gnav.querySelector('#sales-link');
         const { applyGnavPersonalization } = importModules();
         applyGnavPersonalization(gnav);
@@ -274,11 +290,11 @@ describe('Test personalization.js', () => {
         const cookieObject = {
           CPP: {
             status: 'MEMBER',
-            firstName: 'Test user',
             level: 'Silver',
           },
         };
         document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+        document.cookie = `partner_info=${JSON.stringify({ firstName: 'Test user' })}`;
         const { applyGnavPersonalization } = importModules();
 
         let platinumText = gnav.querySelector('#text-platinum');

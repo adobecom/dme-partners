@@ -76,6 +76,7 @@ describe('Test utils.js', () => {
     it('Protected footer is shown for members', async () => {
       const cookieObject = { CPP: { status: 'MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      document.cookie = `partner_info=${JSON.stringify({})}`;
       const locales = {
         '': { ietf: 'en-US', tk: 'hah7vzn.css' },
         de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
@@ -104,6 +105,7 @@ describe('Test utils.js', () => {
     it('Protected footer is fetched based on locale if footer-loggeding-source metadata is not present', async () => {
       const cookieObject = { CPP: { status: 'MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      document.cookie = `partner_info=${JSON.stringify({})}`;
       window.location.pathname = '/de/channelpartners/';
       const locales = {
         '': { ietf: 'en-US', tk: 'hah7vzn.css' },
@@ -132,6 +134,7 @@ describe('Test utils.js', () => {
     it('Protected navigation is shown for members', async () => {
       const cookieObject = { CPP: { status: 'MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      document.cookie = `partner_info=${JSON.stringify({})}`;
       const locales = {
         '': { ietf: 'en-US', tk: 'hah7vzn.css' },
         de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
@@ -160,6 +163,7 @@ describe('Test utils.js', () => {
     it('Protected gnav is fetched based on locale if gnav-loggeding-source metadata is not present', async () => {
       const cookieObject = { CPP: { status: 'MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+      document.cookie = `partner_info=${JSON.stringify({})}`;
       window.location.pathname = '/de/channelpartners/';
       const locales = {
         '': { ietf: 'en-US', tk: 'hah7vzn.css' },
@@ -213,14 +217,17 @@ describe('Test utils.js', () => {
   it('Should return partner data cookie object', () => {
     const cookieObject = { CPP: { status: 'MEMBER' } };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+    document.cookie = `partner_info=${JSON.stringify({})}`;
     expect(getPartnerDataCookieObject('cpp')).toStrictEqual(cookieObject.CPP);
   });
   it('Check if user is a member', () => {
     const cookieObjectMember = { CPP: { status: 'MEMBER' } };
     document.cookie = `partner_data=${JSON.stringify(cookieObjectMember)}`;
+    document.cookie = `partner_info=${JSON.stringify({})}`;
     expect(isMember()).toEqual(true);
     const cookieObjectNotMember = { CPP: { status: 'NOT_PARTNER' } };
     document.cookie = `partner_data=${JSON.stringify(cookieObjectNotMember)}`;
+    document.cookie = `partner_info=${JSON.stringify({})}`;
     expect(isMember()).toEqual(false);
   });
   it('Check if partner is signed id', () => {
@@ -230,6 +237,7 @@ describe('Test utils.js', () => {
   it('Check if signed in partner is non member', () => {
     const cookieObjectNotMember = { CPP: { status: 'NOT_PARTNER' } };
     document.cookie = `partner_data=${JSON.stringify(cookieObjectNotMember)}`;
+    document.cookie = `partner_info=${JSON.stringify({})}`;
     expect(signedInNonMember()).toBeTruthy();
   });
   it('Check if partner is reseller', () => {
