@@ -35,9 +35,7 @@ describe('Test personalization.js', () => {
   });
   it('Populate placeholder if user is a member', () => {
     jest.isolateModules(() => {
-      const cookieObject = {
-        CPP: {status: 'MEMBER',},
-      };
+      const cookieObject = { CPP: { status: 'MEMBER' } };
       const partnerInfo = { firstName: 'Test user' };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       document.cookie = `partner_info=${JSON.stringify(partnerInfo)}`;
@@ -49,9 +47,7 @@ describe('Test personalization.js', () => {
   });
   it('Remove placeholder if user is not a member', () => {
     jest.isolateModules(() => {
-      const cookieObject = {
-        SPP: {status: 'MEMBER',},
-      };
+      const cookieObject = { SPP: { status: 'MEMBER' } };
       document.cookie = 'partner_info=; Max-Age=0;';
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       const { applyPagePersonalization } = importModules();
@@ -71,9 +67,7 @@ describe('Test personalization.js', () => {
 
   it('Show partner-not-member block', () => {
     jest.isolateModules(() => {
-      const cookieObject = {
-        SPP: {status: 'MEMBER',},
-      };
+      const cookieObject = { SPP: { status: 'MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       document.cookie = `partner_info=${JSON.stringify({ firstName: 'Test use' })}`;
       const { applyPagePersonalization } = importModules();
