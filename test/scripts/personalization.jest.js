@@ -36,9 +36,7 @@ describe('Test personalization.js', () => {
   it('Populate placeholder if user is a member', () => {
     jest.isolateModules(() => {
       const cookieObject = {
-        CPP: {
-          status: 'MEMBER',
-        },
+        CPP: {status: 'MEMBER',},
       };
       const partnerInfo = { firstName: 'Test user' };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
@@ -52,9 +50,7 @@ describe('Test personalization.js', () => {
   it('Remove placeholder if user is not a member', () => {
     jest.isolateModules(() => {
       const cookieObject = {
-        SPP: {
-          status: 'MEMBER',
-        },
+        SPP: {status: 'MEMBER',},
       };
       document.cookie = 'partner_info=; Max-Age=0;';
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
@@ -76,9 +72,7 @@ describe('Test personalization.js', () => {
   it('Show partner-not-member block', () => {
     jest.isolateModules(() => {
       const cookieObject = {
-        SPP: {
-          status: 'MEMBER',
-        },
+        SPP: {status: 'MEMBER',},
       };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
       document.cookie = `partner_info=${JSON.stringify({ firstName: 'Test use' })}`;

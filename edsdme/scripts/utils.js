@@ -136,10 +136,9 @@ export function getPartnerDataCookieValue(programType, key) {
 
     const partnerDataObj = JSON.parse(decodeURIComponent(partnerDataCookie.toLowerCase()));
     const partnerInfoObj = JSON.parse(decodeURIComponent(partnerInfoCookie.toLowerCase()));
-    
     const portalData = {
       ...(partnerDataObj?.[programType] ?? {}),
-      ...partnerInfoObj
+      ...partnerInfoObj,
     };
 
     // eslint-disable-next-line consistent-return
@@ -161,12 +160,10 @@ export function getPartnerDataCookieObject(programType) {
 
   const partnerDataObj = JSON.parse(decodeURIComponent(partnerDataCookie));
   const partnerInfoObj = JSON.parse(decodeURIComponent(partnerInfoCookie));
-  
   const portalData = {
     ...(partnerDataObj?.[programType.toUpperCase()] ?? {}),
-    ...partnerInfoObj
+    ...partnerInfoObj,
   };
-  
   return portalData;
 }
 
