@@ -419,7 +419,7 @@
   overflow: hidden;
   /*margin: 0 auto;*/
   box-sizing: border-box;
-  /*max-width: 900px;*/
+  max-width: 900px;
   position: relative;
   scroll-behavior: smooth;
   /*width: 75%;*/
@@ -790,5 +790,94 @@ chat-history-left .user-message {
   100% {
     opacity: 0;
   }
+}
+
+/* Scroll to Bottom Button */
+.scroll-to-bottom-btn {
+  position: fixed;
+  bottom: 130px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #E1E1E1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.scroll-to-bottom-btn.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.scroll-to-bottom-btn:hover {
+  background: #f5f5f5;
+}
+
+.scroll-to-bottom-btn:focus-visible {
+  outline: 2px solid var(--yc-keyboard-focus-color);
+  outline-offset: 2px;
+}
+
+.scroll-to-bottom-btn svg {
+  width: 16px;
+  height: 16px;
+  color: #292929;
+}
+
+/* Markdown Tables */
+.message-text table.markdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 14px;
+  border: 1px solid #E1E1E1;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.message-text table.markdown-table thead {
+  background: #F5F5F5;
+}
+
+.message-text table.markdown-table th {
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #000;
+  border-bottom: 2px solid #E1E1E1;
+  border-right: 1px solid #E1E1E1;
+}
+
+.message-text table.markdown-table th:last-child {
+  border-right: none;
+}
+
+.message-text table.markdown-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #E1E1E1;
+  border-right: 1px solid #E1E1E1;
+  color: #292929;
+}
+
+.message-text table.markdown-table td:last-child {
+  border-right: none;
+}
+
+.message-text table.markdown-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.message-text table.markdown-table tbody tr:hover {
+  background: #F9F9F9;
 }
 
