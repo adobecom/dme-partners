@@ -126,20 +126,6 @@ export function deleteCookieValue(key) {
   document.cookie = `${key}=; Path=/; Max-Age=0;`;
 }
 
-export function getPartnerCookieValue(programType, key) {
-  try {
-    const portalData = getPartnerCookieObject(programType);
-    const lowercasedPortalData = JSON.parse(
-      JSON.stringify(portalData).toLowerCase()
-    );
-    return lowercasedPortalData?.[key] || '';
-  } catch (error) {
-    console.error('Error parsing partner data object:', error);
-    // eslint-disable-next-line consistent-return
-    return '';
-  }
-}
-
 export function getPartnerCookieObject(programType) {
   const partnerDataCookie = getCookieValue('partner_data');
   const partnerInfoCookie = getCookieValue('partner_info');
@@ -152,6 +138,20 @@ export function getPartnerCookieObject(programType) {
     ...partnerInfoObj,
   };
   return portalData;
+}
+
+export function getPartnerCookieValue(programType, key) {
+  try {
+    const portalData = getPartnerCookieObject(programType);
+    const lowercasedPortalData = JSON.parse(
+      JSON.stringify(portalData).toLowerCase()
+    );
+    return lowercasedPortalData?.[key] || '';
+  } catch (error) {
+    console.error('Error parsing partner data object:', error);
+    // eslint-disable-next-line consistent-return
+    return '';
+  }
 }
 
 export function isMember() {
