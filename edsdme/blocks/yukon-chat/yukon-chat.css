@@ -44,7 +44,7 @@
 }
 
 .yc-input-field-container {
-  align-items: center;
+  align-items: flex-end;
   background: #fff;
   border-radius: calc(var(--yc-input-radius) - 2px);
   display: flex;
@@ -95,8 +95,9 @@
   display: flex;
   align-items: center;
   user-select: none;
-  align-self: center;
+  align-self: flex-start;
   margin-right: -8px;
+  margin-top: 10px;
   height: 32px;
   width: 32px;
   justify-content: center;
@@ -160,7 +161,8 @@
 .yc-textarea-grow-wrap {
   flex: 1;
   display: grid;
-  align-items: center;
+  align-items: flex-end;
+  place-items: anchor-center;
 }
 
 .yc-textarea-grow-wrap::after {
@@ -221,9 +223,10 @@
   height: var(--yc-button-dimensions);
   transition: background 0.3s ease;
   width: var(--yc-button-dimensions);
-  align-self: end;
+  align-self: flex-end;
   margin-bottom: 10px;
   padding: 0;
+  flex-shrink: 0;
 }
 
 .yc-input-field-button:hover {
@@ -261,10 +264,11 @@
   align-items: center;
   display: flex;
   justify-content: center;
-  margin-bottom: 0;
-  align-self: auto;
+  margin-bottom: 10px;
+  align-self: flex-end;
   color: #fff;
   opacity: 1;
+  flex-shrink: 0;
 }
 
 /* Modal Input Wrapper - Fixed at bottom */
@@ -469,10 +473,7 @@
 }
 
 .chat-history > .chat-message {
-  width: 100%;
   max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
   padding-left: 16px;
   padding-right: 16px;
 }
