@@ -88,6 +88,7 @@ export default async function init(el) {
   app.className = 'content announcements-wrapper';
   app.blockData = blockData;
   app.setAttribute('data-idx', sectionIndex);
+  app.setAttribute('daa-lh', 'Partner Announcements Cards');
   el.replaceWith(app);
 
   await deps;
