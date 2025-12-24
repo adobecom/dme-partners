@@ -417,14 +417,13 @@
   flex-direction: column;
   justify-content: flex-start;
   overflow: hidden;
-  /*margin: 0 auto;*/
   box-sizing: border-box;
   max-width: 900px;
   position: relative;
   scroll-behavior: smooth;
-  /*width: 75%;*/
   z-index: 1;
   gap: 16px;
+  flex: 1;
   min-height: 0;
 }
 
@@ -432,17 +431,17 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  flex: 1;
+  min-height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 16px 15%;
+  padding: 16px 15% 60vh;
   position: relative;
   transition: opacity 0.5s ease;
-  margin-bottom: 50px;
   z-index: 2;
 }
 .chat-history.is-scrolling {
-  padding-bottom: 400px;
+  padding-bottom: 60vh;
 }
 
 .user-message .message-content {

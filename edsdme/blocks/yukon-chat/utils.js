@@ -93,7 +93,7 @@ export function parseMarkdown(markdown) {
       .replace(/_/g, '')
       .trim();
     // Match any variation of Citations or References heading (with or without markdown)
-    if (/^#{0,6}\s*(citations?|references?):?\s*$/i.test(plainLine)) {
+    if (/^#{0,6}\s*.*\b(citations?|references?)\b:?\s*$/i.test(plainLine)) {
       cutoffLineIndex = i;
       break;
     }
