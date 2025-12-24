@@ -144,7 +144,7 @@ export function getPartnerCookieValue(programType, key) {
   try {
     const portalData = getPartnerCookieObject(programType);
     const lowercasedPortalData = JSON.parse(
-      JSON.stringify(portalData).toLowerCase()
+      JSON.stringify(portalData).toLowerCase(),
     );
     return lowercasedPortalData?.[key] || '';
   } catch (error) {
