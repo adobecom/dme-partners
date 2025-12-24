@@ -1,9 +1,9 @@
 import { PROGRAM } from '../blocks/utils/dmeConstants.js';
 
-import { getPartnerDataCookieObject, hasSalesCenterAccess } from './utils.js';
+import { getPartnerCookieObject, hasSalesCenterAccess } from './utils.js';
 
 export const PERSONALIZATION_HIDE = 'personalization-hide';
-export const COOKIE_OBJECT = getPartnerDataCookieObject(PROGRAM);
+export const COOKIE_OBJECT = getPartnerCookieObject(PROGRAM);
 
 export function processPrimaryContact(el) {
   const isPrimary = COOKIE_OBJECT.primaryContact;

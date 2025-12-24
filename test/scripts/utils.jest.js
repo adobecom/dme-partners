@@ -11,9 +11,9 @@ import {
   getProgramHomePage,
   getCurrentProgramType,
   getCookieValue,
-  getPartnerDataCookieObject,
+  getPartnerCookieObject,
   isMember,
-  getPartnerDataCookieValue,
+  getPartnerCookieValue,
   partnerIsSignedIn,
   signedInNonMember,
   isReseller,
@@ -212,13 +212,13 @@ describe('Test utils.js', () => {
   });
   it('Should get empty string if cookie JSON is not valid', () => {
     document.cookie = 'partner_data={cpp: {test1:test test2:test}}';
-    expect(getPartnerDataCookieValue('cpp', 'test_cookie')).toEqual('');
+    expect(getPartnerCookieValue('cpp', 'test_cookie')).toEqual('');
   });
   it('Should return partner data cookie object', () => {
     const cookieObject = { CPP: { status: 'MEMBER' } };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
     document.cookie = `partner_info=${JSON.stringify({})}`;
-    expect(getPartnerDataCookieObject('cpp')).toStrictEqual(cookieObject.CPP);
+    expect(getPartnerCookieObject('cpp')).toStrictEqual(cookieObject.CPP);
   });
   it('Check if user is a member', () => {
     const cookieObjectMember = { CPP: { status: 'MEMBER' } };
