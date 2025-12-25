@@ -234,6 +234,15 @@
   max-height: 35vh;
 }
 
+.yc-textarea-grow-wrap textarea:disabled {
+  overflow: hidden;
+  height: 28px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  line-height: 28px;
+}
+
 .yc-input-field-button:disabled {
   background: #e1e1e1;
   color: #999;
@@ -358,12 +367,51 @@
   overflow: hidden;
 }
 
+.dialog-modal.opening {
+  animation: 500ms ease-in-out slide-up;
+}
+
+.dialog-modal.closing {
+  animation: 500ms ease-in-out slide-down;
+  bottom: -100vh;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
 @media (max-width: 768px) {
   .dialog-modal {
     width: 90%;
     height: 100vh;
     max-height: 100vh;
     min-height: 300px;
+  }
+}
+@media (max-width: 768px) {
+  .yc-textarea-grow-wrap textarea {
+    height: 80%;
+    overflow: hidden;
+    padding: 0 16px;
+    display: flex;
   }
 }
 
