@@ -1,5 +1,5 @@
 /* stylelint-disable */
-#yukon-chat-modal, .yukon-chat-block {
+#yukon-chat-modal, .yukon-chat-block, .yukon-chat-sticky {
   --yc-header-color: #131313;
   --yc-card-radius: 12px;
   --yc-card-text-color: #292929;
@@ -30,6 +30,36 @@
   background: var(--yukon-chat-bg);
   padding: 80px 48px 12px;
 }
+
+/* Sticky Variant - Only Input at Bottom */
+.yukon-chat-sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: transparent;
+  padding: 0;
+}
+
+.yukon-chat-sticky .yc-input-field {
+  margin: 0 auto;
+  max-width: 680px;
+  padding: 16px;
+}
+
+.yukon-chat-sticky .yc-input-field::before,
+.yukon-chat-sticky .yc-input-field::after {
+  content: none;
+}
+
+.yukon-chat-sticky .yc-input-field-container {
+  background: #fff;
+  border: 2px solid transparent;
+  background: linear-gradient(#FFFFFF, #FFFFFF) padding-box, 
+              linear-gradient(98.11deg, #9A3CF9 -4.21%, #E743C8 35.46%, #ED457E 68.67%, #FF7918 104.7%) border-box;
+}
+
 
 .yukon-chat-pill {
   box-sizing: border-box;
