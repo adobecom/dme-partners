@@ -1,4 +1,4 @@
-import { getCurrentProgramType, getPartnerDataCookieObject, partnerIsSignedIn, aemPublish } from '../../scripts/utils.js';
+import { getCurrentProgramType, getPartnerCookieObject, partnerIsSignedIn, aemPublish } from '../../scripts/utils.js';
 
 export default async function init(el) {
   const app = document.createElement('div');
@@ -53,7 +53,7 @@ export default async function init(el) {
     // TODO: the partner data must be sent to the servlet and parsed there
     if (partnerIsSignedIn()) {
       try {
-        const profileData = getPartnerDataCookieObject(getCurrentProgramType());
+        const profileData = getPartnerCookieObject(getCurrentProgramType());
         level = profileData.level.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '');
         region = profileData.permissionRegion.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '');
       } catch (error) {

@@ -1,4 +1,4 @@
-import { getCurrentProgramType, getPartnerDataCookieObject } from '../../scripts/utils.js';
+import { getCurrentProgramType, getPartnerCookieObject } from '../../scripts/utils.js';
 
 async function resolvePlaceholderFromProfile(placeholder) {
   const placeholderPattern = /\$\{(.+?)\}/g;
@@ -6,7 +6,7 @@ async function resolvePlaceholderFromProfile(placeholder) {
   if (!placeholderPattern.test(placeholder)) return '';
 
   try {
-    const profileData = getPartnerDataCookieObject(getCurrentProgramType());
+    const profileData = getPartnerCookieObject(getCurrentProgramType());
 
     // Replace all placeholders with matching values from profileData
     return placeholder.replace(placeholderPattern, (_, key) => (
