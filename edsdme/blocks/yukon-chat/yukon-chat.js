@@ -11,7 +11,11 @@ export default async function init(el) {
   const submitIconString = '<svg xmlns="http://www.w3.org/2000/svg" class="send-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path d="M18.6485 9.9735C18.6482 9.67899 18.4769 9.41106 18.2059 9.29056L4.05752 2.93282C3.80133 2.8175 3.50129 2.85583 3.28171 3.03122C3.06178 3.20765 2.95889 3.49146 3.01516 3.76733L4.28678 10.008L3.06488 16.2384C3.0162 16.4852 3.09492 16.738 3.27031 16.9134C3.29068 16.9337 3.31278 16.9531 3.33522 16.9714C3.55619 17.1454 3.85519 17.182 4.11069 17.066L18.2086 10.6578C18.4773 10.5356 18.6489 10.268 18.6485 9.9735ZM14.406 9.22716L5.66439 9.25379L4.77705 4.90084L14.406 9.22716ZM4.81711 15.0973L5.6694 10.7529L14.4323 10.7264L4.81711 15.0973Z"></path></svg>';
   const arrowIconString = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path d="M13.55029,13.71484c-.29297-.29297-.76758-.29297-1.06055,0l-1.73975,1.73975V2.76172c0-.41406-.33594-.75-.75-.75s-.75.33594-.75.75v12.6626l-1.70996-1.70947c-.29297-.29297-.76758-.29297-1.06055,0s-.29297.76758,0,1.06055l3.00537,3.00488c.14648.14648.33838.21973.53027.21973s.38379-.07324.53027-.21973l3.00488-3.00488c.29297-.29297.29297-.76758,0-1.06055Z" stroke-width="0"></path></svg>';
 
-  const createInputField = (textareaEl, buttonEl) => {
+  const mobileView = window.matchMedia('(max-width: 767px)');
+  let stickyViewportHandler = null;
+  let isModalOpen = false;
+
+  const createInputField = (textareaEl, buttonEl, forModal = false) => {
     const container = createTag('div', { class: 'yc-input-field-container' });
 
     const label = createTag('label', {
@@ -30,10 +34,30 @@ export default async function init(el) {
     const textareaWrap = createTag('div', { class: 'yc-textarea-grow-wrap' });
     textareaWrap.appendChild(textareaEl);
 
-    container.appendChild(label);
-    container.appendChild(tooltip);
-    container.appendChild(textareaWrap);
-    container.appendChild(buttonEl);
+    if (forModal || !isSticky) {
+      container.appendChild(label);
+      container.appendChild(tooltip);
+      container.appendChild(textareaWrap);
+      container.appendChild(buttonEl);
+    } else {
+      stickyViewportHandler = (e) => {
+        if (isModalOpen) return;
+        
+        while (container.firstChild) {
+          container.removeChild(container.firstChild);
+        }
+        
+        if (!e.matches) {
+          container.appendChild(label);
+          container.appendChild(tooltip);
+          container.appendChild(textareaWrap);
+          container.appendChild(buttonEl);
+        }
+      };
+
+      stickyViewportHandler(mobileView);
+      mobileView.addEventListener('change', stickyViewportHandler);
+    }
 
     return container;
   };
@@ -59,10 +83,35 @@ export default async function init(el) {
   inputField.appendChild(sharedInputField);
   pillContainer.appendChild(inputField);
 
+  let mobileButton = null;
+
   // For sticky variant, create sticky container instead of regular block
   if (isSticky) {
     const stickyContainer = createTag('div', { class: 'yukon-chat-sticky' });
-    stickyContainer.appendChild(inputField);
+    
+    // Create mobile button for sticky variant
+    mobileButton = createTag('button', { 
+      class: 'yc-mobile-button',
+      'aria-label': 'Open chat',
+    }, aiChatIconString);
+    
+    function handleMobileButton(e) {
+      if (e.matches) {
+        stickyContainer.appendChild(mobileButton);
+        if (inputField.parentNode === stickyContainer) {
+          stickyContainer.removeChild(inputField);
+        }
+      } else {
+        if (mobileButton.parentNode === stickyContainer) {
+          stickyContainer.removeChild(mobileButton);
+        }
+        stickyContainer.appendChild(inputField);
+      }
+    }
+    
+    handleMobileButton(mobileView);
+    mobileView.addEventListener('change', handleMobileButton);
+    
     el.replaceWith(stickyContainer);
   } else {
     chatBlock.appendChild(chatBlockHeader);
@@ -388,26 +437,38 @@ export default async function init(el) {
     }
     // Modal input wrapper
     modalInputWrapper = createTag('div', { class: 'modal-input-wrapper' });
-    chatInterface.appendChild(chatHistory);
+  chatInterface.appendChild(chatHistory);
     if (scrollToBottomBtn) {
       chatInterface.appendChild(scrollToBottomBtn);
     }
-    chatInterface.appendChild(modalInputWrapper);
-    bodyContainer.appendChild(chatInterface);
-    dialogBody.appendChild(bodyContainer);
+  chatInterface.appendChild(modalInputWrapper);
+  bodyContainer.appendChild(chatInterface);
+  dialogBody.appendChild(bodyContainer);
     fragment.appendChild(modalHeader);
     fragment.appendChild(dialogBody);
     return fragment;
   };
   // Function to show modal using getModal
   const showModal = async () => {
+    isModalOpen = true;
+    if (isSticky) {
+      const container = sharedInputField;
+      const label = container.querySelector('.yc-input-field-label');
+      if (!label || !label.parentNode) {
+        const tempContainer = createInputField(textArea, inputFieldButton, true);        
+        while (tempContainer.firstChild) {
+          container.appendChild(tempContainer.firstChild);
+        }
+      }
+    }
+    
     // Check if modal already exists in DOM
     if (modalInstance && document.body.contains(modalInstance)) {
       if (modalInputWrapper && !modalInputWrapper.contains(sharedInputField)) {
-        modalInputWrapper.appendChild(sharedInputField);
+    modalInputWrapper.appendChild(sharedInputField);
       }
       setTimeout(() => {
-        textArea.focus();
+    textArea.focus();
       }, 100);
       return modalInstance;
     }
@@ -423,14 +484,21 @@ export default async function init(el) {
           // eslint-disable-next-line no-promise-executor-return
           await new Promise((resolve) => setTimeout(resolve, 500));
         }
+        
+        isModalOpen = false;        
         // Abort any ongoing request
         if (currentAbortController) {
           currentAbortController.abort();
           currentAbortController = null;
         }
+        // Re-enable textarea if it was disabled
+        textArea.removeAttribute('disabled');
         // Move input field back to pill when modal closes
         if (inputField && sharedInputField) {
           inputField.appendChild(sharedInputField);
+          if (isSticky && stickyViewportHandler) {
+            stickyViewportHandler(mobileView);
+          }
         }
         textArea.value = '';
         updateButtonState();
@@ -485,4 +553,10 @@ export default async function init(el) {
     await sendMessage(textArea);
     updateReplicatedValue(textareaWrapper, textArea);
   });
+
+  if (mobileButton) {
+    mobileButton.addEventListener('click', async () => {
+      await showModal();
+    });
+  }
 }
