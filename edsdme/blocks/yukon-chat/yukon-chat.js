@@ -14,6 +14,18 @@ export default async function init(el) {
   const mobileView = window.matchMedia('(max-width: 767px)');
   let stickyViewportHandler = null;
   let isModalOpen = false;
+  const rows = Array.from(el.children);
+  const placeholders = {};
+
+  rows.forEach((row) => {
+    const divs = row.querySelectorAll('div');
+    if (divs.length < 2) return;
+
+    const key = divs[0].textContent.trim().replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+    const value = divs[1].textContent.trim();
+
+    placeholders[key] = value;
+  });
 
   const createInputField = (textareaEl, buttonEl, forModal = false) => {
     const container = createTag('div', { class: 'yc-input-field-container' });
@@ -29,7 +41,7 @@ export default async function init(el) {
       id: 'yc-label-tooltip',
       class: 'yc-label-tooltip',
       role: 'tooltip',
-    }, 'Ask');
+    }, placeholders.chatTooltip);
 
     const textareaWrap = createTag('div', { class: 'yc-textarea-grow-wrap' });
     textareaWrap.appendChild(textareaEl);
@@ -42,11 +54,9 @@ export default async function init(el) {
     } else {
       stickyViewportHandler = (e) => {
         if (isModalOpen) return;
-        
         while (container.firstChild) {
           container.removeChild(container.firstChild);
         }
-        
         if (!e.matches) {
           container.appendChild(label);
           container.appendChild(tooltip);
@@ -63,14 +73,14 @@ export default async function init(el) {
   };
 
   const chatBlock = createTag('div', { class: 'yukon-chat-block' });
-  const chatBlockHeader = createTag('div', { class: 'yc-block-header' }, 'Explore');
+  const chatBlockHeader = createTag('div', { class: 'yc-block-header' }, placeholders?.blockHeader);
   const pillContainer = createTag('div', { class: 'yukon-chat-pill' });
   const inputField = createTag('section', { class: 'yc-input-field' });
 
   const textArea = createTag('textarea', {
     id: 'yc-input-field',
     rows: 1,
-    placeholder: 'Ask anything about Adobe Partner Connection Portal?',
+    placeholder: placeholders.inputPlaceholder,
   });
 
   const inputFieldButton = createTag('button', {
@@ -85,33 +95,30 @@ export default async function init(el) {
 
   let mobileButton = null;
 
+  // Function to handle mobile button visibility for sticky variant
+  function handleMobileButton(e, stickyContainer) {
+    if (e.matches) {
+      stickyContainer.appendChild(mobileButton);
+      if (inputField.parentNode === stickyContainer) {
+        stickyContainer.removeChild(inputField);
+      }
+    } else {
+      if (mobileButton.parentNode === stickyContainer) {
+        stickyContainer.removeChild(mobileButton);
+      }
+      stickyContainer.appendChild(inputField);
+    }
+  }
+
   // For sticky variant, create sticky container instead of regular block
   if (isSticky) {
     const stickyContainer = createTag('div', { class: 'yukon-chat-sticky' });
-    
-    // Create mobile button for sticky variant
-    mobileButton = createTag('button', { 
+    mobileButton = createTag('button', {
       class: 'yc-mobile-button',
       'aria-label': 'Open chat',
     }, aiChatIconString);
-    
-    function handleMobileButton(e) {
-      if (e.matches) {
-        stickyContainer.appendChild(mobileButton);
-        if (inputField.parentNode === stickyContainer) {
-          stickyContainer.removeChild(inputField);
-        }
-      } else {
-        if (mobileButton.parentNode === stickyContainer) {
-          stickyContainer.removeChild(mobileButton);
-        }
-        stickyContainer.appendChild(inputField);
-      }
-    }
-    
-    handleMobileButton(mobileView);
-    mobileView.addEventListener('change', handleMobileButton);
-    
+    handleMobileButton(mobileView, stickyContainer);
+    mobileView.addEventListener('change', (e) => handleMobileButton(e, stickyContainer));
     el.replaceWith(stickyContainer);
   } else {
     chatBlock.appendChild(chatBlockHeader);
@@ -408,7 +415,7 @@ export default async function init(el) {
     const fragment = new DocumentFragment();
     // Modal header
     const modalHeader = createTag('div', { class: 'yc-modal-header' });
-    const headerTitle = createTag('h1', { class: 'yc-modal-title' }, 'Ask');
+    const headerTitle = createTag('h1', { class: 'yc-modal-title' }, placeholders.modalTitle);
     modalHeader.appendChild(headerTitle);
     // Chat dialog body
     const dialogBody = createTag('div', { class: 'yukon-chat-dialog-body' });
@@ -420,7 +427,7 @@ export default async function init(el) {
       const privacyNoticeMessage = createTag('div', { class: 'chat-message privacy-notice-message' });
       const privacyNoticeContent = createTag('div', { class: 'message-content privacy-notice-content' });
       const privacyNoticeTitle = createTag('div', { class: 'privacy-notice-title' });
-      const privacyNoticeText = createTag('div', { class: 'privacy-notice-text' }, 'Welcome! Thank you for trying out this initial release. The experience is still evolving and will continue to improve over time.');
+      const privacyNoticeText = createTag('div', { class: 'privacy-notice-text' }, placeholders.modalPrivacyNotice);
       privacyNoticeContent.appendChild(privacyNoticeTitle);
       privacyNoticeContent.appendChild(privacyNoticeText);
       privacyNoticeMessage.appendChild(privacyNoticeContent);
@@ -437,13 +444,13 @@ export default async function init(el) {
     }
     // Modal input wrapper
     modalInputWrapper = createTag('div', { class: 'modal-input-wrapper' });
-  chatInterface.appendChild(chatHistory);
+    chatInterface.appendChild(chatHistory);
     if (scrollToBottomBtn) {
       chatInterface.appendChild(scrollToBottomBtn);
     }
-  chatInterface.appendChild(modalInputWrapper);
-  bodyContainer.appendChild(chatInterface);
-  dialogBody.appendChild(bodyContainer);
+    chatInterface.appendChild(modalInputWrapper);
+    bodyContainer.appendChild(chatInterface);
+    dialogBody.appendChild(bodyContainer);
     fragment.appendChild(modalHeader);
     fragment.appendChild(dialogBody);
     return fragment;
@@ -455,20 +462,19 @@ export default async function init(el) {
       const container = sharedInputField;
       const label = container.querySelector('.yc-input-field-label');
       if (!label || !label.parentNode) {
-        const tempContainer = createInputField(textArea, inputFieldButton, true);        
+        const tempContainer = createInputField(textArea, inputFieldButton, true);
         while (tempContainer.firstChild) {
           container.appendChild(tempContainer.firstChild);
         }
       }
     }
-    
     // Check if modal already exists in DOM
     if (modalInstance && document.body.contains(modalInstance)) {
       if (modalInputWrapper && !modalInputWrapper.contains(sharedInputField)) {
-    modalInputWrapper.appendChild(sharedInputField);
+        modalInputWrapper.appendChild(sharedInputField);
       }
       setTimeout(() => {
-    textArea.focus();
+        textArea.focus();
       }, 100);
       return modalInstance;
     }
@@ -484,8 +490,7 @@ export default async function init(el) {
           // eslint-disable-next-line no-promise-executor-return
           await new Promise((resolve) => setTimeout(resolve, 500));
         }
-        
-        isModalOpen = false;        
+        isModalOpen = false;
         // Abort any ongoing request
         if (currentAbortController) {
           currentAbortController.abort();
