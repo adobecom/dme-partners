@@ -246,8 +246,9 @@ export default async function init(el) {
     if (!chatHistory) return;
     const question = textArea.value.trim();
     if (!question) return;
-
+    const textareaWrapper = sharedInputField.querySelector('.yc-textarea-grow-wrap');
     textArea.value = '';
+    updateReplicatedValue(textareaWrapper, textArea);
     updateButtonState();
     textArea.setAttribute('disabled', '');
     // Create new abort controller for this request
@@ -269,15 +270,12 @@ export default async function init(el) {
       }
     }
     try {
-      const tags = [
-        { key: level, value: level },
-        { key: region, value: region },
-      ];
+      const tags = [level, region].filter((tag) => tag && tag !== '').join(',');
 
       const origin = aemPublish;
       const url = new URL(`${origin}/services/gravity/yukonAIAssistant`);
       url.searchParams.append('question', encodeURIComponent(question));
-      url.searchParams.append('tags', JSON.stringify(tags));
+      url.searchParams.append('tags', tags);
       url.searchParams.append('requestId', requestId);
       url.searchParams.append('yukonProfile', 'dmeChat');
 
