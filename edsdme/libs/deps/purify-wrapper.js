@@ -1,2 +1,4 @@
-import '../deps/purify.min.js';
+import './purify.min.js';
+
+/* global DOMPurify */
 export default DOMPurify;

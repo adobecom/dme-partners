@@ -7,9 +7,7 @@ import fs from 'fs';
 const PERSONALIZATION_HIDE_CLASS = 'personalization-hide';
 jest.mock('./../../edsdme/libs/deps/purify-wrapper.js', () => ({
   __esModule: true,
-  default: {
-    sanitize: jest.fn(v => v),
-  }
+  default: { sanitize: jest.fn((v) => v) },
 }));
 function importModules() {
   // eslint-disable-next-line global-require
