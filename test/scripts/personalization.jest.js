@@ -47,7 +47,7 @@ describe('Test personalization.js', () => {
       const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const placeholderElementAfter = document.querySelector('#welcome-firstname');
-      expect(placeholderElementAfter.textContent.includes(cookieObject.CPP.firstName)).toBe(true);
+      expect(placeholderElementAfter.textContent.includes(partnerInfo.firstName)).toBe(true);
       expect(placeholderElementAfter.querySelector('a')).toBeTruthy();
       expect(placeholderElementAfter.textContent.includes(partnerInfo.firstName)).toBe(true);
     });
