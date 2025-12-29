@@ -5,6 +5,7 @@ import { getConfig, replaceText } from '../blocks/utils/utils.js';
 const miloLibs = getLibs();
 const config = getConfig();
 const { html, repeat, LitElement, until } = await import(`${miloLibs}/deps/lit-all.min.js`);
+const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
 
 class SearchCard extends LitElement {
   static properties = {
@@ -71,10 +72,10 @@ class SearchCard extends LitElement {
           </div>
           <div class="card-icons">
             <sp-theme theme="spectrum" color="light" scale="medium">
-              <sp-action-button @click=${(e) => { e.stopPropagation(); if (e.isTrusted) { e.preventDefault(); } }} ?disabled=${this.isDownloadDisabled(this.data.contentArea?.type)} href="${this.data.contentArea?.url}" download="${this.data.contentArea?.title}" aria-label="${this.localizedText['{{download}}']}"><sp-icon-download /></sp-action-button>
+              <sp-action-button daa-ll="Download | ${processTrackingLabels(this.data.contentArea?.title !== 'card-metadata' ? this.data.contentArea?.title : '', getConfig(), 30)}" @click=${(e) => { e.stopPropagation(); if (e.isTrusted) { e.preventDefault(); } }} ?disabled=${this.isDownloadDisabled(this.data.contentArea?.type)} href="${this.data.contentArea?.url}" download="${this.data.contentArea?.title}" aria-label="${this.localizedText['{{download}}']}"><sp-icon-download /></sp-action-button>
               ${this.isPreviewEnabled(this.data.contentArea?.type)
                 ? html`
-                  <sp-action-button @click=${(e) => { e.stopPropagation(); if (e.isTrusted) { e.preventDefault(); } }} href="${this.data.contentArea?.url}"
+                  <sp-action-button daa-ll="Preview | ${processTrackingLabels(this.data.contentArea?.title !== 'card-metadata' ? this.data.contentArea?.title : '', getConfig(), 30)}" @click=${(e) => { e.stopPropagation(); if (e.isTrusted) { e.preventDefault(); } }} href="${this.data.contentArea?.url}"
                                     target="_blank" aria-label="${this.localizedText['{{open-in}}']}">
                     <sp-icon-open-in/>
                   </sp-action-button>`
