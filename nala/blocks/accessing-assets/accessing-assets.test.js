@@ -55,7 +55,7 @@ test.describe('Validate popups', () => {
 
     const promise = new Promise((resolve) => {
       page.on('response', (response) => {
-        if (response.url().includes(`${data.assetURL}`) && response.status() === data.httpStatusCode) {
+        if (response.url().includes(`${data.expectedToSeeInURL}`) && response.status() === data.httpStatusCode) {
           resolve(true);
         }
       });
@@ -130,6 +130,7 @@ test.describe('Validate popups', () => {
           .toContain(`${data.expectedToSeeInURL}`);
         const accessingAssetPageNewTab = new AccessingAssetPage(newTab);
         await expect(accessingAssetPageNewTab.notFound404).toBeVisible();
+        await newTab.close();
       });
 
       const promise = new Promise((resolve) => {
@@ -156,7 +157,7 @@ test.describe('Validate popups', () => {
     const { data } = features[8];
     const promise = new Promise((resolve) => {
       page.on('response', (response) => {
-        if (response.url().includes(`${data.assetURL}`) && response.status() === data.httpStatusCode) {
+        if (response.url().includes(`${data.expectedToSeeInURL}`) && response.status() === data.httpStatusCode) {
           resolve(true);
         }
       });

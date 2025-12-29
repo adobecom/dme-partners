@@ -58,6 +58,7 @@ export const prodHosts = [
 ];
 export const previewHosts = ['partnerspreview.adobe.com', 'stage--dme-partners--adobecom.aem.live'];
 
+export const aemPublish = 'https://partners.stage.adobe.com';
 /*
  * ------------------------------------------------------------
  * Edit above at your own risk.
@@ -125,32 +126,36 @@ export function deleteCookieValue(key) {
   document.cookie = `${key}=; Path=/; Max-Age=0;`;
 }
 
-export function getPartnerDataCookieValue(programType, key) {
+export function getPartnerCookieObject(programType) {
+  const partnerDataCookie = getCookieValue('partner_data');
+  const partnerInfoCookie = getCookieValue('partner_info');
+
+  const partnerDataObj = partnerDataCookie ? JSON.parse(decodeURIComponent(partnerDataCookie)) : {};
+  const partnerInfoObj = partnerInfoCookie ? JSON.parse(decodeURIComponent(partnerInfoCookie)) : {};
+
+  const portalData = {
+    ...(partnerDataObj?.[programType.toUpperCase()] ?? {}),
+    ...partnerInfoObj,
+  };
+  return portalData;
+}
+
+export function getPartnerCookieValue(programType, key) {
   try {
-    const partnerDataCookie = getCookieValue('partner_data');
-    if (!partnerDataCookie) return '';
-    const partnerDataObj = JSON.parse(decodeURIComponent(partnerDataCookie.toLowerCase()));
-    const portalData = partnerDataObj?.[programType];
-    // eslint-disable-next-line consistent-return
-    return portalData?.[key] || '';
+    const portalData = getPartnerCookieObject(programType);
+    const lowercasedPortalData = JSON.parse(
+      JSON.stringify(portalData).toLowerCase(),
+    );
+    return lowercasedPortalData?.[key] || '';
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Error parsing partner data object:', error);
     // eslint-disable-next-line consistent-return
     return '';
   }
 }
 
-export function getPartnerDataCookieObject(programType) {
-  const partnerDataCookie = getCookieValue('partner_data');
-  if (!partnerDataCookie) return {};
-  const partnerDataObj = JSON.parse(decodeURIComponent(partnerDataCookie));
-  const portalData = partnerDataObj?.[programType.toUpperCase()] ?? {};
-  return portalData;
-}
-
 export function isMember() {
-  const { status } = getPartnerDataCookieObject(getCurrentProgramType());
+  const { status } = getPartnerCookieObject(getCurrentProgramType());
   return status === 'MEMBER';
 }
 
@@ -167,7 +172,7 @@ export function isReseller(level) {
 }
 
 export function hasSalesCenterAccess() {
-  const { salesCenterAccess } = getPartnerDataCookieObject(getCurrentProgramType());
+  const { salesCenterAccess } = getPartnerCookieObject(getCurrentProgramType());
   return !!salesCenterAccess;
 }
 
@@ -198,13 +203,13 @@ export function redirectLoggedinPartner() {
 export function isRenew() {
   const programType = getCurrentProgramType();
 
-  const primaryContact = getPartnerDataCookieValue(programType, 'primarycontact');
+  const primaryContact = getPartnerCookieValue(programType, 'primarycontact');
   if (!primaryContact) return;
 
-  const partnerLevel = getPartnerDataCookieValue(programType, 'level');
+  const partnerLevel = getPartnerCookieValue(programType, 'level');
   if (partnerLevel !== 'gold' && partnerLevel !== 'registered' && partnerLevel !== 'certified') return;
 
-  const accountExpiration = getPartnerDataCookieValue(programType, 'accountanniversary');
+  const accountExpiration = getPartnerCookieValue(programType, 'accountanniversary');
   if (!accountExpiration) return;
 
   const expirationDate = new Date(accountExpiration);
@@ -344,7 +349,7 @@ function preloadLit(miloLibs) {
 }
 
 function getPartnerLevelParams(portal) {
-  const partnerLevel = getPartnerDataCookieValue(portal, 'level');
+  const partnerLevel = getPartnerCookieValue(portal, 'level');
   const partnerTagBase = `"caas:adobe-partners/${portal}/partner-level/`;
   return partnerLevel ? `(${partnerTagBase}${partnerLevel}"+OR+${partnerTagBase}public")` : `(${partnerTagBase}public")`;
 }
@@ -502,4 +507,33 @@ export function enableGeoPopup() {
     return 'on';
   }
   return 'off';
+}
+
+export async function setFeedback(getConfig) {
+  const feedback = getMetadataContent('feedback');
+  if (!feedback || feedback === 'false') return;
+  const config = getConfig();
+
+  const { prefix } = config.locale;
+  const fragmentPath = `${prefix}/edsdme/partners-shared/fragments/feedback`;
+  const url = new URL(fragmentPath, window.location.origin);
+
+  try {
+    const response = await fetch(`${url}.plain.html`);
+    if (!response.ok) throw new Error(`Response was not ok ${response.statusText}`);
+
+    const data = await response.text();
+    const parser = new DOMParser();
+    const page = parser.parseFromString(data, 'text/html');
+    const main = document.querySelector('main');
+    const block = page.querySelector('.feedback');
+    const div = document.createElement('div');
+    div.appendChild(block);
+    if (main) main.insertBefore(div, main.firstChild);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching plain html of feedback fragment:', error);
+    // eslint-disable-next-line consistent-return
+    return null;
+  }
 }

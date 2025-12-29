@@ -4,6 +4,7 @@ import './SinglePartnerCard.js';
 
 const miloLibs = getLibs();
 const { html, LitElement, css, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
+const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
 
 export default class PartnerCards extends LitElement {
   static styles = [
@@ -303,7 +304,7 @@ export default class PartnerCards extends LitElement {
       return html`${repeat(
         this.paginatedCards,
         (card) => card.id,
-        (card) => html`<single-partner-card class="card-wrapper" .data=${card} .ietf=${this.blockData.ietf}></single-partner-card>`,
+        (card, index) => html`<single-partner-card  class="card-wrapper" daa-lh="Card ${index + 1} | ${processTrackingLabels(card.contentArea?.title)}"  .data=${card} .ietf=${this.blockData.ietf}></single-partner-card>`,
       )}`;
     }
 
@@ -826,7 +827,10 @@ export default class PartnerCards extends LitElement {
     return html`
       ${this.fetchedData
         ? html`
-          <div class="partner-cards">
+          <div
+            class="partner-cards"
+            daa-lh="Card Collection | Filters: ${processTrackingLabels(Object.keys(this.selectedFilters).length > 0 ? Object.values(this.selectedFilters).flat().map((item) => item.value).join(', ') : 'No Filters')} | Search Query: ${processTrackingLabels(this.searchTerm.trim() ? this.searchTerm : 'None')}"
+          >
             <div class="partner-cards-sidebar-wrapper">
               <div class="partner-cards-sidebar">
                 <sp-theme class="search-wrapper" theme="spectrum" color="light" scale="medium">

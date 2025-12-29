@@ -50,7 +50,7 @@ export default {
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
-        partnerLevel: 'spp-platinum:',
+        partnerLevel: 'dxp-platinum:',
         expectedRedirectedURL: 'https://partners.stage.adobe.com/channelpartners/error/contact-not-found',
         expectedPublicPageURL: 'https://partners.stage.adobe.com/channelpartners/',
         logoutButtonText: 'Sign Out',
@@ -64,7 +64,7 @@ export default {
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
-        partnerLevel: 'spp-platinum:',
+        partnerLevel: 'dxp-platinum:',
         expectedRedirectedURL: 'https://partners.stage.adobe.com/channelpartners/error/contact-not-found',
         expectedPublicPageURL: 'https://partners.stage.adobe.com/channelpartners/',
         logoutButtonText: 'Sign Out',

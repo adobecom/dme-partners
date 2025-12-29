@@ -11,6 +11,7 @@ import {
   PARTNER_LOGIN_QUERY,
   prodHosts,
   previewHosts,
+  setFeedback,
 } from './utils.js';
 import { rewriteLinks } from './rewriteLinks.js';
 import { sidekickListener } from '../blocks/utils/utils.js';
@@ -108,6 +109,7 @@ function setUpPage() {
   const { loadArea, setConfig, getConfig } = await import(`${miloLibs}/utils/utils.js`);
 
   setConfig({ ...CONFIG, miloLibs });
+  await setFeedback(getConfig);
   await getRenewBanner(getConfig);
   await loadArea();
   applyPagePersonalization();

@@ -126,6 +126,7 @@ test.describe('Smoke Tests', () => {
     });
 
     await test.step('Find a row in assets list and click on download', async () => {
+      await smokeTest.assetTabs.click();
       await smokeTest.searchPageDownloadButton();
     });
   });

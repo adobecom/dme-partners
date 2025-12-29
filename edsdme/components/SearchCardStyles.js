@@ -54,6 +54,7 @@ const searchCardStyles = css`
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    overflow-wrap: anywhere;
   }
   
   .card-header .card-icons {
@@ -109,6 +110,7 @@ const searchCardStyles = css`
     font-size: 14px;
     color: #505050;
     margin: 0 0 6px;
+    white-space: pre-line;
   }
   
   .card-text .card-tags-wrapper {

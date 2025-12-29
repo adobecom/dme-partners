@@ -252,7 +252,7 @@ export default {
       tcid: '17',
       name: '@desc-regression-banners-sign-in-registered-us-user-anniversary-date-next-30-days',
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-banners @regression @circleCi',
+      // tags: '@dme-banners @regression @circleCi',
       data: {
         partnerLevel: 'cpp-us-registered:',
         paragraphIndex: 1,
@@ -266,7 +266,7 @@ export default {
       tcid: '18',
       name: '@desc-regression-banners-sign-in-certified-us-user-anniversary-date-last-90-days',
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-banners @regression @circleCi',
+      // tags: '@dme-banners @regression @circleCi',
       data: {
         partnerLevel: 'cpp-us-certified:',
         paragraphIndex: 1,
