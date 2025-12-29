@@ -5,7 +5,10 @@ import path from 'path';
 import fs from 'fs';
 
 const PERSONALIZATION_HIDE_CLASS = 'personalization-hide';
-
+jest.mock('./../../edsdme/libs/deps/purify-wrapper.js', () => ({
+  __esModule: true,
+  default: { sanitize: jest.fn((v) => v) },
+}));
 function importModules() {
   // eslint-disable-next-line global-require
   const { applyPagePersonalization, applyGnavPersonalization } = require('../../edsdme/scripts/personalization.js');
@@ -42,6 +45,8 @@ describe('Test personalization.js', () => {
       const { applyPagePersonalization } = importModules();
       applyPagePersonalization();
       const placeholderElementAfter = document.querySelector('#welcome-firstname');
+      expect(placeholderElementAfter.textContent.includes(partnerInfo.firstName)).toBe(true);
+      expect(placeholderElementAfter.querySelector('a')).toBeTruthy();
       expect(placeholderElementAfter.textContent.includes(partnerInfo.firstName)).toBe(true);
     });
   });
