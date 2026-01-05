@@ -214,8 +214,7 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
   try {
     const tags = [level, region].filter((tag) => tag && tag !== '').join(',');
 
-    // const origin = aemPublish;
-    const origin = 'http://localhost:7502';
+    const origin = aemPublish;
     const url = new URL(`${origin}/services/gravity/yukonAIAssistant`);
     url.searchParams.append('question', encodeURIComponent(question));
     url.searchParams.append('tags', tags);
