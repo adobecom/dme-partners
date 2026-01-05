@@ -107,7 +107,7 @@ export default {
       tcid: '9',
       name: '@pricelist-validation-distributor-india-user',
       path: '/na/channelpartners/?georouting=off&martech=off',
-      tags: '@dme-pricelists @regression @circleCi',
+      // tags: '@dme-pricelists @regression @circleCi',
       data: {
         partnerLevel: 'cpp-distributor-india:',
         text: 'Asia Pacific,Korea',

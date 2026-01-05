@@ -2,10 +2,11 @@ import { getLibs } from '../../scripts/utils.js';
 import { horizontalPartnerCardStyles } from '../../components/PartnerCardsStyles.js';
 import PartnerCards from '../../components/PartnerCards.js';
 import { filterRestrictedCardsByCurrentSite, filterExpiredAnnouncements } from '../announcements/AnnouncementsCards.js';
-import { transformCardUrl } from '../utils/utils.js';
+import { getConfig, transformCardUrl } from '../utils/utils.js';
 
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
+const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
 
 export default class AnnouncementsPreview extends PartnerCards {
   static styles = [
@@ -55,7 +56,7 @@ export default class AnnouncementsPreview extends PartnerCards {
   getViewAllButton() {
     if (this.blockData.link && this.blockData.buttonText) {
       return html`
-            <div class="${this.blockData.buttonSize}">
+            <div class="${this.blockData.buttonSize}" daa-ll="${this.blockData.buttonText}">
               <a class="con-button blue" href="${this.blockData.link}">${this.blockData.buttonText}</a>
             </div>
         `;
@@ -68,13 +69,13 @@ export default class AnnouncementsPreview extends PartnerCards {
       return html`${repeat(
         this.cards,
         (card) => card.id,
-        (card) => {
+        (card, index) => {
           const imageUrl = card.styles?.backgroundImage
             ? `${new URL(card.styles.backgroundImage).pathname}?width=240&format=webp&optimize=small`
             : '';
 
           return html`
-            <a class="link-wrapper" href="${transformCardUrl(card.contentArea.url)}" target="_blank">
+            <a class="link-wrapper" href="${transformCardUrl(card.contentArea.url)}" target="_blank" daa-ll="Announcement Preview Horizontal Card ${index + 1} | ${processTrackingLabels(card.contentArea.title, getConfig(), 30)}">
               <div class="horizontal-partner-card">
                 <div class="card-image">
                   <picture>
