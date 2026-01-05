@@ -1,5 +1,5 @@
 import { getCurrentProgramType, getPartnerDataCookieObject, partnerIsSignedIn, aemPublish, getLibs } from '../../scripts/utils.js';
-import { parseMarkdown, extractAuthoredPlaceholders } from './utils.js';
+import { parseMarkdown, extractAuthoredConfigs } from './utils.js';
 
 const miloLibs = getLibs();
 const { getModal } = await import(`${miloLibs}/blocks/modal/modal.js`);
@@ -14,7 +14,7 @@ let stickyViewportHandler = null;
 let isModalOpen = false;
 let currentAbortController = null; // Store abort controller for ongoing requests
 const requestId = crypto.randomUUID(); // TODO check if it should be inside init
-const placeholders = {};
+const configs = {};
 
 const createInputField = (textareaEl, buttonEl, isSticky, forModal = false) => {
   const container = createTag('div', { class: 'yc-input-field-container' });
@@ -30,7 +30,7 @@ const createInputField = (textareaEl, buttonEl, isSticky, forModal = false) => {
     id: 'yc-label-tooltip',
     class: 'yc-label-tooltip',
     role: 'tooltip',
-  }, placeholders.chatTooltip);
+  }, configs.chatTooltip);
 
   const textareaWrap = createTag('div', { class: 'yc-textarea-grow-wrap' });
   textareaWrap.appendChild(textareaEl);
@@ -219,7 +219,7 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
     url.searchParams.append('question', encodeURIComponent(question));
     url.searchParams.append('tags', tags);
     url.searchParams.append('requestId', requestId);
-    url.searchParams.append('yukonProfile', 'dmeChat');
+    url.searchParams.append('yukonProfile', configs.yukonProfile);
 
     const resp = await fetch(url, {
       method: 'GET',
@@ -295,7 +295,8 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
                 chatHistory.appendChild(chatMessage);
                 messageAdded = true;
               }
-              messageText.innerHTML = parseMarkdown(accumulatedMarkdown);
+              // eslint-disable-next-line no-await-in-loop
+              messageText.innerHTML = await parseMarkdown(accumulatedMarkdown);
             }
             if (source && Object.keys(source).length > 0) {
               if (!sourcesProcessed) {
@@ -352,16 +353,16 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
 
 export default async function init(el) {
   const isSticky = el.classList.contains('sticky');
-  extractAuthoredPlaceholders(placeholders, el.children);
+  extractAuthoredConfigs(configs, el.children);
   const chatBlock = createTag('div', { class: 'yukon-chat-block' });
-  const chatBlockHeader = createTag('div', { class: 'yc-block-header' }, placeholders?.blockHeader);
+  const chatBlockHeader = createTag('div', { class: 'yc-block-header' }, configs?.blockHeader);
   const pillContainer = createTag('div', { class: 'yukon-chat-pill' });
   const inputField = createTag('section', { class: 'yc-input-field' });
 
   const textArea = createTag('textarea', {
     id: 'yc-input-field',
     rows: 1,
-    placeholder: placeholders.inputPlaceholder,
+    placeholder: configs.inputPlaceholder,
   });
 
   const inputFieldButton = createTag('button', {
@@ -405,7 +406,7 @@ export default async function init(el) {
     const fragment = new DocumentFragment();
     // Modal header
     const modalHeader = createTag('div', { class: 'yc-modal-header' });
-    const headerTitle = createTag('h1', { class: 'yc-modal-title' }, placeholders.modalTitle);
+    const headerTitle = createTag('h1', { class: 'yc-modal-title' }, configs.modalTitle);
     modalHeader.appendChild(headerTitle);
     // Chat dialog body
     const dialogBody = createTag('div', { class: 'yukon-chat-dialog-body' });
@@ -417,7 +418,7 @@ export default async function init(el) {
       const privacyNoticeMessage = createTag('div', { class: 'chat-message privacy-notice-message' });
       const privacyNoticeContent = createTag('div', { class: 'message-content privacy-notice-content' });
       const privacyNoticeTitle = createTag('div', { class: 'privacy-notice-title' });
-      const privacyNoticeText = createTag('div', { class: 'privacy-notice-text' }, placeholders.modalPrivacyNotice);
+      const privacyNoticeText = createTag('div', { class: 'privacy-notice-text' }, configs.modalPrivacyNotice);
       privacyNoticeContent.appendChild(privacyNoticeTitle);
       privacyNoticeContent.appendChild(privacyNoticeText);
       privacyNoticeMessage.appendChild(privacyNoticeContent);
