@@ -187,7 +187,6 @@ describe('Test personalization.js', () => {
         expect(companyPlaceholderUpdated.textContent).toEqual('Test Company');
         expect(levelPlaceholderUpdated.textContent).toEqual('Platinum');
         expect(levelPlaceholder.classList.contains('level-placeholder')).toBe(true);
-
       });
     });
     it('Show primary contact', () => {
