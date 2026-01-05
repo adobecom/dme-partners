@@ -13,7 +13,7 @@ const mobileView = window.matchMedia('(max-width: 767px)');
 let stickyViewportHandler = null;
 let isModalOpen = false;
 let currentAbortController = null; // Store abort controller for ongoing requests
-const requestId = crypto.randomUUID(); // TODO check if it should be inside init
+const requestId = crypto.randomUUID();
 const configs = {};
 
 const createInputField = (textareaEl, buttonEl, isSticky, forModal = false) => {
