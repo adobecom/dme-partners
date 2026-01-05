@@ -58,7 +58,6 @@ export const prodHosts = [
 ];
 export const previewHosts = ['partnerspreview.adobe.com', 'stage--dme-partners--adobecom.aem.live'];
 
-export const aemPublish = 'https://partners.stage.adobe.com';
 /*
  * ------------------------------------------------------------
  * Edit above at your own risk.
@@ -148,6 +147,7 @@ export function getPartnerCookieValue(programType, key) {
     );
     return lowercasedPortalData?.[key] || '';
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error parsing partner data object:', error);
     // eslint-disable-next-line consistent-return
     return '';
