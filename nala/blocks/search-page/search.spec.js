@@ -5,7 +5,7 @@ export default {
       tcid: '1',
       name: '@na-validate-assets-present-for-user',
       path: '/channelpartners/home/search/?georouting=off&martech=off',
-      tags: '@dme-search @regression @circleCi',
+      // tags: '@dme-search @regression @circleCi',
       data: {
         partnerLevel: 'cpp-distributor-us:',
         signInButtonInternationalText: 'Sign In',

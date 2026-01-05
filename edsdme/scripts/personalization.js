@@ -13,6 +13,7 @@ import {
   LEVEL_CONDITION,
 } from './personalizationConfig.js';
 import { COOKIE_OBJECT, PERSONALIZATION_HIDE } from './personalizationUtils.js';
+import DOMPurify from '../libs/deps/purify-wrapper.js';
 
 function personalizePlaceholders(placeholders, context = document) {
   Object.entries(placeholders).forEach(([key, value]) => {
@@ -22,7 +23,7 @@ function personalizePlaceholders(placeholders, context = document) {
         el.remove();
         return;
       }
-      el.textContent = el.textContent.replace(`$${key}`, placeholderValue);
+      el.innerHTML = DOMPurify.sanitize(el.innerHTML.replace(`$${key}`, placeholderValue));
       el.classList.add(`${key.toLowerCase()}-placeholder`);
     });
   });

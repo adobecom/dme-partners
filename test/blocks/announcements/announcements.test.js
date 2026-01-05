@@ -79,4 +79,54 @@ describe('announcements block', () => {
     const firstFilter = sidebarFiltersWrapper.querySelector('.filter');
     expect(firstFilter).to.exist;
   });
+
+  it('should contain announcements cards analytics attributes', async () => {
+    const block = document.querySelector('.announcements');
+    expect(block).to.exist;
+
+    const component = await init(block);
+    await component.updateComplete;
+    expect(component).to.exist;
+
+    const partnerNewsWrapper = document.querySelector('.announcements-wrapper');
+    expect(partnerNewsWrapper.shadowRoot).to.exist;
+
+    expect(partnerNewsWrapper.getAttribute('daa-lh')).to.equal('Partner Announcements Cards');
+
+    const partnerCards = partnerNewsWrapper.shadowRoot.querySelector('.partner-cards');
+    expect(partnerCards.getAttribute('daa-lh')).to.equal('Card Collection | Filters: No Filters | Search Query: None');
+
+    const firstCard = partnerCards.querySelector('.card-wrapper');
+    expect(firstCard.getAttribute('daa-lh')).to.equal(`Card 1 | ${cards[0].contentArea.title.trim()}`);
+
+    const singlePartnerCardBtn = firstCard.shadowRoot.querySelector('.card-btn');
+    expect(singlePartnerCardBtn.getAttribute('daa-ll')).to.equal(singlePartnerCardBtn.textContent);
+  });
+
+  it('should contain announcements cards analytics attributes with filtering and search', async () => {
+    const block = document.querySelector('.announcements');
+    expect(block).to.exist;
+    PartnerCards.prototype.firstUpdated.restore();
+
+    sinon.stub(PartnerCards.prototype, 'firstUpdated').callsFake(async function () {
+      this.allCards = cards;
+      this.cards = cards;
+      this.paginatedCards = this.cards.slice(0, 1);
+      this.hasResponseData = true;
+      this.fetchedData = true;
+      this.searchTerm = 'Adobe';
+      this.selectedFilters = { 'content-type': { checked: true, hash: '37mr/hvv', key: 'event-session', parentKey: 'content-type', value: 'Event Session' } };
+    });
+
+    const component = await init(block);
+    await component.updateComplete;
+    expect(component).to.exist;
+
+    const partnerNewsWrapper = document.querySelector('.announcements-wrapper');
+    expect(partnerNewsWrapper.shadowRoot).to.exist;
+
+    const partnerCards = partnerNewsWrapper.shadowRoot.querySelector('.partner-cards');
+    expect(partnerCards).to.exist;
+    expect(partnerCards.getAttribute('daa-lh')).to.equal('Card Collection | Filters: Event Session | Search Query: Adobe');
+  });
 });
