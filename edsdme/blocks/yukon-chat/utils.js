@@ -209,3 +209,16 @@ export function parseMarkdown(markdown) {
 
   return processedLines.join('');
 }
+
+export function extractAuthoredPlaceholders(placeholders, elementChildren) {
+  const rows = Array.from(elementChildren);
+  rows.forEach((row) => {
+    const divs = row.querySelectorAll('div');
+    if (divs.length < 2) return;
+
+    const key = divs[0].textContent.trim().replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+    const value = divs[1].textContent.trim();
+
+    placeholders[key] = value;
+  });
+}
