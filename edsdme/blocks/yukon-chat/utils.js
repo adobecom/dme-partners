@@ -1,9 +1,9 @@
+import MarkdownIt from '../../libs/deps/markdown-it-wrapper.js';
+
 let md = null;
 async function initMarkdownIt() {
   if (!md) {
-    // eslint-disable-next-line import/no-unresolved
-    const markdownIt = await import('https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/+esm');
-    md = markdownIt.default({
+    md = new MarkdownIt({
       html: false,
       breaks: true,
       linkify: true,
