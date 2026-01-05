@@ -11,7 +11,7 @@ import { PARTNER_LEVEL } from '../blocks/utils/dmeConstants.js';
 export const PERSONALIZATION_PLACEHOLDERS = {
   firstName: '//*[text()[contains(., "$firstName")]]',
   company: '//*[text()[contains(., "$company")]]',
-  level:'//*[text()[contains(., "$level")]]',
+  level: '//*[text()[contains(., "$level")]]',
 };
 
 export const LEVEL_CONDITION = 'partner-level';
