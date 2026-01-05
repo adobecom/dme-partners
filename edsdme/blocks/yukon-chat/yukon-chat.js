@@ -1,4 +1,4 @@
-import { getCurrentProgramType, getPartnerDataCookieObject, partnerIsSignedIn, aemPublish, getLibs } from '../../scripts/utils.js';
+import { getCurrentProgramType, getPartnerCookieObject, partnerIsSignedIn, aemPublish, getLibs } from '../../scripts/utils.js';
 import { parseMarkdown, extractAuthoredConfigs } from './utils.js';
 
 const miloLibs = getLibs();
@@ -203,7 +203,7 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
   // TODO: the partner data must be sent to the servlet and parsed there
   if (partnerIsSignedIn()) {
     try {
-      const profileData = getPartnerDataCookieObject(getCurrentProgramType());
+      const profileData = getPartnerCookieObject(getCurrentProgramType());
       level = profileData.level.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '');
       region = profileData.permissionRegion.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '');
     } catch (error) {
