@@ -48,6 +48,7 @@ describe('Test personalization.js', () => {
       expect(placeholderElementAfter.textContent.includes(partnerInfo.firstName)).toBe(true);
       expect(placeholderElementAfter.querySelector('a')).toBeTruthy();
       expect(placeholderElementAfter.textContent.includes(partnerInfo.firstName)).toBe(true);
+      expect(placeholderElementAfter.classList.contains('firstname-placeholder')).toBe(false);
     });
   });
   it('Remove placeholder if user is not a member', () => {
@@ -185,6 +186,8 @@ describe('Test personalization.js', () => {
         const levelPlaceholderUpdated = personalizedGnav.querySelector('#test-level-placeholder');
         expect(companyPlaceholderUpdated.textContent).toEqual('Test Company');
         expect(levelPlaceholderUpdated.textContent).toEqual('Platinum');
+        expect(levelPlaceholder.classList.contains('level-placeholder')).toBe(true);
+
       });
     });
     it('Show primary contact', () => {
