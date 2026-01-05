@@ -149,6 +149,7 @@ export function getPartnerCookieValue(programType, key) {
     );
     return lowercasedPortalData?.[key] || '';
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error parsing partner data object:', error);
     // eslint-disable-next-line consistent-return
     return '';
