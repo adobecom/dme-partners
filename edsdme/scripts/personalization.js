@@ -14,7 +14,15 @@ import {
 } from './personalizationConfig.js';
 import { COOKIE_OBJECT, PERSONALIZATION_HIDE } from './personalizationUtils.js';
 
-function personalizePlaceholders(placeholders, context = document) {
+function replaceDirectText(node, search, replace) {
+  node.childNodes.forEach((child) => {
+    if (child.nodeType === Node.TEXT_NODE) {
+      child.nodeValue = child.nodeValue.replaceAll(search, replace);
+    }
+  });
+}
+
+function personalizePlaceholders(placeholders, context = document, addClass = false) {
   Object.entries(placeholders).forEach(([key, value]) => {
     const placeholderValue = COOKIE_OBJECT[key];
     getNodesByXPath(value, context).forEach((el) => {
@@ -22,8 +30,11 @@ function personalizePlaceholders(placeholders, context = document) {
         el.remove();
         return;
       }
-      el.textContent = el.textContent.replace(`$${key}`, placeholderValue);
-      el.classList.add(`${key.toLowerCase()}-placeholder`);
+      replaceDirectText(el, `$${key}`, placeholderValue);
+
+      if (addClass) {
+        el.classList.add(`${key.toLowerCase()}-placeholder`);
+      }
     });
   });
 }
@@ -153,7 +164,7 @@ export function personalizeMainNav(gnav) {
 
 function personalizeProfile(gnav) {
   const profile = gnav.querySelector('.profile');
-  personalizePlaceholders(PERSONALIZATION_PLACEHOLDERS, profile);
+  personalizePlaceholders(PERSONALIZATION_PLACEHOLDERS, profile, true);
   personalizeDropdownElements(profile);
   processRenew(profile);
 }

@@ -40,6 +40,7 @@ export default async function init(el) {
 
   const app = document.createElement('div');
   app.className = 'announcements-preview';
+  app.setAttribute('daa-lh', 'Announcements Preview Cards');
   app.classList.add('con-block');
   el.classList.forEach((elem) => {
     if (elem.includes('button')) {

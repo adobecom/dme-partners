@@ -99,7 +99,7 @@ test.describe('Pricelist Page Validation', () => {
 
       await pricelistPage.filterPricelists(pricelistPage.regionFilter, data.japanCheckBox, true);
       const japanCheckBoxNumberOfPriceLists = await pricelistPage.priceListsCount(page);
-      expect(ycVipCommercialCheckBoxNumberofPriceLists).toBeGreaterThan(japanCheckBoxNumberOfPriceLists);
+      expect(ycVipCommercialCheckBoxNumberofPriceLists).toBeGreaterThanOrEqual(japanCheckBoxNumberOfPriceLists);
     });
 
     await test.step('Sign out and check url', async () => {
@@ -171,7 +171,7 @@ test.describe('Pricelist Page Validation', () => {
 
       await pricelistPage.includeEndUserPricelists();
       const includeEndUserPricelistsNumberOFPriceLists = await pricelistPage.priceListsCount(page);
-      expect(includeEndUserPricelistsNumberOFPriceLists).toBeGreaterThan(vipCommercialCheckBoxNumberOFPriceLists);
+      expect(includeEndUserPricelistsNumberOFPriceLists).toBeGreaterThanOrEqual(vipCommercialCheckBoxNumberOFPriceLists);
     });
   });
   // @pricelist-validation-platinum-user

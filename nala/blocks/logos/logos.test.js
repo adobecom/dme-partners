@@ -52,7 +52,7 @@ test.describe('Validate logos page', () => {
       await logosPage.cardDescription.waitFor({ state: 'visible', timeout: 5000 });
       await logosPage.cardTagLogo.waitFor({ state: 'visible', timeout: 5000 });
       const downloadButton = await logosPage.downloadLogo.getAttribute('href');
-      await expect(downloadButton).toContain('download');
+      await expect(downloadButton).toContain(data.downloadButtonLink);
     });
   });
 });
