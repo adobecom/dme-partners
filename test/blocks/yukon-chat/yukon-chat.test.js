@@ -98,6 +98,89 @@ describe('yukon-chat block', () => {
     });
   });
 
+  describe('SVG loading', () => {
+    it('should handle successful SVG loading', async () => {
+      const mockSvgContent = '<svg><path d="M10 10"/></svg>';
+      
+      fetchStub.restore();
+      fetchStub = sinon.stub(window, 'fetch');
+      
+      fetchStub.callsFake(async (url) => {
+        if (typeof url === 'string' && url.includes('partners-shared/mnemonics/')) {
+          return {
+            ok: true,
+            status: 200,
+            text: async () => mockSvgContent,
+          };
+        }
+        return { ok: false, status: 404 };
+      });
+
+      document.body.innerHTML = '';
+      document.body.innerHTML = await readFile({ path: './mocks/body.html' });
+
+      const module = await import(`../../../edsdme/blocks/yukon-chat/yukon-chat.js?svg-success=${Date.now()}`);
+      const testInit = module.default;
+
+      const block = document.querySelector('.yukon-chat');
+      await testInit(block);
+
+      const chatBlock = document.querySelector('.yukon-chat-block');
+      expect(chatBlock).to.exist;
+      expect(chatBlock.innerHTML).to.include('svg');
+    });
+
+    it('should handle SVG loading failure when response is not ok', async () => {
+      const consoleErrorStub = sinon.stub(console, 'error');
+
+      fetchStub.restore();
+      fetchStub = sinon.stub(window, 'fetch');
+
+      fetchStub.callsFake(async (url) => {
+        if (typeof url === 'string' && url.includes('partners-shared/mnemonics/')) {
+          return {
+            ok: false,
+            status: 404,
+          };
+        }
+        return { ok: true, status: 200 };
+      });
+
+      document.body.innerHTML = '';
+      document.body.innerHTML = await readFile({ path: './mocks/body.html' });
+
+      await import(`../../../edsdme/blocks/yukon-chat/yukon-chat.js?svg-fail=${Date.now()}`);
+
+      expect(consoleErrorStub.calledWith('SVG does NOT exist:', 404)).to.be.true;
+      consoleErrorStub.restore();
+    });
+
+    it('should handle SVG loading fetch errors', async () => {
+      const consoleErrorStub = sinon.stub(console, 'error');
+
+      fetchStub.restore();
+      fetchStub = sinon.stub(window, 'fetch');
+
+      fetchStub.callsFake(async (url) => {
+        if (typeof url === 'string' && url.includes('partners-shared/mnemonics/')) {
+          throw new Error('Network error loading SVG');
+        }
+        return { ok: true, status: 200 };
+      });
+
+      document.body.innerHTML = '';
+      document.body.innerHTML = await readFile({ path: './mocks/body.html' });
+
+      await import(`../../../edsdme/blocks/yukon-chat/yukon-chat.js?svg-error=${Date.now()}`);
+
+      const errorCall = consoleErrorStub.getCalls().find(call => 
+        call.args[0] === 'Error fetching SVG:'
+      );
+      expect(errorCall).to.exist;
+      consoleErrorStub.restore();
+    });
+  });
+
   describe('Input field interactions', () => {
     it('should enable send button when text is entered', async () => {
       const block = document.querySelector('.yukon-chat');
@@ -287,6 +370,75 @@ describe('yukon-chat block', () => {
       const errorMessage = modal.querySelector('.error-message');
       expect(errorMessage).to.exist;
       expect(errorMessage.textContent).to.include('We’re having trouble processing your request right now. Please try again later');
+    });
+
+    it('should handle network errors (TypeError) and re-enable button', async () => {
+      const block = document.querySelector('.yukon-chat');
+      await init(block);
+
+      const textarea = document.querySelector('#yc-input-field');
+      const sendButton = document.querySelector('.yc-input-field-button');
+
+      fetchStub.callsFake(async (url) => {
+        const urlStr = typeof url === 'string' ? url : url.toString();
+        if (urlStr.includes('yukonAIAssistant')) {
+          throw new TypeError('Failed to fetch');
+        }
+        return { ok: true, status: 200 };
+      });
+
+      textarea.value = 'Test network error';
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      expect(sendButton.hasAttribute('disabled')).to.be.false;
+      sendButton.click();
+
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 50));
+
+      const modal = document.querySelector('#yukon-chat-modal');
+      expect(modal).to.exist;
+
+      const errorMessage = modal.querySelector('.error-message');
+      expect(errorMessage).to.exist;
+      expect(errorMessage.textContent).to.include('Network error. Please check your connection and try again.');
+
+      expect(sendButton.hasAttribute('disabled')).to.be.false;
+      expect(textarea.hasAttribute('disabled')).to.be.false;
+    });
+
+    it('should handle server errors and re-enable button', async () => {
+      const block = document.querySelector('.yukon-chat');
+      await init(block);
+
+      const textarea = document.querySelector('#yc-input-field');
+      const sendButton = document.querySelector('.yc-input-field-button');
+
+      fetchStub.callsFake(async (url) => {
+        const urlStr = typeof url === 'string' ? url : url.toString();
+        if (urlStr.includes('yukonAIAssistant')) {
+          throw new Error('Some server error');
+        }
+        return { ok: true, status: 200 };
+      });
+
+      textarea.value = 'Test general error';
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      expect(sendButton.hasAttribute('disabled')).to.be.false;
+
+      sendButton.click();
+
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 50));
+
+      const modal = document.querySelector('#yukon-chat-modal');
+      expect(modal).to.exist;
+
+      const errorMessage = modal.querySelector('.error-message');
+      expect(errorMessage).to.exist;
+      expect(errorMessage.textContent).to.include('We’re having trouble processing your request right now. Please try again later');
+
+      expect(sendButton.hasAttribute('disabled')).to.be.false;
+      expect(textarea.hasAttribute('disabled')).to.be.false;
     });
   });
 });
