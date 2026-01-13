@@ -101,10 +101,8 @@ describe('yukon-chat block', () => {
   describe('SVG loading', () => {
     it('should handle successful SVG loading', async () => {
       const mockSvgContent = '<svg><path d="M10 10"/></svg>';
-      
       fetchStub.restore();
       fetchStub = sinon.stub(window, 'fetch');
-      
       fetchStub.callsFake(async (url) => {
         if (typeof url === 'string' && url.includes('partners-shared/mnemonics/')) {
           return {
@@ -173,9 +171,7 @@ describe('yukon-chat block', () => {
 
       await import(`../../../edsdme/blocks/yukon-chat/yukon-chat.js?svg-error=${Date.now()}`);
 
-      const errorCall = consoleErrorStub.getCalls().find(call => 
-        call.args[0] === 'Error fetching SVG:'
-      );
+      const errorCall = consoleErrorStub.getCalls().find((call) => call.args[0] === 'Error fetching SVG:');
       expect(errorCall).to.exist;
       consoleErrorStub.restore();
     });
