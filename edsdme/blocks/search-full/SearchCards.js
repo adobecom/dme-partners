@@ -3,6 +3,7 @@ import PartnerCards from '../../components/PartnerCards.js';
 import { searchCardsStyles } from './SearchCardsStyles.js';
 import '../../components/SearchCard.js';
 import { generateRequestForSearchAPI } from '../utils/utils.js';
+import { debounce } from '../utils/action.js';
 
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
@@ -29,6 +30,12 @@ export default class Search extends PartnerCards {
     this.contentTypeCounter = { countAll: 0, countAssets: 0, countPages: 0 };
     this.typeaheadOptions = [];
     this.isTypeaheadOpen = false;
+    this.abortController = null;
+    this.suggestionAbortController = null;
+    // Create debounced version of updateTypeaheadDialog for search input
+    this.debouncedUpdateTypeahead = debounce(() => this.updateTypeaheadDialog(), 300);
+    // Wrap handleActions with debounce for API calls (override parent's synchronous version)
+    this.handleActions = debounce(() => this.handleActionsCore(), 250);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -52,7 +59,7 @@ export default class Search extends PartnerCards {
     return this.renderRoot.querySelector('.suggestion-dialog');
   }
 
-  async onSearchInput(event) {
+  onSearchInput(event) {
     this.searchTerm = event.target.value;
 
     // Handle empty input
@@ -61,8 +68,8 @@ export default class Search extends PartnerCards {
       return;
     }
 
-    // Handle non-empty input
-    await this.updateTypeaheadDialog();
+    // Debounce typeahead suggestions (wait 300ms after user stops typing)
+    this.debouncedUpdateTypeahead();
   }
 
   async updateTypeaheadDialog() {
@@ -74,7 +81,30 @@ export default class Search extends PartnerCards {
         // eslint-disable-next-line no-underscore-dangle
         this._searchInput?.focus();
       }
-      this.typeaheadOptions = await this.getSuggestions();
+
+      // Cancel previous suggestion request if still in flight
+      if (this.suggestionAbortController) {
+        this.suggestionAbortController.abort();
+      }
+
+      // Create new AbortController for this suggestion request
+      this.suggestionAbortController = new AbortController();
+
+      const suggestions = await this.getSuggestions(this.suggestionAbortController.signal);
+
+      // If request was aborted, don't update (new request coming)
+      if (suggestions?.aborted) {
+        return;
+      }
+
+      // If request failed (null), clear suggestions
+      if (!suggestions) {
+        this.typeaheadOptions = [];
+        return;
+      }
+
+      // Update with successful suggestions
+      this.typeaheadOptions = suggestions;
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('There was a problem with your fetch operation:', error);
@@ -128,7 +158,7 @@ export default class Search extends PartnerCards {
   }
 
   // eslint-disable-next-line consistent-return
-  async getSuggestions() {
+  async getSuggestions(signal) {
     let data;
     try {
       const SUGGESTIONS_SIZE = 10;
@@ -142,6 +172,7 @@ export default class Search extends PartnerCards {
           suggestions: 'true',
         },
         this.generateFilters(),
+        signal,
       );
 
       if (!response.ok) {
@@ -151,8 +182,13 @@ export default class Search extends PartnerCards {
       data = await response.json();
       return data.suggested_completions;
     } catch (error) {
+      // Return special marker for aborted requests
+      if (error.name === 'AbortError') {
+        return { aborted: true };
+      }
       // eslint-disable-next-line no-console
       console.error('There was a problem with your fetch operation:', error);
+      return null;
     }
   }
 
@@ -177,7 +213,7 @@ export default class Search extends PartnerCards {
   }
 
   // eslint-disable-next-line consistent-return
-  async getCards() {
+  async getCards(signal) {
     const startCardIndex = (this.paginationCounter - 1) * this.cardsPerPage;
     let apiData;
     try {
@@ -190,6 +226,7 @@ export default class Search extends PartnerCards {
           term: this.searchTerm,
         },
         this.generateFilters(),
+        signal,
       );
 
       if (!response.ok) {
@@ -200,8 +237,13 @@ export default class Search extends PartnerCards {
       this.hasResponseData = !!apiData.cards;
       return apiData;
     } catch (error) {
+      // Return special marker for aborted requests
+      if (error.name === 'AbortError') {
+        return { aborted: true };
+      }
       // eslint-disable-next-line no-console
       console.error('There was a problem with your fetch operation:', error);
+      return null;
     }
   }
 
@@ -215,10 +257,25 @@ export default class Search extends PartnerCards {
     return { filters };
   }
 
-  async handleActions() {
+  async handleActionsCore() {
     this.hasResponseData = false;
     this.additionalResetActions();
-    const cardsData = await this.getCards();
+
+    // Cancel previous request if still in flight
+    if (this.abortController) {
+      this.abortController.abort();
+    }
+
+    // Create new AbortController for this request
+    this.abortController = new AbortController();
+
+    const cardsData = await this.getCards(this.abortController.signal);
+
+    // If request was aborted, return early without updating (new request coming)
+    if (cardsData?.aborted) {
+      return;
+    }
+
     const { cards, count } = cardsData || { cards: [], count: { all: 0, assets: 0, pages: 0 } };
     this.cards = cards;
     if (this.blockData.pagination === 'load-more') {
