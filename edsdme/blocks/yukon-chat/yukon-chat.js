@@ -376,9 +376,9 @@ export default async function init(el) {
   const config = getConfig();
 
   const localizedText = {
-    '{{send-message}}': 'Send Message',
+    '{{send-message}}': 'Send Message333',
     '{{open-chat}}': 'Open Chat',
-    '{{scroll-to-bottom}}': 'Scroll to bottom'
+    '{{scroll-to-bottom}}': 'Scroll to bottom',
   };
 
   if (config && config.contentRoot) {

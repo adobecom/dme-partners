@@ -26,7 +26,6 @@ describe('yukon-chat block', () => {
     window.crypto.randomUUID = sinon.stub().returns('test-uuid-12345');
 
     fetchStub = sinon.stub(window, 'fetch');
-    
     fetchStub.callsFake(async (url) => {
       const urlStr = typeof url === 'string' ? url : url.toString();
       if (urlStr.includes('placeholders.json')) {
@@ -288,7 +287,6 @@ describe('yukon-chat block', () => {
         const urlStr = url?.toString?.() ?? String(url);
         return urlStr.includes('yukonAIAssistant');
       })?.args[0];
-      
       expect(calledUrl).to.exist;
       const urlStr = calledUrl?.toString?.() ?? String(calledUrl);
 
@@ -342,14 +340,12 @@ describe('yukon-chat block', () => {
       await new Promise((r) => setTimeout(r, 50));
       const modal = document.querySelector('#yukon-chat-modal');
       expect(modal).to.exist;
-      
       const yukonFetchCalled = fetchStub.getCalls().some((call) => {
         const url = call.args[0];
         const urlStr = url?.toString?.() ?? String(url);
         return urlStr.includes('yukonAIAssistant');
       });
       expect(yukonFetchCalled).to.be.true;
-      
       const errorMessage = modal.querySelector('.error-message');
       expect(errorMessage).to.exist;
       expect(errorMessage.textContent).to.include(
