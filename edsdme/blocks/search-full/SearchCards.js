@@ -83,7 +83,7 @@ export default class Search extends PartnerCards {
         this._searchInput?.focus();
       }
 
-      this.suggestionReqCounter++;
+      this.suggestionReqCounter += 1;
       const reqId = this.suggestionReqCounter;
       const suggestions = await this.getSuggestions();
       if (this.suggestionReqCounter > reqId) {
@@ -239,7 +239,7 @@ export default class Search extends PartnerCards {
   }
 
   async handleActionsCore() {
-    this.searchReqCounter++;
+    this.searchReqCounter += 1;
     const reqId = this.searchReqCounter;
     this.hasResponseData = false;
     this.additionalResetActions();
