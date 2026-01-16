@@ -39,7 +39,7 @@ describe('search-full block', () => {
     sinon.stub(Search.prototype, 'fetchData').callsFake(async () => {
     });
 
-    sinon.stub(Search.prototype, 'handleActions').callsFake(async function () {
+    sinon.stub(Search.prototype, 'handleActionsCore').callsFake(async function () {
       this.cards = cards;
       this.paginatedCards = this.cards.slice(0, 12);
       this.hasResponseData = true;
@@ -90,7 +90,7 @@ describe('search-full block', () => {
   afterEach(() => {
     fetchStub.restore();
     Search.prototype.fetchData.restore();
-    Search.prototype.handleActions.restore();
+    Search.prototype.handleActionsCore.restore();
     Search.prototype.getSuggestions.restore();
     Search.prototype.setBlockData.restore();
     Search.prototype.firstUpdated.restore();
