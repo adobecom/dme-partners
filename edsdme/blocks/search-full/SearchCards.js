@@ -165,8 +165,6 @@ export default class Search extends PartnerCards {
         },
         this.generateFilters(),
       );
-
-
       if (!response.ok) {
         throw new Error(`Error message: ${response.statusText}`);
       }
