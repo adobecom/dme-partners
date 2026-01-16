@@ -30,12 +30,13 @@ export default class Search extends PartnerCards {
     this.contentTypeCounter = { countAll: 0, countAssets: 0, countPages: 0 };
     this.typeaheadOptions = [];
     this.isTypeaheadOpen = false;
-    this.abortController = null;
-    this.suggestionAbortController = null;
     // Create debounced version of updateTypeaheadDialog for search input
     this.debouncedUpdateTypeahead = debounce(() => this.updateTypeaheadDialog(), 300);
     // Wrap handleActions with debounce for API calls (override parent's synchronous version)
     this.handleActions = debounce(() => this.handleActionsCore(), 250);
+    // Tracks order of requests for search and suggestions to use response from last fired request
+    this.searchReqCounter = 0;
+    this.suggestionReqCounter = 0;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -82,27 +83,18 @@ export default class Search extends PartnerCards {
         this._searchInput?.focus();
       }
 
-      // Cancel previous suggestion request if still in flight
-      if (this.suggestionAbortController) {
-        this.suggestionAbortController.abort();
-      }
-
-      // Create new AbortController for this suggestion request
-      this.suggestionAbortController = new AbortController();
-
-      const suggestions = await this.getSuggestions(this.suggestionAbortController.signal);
-
-      // If request was aborted, don't update (new request coming)
-      if (suggestions?.aborted) {
+      this.suggestionReqCounter ++;
+      const reqId = this.suggestionReqCounter;
+      const suggestions = await this.getSuggestions();
+      if (this.suggestionReqCounter > reqId) {
         return;
       }
-
-      // If request failed (null), clear suggestions
+      this.suggestionReqCounter = 0;
+      // If request failed, clear suggestions
       if (!suggestions) {
         this.typeaheadOptions = [];
         return;
       }
-
       // Update with successful suggestions
       this.typeaheadOptions = suggestions;
     } catch (error) {
@@ -158,7 +150,7 @@ export default class Search extends PartnerCards {
   }
 
   // eslint-disable-next-line consistent-return
-  async getSuggestions(signal) {
+  async getSuggestions() {
     let data;
     try {
       const SUGGESTIONS_SIZE = 10;
@@ -172,8 +164,8 @@ export default class Search extends PartnerCards {
           suggestions: 'true',
         },
         this.generateFilters(),
-        signal,
       );
+
 
       if (!response.ok) {
         throw new Error(`Error message: ${response.statusText}`);
@@ -182,10 +174,6 @@ export default class Search extends PartnerCards {
       data = await response.json();
       return data.suggested_completions;
     } catch (error) {
-      // Return special marker for aborted requests
-      if (error.name === 'AbortError') {
-        return { aborted: true };
-      }
       // eslint-disable-next-line no-console
       console.error('There was a problem with your fetch operation:', error);
       return null;
@@ -213,7 +201,7 @@ export default class Search extends PartnerCards {
   }
 
   // eslint-disable-next-line consistent-return
-  async getCards(signal) {
+  async getCards() {
     const startCardIndex = (this.paginationCounter - 1) * this.cardsPerPage;
     let apiData;
     try {
@@ -226,7 +214,6 @@ export default class Search extends PartnerCards {
           term: this.searchTerm,
         },
         this.generateFilters(),
-        signal,
       );
 
       if (!response.ok) {
@@ -237,10 +224,6 @@ export default class Search extends PartnerCards {
       this.hasResponseData = !!apiData.cards;
       return apiData;
     } catch (error) {
-      // Return special marker for aborted requests
-      if (error.name === 'AbortError') {
-        return { aborted: true };
-      }
       // eslint-disable-next-line no-console
       console.error('There was a problem with your fetch operation:', error);
       return null;
@@ -258,23 +241,16 @@ export default class Search extends PartnerCards {
   }
 
   async handleActionsCore() {
+    this.searchReqCounter++;
+    const reqId = this.searchReqCounter;
     this.hasResponseData = false;
     this.additionalResetActions();
 
-    // Cancel previous request if still in flight
-    if (this.abortController) {
-      this.abortController.abort();
-    }
-
-    // Create new AbortController for this request
-    this.abortController = new AbortController();
-
-    const cardsData = await this.getCards(this.abortController.signal);
-
-    // If request was aborted, return early without updating (new request coming)
-    if (cardsData?.aborted) {
+    const cardsData = await this.getCards();
+    if (this.searchReqCounter > reqId) {
       return;
     }
+    this.searchReqCounter = 0;
 
     const { cards, count } = cardsData || { cards: [], count: { all: 0, assets: 0, pages: 0 } };
     this.cards = cards;
