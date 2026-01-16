@@ -955,6 +955,10 @@ chat-history-left .user-message {
   .privacy-notice-message {
     width: unset;
   }
+
+  .yc-textarea-grow-wrap textarea {
+    font-size: 16px;
+  }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
@@ -973,6 +977,11 @@ chat-history-left .user-message {
   #yukon-chat-modal.dialog-modal {
     width: 100%;
     border-radius: 24px 24px 0 0;
+    height: 100%;
+  }
+
+  .yc-textarea-grow-wrap textarea {
+    font-size: 16px;
   }
 }
 
