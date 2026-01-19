@@ -1,5 +1,6 @@
 import { getCurrentProgramType, getPartnerCookieObject, partnerIsSignedIn, prodHosts, getLibs } from '../../scripts/utils.js';
 import { parseMarkdown, extractAuthoredConfigs } from './utils.js';
+import { getConfig, localizationPromises } from '../utils/utils.js';
 
 const miloLibs = getLibs();
 const { getModal } = await import(`${miloLibs}/blocks/modal/modal.js`);
@@ -183,8 +184,26 @@ const updateButtonState = (textArea, inputFieldButton) => {
   }
 };
 
+function showChatError(chatHistory, text) {
+  if (!chatHistory) return;
+
+  const chatMessage = document.createElement('div');
+  chatMessage.className = 'chat-message yukon-message new-message';
+
+  const messageContent = document.createElement('div');
+  messageContent.className = 'message-content';
+
+  const messageText = document.createElement('div');
+  messageText.className = 'message-text error-message';
+  messageText.textContent = text;
+
+  messageContent.appendChild(messageText);
+  chatMessage.appendChild(messageContent);
+  chatHistory.appendChild(chatMessage);
+}
+
 // eslint-disable-next-line no-shadow, max-len
-const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBottomBtn, modalInputWrapper, inputFieldButton) => {
+const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBottomBtn, modalInputWrapper, inputFieldButton, localizedText) => {
   if (!chatHistory) return;
   const question = textArea.value.trim();
   if (!question) return;
@@ -229,17 +248,13 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
 
     if (!resp || !resp.ok) {
       removeLoadingMessage(loadingElement);
-      const chatMessage = document.createElement('div');
-      chatMessage.className = 'chat-message yukon-message new-message';
-      const messageContent = document.createElement('div');
-      messageContent.className = 'message-content';
-      const messageText = document.createElement('div');
-      messageText.className = 'message-text';
-      chatMessage.appendChild(messageContent);
-      messageContent.appendChild(messageText);
-      chatHistory.appendChild(chatMessage);
-      const errorText = await resp.text();
-      messageText.textContent = `Error ${resp.status}: ${errorText || 'Failed to get response from Yukon AI. Please try again.'}`;
+      if (resp?.status === 504) {
+        showChatError(chatHistory, localizedText['{{timeout-error}}']);
+      } else {
+        showChatError(chatHistory, localizedText['{{server-error}}']);
+      }
+      textArea.removeAttribute('disabled');
+      inputFieldButton.removeAttribute('disabled');
       return;
     }
 
@@ -304,6 +319,12 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
               }
             }
           }
+          if (line.startsWith('<!DOCTYPE html') || line.startsWith('<html')) {
+            removeLoadingMessage(loadingElement);
+            showChatError(chatHistory, localizedText['{{server-error}}']);
+            reader.cancel();
+            break;
+          }
         } catch (parseError) {
           // eslint-disable-next-line no-console
           console.debug('Skipping non-JSON line:', line);
@@ -326,19 +347,13 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
       currentAbortController = null;
       return;
     }
-    if (chatHistory) {
-      const chatMessage = document.createElement('div');
-      chatMessage.className = 'chat-message yukon-message new-message';
-      const messageContent = document.createElement('div');
-      messageContent.className = 'message-content';
-      const messageText = document.createElement('div');
-      messageText.className = 'message-text';
-      chatMessage.appendChild(messageContent);
-      messageContent.appendChild(messageText);
-      chatHistory.appendChild(chatMessage);
-      messageText.textContent = `Error: ${error.message}`;
+    if (error instanceof TypeError) {
+      showChatError(chatHistory, localizedText['{{network-error}}']);
+    } else {
+      showChatError(chatHistory, localizedText['{{server-error}}']);
     }
     textArea.removeAttribute('disabled');
+    inputFieldButton.removeAttribute('disabled');
     currentAbortController = null;
     // eslint-disable-next-line no-console
     console.error('Yukon API error:', error);
@@ -352,6 +367,21 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
 };
 
 export default async function init(el) {
+  const config = getConfig();
+
+  const localizedText = {
+    '{{send-message}}': 'Send Message',
+    '{{open-chat}}': 'Open Chat',
+    '{{scroll-to-bottom}}': 'Scroll to bottom',
+    '{{timeout-error}}': 'This is taking longer than expected. Please try again in a moment.',
+    '{{server-error}}': 'We’re having trouble processing your request right now. Please try again later.',
+    '{{network-error}}': 'Network error. Please check your connection and try again.',
+  };
+
+  if (config && config.contentRoot) {
+    await localizationPromises(localizedText, config);
+  }
+
   const isSticky = el.classList.contains('sticky');
   extractAuthoredConfigs(configs, el.children);
   const chatBlock = createTag('div', { class: 'yukon-chat-block' });
@@ -368,7 +398,7 @@ export default async function init(el) {
   const inputFieldButton = createTag('button', {
     class: 'yc-input-field-button',
     disabled: true,
-    'aria-label': 'Send Message',
+    'aria-label': localizedText['{{send-message}}'],
   }, submitIconString);
 
   const sharedInputField = createInputField(textArea, inputFieldButton, isSticky);
@@ -382,7 +412,7 @@ export default async function init(el) {
     const stickyContainer = createTag('div', { class: 'yukon-chat-sticky' });
     mobileButton = createTag('button', {
       class: 'yc-mobile-button',
-      'aria-label': 'Open chat',
+      'aria-label': localizedText['{{open-chat}}'],
     }, aiChatIconString);
     handleMobileButton(mobileButton, mobileView, stickyContainer, inputField);
     mobileView.addEventListener('change', (e) => handleMobileButton(mobileButton, e, stickyContainer, inputField));
@@ -426,7 +456,7 @@ export default async function init(el) {
       // Create scroll to bottom button
       scrollToBottomBtn = createTag('button', {
         class: 'scroll-to-bottom-btn',
-        'aria-label': 'Scroll to bottom',
+        'aria-label': localizedText['{{scroll-to-bottom}}'],
       }, arrowIconString);
       scrollToBottomBtn.addEventListener('click', () => scrollToBottom(chatHistory));
       // Add scroll event listener to chat history
@@ -545,6 +575,7 @@ export default async function init(el) {
           scrollToBottomBtn,
           modalInputWrapper,
           inputFieldButton,
+          localizedText,
         );
         updateReplicatedValue(textareaWrapper, textArea, scrollToBottomBtn, modalInputWrapper);
       }
@@ -562,6 +593,7 @@ export default async function init(el) {
       scrollToBottomBtn,
       modalInputWrapper,
       inputFieldButton,
+      localizedText,
     );
     updateReplicatedValue(textareaWrapper, textArea, scrollToBottomBtn, modalInputWrapper);
   });
