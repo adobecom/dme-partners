@@ -265,8 +265,8 @@ export default {
       tags: '@dme-smoke-test',
       data: {
         partnerLevel: 'cpp-distributor-us:',
-        expectedSalesForceURL: 'https://partners.stage.adobe.com/s/directory/channel?view=distributor&lang=en',
-        expectedFindURL: 'https://partners.stage.adobe.com/s/directory/channel?view=distributor&lang=en',
+        expectedSalesForceURL: '/s/directory/channel?lang=en&view=distributor',
+        expectedFindURL: '/s/directory/channel?lang=en&view=distributor',
         expectedID: 'tid',
       },
     },
