@@ -43,6 +43,7 @@ export default async function init(el) {
   const app = document.createElement('logos-cards');
   app.className = `logos-cards-wrapper${blockData.isMain ? ' main' : ''}`;
   app.blockData = blockData;
+  app.setAttribute('daa-lh', 'Logos Block');
   app.setAttribute('data-idx', sectionIndex);
   el.replaceWith(app);
 
