@@ -30,6 +30,7 @@ export default class Search extends PartnerCards {
     this.contentTypeCounter = { countAll: 0, countAssets: 0, countPages: 0 };
     this.typeaheadOptions = [];
     this.isTypeaheadOpen = false;
+    this.hasResponseData = false;
     // Create debounced version of updateTypeaheadDialog for search input
     this.debouncedUpdateTypeahead = debounce(() => this.updateTypeaheadDialog(), 300);
     // Wrap handleActions with debounce for API calls (override parent's synchronous version)
