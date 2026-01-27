@@ -1,9 +1,12 @@
 import PartnerCards from '../../components/PartnerCards.js';
 import { getLibs } from '../../scripts/utils.js';
+import { getConfig } from '../utils/utils.js';
 import { pricelistBlockStyles } from './PricelistBlockStyles.js';
 
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
+const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
+
 export const priceListKeyWords = {
   CURRENCY: 'currency',
   MONTH: 'month',
@@ -143,7 +146,8 @@ export default class Pricelist extends PartnerCards {
                             href="${rowData.contentArea?.url}"
                             download="${rowData.contentArea?.filename}"
                             aria-label="${this.blockData.localizedText['{{download}}']}"
-                            @click=${(e) => { if (e.isTrusted) { e.preventDefault(); } }}>
+                            @click=${(e) => { if (e.isTrusted) { e.preventDefault(); } }}
+                            daa-ll="${processTrackingLabels(this.blockData.localizedText['{{download}}'], getConfig(), 30)}">
                         <sp-icon-download slot="icon"></sp-icon-download>
                         ${this.blockData.localizedText['{{download}}']}
                     </sp-action-button>
