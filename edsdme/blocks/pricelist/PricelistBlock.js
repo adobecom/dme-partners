@@ -236,7 +236,7 @@ export default class Pricelist extends PartnerCards {
 
   handleSearchAction() {
     // eslint-disable-next-line max-len
-    this.cards = this.allCards.filter((card) => this.getCardArbitraryValues(card).includes(this.searchTerm));
+    this.cards = this.allCards.filter((card) => this.getCardArbitraryValues(card).includes(this.searchTerm.toLocaleLowerCase()));
   }
 
   shouldDisplayPagination() {
