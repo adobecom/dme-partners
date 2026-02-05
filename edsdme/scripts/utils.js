@@ -349,7 +349,8 @@ function preloadLit(miloLibs) {
 }
 
 function getPartnerLevelParams(portal) {
-  const partnerLevel = getPartnerCookieValue(portal, 'level');
+  //const partnerLevel = getPartnerCookieValue(portal, 'level');
+  const partnerLevel = 'platinum';
   const partnerTagBase = `"caas:adobe-partners/${portal}/partner-level/`;
   return partnerLevel ? `(${partnerTagBase}${partnerLevel}"+OR+${partnerTagBase}public")` : `(${partnerTagBase}public")`;
 }
@@ -425,7 +426,7 @@ function setApiParams(api, block) {
 }
 
 export function getCaasUrl(block) {
-  const domain = 'https://www.adobe.com/chimera-api';
+  const domain = 'https://www.stage.adobe.com/chimera-api';
   const api = new URL(`${domain}/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true`);
   return setApiParams(api, block);
 }
@@ -435,6 +436,7 @@ export async function preloadResources(locales, miloLibs) {
   const cardBlocks = {
     announcements: '"caas:adobe-partners/collections/announcements"',
     'announcements-preview': '"caas:adobe-partners/collections/announcements"',
+    'prp-collection': '"caas:adobe-partners/collections/prp-collection"',
   };
   const blockWithPlaceholders = ['announcements', 'search-full', 'logos', 'pricelist'];
   let isPreloadCalled = false;
