@@ -81,6 +81,7 @@ export default async function init(el) {
   app.className = 'content pricelist-block-wrapper';
   app.blockData = blockData;
   app.setAttribute('data-idx', sectionIndex);
+  app.setAttribute('daa-lh', 'Pricelist');
   el.replaceWith(app);
   await deps;
   return app;
