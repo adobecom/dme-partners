@@ -358,8 +358,8 @@
   margin-bottom: 20px;
 }
 
-.modal-input-wrapper .yc-input-field-container .yc-input-field-button,
-.modal-input-wrapper .yc-input-field-container .yc-input-field-button:disabled{
+.yc-input-field-container .yc-input-field-button,
+.yc-input-field-container .yc-input-field-button:disabled{
   background: #000;
   border: none;
   transition: background-color 0.3s ease;
@@ -376,7 +376,7 @@
   flex-shrink: 0;
 }
 
-.modal-input-wrapper .yc-input-field-container .yc-input-field-button:disabled {
+.yc-input-field-container .yc-input-field-button:disabled {
   background: var(--yc-container-color);
   color: #999;
   pointer-events: none;
@@ -409,6 +409,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
   z-index: 998;
@@ -433,6 +434,8 @@
   width: 85%;
   height: 100vh;
   max-height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
   min-height: 400px;
   display: none;
   overflow: hidden;
@@ -446,6 +449,7 @@
   margin-bottom: 0;
   margin-top: var(--feds-height-nav);
   height: calc(100vh - var(--feds-height-nav));
+  height: calc(100dvh - var(--feds-height-nav));
   overflow: hidden;
 }
 
@@ -456,6 +460,7 @@
 .dialog-modal.closing {
   animation: 500ms ease-in-out slide-down;
   bottom: -100vh;
+  bottom: -100dvh;
 }
 
 @keyframes slide-up {
@@ -485,6 +490,8 @@
     width: 90%;
     height: 100vh;
     max-height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
     min-height: 300px;
   }
   .yukon-chat-sticky {
