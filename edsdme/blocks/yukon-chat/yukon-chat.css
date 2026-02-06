@@ -287,6 +287,7 @@
   line-height: 1.5;
   min-height: 28px;
   max-height: 35vh;
+  max-height: 35dvh;
   overflow: hidden;
 }
 
@@ -311,6 +312,7 @@
   grid-area: 1 / 1 / 2 / 2;
   min-height: 28px;
   max-height: 35vh;
+  max-height: 35dvh;
 }
 
 .yc-textarea-grow-wrap textarea:disabled {
@@ -433,8 +435,8 @@
   max-width: 1000px;
   width: 85%;
   height: 100vh;
-  max-height: 100vh;
   height: 100dvh;
+  max-height: 100vh;
   max-height: 100dvh;
   min-height: 400px;
   display: none;
@@ -466,6 +468,7 @@
 @keyframes slide-up {
   from {
     transform: translateY(100vh);
+    transform: translateY(100dvh);
     opacity: 0;
   }
   to {
@@ -481,6 +484,7 @@
   }
   to {
     transform: translateY(100vh);
+    transform: translateY(100dvh);
     opacity: 0;
   }
 }
@@ -652,6 +656,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 16px 15% 60vh;
+  padding: 16px 15% 60dvh;
   position: relative;
   transition: opacity 0.5s ease;
   z-index: 2;
@@ -676,6 +681,7 @@
 
 .chat-history.is-scrolling {
   padding-bottom: 60vh;
+  padding-bottom: 60dvh;
 }
 
 .user-message .message-content {
@@ -946,6 +952,7 @@ chat-history-left .user-message {
   .chat-history {
     max-width: 700px;
     padding: 16px 0 60vh;
+    padding: 16px 0 60dvh;
   }
 
   #yukon-chat-modal.dialog-modal {
@@ -977,6 +984,7 @@ chat-history-left .user-message {
   .chat-history {
     max-width: 700px;
     padding: 16px 0 60vh;
+    padding: 16px 0 60dvh;
   }
 
   #yukon-chat-modal.dialog-modal {
