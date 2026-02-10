@@ -246,7 +246,6 @@ describe('SearchCard Unit Tests', () => {
       searchComponent.searchTerm = 'analytics';
       searchComponent.isTypeaheadOpen = false;
       const getSuggestionsStub = sinon.stub(searchComponent, 'getSuggestions').resolves(['suggestion1', 'suggestion2']);
-      
       await searchComponent.updateTypeaheadDialog();
       
       expect(searchComponent.isTypeaheadOpen).to.be.true;
