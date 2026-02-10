@@ -274,7 +274,6 @@ describe('SearchCard Unit Tests', () => {
           .withArgs('dialog#typeahead').returns(mockDialog)
           .withArgs('#search').returns(mockInput)
       };
-      
       searchComponent.searchTerm = 'test';
       searchComponent.isTypeaheadOpen = false;
       const getSuggestionsStub = sinon.stub(searchComponent, 'getSuggestions').rejects(new Error('API Error'));
