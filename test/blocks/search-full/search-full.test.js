@@ -252,8 +252,7 @@ describe('SearchCard Unit Tests', () => {
 
     it('should not update typeahead when searchTerm is empty', async () => {
       const mockDialog = { show: sinon.spy() };
-      searchComponent.renderRoot = {
-        querySelector: sinon.stub().withArgs('dialog#typeahead').returns(mockDialog)
+      searchComponent.renderRoot = {querySelector: sinon.stub().withArgs('dialog#typeahead').returns(mockDialog)
       };
       
       searchComponent.searchTerm = '';
