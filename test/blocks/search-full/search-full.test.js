@@ -280,7 +280,6 @@ describe('SearchCard Unit Tests', () => {
       
       const getSuggestionsStub = sinon.stub(searchComponent, 'getSuggestions').rejects(new Error('API Error'));
       await searchComponent.updateTypeaheadDialog();
-      
       expect(consoleErrorStub.called).to.be.true;
       getSuggestionsStub.restore();
     });
