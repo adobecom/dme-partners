@@ -257,7 +257,6 @@ describe('SearchCard Unit Tests', () => {
       searchComponent.searchTerm = '';
       searchComponent.typeaheadOptions = ['existing', 'suggestions'];
       await searchComponent.updateTypeaheadDialog();
-      
       expect(searchComponent.typeaheadOptions).to.deep.equal([]);
       expect(mockDialog.show.called).to.be.false;
     });
