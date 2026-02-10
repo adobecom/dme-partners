@@ -242,7 +242,6 @@ describe('SearchCard Unit Tests', () => {
           .withArgs('#search')
 .returns(mockInput)
       };
-      
       searchComponent.contentType = 'all';
       searchComponent.searchTerm = 'analytics';
       searchComponent.isTypeaheadOpen = false;
