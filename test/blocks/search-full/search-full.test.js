@@ -267,7 +267,8 @@ describe('SearchCard Unit Tests', () => {
       searchComponent.renderRoot = {
         querySelector: sinon.stub()
           .withArgs('dialog#typeahead').returns(mockDialog)
-          .withArgs('#search').returns(mockInput)
+          .withArgs('#search')
+.returns(mockInput)
       };
       searchComponent.searchTerm = 'test';
       searchComponent.isTypeaheadOpen = false;
