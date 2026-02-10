@@ -277,7 +277,6 @@ describe('SearchCard Unit Tests', () => {
       
       searchComponent.searchTerm = 'test';
       searchComponent.isTypeaheadOpen = false;
-      
       const getSuggestionsStub = sinon.stub(searchComponent, 'getSuggestions').rejects(new Error('API Error'));
       await searchComponent.updateTypeaheadDialog();
       expect(consoleErrorStub.called).to.be.true;
