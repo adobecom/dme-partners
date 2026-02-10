@@ -240,7 +240,7 @@ describe('SearchCard Unit Tests', () => {
         querySelector: sinon.stub()
           .withArgs('dialog#typeahead').returns(mockDialog)
           .withArgs('#search')
-.returns(mockInput)
+.returns(mockInput),
       };
       searchComponent.contentType = 'all';
       searchComponent.searchTerm = 'analytics';
