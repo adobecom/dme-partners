@@ -282,7 +282,6 @@ describe('SearchCard Unit Tests', () => {
       await searchComponent.updateTypeaheadDialog();
       
       expect(consoleErrorStub.called).to.be.true;
-      
       getSuggestionsStub.restore();
     });
   });
