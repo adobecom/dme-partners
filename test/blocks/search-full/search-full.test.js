@@ -254,7 +254,6 @@ describe('SearchCard Unit Tests', () => {
       const mockDialog = { show: sinon.spy() };
       searchComponent.renderRoot = {querySelector: sinon.stub().withArgs('dialog#typeahead').returns(mockDialog)
       };
-      
       searchComponent.searchTerm = '';
       searchComponent.typeaheadOptions = ['existing', 'suggestions'];
       await searchComponent.updateTypeaheadDialog();
