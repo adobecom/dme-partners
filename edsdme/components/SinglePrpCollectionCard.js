@@ -8,6 +8,7 @@ const DEFAULT_BACKGROUND_IMAGE_PATH = '/content/dam/solution/en/images/card-coll
 
 class SinglePrpCollectionCard extends LitElement {
   static properties = {
+    localizedText: { type: Object },
     data: { type: Object },
     ietf: { type: String },
   };
@@ -15,29 +16,29 @@ class SinglePrpCollectionCard extends LitElement {
   static styles = singlePrpCollectionCardStyles;
 
   get imageUrl() {
-    return `${new URL(this.data.styles?.backgroundImage).pathname}?width=400&format=webp&optimize=small`;
+    return `${new URL(this.data.styles?.backgroundImage)}?width=400&format=webp&optimize=small`;
   }
 
-  checkBackgroundImage(element) {
-    const url = this.imageUrl;
-    const img = new Image();
+  // checkBackgroundImage(element) {
+  //   const url = this.imageUrl;
+  //   const img = new Image();
 
-    const isProd = prodHosts.includes(window.location.host);
-    const defaultBackgroundImageOrigin = `https://partners.${isProd ? '' : 'stage.'}adobe.com`;
-    const defaultBackgroundImageUrl = `${defaultBackgroundImageOrigin}${DEFAULT_BACKGROUND_IMAGE_PATH}`;
+  //   const isProd = prodHosts.includes(window.location.host);
+  //   const defaultBackgroundImageOrigin = `https://partners.${isProd ? '' : 'stage.'}adobe.com`;
+  //   const defaultBackgroundImageUrl = `${defaultBackgroundImageOrigin}${DEFAULT_BACKGROUND_IMAGE_PATH}`;
 
-    img.onerror = () => {
-      element.style.backgroundImage = `url(${defaultBackgroundImageUrl})`;
-    };
+  //   img.onerror = () => {
+  //     element.style.backgroundImage = `url(${defaultBackgroundImageUrl})`;
+  //   };
 
-    img.src = url;
-  }
+  //   img.src = url;
+  // }
 
-  firstUpdated() {
-    this.checkBackgroundImage(this.shadowRoot.querySelector('.card-header'));
-  }
+  // firstUpdated() {
+  //   this.checkBackgroundImage(this.shadowRoot.querySelector('.card-header'));
+  // }
 
-  getFileExtensions(items) {
+  getFileExtension(items) {
     return items
       .map((item) => {
         const match = item?.id?.match(/file-format\/(.+)$/);
@@ -51,22 +52,29 @@ class SinglePrpCollectionCard extends LitElement {
 
     arbitrary.forEach((item) => {
       if (item.category) {
-        result.push(item.category);
+        result.push(this.localizedText[`{{${item.category}}}`] ?? item.category);
       }
 
       if (item.language) {
-        result.push(item.language);
+        result.push(this.localizedText[`{{${item.language}}}`] ?? item.language);
       }
     });
 
     return [...new Set(result)].join(', ');
   }
 
+  hasPreviewOption(fileFormat) {
+    const supportedExtensions = ['pdf', 'word', 'pptx', 'jpeg', 'svg', 'gif', 'webp', 'png', 'octet-stream'];
+    const currentExtension = this.getFileExtension(fileFormat)[0].toLowerCase();
+
+    return supportedExtensions.includes(currentExtension);
+  }
+
   render() {
     return html`
       <div class="single-prp-collection-card">
         <div class="card-header" style="background-image: url(${this.imageUrl})" alt="${this.data.styles?.backgroundAltText}"></div>
-        <span class="card-file-type">${this.getFileExtensions(this.data.tags)}</span>
+        <span class="card-file-type">${this.getFileExtension(this.data.tags)}</span>
         <div class="card-content">
           <span class="card-date">${formatDate(this.data.cardDate, this.ietf)}</span>
           <div class="card-text">
@@ -74,8 +82,8 @@ class SinglePrpCollectionCard extends LitElement {
             <p class="card-description">${this.getAssetDetails(this.data.arbitrary)}</p>
           </div>
           <div class="card-footer">
-            <a class="card-download-link" href="${this.data.contentArea?.url}" target="_blank">Open</a>
-            <a class="card-btn" download="${this.data.contentArea?.title}">${this.data.footer[0]?.right[0]?.text}</a>
+            ${this.hasPreviewOption(this.data.tags) ? html`<a class="card-open-link" href="${this.data.contentArea?.url}" target="_blank">${this.localizedText['{{open}}']}</a>` : ''}
+            <a class="card-btn" download="${this.data.contentArea?.title}">${this.localizedText['{{download}}']}</a>
           </div>
         </div>
       </div>

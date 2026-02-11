@@ -5,13 +5,13 @@ import '../../components/SinglePrpCollectionCard.js';
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
-export function filterCardsByCollectionName(cards, arbitrary) {
+export function filterCardsByCollectionName(cards, collectionName) {
   return cards.filter((card) => {
-    const collectionName = Object.values(card?.arbitrary[0])[0];
-    if (!collectionName) return false;
+    const name = Object.values(card?.arbitrary[0])[0];
+    if (!name) return false;
 
     try {
-      return collectionName === arbitrary;
+      return name === collectionName;
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(`Invalid title: ${collectionName}`, error);
@@ -26,7 +26,7 @@ export default class PRPCollectionCards extends PartnerCards {
       return html`${repeat(
         this.paginatedCards,
         (card) => card.id,
-        (card) => html`<single-prp-collection-card  class="card-wrapper"  .data=${card} .ietf=${this.blockData.ietf}></single-partner-card>`,
+        (card) => html`<single-prp-collection-card  class="card-wrapper"  .data=${card} .ietf=${this.blockData.ietf} .localizedText=${this.blockData.localizedText}></single-partner-card>`,
       )}`;
     }
 
@@ -39,6 +39,6 @@ export default class PRPCollectionCards extends PartnerCards {
   // eslint-disable-next-line class-methods-use-this
   onDataFetched(apiData) {
     // Filter assets by collection name
-    apiData.cards = filterCardsByCollectionName(apiData.cards, this.blockData.arbitrary);
+    apiData.cards = filterCardsByCollectionName(apiData.cards, this.blockData.collectionName);
   }
 }

@@ -59,21 +59,22 @@ export const singlePrpCollectionCardStyles = css`
 
   .single-prp-collection-card .card-file-type {
     position: absolute;
-    left: 10px;
-    top: 10px;
-    padding: 0px 10px;
+    left: 15px;
+    top: 15px;
+    padding: 5px 10px;
     background: #fff;
     font-size: 12px;
-    border-radius: 2px;
-    border: 1px solid ${borderColor};
+    line-height: 14px;
+    border-radius: 5px;
+    border: 1px solid #676767;
+    color: #444444;
   }
 
   .single-prp-collection-card .card-content {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     background-color: #fff;
-    padding: 16px 16px 20px;
+    padding: 16px 16px 0px;
     height: 100%;
   }
 
@@ -84,7 +85,7 @@ export const singlePrpCollectionCardStyles = css`
     line-height: 1.375rem;
     word-break: break-word;
     max-height: 2.75rem;
-    margin: 0 0 7px;
+    margin: 7px 0 7px;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
@@ -97,7 +98,7 @@ export const singlePrpCollectionCardStyles = css`
     line-height: 1.3125rem;
     font-weight: 400;
     word-break: break-word;
-    margin: 0 0 14px;
+    margin: 0 0 40px;
     max-height: 3.9375rem;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -109,6 +110,7 @@ export const singlePrpCollectionCardStyles = css`
     display: flex;
     justify-content: end;
     align-items: center;
+    height: 100%;
   }
 
   .single-prp-collection-card .card-text {
@@ -145,7 +147,7 @@ export const singlePrpCollectionCardStyles = css`
     color: #ffffff;
   }
 
-  .single-prp-collection-card .card-download-link {
+  .single-prp-collection-card .card-open-link {
     font-size: .875rem;
     line-height: 1.063rem;
     font-weight: 700;

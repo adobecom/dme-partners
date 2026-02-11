@@ -22,6 +22,7 @@ export default async function init(el) {
     '{{clear-all}}': 'Clear all',
     '{{current-month}}': 'Current month',
     '{{date}}': 'Date',
+    '{{download}}': 'Download',
     '{{filter}}': 'Filter',
     '{{filter-by}}': 'Filter by',
     '{{filters}}': 'Filters',
@@ -32,6 +33,7 @@ export default async function init(el) {
     '{{no-results-description}}': 'Try checking your spelling or broadening your search.',
     '{{no-results-title}}': 'No Results Found',
     '{{of}}': 'Of',
+    '{{open}}': 'Open',
     '{{page}}': 'Page',
     '{{prev}}': 'Prev',
     '{{previous-month}}': 'Previous month',
@@ -70,15 +72,15 @@ export default async function init(el) {
     isArchive,
     caasUrl: getCaasUrl(block),
     ietf: config.locale.ietf,
-    arbitrary: '',
+    collectionName: '',
   };
 
   Array.from(el.children).forEach((row) => {
     const cols = Array.from(row.children);
     const rowTitle = cols[0].innerText.trim().toLowerCase().replace(/ /g, '-');
 
-    if (rowTitle && rowTitle === 'arbitrary') {
-      blockData.arbitrary = cols[2].innerText;
+    if (rowTitle && rowTitle === 'collection-name') {
+      blockData.collectionName = cols[1].innerText;
     }
   });
 
