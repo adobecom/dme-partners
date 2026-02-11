@@ -349,8 +349,7 @@ function preloadLit(miloLibs) {
 }
 
 function getPartnerLevelParams(portal) {
-  //const partnerLevel = getPartnerCookieValue(portal, 'level');
-  const partnerLevel = 'platinum';
+  const partnerLevel = getPartnerCookieValue(portal, 'level');
   const partnerTagBase = `"caas:adobe-partners/${portal}/partner-level/`;
   return partnerLevel ? `(${partnerTagBase}${partnerLevel}"+OR+${partnerTagBase}public")` : `(${partnerTagBase}public")`;
 }
