@@ -1,14 +1,14 @@
 import { getLibs, getCaasUrl } from '../../scripts/utils.js';
 import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
-import Collections from './prp-collection-cards.js';
+import PRPCollectionCards from './prp-collection-cards.js';
 
-function declareCollections() {
-  if (customElements.get('collections-cards')) return;
-  customElements.define('collections-cards', Collections);
+function declareCollection() {
+  if (customElements.get('prp-collection-cards')) return;
+  customElements.define('prp-collection-cards', PRPCollectionCards);
 }
 
 export default async function init(el) {
-  performance.mark('collections-cards:start');
+  performance.mark('prp-collection:start');
 
   const miloLibs = getLibs();
   const config = getConfig();
@@ -54,7 +54,7 @@ export default async function init(el) {
     import(`${miloLibs}/features/spectrum-web-components/dist/progress-circle.js`),
   ]);
 
-  declareCollections();
+  declareCollection();
 
   const block = {
     el,
@@ -70,9 +70,19 @@ export default async function init(el) {
     isArchive,
     caasUrl: getCaasUrl(block),
     ietf: config.locale.ietf,
+    arbitrary: '',
   };
 
-  const app = document.createElement('collections-cards');
+  Array.from(el.children).forEach((row) => {
+    const cols = Array.from(row.children);
+    const rowTitle = cols[0].innerText.trim().toLowerCase().replace(/ /g, '-');
+
+    if (rowTitle && rowTitle === 'arbitrary') {
+      blockData.arbitrary = cols[2].innerText;
+    }
+  });
+
+  const app = document.createElement('prp-collection-cards');
   app.className = 'content prp-collection-wrapper';
   app.blockData = blockData;
   app.setAttribute('data-idx', sectionIndex);
@@ -80,7 +90,7 @@ export default async function init(el) {
   el.replaceWith(app);
 
   await deps;
-  performance.mark('collections-cards:end');
-  performance.measure('collections-cards block', 'collections-cards:start', 'collections-cards:end');
+  performance.mark('prp-collection-cards:end');
+  //performance.measure('prp-collection-cards block', 'prp-collection-cards:start', 'prp-collection-cards:end');
   return app;
 }

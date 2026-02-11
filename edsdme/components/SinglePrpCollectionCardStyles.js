@@ -115,13 +115,6 @@ export const singlePrpCollectionCardStyles = css`
     border-bottom: 1px solid ${borderColor};
   }
 
-  .single-prp-collection-card .card-open-link {
-    font-size: .875rem;
-    line-height: 1.063rem;
-    font-weight: 700;
-    color: ${blueColor};
-  }
-
   .single-prp-collection-card .card-btn {
     display: flex;
     justify-content: center;
@@ -150,6 +143,13 @@ export const singlePrpCollectionCardStyles = css`
     border-color: #222222;
     background-color: #222222;
     color: #ffffff;
+  }
+
+  .single-prp-collection-card .card-download-link {
+    font-size: .875rem;
+    line-height: 1.063rem;
+    font-weight: 700;
+    color: ${blueColor};
   }
 
   .single-prp-collection-card .card-date {

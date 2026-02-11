@@ -94,9 +94,6 @@ export default class PartnerCards extends LitElement {
         }
         const filterTagsKeys = [];
 
-        console.log('cols - ', cols)
-        console.log('filterTagsKeysEl - ', filterTagsKeysEl.querySelectorAll('ul').length);
-
         filterTagsKeysEl.querySelectorAll('ul')[0].querySelectorAll('li').forEach((li) => {
           const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
           if (key !== '') filterTagsKeys.push(createTag(key, false, this.blockData));
