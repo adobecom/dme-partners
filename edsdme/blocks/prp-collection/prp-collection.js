@@ -8,7 +8,7 @@ function declareCollection() {
 }
 
 export default async function init(el) {
-  performance.mark('prp-collection:start');
+  performance.mark('prp-collection-cards:start');
 
   const miloLibs = getLibs();
   const config = getConfig();
@@ -93,6 +93,6 @@ export default async function init(el) {
 
   await deps;
   performance.mark('prp-collection-cards:end');
-  //performance.measure('prp-collection-cards block', 'prp-collection-cards:start', 'prp-collection-cards:end');
+  performance.measure('prp-collection-cards block', 'prp-collection-cards:start', 'prp-collection-cards:end');
   return app;
 }

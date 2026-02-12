@@ -68,6 +68,7 @@ export const singlePrpCollectionCardStyles = css`
     border-radius: 5px;
     border: 1px solid #676767;
     color: #444444;
+    text-transform: uppercase;
   }
 
   .single-prp-collection-card .card-content {
