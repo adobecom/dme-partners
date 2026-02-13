@@ -443,7 +443,7 @@ export async function preloadResources(locales, miloLibs) {
     'announcements-preview': '"caas:adobe-partners/collections/announcements"',
     'prp-collection': '"caas:adobe-partners/collections/prp-collection"',
   };
-  const blockWithPlaceholders = ['announcements', 'search-full', 'logos', 'pricelist'];
+  const blockWithPlaceholders = ['announcements', 'search-full', 'logos', 'pricelist', 'prp-collection'];
   let isPreloadCalled = false;
   blockWithPlaceholders.forEach(async (item) => {
     const el = document.querySelector(`.${item}`);
