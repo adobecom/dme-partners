@@ -129,4 +129,44 @@ describe('announcements block', () => {
     expect(partnerCards).to.exist;
     expect(partnerCards.getAttribute('daa-lh')).to.equal('Card Collection | Filters: Event Session | Search Query: Adobe');
   });
+
+  it('should call window.history.replaceState when updating URL search params', async () => {
+    const replaceStateStub = sinon.stub(window.history, 'replaceState');
+
+    const block = document.querySelector('.announcements');
+    expect(block).to.exist;
+
+    const component = await init(block);
+    await component.updateComplete;
+    expect(component).to.exist;
+
+    const announcementsWrapper = document.querySelector('.announcements-wrapper');
+    expect(announcementsWrapper).to.exist;
+
+    // Initialize urlSearchParams if not already done (since firstUpdated is stubbed)
+    if (!announcementsWrapper.urlSearchParams || typeof announcementsWrapper.urlSearchParams.set !== 'function') {
+      announcementsWrapper.urlSearchParams = new URLSearchParams();
+    }
+
+    // Call handleSearch directly to test handleUrlSearchParams
+    const searchEvent = { target: { value: 'test search' } };
+
+    announcementsWrapper.handleSearch(searchEvent);
+    await component.updateComplete;
+
+    // Verify that replaceState was called
+    expect(replaceStateStub.called).to.be.true;
+
+    // Verify the URL includes the search term
+    const calls = replaceStateStub.getCalls();
+    const lastCall = calls[calls.length - 1];
+    if (lastCall) {
+      const [state, title, url] = lastCall.args;
+      expect(state).to.deep.equal({});
+      expect(title).to.equal('');
+      expect(url.toString()).to.include('term=test');
+    }
+
+    replaceStateStub.restore();
+  });
 });
