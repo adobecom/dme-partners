@@ -105,6 +105,8 @@ export const singlePrpCollectionCardStyles = css`
     -webkit-box-orient: vertical;
     overflow: hidden;
     -webkit-line-clamp: 3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .single-prp-collection-card .card-footer {

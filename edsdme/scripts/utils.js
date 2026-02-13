@@ -425,7 +425,13 @@ function setApiParams(api, block) {
 }
 
 export function getCaasUrl(block) {
-  const domain = 'https://www.stage.adobe.com/chimera-api';
+  let domain = 'https://www.adobe.com/chimera-api';
+  const isProd = prodHosts.includes(window.location.host);
+
+  if (block.collectionTag.includes('caas:adobe-partners/collections/prp-collection') && !isProd) {
+    domain = 'https://www.stage.adobe.com/chimera-api';
+  }
+
   const api = new URL(`${domain}/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true`);
   return setApiParams(api, block);
 }

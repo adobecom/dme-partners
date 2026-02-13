@@ -37,8 +37,8 @@ class SinglePrpCollectionCard extends LitElement {
     const result = [];
 
     arbitrary.forEach((item) => {
-      if (item.category) {
-        result.push(this.localizedText[`{{${item.category}}}`] ?? item.category);
+      if (item.assetType) {
+        result.push(this.localizedText[`{{${item.type}}}`] ?? item.assetType);
       }
 
       if (item.language) {
@@ -67,7 +67,7 @@ class SinglePrpCollectionCard extends LitElement {
           </div>
           <div class="card-footer">
             ${this.hasPreviewOption(this.data.contentArea?.url) ? html`<a class="card-open-link" href="${this.data.contentArea?.url}" target="_blank">${this.localizedText['{{open}}']}</a>` : ''}
-            <a class="card-btn" download="${this.data.contentArea?.title}">${this.localizedText['{{download}}']}</a>
+            <a class="card-btn" @click=${(e) => e.stopPropagation()} download="${this.data.contentArea?.title}" href="${this.data.contentArea?.url}">${this.localizedText['{{download}}']}</a>
           </div>
         </div>
       </div>

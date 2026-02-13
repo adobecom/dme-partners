@@ -43,6 +43,7 @@ export default async function init(el) {
     '{{show-all}}': 'Show all',
     '{{show-more}}': 'Show more',
     '{{show-less}}': 'Show less',
+    '{{type}}': 'Type',
   };
 
   populateLocalizedTextFromListItems(el, localizedText);
