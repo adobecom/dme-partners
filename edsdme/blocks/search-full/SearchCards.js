@@ -360,7 +360,7 @@ export default class Search extends PartnerCards {
       <div @click="${this.handleClickOutside}" class="search-box-wrapper" daa-lh="Search Box" style="${this.blockData.backgroundColor ? `background: ${this.blockData.backgroundColor}` : ''}">
         <div class="search-box content">
           <h3 class="partner-cards-title">
-            ${this.searchTerm && !this.isTypeaheadOpen
+             ${this.searchTerm && this.urlSearchParams instanceof URLSearchParams && this.urlSearchParams.get('term') === this.searchTerm
               ? `${this.blockData.localizedText['{{showing-results-for}}']} ${this.searchTerm}`
               : this.blockData.title
             }
