@@ -1,0 +1,259 @@
+[
+  {
+    "id": "7d1e9529-6702-351e-a7e8-0442100860ec",
+    "eid": "7d1e9529-6702-351e-a7e8-0442100860ec",
+    "showCard": {
+        "from": "",
+        "until": ""
+    },
+    "styles": {
+        "typeOverride": "",
+        "backgroundImage": "https://partners.dev02.corp.adobe.com/content/dam/cpp_assets/prp-assets/restricted/dev-coll/file_example_PNG_1MB.png/_jcr_content/thumbnail.png",
+        "backgroundAltText": "file_example_PNG_1MB.png",
+        "mnemonic": "",
+        "icon": "https://www.adobe.com/content/dam/cc/images/shared/icons/9-nothing.svg",
+        "iconAlt": ""
+    },
+    "overlays": {
+        "banner": {
+            "backgroundColor": "#EAEAEA",
+            "fontColor": "#323232",
+            "description": "",
+            "icon": ""
+        },
+        "logo": {
+            "src": ""
+        },
+        "label": {
+            "description": ""
+        },
+        "videoButton": {
+            "url": ""
+        }
+    },
+    "tags": [
+        {
+            "id": "caas:adobe-partners/cpp/partner-level/certified"
+        },
+        {
+            "id": "caas:adobe-partners/cpp/partner-level/distributor"
+        },
+        {
+            "id": "caas:adobe-partners/cpp/partner-level/gold"
+        },
+        {
+            "id": "caas:adobe-partners/cpp/partner-level/platinum"
+        },
+        {
+            "id": "caas:adobe-partners/cpp/partner-level/registered"
+        },
+        {
+            "id": "caas:adobe-partners/cpp"
+        },
+        {
+            "id": "caas:adobe-partners/collections/prp-collection"
+        },
+        {
+            "id": "caas:file-format/image"
+        }
+    ],
+    "contentArea": {
+        "detailText": "",
+        "title": "file_example_PNG_1MB.png",
+        "url": "https://partners.dev02.corp.adobe.com/channelpartnerassets/prp-assets/restricted/dev-coll/file_example_PNG_1MB.png",
+        "description": " desc asset ",
+        "dateDetailText": {
+            "type": "date-interval",
+            "startTime": "",
+            "endTime": ""
+        }
+    },
+    "footer": [
+        {
+            "divider": false,
+            "left": [
+                {
+                    "type": "bookmark",
+                    "saveCardIcon": "",
+                    "unsaveCardIcon": "",
+                    "cardSaveText": "",
+                    "unsaveCardText": ""
+                }
+            ],
+            "center": [],
+            "right": [
+                {
+                    "type": "button",
+                    "style": "",
+                    "text": "Open",
+                    "href": "https://partners.dev02.corp.adobe.com/channelpartnerassets/prp-assets/restricted/dev-coll/file_example_PNG_1MB.png"
+                }
+            ],
+            "altCta": []
+        }
+    ],
+    "search": {
+        "collection-name": "dev-coll",
+        "product": "adobe-coldfusion",
+        "category": "datasheet",
+        "language": "croatian"
+    },
+    "cardDate": "2026-02-11T11:30:08.213Z",
+    "createdDate": "2026-02-11T11:30:08.213Z",
+    "modifiedDate": "2026-02-11T11:39:00.284Z",
+    "startDate": "",
+    "endDate": "",
+    "ctaLink": "https://partners.dev02.corp.adobe.com/channelpartnerassets/prp-assets/restricted/dev-coll/file_example_PNG_1MB.png",
+    "arbitrary": [
+        {
+            "collection-name": "dev-coll"
+        },
+        {
+            "product": "adobe-connect"
+        },
+        {
+            "product": "adobe-coldfusion"
+        },
+        {
+            "category": "datasheet"
+        },
+        {
+            "language": "croatian"
+        }
+    ],
+    "overlayLink": "https://partners.dev02.corp.adobe.com/channelpartnerassets/prp-assets/restricted/dev-coll/file_example_PNG_1MB.png",
+    "origin": "dme-partners",
+    "lang": "en",
+    "country": "us"
+  },
+  {
+      "id": "1d2855ff-d481-3d8a-8851-d3ea88668f39",
+      "eid": "1d2855ff-d481-3d8a-8851-d3ea88668f39",
+      "showCard": {
+          "from": "",
+          "until": ""
+      },
+      "styles": {
+          "typeOverride": "",
+          "backgroundImage": "https://partners.dev02.corp.adobe.com/edsdme/partners-shared/images/card-collection/sample-pptx.png",
+          "backgroundAltText": "example.pptx",
+          "mnemonic": "",
+          "icon": "https://www.adobe.com/content/dam/cc/images/shared/icons/9-nothing.svg",
+          "iconAlt": ""
+      },
+      "overlays": {
+          "banner": {
+              "backgroundColor": "#EAEAEA",
+              "fontColor": "#323232",
+              "description": "",
+              "icon": ""
+          },
+          "logo": {
+              "src": ""
+          },
+          "label": {
+              "description": ""
+          },
+          "videoButton": {
+              "url": ""
+          }
+      },
+      "tags": [
+          {
+              "id": "caas:adobe-partners/cpp/partner-level/certified"
+          },
+          {
+              "id": "caas:adobe-partners/cpp/partner-level/distributor"
+          },
+          {
+              "id": "caas:adobe-partners/cpp/partner-level/gold"
+          },
+          {
+              "id": "caas:adobe-partners/cpp/partner-level/platinum"
+          },
+          {
+              "id": "caas:adobe-partners/cpp/partner-level/registered"
+          },
+          {
+              "id": "caas:adobe-partners/cpp"
+          },
+          {
+              "id": "caas:adobe-partners/collections/prp-collection"
+          },
+          {
+              "id": "caas:file-format/powerpoint"
+          }
+      ],
+      "contentArea": {
+          "detailText": "",
+          "title": "example.pptx",
+          "url": "https://partners.dev02.corp.adobe.com/channelpartnerassets/prp-assets/restricted/dev-coll/example.pptx",
+          "description": "pptxx description fo asset",
+          "dateDetailText": {
+              "type": "date-interval",
+              "startTime": "",
+              "endTime": ""
+          }
+      },
+      "footer": [
+          {
+              "divider": false,
+              "left": [
+                  {
+                      "type": "bookmark",
+                      "saveCardIcon": "",
+                      "unsaveCardIcon": "",
+                      "cardSaveText": "",
+                      "unsaveCardText": ""
+                  }
+              ],
+              "center": [],
+              "right": [
+                  {
+                      "type": "button",
+                      "style": "",
+                      "text": "Download",
+                      "href": "https://partners.dev02.corp.adobe.com/channelpartnerassets/prp-assets/restricted/dev-coll/example.pptx"
+                  }
+              ],
+              "altCta": []
+          }
+      ],
+      "search": {
+          "collection-name": "dev-coll",
+          "product": "adobe-coldfusion",
+          "category": "toolkit",
+          "language": "danish"
+      },
+      "cardDate": "2026-02-11T11:30:04.643Z",
+      "createdDate": "2026-02-11T11:30:04.643Z",
+      "modifiedDate": "2026-02-11T11:39:00.493Z",
+      "startDate": "",
+      "endDate": "",
+      "ctaLink": "https://partners.dev02.corp.adobe.com/channelpartnerassets/prp-assets/restricted/dev-coll/example.pptx",
+      "arbitrary": [
+          {
+              "collection-name": "dev-coll"
+          },
+          {
+              "product": "adobe-connect"
+          },
+          {
+              "product": "adobe-coldfusion"
+          },
+          {
+              "category": "email"
+          },
+          {
+              "category": "toolkit"
+          },
+          {
+              "language": "danish"
+          }
+      ],
+      "overlayLink": "https://partners.dev02.corp.adobe.com/channelpartnerassets/prp-assets/restricted/dev-coll/example.pptx",
+      "origin": "dme-partners",
+      "lang": "en",
+      "country": "us"
+  }
+]

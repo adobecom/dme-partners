@@ -1,51 +1,42 @@
-import { getLibs } from '../../scripts/utils.js';
+import { getLibs, getCaasUrl } from '../../scripts/utils.js';
 import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
-import Search from './SearchCards.js';
+import PRPCollectionCards from './prp-collection-cards.js';
 
-function declareSearch() {
-  if (customElements.get('search-cards')) return;
-  customElements.define('search-cards', Search);
+function declareCollection() {
+  if (customElements.get('prp-collection-cards')) return;
+  customElements.define('prp-collection-cards', PRPCollectionCards);
 }
 
 export default async function init(el) {
-  performance.mark('search-cards:start');
+  performance.mark('prp-collection-cards:start');
 
   const miloLibs = getLibs();
   const config = getConfig();
 
+  const isArchive = el.classList.contains('archive');
   const sectionIndex = el.parentNode.getAttribute('data-idx');
 
   const localizedText = {
-    '{{all}}': 'All',
     '{{apply}}': 'Apply',
-    '{{assets}}': 'Assets',
     '{{back}}': 'Back',
     '{{clear-all}}': 'Clear all',
     '{{download}}': 'Download',
     '{{filter}}': 'Filter',
     '{{filter-by}}': 'Filter by',
     '{{filters}}': 'Filters',
-    '{{open-in}}': 'Open in',
-    '{{open-in-disabled}}': 'Open in disabled',
-    '{{last-modified}}': 'Last modified',
-    '{{load-more}}': 'Load more',
     '{{next}}': 'Next',
     '{{next-page}}': 'Next Page',
+    '{{load-more}}': 'Load more',
     '{{no-results-description}}': 'Try checking your spelling or broadening your search.',
     '{{no-results-title}}': 'No Results Found',
     '{{of}}': 'Of',
+    '{{open}}': 'Open',
     '{{page}}': 'Page',
-    '{{pages}}': 'Pages',
     '{{prev}}': 'Prev',
     '{{previous-page}}': 'Previous Page',
     '{{results}}': 'Results',
-    '{{search-topics-resources-files}}': 'Search for topics, resources or files',
-    '{{show}}': 'Show',
-    '{{showing-results-for}}': 'Showing results for:',
-    '{{size}}': 'Size',
-    '{{view-all-results}}': 'View all results',
-    '{{show-more}}': 'Show more',
-    '{{show-less}}': 'Show less',
+    '{{search}}': 'Search',
+    '{{type}}': 'Type',
   };
 
   populateLocalizedTextFromListItems(el, localizedText);
@@ -57,30 +48,47 @@ export default async function init(el) {
     import(`${miloLibs}/features/spectrum-web-components/dist/checkbox.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/button.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/progress-circle.js`),
-    import(`${miloLibs}/features/spectrum-web-components/dist/action-button.js`),
-    import(`${miloLibs}/features/spectrum-web-components/dist/icons-workflow.js`),
-    import(`${miloLibs}/features/spectrum-web-components/dist/button-group.js`),
   ]);
 
-  declareSearch();
+  declareCollection();
+
+  const block = {
+    el,
+    collectionTag: '"caas:adobe-partners/collections/prp-collection"',
+    ietf: config.locale.ietf,
+  };
 
   const blockData = {
     localizedText,
     tableData: el.children,
-    cardsPerPage: 12,
+    cardsPerPage: 9,
+    pagination: 'load-more',
+    isArchive,
+    caasUrl: getCaasUrl(block),
     ietf: config.locale.ietf,
-    pagination: 'default',
+    collectionName: '',
   };
 
-  const app = document.createElement('search-cards');
-  app.className = 'search-cards-wrapper';
+  Array.from(el.children).forEach((row) => {
+    const cols = Array.from(row.children);
+
+    if (cols.length === 0) return;
+    const rowTitle = cols[0].innerText.trim().toLowerCase().replace(/ /g, '-');
+
+    if (rowTitle && rowTitle === 'collection-name') {
+      blockData.collectionName = cols[1].innerText;
+    }
+  });
+
+  const app = document.createElement('prp-collection-cards');
+  app.className = 'content prp-collection-wrapper';
   app.blockData = blockData;
   app.setAttribute('data-idx', sectionIndex);
-  app.setAttribute('daa-lh', 'Search Cards Section');
+  app.setAttribute('daa-lh', 'PRP Collection Cards');
   el.replaceWith(app);
 
   await deps;
-  performance.mark('search-cards:end');
-  performance.measure('search-cards block', 'search-cards:start', 'search-cards:end');
+  performance.mark('prp-collection-cards:end');
+  performance.measure('prp-collection-cards block', 'prp-collection-cards:start', 'prp-collection-cards:end');
   return app;
 }

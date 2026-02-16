@@ -39,7 +39,7 @@ describe('search-full block', () => {
     sinon.stub(Search.prototype, 'fetchData').callsFake(async () => {
     });
 
-    sinon.stub(Search.prototype, 'handleActions').callsFake(async function () {
+    sinon.stub(Search.prototype, 'handleActionsCore').callsFake(async function () {
       this.cards = cards;
       this.paginatedCards = this.cards.slice(0, 12);
       this.hasResponseData = true;
@@ -90,7 +90,7 @@ describe('search-full block', () => {
   afterEach(() => {
     fetchStub.restore();
     Search.prototype.fetchData.restore();
-    Search.prototype.handleActions.restore();
+    Search.prototype.handleActionsCore.restore();
     Search.prototype.getSuggestions.restore();
     Search.prototype.setBlockData.restore();
     Search.prototype.firstUpdated.restore();
@@ -149,8 +149,11 @@ describe('search-full block', () => {
 // Unit tests for SearchCard component
 describe('SearchCard Unit Tests', () => {
   let searchCard;
+  let searchComponent;
+  let consoleErrorStub;
 
   beforeEach(async () => {
+    consoleErrorStub = sinon.stub(console, 'error');
     // Import SearchCard component
     await import('../../../edsdme/components/SearchCard.js');
 
@@ -183,9 +186,11 @@ describe('SearchCard Unit Tests', () => {
     };
 
     searchCard.ietf = 'en-US';
+    searchComponent = new Search();
   });
 
   afterEach(() => {
+    consoleErrorStub.restore();
     if (searchCard.parentNode) {
       searchCard.parentNode.removeChild(searchCard);
     }
@@ -225,6 +230,50 @@ describe('SearchCard Unit Tests', () => {
 
       const searchCardsContent = searchCardsWrapper.shadowRoot.querySelectorAll('.content')[1];
       expect(searchCardsContent.getAttribute('daa-lh')).to.equal('Search Cards Content | Filters: No Filters | Search Query: None');
+    });
+  });
+  describe('updateTypeaheadDialog', () => {
+    it('should update typeahead state and options', async () => {
+      const mockDialog = { show: sinon.spy() };
+      const mockInput = { focus: sinon.spy() };
+      searchComponent.renderRoot = {
+        querySelector: sinon.stub()
+          .withArgs('dialog#typeahead').returns(mockDialog)
+          .withArgs('#search')
+          .returns(mockInput),
+      };
+      searchComponent.contentType = 'all';
+      searchComponent.searchTerm = 'analytics';
+      searchComponent.isTypeaheadOpen = false;
+      await searchComponent.updateTypeaheadDialog();
+      expect(searchComponent.isTypeaheadOpen).to.be.true;
+    });
+
+    it('should not update typeahead when searchTerm is empty', async () => {
+      const mockDialog = { show: sinon.spy() };
+      searchComponent.renderRoot = { querySelector: sinon.stub().withArgs('dialog#typeahead').returns(mockDialog) };
+      searchComponent.searchTerm = '';
+      searchComponent.typeaheadOptions = ['existing', 'suggestions'];
+      await searchComponent.updateTypeaheadDialog();
+      expect(searchComponent.typeaheadOptions).to.deep.equal([]);
+      expect(mockDialog.show.called).to.be.false;
+    });
+
+    it('should handle errors gracefully', async () => {
+      const mockDialog = { show: sinon.spy() };
+      const mockInput = { focus: sinon.spy() };
+      searchComponent.renderRoot = {
+        querySelector: sinon.stub()
+          .withArgs('dialog#typeahead').returns(mockDialog)
+          .withArgs('#search')
+          .returns(mockInput),
+      };
+      searchComponent.searchTerm = 'test';
+      searchComponent.isTypeaheadOpen = false;
+      const getSuggestionsStub = sinon.stub(searchComponent, 'getSuggestions').rejects(new Error('API Error'));
+      await searchComponent.updateTypeaheadDialog();
+      expect(consoleErrorStub.called).to.be.true;
+      getSuggestionsStub.restore();
     });
   });
 });

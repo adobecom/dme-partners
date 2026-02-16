@@ -39,7 +39,7 @@ export default class SmokeTest {
     this.cal = page.locator('div.feds-menu-items a[href*="/sales-resources/cal/"]');
     this.geoModal = page.locator('#locale-modal-v2');
     this.cbcLearnMore = page.locator('.media .media-row a[href*="/bin/fusion/modalImsLogin?resource=%2Fen%2Fnews%2Fenablement-news-partner-lock"]');
-    this.findDistributorBtn = page.locator('.feds-navItem .feds-cta-wrapper a[href*="/api/v1/web/dx-partners-runtime/sfdc-redirect?program_type=channel&request_type=distributor_finder"]');
+    this.findDistributorBtn = page.getByRole('link', { name: 'Find a Distributor' });
     this.programGnavOption = page.locator('.feds-navItem a[href*="/channelpartners/program"]');
     this.supportGnavOption = page.locator('.feds-navLink.feds-navLink--hoverCaret');
     this.supportResources = page.locator('.feds-navItem a[href*="/channelpartners/support"]');
@@ -146,7 +146,7 @@ export default class SmokeTest {
   }
 
   getFindPartnerByRegion(text) {
-    return this.page.locator(`#feds-nav-wrapper a[href*="/PartnerSearch"]:has-text("${text}")`);
+    return this.page.locator(`#feds-nav-wrapper a[href*="/s/directory/"]:has-text("${text}")`);
   }
 
   getGeoModalLink(linkText) {

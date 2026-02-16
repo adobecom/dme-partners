@@ -265,8 +265,8 @@ export default {
       tags: '@dme-smoke-test',
       data: {
         partnerLevel: 'cpp-distributor-us:',
-        expectedSalesForceURL: 'salesforce-sites.com/PartnerSearch',
-        expectedFindURL: '/api/v1/web/dx-partners-runtime/sfdc-redirect?program_type=channel&request_type=distributor_finder',
+        expectedSalesForceURL: '/s/directory/channel?lang=en&view=distributor',
+        expectedFindURL: '/s/directory/channel?lang=en&view=distributor',
         expectedID: 'tid',
       },
     },
