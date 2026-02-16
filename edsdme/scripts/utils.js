@@ -425,7 +425,13 @@ function setApiParams(api, block) {
 }
 
 export function getCaasUrl(block) {
-  const domain = 'https://www.adobe.com/chimera-api';
+  let domain = 'https://www.adobe.com/chimera-api';
+  const isProd = prodHosts.includes(window.location.host);
+
+  if (block.collectionTag.includes('caas:adobe-partners/collections/prp-collection') && !isProd) {
+    domain = 'https://www.stage.adobe.com/chimera-api';
+  }
+
   const api = new URL(`${domain}/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true`);
   return setApiParams(api, block);
 }
@@ -435,8 +441,9 @@ export async function preloadResources(locales, miloLibs) {
   const cardBlocks = {
     announcements: '"caas:adobe-partners/collections/announcements"',
     'announcements-preview': '"caas:adobe-partners/collections/announcements"',
+    'prp-collection': '"caas:adobe-partners/collections/prp-collection"',
   };
-  const blockWithPlaceholders = ['announcements', 'search-full', 'logos', 'pricelist'];
+  const blockWithPlaceholders = ['announcements', 'search-full', 'logos', 'pricelist', 'prp-collection'];
   let isPreloadCalled = false;
   blockWithPlaceholders.forEach(async (item) => {
     const el = document.querySelector(`.${item}`);
