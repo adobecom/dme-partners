@@ -1,5 +1,5 @@
 import { singlePrpCollectionCardStyles } from './SinglePrpCollectionCardStyles.js';
-import { formatDate, getLibs } from '../scripts/utils.js';
+import { formatDate, getLibs } from '../../scripts/utils.js';
 
 const miloLibs = getLibs();
 const { html, LitElement } = await import(`${miloLibs}/deps/lit-all.min.js`);

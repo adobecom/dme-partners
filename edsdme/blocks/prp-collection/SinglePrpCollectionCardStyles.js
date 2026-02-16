@@ -1,10 +1,13 @@
-import { getLibs } from '../scripts/utils.js';
+import { getLibs } from '../../scripts/utils.js';
 
 const miloLibs = getLibs();
 const { css } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
 const borderColor = css`#eaeaea`;
 const blueColor = css`#1473e6`;
+const darkGrey = css`#323232`;
+const darkGrey2 = css`#222222`;
+const white = css`#fff`;
 
 export const singlePrpCollectionCardStyles = css`
   .single-prp-collection-card * {
@@ -14,7 +17,7 @@ export const singlePrpCollectionCardStyles = css`
   .single-prp-collection-card {
     display: flex;
     flex-direction: column;
-    background-color: #fff;
+    background-color: ${white};
     border: 1px solid ${borderColor};
     border-radius: 4px;
     overflow: hidden;
@@ -30,7 +33,7 @@ export const singlePrpCollectionCardStyles = css`
   .single-prp-collection-card .card-header {
     min-height: 192px;
     max-height: 192px;
-    background-color: #323232;
+    background-color: ${darkGrey};
     background-repeat: no-repeat;
     background-position: 50% 50%;
     background-size: cover;
@@ -62,7 +65,7 @@ export const singlePrpCollectionCardStyles = css`
     left: 15px;
     top: 15px;
     padding: 5px 10px;
-    background: #fff;
+    background: ${white};
     font-size: 12px;
     line-height: 14px;
     border-radius: 5px;
@@ -74,13 +77,13 @@ export const singlePrpCollectionCardStyles = css`
   .single-prp-collection-card .card-content {
     display: flex;
     flex-direction: column;
-    background-color: #fff;
+    background-color: ${white};
     padding: 16px 16px 0px;
     height: 100%;
   }
 
   .single-prp-collection-card .card-title {
-    color: #323232;
+    color: ${darkGrey};
     font-size: 1.125rem;
     font-weight: 700;
     line-height: 1.375rem;
@@ -135,8 +138,8 @@ export const singlePrpCollectionCardStyles = css`
     padding-left: 14px;
     padding-right: 14px;
     text-decoration: none;
-    color: #222222;
-    border: 2px solid #222222;
+    color: ${darkGrey2};
+    border: 2px solid ${darkGrey2};
     border-radius: 16px;
     background-color: #ffffff00;
     cursor: pointer;
@@ -145,9 +148,9 @@ export const singlePrpCollectionCardStyles = css`
 
   .single-prp-collection-card .card-btn:hover {
     text-decoration: none;
-    border-color: #222222;
-    background-color: #222222;
-    color: #ffffff;
+    border-color: ${darkGrey2};
+    background-color: ${darkGrey2};
+    color: ${white};
   }
 
   .single-prp-collection-card .card-open-link {

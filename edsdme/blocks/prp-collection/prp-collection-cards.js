@@ -1,6 +1,6 @@
 import { getLibs } from '../../scripts/utils.js';
 import PartnerCards from '../../components/PartnerCards.js';
-import '../../components/SinglePrpCollectionCard.js';
+import './SinglePrpCollectionCard.js';
 
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);

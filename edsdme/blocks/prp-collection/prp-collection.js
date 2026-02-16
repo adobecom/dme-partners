@@ -71,6 +71,8 @@ export default async function init(el) {
 
   Array.from(el.children).forEach((row) => {
     const cols = Array.from(row.children);
+
+    if (cols.length === 0) return;
     const rowTitle = cols[0].innerText.trim().toLowerCase().replace(/ /g, '-');
 
     if (rowTitle && rowTitle === 'collection-name') {
