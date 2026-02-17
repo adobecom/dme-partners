@@ -38,7 +38,7 @@ class SinglePrpCollectionCard extends LitElement {
 
     arbitrary.forEach((item) => {
       if (item['asset-type']) {
-        result.push(this.localizedText[`{{${item.type}}}`] ?? item['asset-type']);
+        result.push(this.localizedText[`{{${item['asset-type']}}}`] ?? item['asset-type']);
       }
 
       if (item.language) {
