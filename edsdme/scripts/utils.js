@@ -348,6 +348,11 @@ function preloadLit(miloLibs) {
   document.head.appendChild(preloadLink);
 }
 
+export function getPermissionSpecializations() {
+  const permissionSpecializations = getPartnerCookieValue(getCurrentProgramType(), 'permissionspecializations');
+  return permissionSpecializations.toLowerCase();
+}
+
 function getPartnerLevelParams(portal) {
   const partnerLevel = getPartnerCookieValue(portal, 'level');
   const partnerTagBase = `"caas:adobe-partners/${portal}/partner-level/`;
