@@ -410,16 +410,17 @@ function getComplexQueryParams(el, collectionTag) {
   return resulStr;
 }
 
-function setApiParams(api, block) {
+function setApiParams(api, block, includeLanguage = true) {
   const { el, collectionTag, ietf } = block;
   const complexQueryParams = getComplexQueryParams(el, collectionTag);
   if (complexQueryParams) api.searchParams.set('complexQuery', complexQueryParams);
-
-  const langCode = ietf === 'en-GB' ? 'en-US' : ietf;
-  const [language, country] = langCode.split('-');
-  if (language && country) {
-    api.searchParams.set('language', language);
-    api.searchParams.set('country', country);
+  if (includeLanguage) {
+    const langCode = ietf === 'en-GB' ? 'en-US' : ietf;
+    const [language, country] = langCode.split('-');
+    if (language && country) {
+      api.searchParams.set('language', language);
+      api.searchParams.set('country', country);
+    }
   }
   return api.toString();
 }
@@ -428,12 +429,13 @@ export function getCaasUrl(block) {
   let domain = 'https://www.adobe.com/chimera-api';
   const isProd = prodHosts.includes(window.location.host);
 
-  if (block.collectionTag.includes('caas:adobe-partners/collections/prp-collection') && !isProd) {
+  const isPrpCollection = block.collectionTag.includes('caas:adobe-partners/collections/prp-collection');
+  if ((isPrpCollection) && !isProd) {
     domain = 'https://www.stage.adobe.com/chimera-api';
   }
 
   const api = new URL(`${domain}/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true`);
-  return setApiParams(api, block);
+  return setApiParams(api, block, !isPrpCollection);
 }
 
 export async function preloadResources(locales, miloLibs) {
