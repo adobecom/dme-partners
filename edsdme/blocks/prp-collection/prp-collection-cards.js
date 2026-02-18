@@ -1,4 +1,4 @@
-import { getLibs } from '../../scripts/utils.js';
+import { getLibs, getPermissionSpecializations } from '../../scripts/utils.js';
 import PartnerCards from '../../components/PartnerCards.js';
 import './SinglePrpCollectionCard.js';
 
@@ -17,6 +17,23 @@ export function filterCardsByCollectionName(cards, collectionName) {
       console.error(`Invalid title: ${collectionName}`, error);
       return false;
     }
+  });
+}
+
+function filterCardsBySpecialization(cards) {
+  const userSpecializations = getPermissionSpecializations();
+
+  return cards.filter((card) => {
+    const arbitrary = card?.arbitrary || [];
+
+    const cardSpecializations = arbitrary
+      .filter((item) => item && typeof item === 'object' && 'specializations' in item)
+      .map((item) => `${item.specializations}`.trim().toLowerCase())
+      .filter(Boolean);
+
+    if (cardSpecializations.length === 0) return true;
+
+    return cardSpecializations.some((spec) => userSpecializations.includes(spec));
   });
 }
 
@@ -40,5 +57,7 @@ export default class PRPCollectionCards extends PartnerCards {
   onDataFetched(apiData) {
     // Filter assets by collection name
     apiData.cards = filterCardsByCollectionName(apiData.cards, this.blockData.collectionName);
+    // Filter assets if user has access based on specialization
+    apiData.cards = filterCardsBySpecialization(apiData.cards);
   }
 }
