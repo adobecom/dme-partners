@@ -93,6 +93,7 @@ export default class PartnerCards extends LitElement {
           };
         }
         const filterTagsKeys = [];
+
         filterTagsKeysEl.querySelectorAll('ul')[0].querySelectorAll('li').forEach((li) => {
           const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
           if (key !== '') filterTagsKeys.push(createTag(key, false, this.blockData));
@@ -421,8 +422,8 @@ export default class PartnerCards extends LitElement {
     : ''}
               <sp-theme theme="spectrum" color="light" scale="medium">
                 ${this.getTagsByFilter(filter)}
-                <a class="hide-filter-option" 
-                   href="#" 
+                <a class="hide-filter-option"
+                   href="#"
                    @click=${(event) => { event.preventDefault(); this.toggleHideTags(filter); }}
                    ?hidden=${!filter.hasHiddenTags}>
                   ${filter.hideTags ? this.blockData.localizedText['{{show-more}}']
@@ -661,7 +662,7 @@ export default class PartnerCards extends LitElement {
       url.search = '';
     }
 
-    window.history.pushState({}, '', url);
+    window.history.replaceState({}, '', url);
   }
 
   handleTag(event, tag, filterKey) {
@@ -844,7 +845,7 @@ export default class PartnerCards extends LitElement {
                     <div class="sidebar-filters-wrapper">
                       ${this.filters}
                     </div>
-                    ${this.blockData.filterInfoBox.title ? html` 
+                    ${this.blockData.filterInfoBox.title ? html`
                       <div class="sidebar-info-box">
                       <div class="title">${this.blockData.filterInfoBox.title}</div>
                       ${this.renderInfoBoxDescription()}

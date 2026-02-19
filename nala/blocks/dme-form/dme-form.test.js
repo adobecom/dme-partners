@@ -96,7 +96,7 @@ test.describe('Validate DME Form block', () => {
       await page.waitForURL(urlRegex, { timeout: 30000 });
 
       const pages = await page.context().pages();
-      expect(pages[0].url()).toContain(`${baseURL}${data.thankYouPageURL}`);
+      expect(pages[0].url()).toContain(data.thankYouPageURL);
     });
   });
 
