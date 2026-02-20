@@ -8,6 +8,7 @@ import { debounce } from '../utils/action.js';
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 const SEE_ALL = 'SEE_ALL';
+const MAX_SEARCH_LENGTH = 200;
 const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
 
 export default class Search extends PartnerCards {
@@ -76,6 +77,10 @@ export default class Search extends PartnerCards {
 
   async updateTypeaheadDialog() {
     try {
+      if (!this.searchTerm) {
+        this.typeaheadOptions = [];
+        return;
+      }
       if (!this.isTypeaheadOpen) {
         this.isTypeaheadOpen = true;
         // eslint-disable-next-line no-underscore-dangle
@@ -356,13 +361,13 @@ export default class Search extends PartnerCards {
       <div @click="${this.handleClickOutside}" class="search-box-wrapper" daa-lh="Search Box" style="${this.blockData.backgroundColor ? `background: ${this.blockData.backgroundColor}` : ''}">
         <div class="search-box content">
           <h3 class="partner-cards-title">
-            ${this.searchTerm && !this.isTypeaheadOpen
+             ${this.searchTerm && this.urlSearchParams instanceof URLSearchParams && this.urlSearchParams.get('term') === this.searchTerm
               ? `${this.blockData.localizedText['{{showing-results-for}}']} ${this.searchTerm}`
               : this.blockData.title
             }
           </h3>
           <sp-theme class="search-wrapper" theme="spectrum" color="light" scale="medium">
-            <sp-search @keydown="${this.handleEnter}" id="search" size="m" value="${this.searchTerm}" @input="${this.onSearchInput}" @submit="${(event) => event.preventDefault()}" placeholder="${this.blockData.localizedText['{{search-topics-resources-files}}']}"></sp-search>
+            <sp-search @keydown="${this.handleEnter}" id="search" size="m" maxlength="${MAX_SEARCH_LENGTH}" value="${this.searchTerm}" @input="${this.onSearchInput}" @submit="${(event) => event.preventDefault()}" placeholder="${this.blockData.localizedText['{{search-topics-resources-files}}']}"></sp-search>
             <dialog class="suggestion-dialog-wrapper" @close="${this.dialogClosed}" id="typeahead">
               <div class="suggestion-dialog ">
                 ${this.typeaheadOptionsHTML}
