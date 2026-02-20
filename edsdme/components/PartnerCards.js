@@ -439,6 +439,7 @@ export default class PartnerCards extends LitElement {
     return this.cards?.length;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   handleMobileFilterBackdropClick(e) {
     if (e.target === e.currentTarget) {
       e.currentTarget.classList.remove('expanded');
