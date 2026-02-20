@@ -573,7 +573,7 @@ export default class PartnerCards extends LitElement {
     this.paginationCounter = 1;
     this.handleActions();
     this.handleFilterAction();
-    if (this.blockData.filters.length) this.handleUrlSearchParams();
+    this.handleUrlSearchParams();
   }
 
   // eslint-disable-next-line class-methods-use-this
