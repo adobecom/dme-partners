@@ -440,7 +440,6 @@ export default class PartnerCards extends LitElement {
   }
 
   handleMobileFilterBackdropClick(e) {
-    // only close if the click is on the backdrop itself (not inside the dialog)
     if (e.target === e.currentTarget) {
       e.currentTarget.classList.remove('expanded');
     }
