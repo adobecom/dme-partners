@@ -44,29 +44,60 @@ test.describe('Smoke Tests', () => {
     });
   });
   // @home-page-validation-smoke-test
-  test(`${features[1].name}, ${features[1].tags}`, async ({ page, baseURL }) => {
+  test(`${features[1].name}, ${features[1].tags}`, async ({ page, baseURL }, testInfo) => {
+    const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+    const prefix = `[${testId}]`;
+    const testStart = Date.now();
+    const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+    const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
+  
+    log('Starting test');
+
     await test.step('Click Sign In button', async () => {
+      log('signInButtonInt waitFor visible START');
+      await signInSmokeTest.signInButtonInt.waitFor({ state: 'visible' });
+      log('signInButtonInt waitFor visible done');
       // finding sign in button
       const signInButtonInt = await signInSmokeTest.getSignInButton(
         `${features[1].data.signInButtonInternationalText}`,
       );
       // click on sign in button
       await signInButtonInt.click();
+      log('signInButtonInt click done');
+      log('smokeSignIn START');
     });
     await test.step('Sing In, enter user email and password', async () => {
       // entering user email and password
-      await smokeTest.smokeSignIn(page, baseURL, `${features[1].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[1].data.partnerLevel}`, log);
+      log('smokeSignIn END');
+      log('wait networkidle START');
+      await page.waitForLoadState('networkidle');
+      log('wait networkidle END');
     });
     await test.step('Verify protected Gnav exists', async () => {
       await smokeTest.verifyProtectedGnav();
+      log('verifyProtectedGnav START');
+      log('verifyProtectedGnav done');
     });
     await test.step('Verify Profile Icon exists', async () => {
       await smokeTest.verifyProfileIcon();
+      log('verifyProfileIcon done');
     });
   });
   // @price-list-validation-smoke-test
-  test(`${features[2].name}, ${features[2].tags}`, async ({ page, baseURL }) => {
+  test(`${features[2].name}, ${features[2].tags}`, async ({ page, baseURL }, testInfo) => {
+    const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+    const prefix = `[${testId}]`;
+    const testStart = Date.now();
+    const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+    const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
+  
+    log('Starting test');
+
     await test.step('Click Sign In button', async () => {
+      log('signInButtonInt waitFor visible START');
+      await signInSmokeTest.signInButtonInt.waitFor({ state: 'visible' });
+      log('signInButtonInt waitFor visible done');
       // finding sign in button
       const signInButtonInt = await signInSmokeTest.getSignInButton(
         `${features[2].data.signInButtonInternationalText}`,
@@ -93,29 +124,47 @@ test.describe('Smoke Tests', () => {
     });
   });
   // @search-page-validation-smoke-test
-  test(`${features[3].name}, ${features[3].tags}`, async ({ page, baseURL }) => {
+  test(`${features[3].name}, ${features[3].tags}`, async ({ page, baseURL }, testInfo) => {
+    const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+    const prefix = `[${testId}]`;
+    const testStart = Date.now();
+    const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+    const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
+  
+    log('Starting test');
+
     const { data } = features[3];
     await test.step('Click Sign In button', async () => {
+      log('signInButtonInt waitFor visible START');
+      await signInSmokeTest.signInButtonInt.waitFor({ state: 'visible' });
+      log('signInButtonInt waitFor visible done');
       // finding sign in button
       const signInButtonInt = await signInSmokeTest.getSignInButton(
         `${features[3].data.signInButtonInternationalText}`,
       );
       // click on sign in button
       await signInButtonInt.click();
+      log('signInButtonInt click done');
     });
     await test.step('Sing In, enter user email and password', async () => {
       // entering user email and password
-      await smokeTest.smokeSignIn(page, baseURL, `${features[2].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[2].data.partnerLevel}`, log);
+      log('smokeSignIn END');
+      log('wait networkidle START');
+      await page.waitForLoadState('networkidle');
+      log('wait networkidle END');
     });
     await test.step('Click rearch from GNav', async () => {
       // cliking on search from gnav
       await smokeTest.searchGnav.click();
+      log('searchGnav click done');
     });
     // search pdf and click enter
     await test.step('Verify a search field and type text', async () => {
       //   await smokeTest.search();
       await smokeTest.searchGnavField.fill(data.searchText);
       await smokeTest.searchGnavField.press('Enter');
+      log('searchGnavField press Enter done');
     });
 
     await test.step('Verify search page conntent', async () => {
@@ -123,16 +172,26 @@ test.describe('Smoke Tests', () => {
         'value',
       );
       expect(searchFieldValue).toContain(data.searchText);
+      log('searchFieldValue toContain done');
     });
 
     await test.step('Find a row in assets list and click on download', async () => {
       await smokeTest.assetTabs.click();
       await smokeTest.searchPageDownloadButton();
+      log('searchPageDownloadButton done');
     });
   });
 
   // @user-redirection-apac-smoke-test
-  test(`${features[4].name}, ${features[4].tags}`, async ({ page, baseURL }) => {
+  test(`${features[4].name}, ${features[4].tags}`, async ({ page, baseURL }, testInfo) => {
+    const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+    const prefix = `[${testId}]`;
+    const testStart = Date.now();
+    const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+    const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
+  
+    log('Starting test');
+
     await test.step('Click Sign In button', async () => {
       // finding sign in button
       const signInButtonInt = await signInSmokeTest.getSignInButton(
@@ -140,20 +199,33 @@ test.describe('Smoke Tests', () => {
       );
       // click on sign in button
       await signInButtonInt.click();
+      log('signInButtonInt click done');
     });
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
-      await smokeTest.smokeSignIn(page, baseURL, `${features[4].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[4].data.partnerLevel}`, log);
+      log('smokeSignIn END');
+      log('wait networkidle START');
       await page.waitForLoadState('networkidle');
+      log('wait networkidle END');
 
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
         features[4].data.expectedPublicPageURL,
       );
+      log('currentURL toContain done');
     });
   });
   // @user-redirection-emea-smoke-test
-  test(`${features[5].name}, ${features[5].tags}`, async ({ page, baseURL }) => {
+  test(`${features[5].name}, ${features[5].tags}`, async ({ page, baseURL }, testInfo) => {
+    const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+    const prefix = `[${testId}]`;
+    const testStart = Date.now();
+    const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+    const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
+  
+    log('Starting test');
+
     await test.step('Click Sign In button', async () => {
       // finding sign in button
       const signInButtonInt = await signInSmokeTest.getSignInButton(
@@ -161,20 +233,33 @@ test.describe('Smoke Tests', () => {
       );
       // click on sign in button
       await signInButtonInt.click();
+      log('signInButtonInt click done');
     });
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
-      await smokeTest.smokeSignIn(page, baseURL, `${features[5].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[5].data.partnerLevel}`, log);
+      log('smokeSignIn END');
+      log('wait networkidle START');
       await page.waitForLoadState('networkidle');
+      log('wait networkidle END');
 
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
         features[5].data.expectedPublicPageURL,
       );
+      log('currentURL toContain done');
     });
   });
   // @user-redirection-jp-smoke-test
-  test(`${features[6].name}, ${features[6].tags}`, async ({ page, baseURL }) => {
+  test(`${features[6].name}, ${features[6].tags}`, async ({ page, baseURL }, testInfo) => {
+    const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+    const prefix = `[${testId}]`;
+    const testStart = Date.now();
+    const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+    const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
+  
+    log('Starting test');
+
     await test.step('Click Sign In button', async () => {
       // finding sign in button
       const signInButtonInt = await signInSmokeTest.getSignInButton(
@@ -182,19 +267,32 @@ test.describe('Smoke Tests', () => {
       );
       // click on sign in button
       await signInButtonInt.click();
+      log('signInButtonInt click done');
     });
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
-      await smokeTest.smokeSignIn(page, baseURL, `${features[6].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[6].data.partnerLevel}`, log);
+      log('smokeSignIn END');
+      log('wait networkidle START');
       await page.waitForLoadState('networkidle');
+      log('wait networkidle END');
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
         features[6].data.expectedPublicPageURL,
       );
+      log('currentURL toContain done');
     });
   });
   // @search-page-validation-smoke-test
-  test(`${features[7].name}, ${features[7].tags}`, async ({ page, baseURL }) => {
+  test(`${features[7].name}, ${features[7].tags}`, async ({ page, baseURL }, testInfo) => {
+    const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+    const prefix = `[${testId}]`;
+    const testStart = Date.now();
+    const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+    const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
+  
+    log('Starting test');
+
     await test.step('Click Sign In button', async () => {
       // finding sign in button
       const signInButtonInt = await signInSmokeTest.getSignInButton(
@@ -202,19 +300,32 @@ test.describe('Smoke Tests', () => {
       );
       // click on sign in button
       await signInButtonInt.click();
+      log('signInButtonInt click done');
     });
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
-      await smokeTest.smokeSignIn(page, baseURL, `${features[7].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[7].data.partnerLevel}`, log);
+      log('smokeSignIn END');
+      log('wait networkidle START');
       await page.waitForLoadState('networkidle');
+      log('wait networkidle END');
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
         features[7].data.expectedPublicPageURL,
       );
+      log('currentURL toContain done');
     });
   });
   // @announcement-page-validation-smoke-test
-  test(`${features[8].name}, ${features[8].tags}`, async ({ page, baseURL }) => {
+  test(`${features[8].name}, ${features[8].tags}`, async ({ page, baseURL }, testInfo) => {
+    const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+    const prefix = `[${testId}]`;
+    const testStart = Date.now();
+    const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+    const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
+  
+    log('Starting test');
+
     await test.step('Click Sign In button', async () => {
       // finding sign in button
       const signInButtonInt = await signInSmokeTest.getSignInButton(
@@ -222,20 +333,34 @@ test.describe('Smoke Tests', () => {
       );
       // click on sign in button
       await signInButtonInt.click();
+      log('signInButtonInt click done');
     });
     await test.step('Sing In', async () => {
       // entering user email and password
-      await smokeTest.smokeSignIn(page, baseURL, `${features[8].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[8].data.partnerLevel}`, log);
+      log('smokeSignIn END');
+      log('wait networkidle START');
+      await page.waitForLoadState('networkidle');
+      log('wait networkidle END');
 
       await test.step('Click on Announcments from GNav and verify one Announcment card is displayed and page is loaded correctly', async () => {
         await smokeTest.announcemnts.click();
         await smokeTest.announcmentCardVerification({ expect });
+        log('announcmentCardVerification done');
       });
     });
   });
   // @search-page-query-param-validation-smoke-test
-  test(`${features[9].name}, ${features[9].tags}`, async ({ page, baseURL }) => {
-    const { data } = features[9];
+  test(`${features[9].name}, ${features[9].tags}`, async ({ page, baseURL }, testInfo) => {
+    const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+    const prefix = `[${testId}]`;
+    const testStart = Date.now();
+    const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+    const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
+  
+    log('Starting test');
+
+    const { data } = features[9]; 
 
     await test.step('Go to prefiltered Search page', async () => {
       await page.goto(`${baseURL}${features[9].path}`);
@@ -244,6 +369,13 @@ test.describe('Smoke Tests', () => {
     await test.step('Sing In, enter user email and password', async () => {
       // entering user email and password
       await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`);
+      log('smokeSignIn END');
+      log('wait networkidle START');
+      await page.waitForLoadState('networkidle');
+      log('wait networkidle END');
+      const currentURL = await page.evaluate(() => window.location.href);
+      await expect(currentURL).toContain(data.searchText);
+      log('currentURL toContain done');
     });
 
     /**
@@ -400,7 +532,15 @@ test.describe('Smoke Tests', () => {
     });
   });
   // @cal-links-apac-validation-smoke-test
-  test(`${features[16].name}, ${features[16].tags}`, async ({ page, baseURL }) => {
+  test(`${features[16].name}, ${features[16].tags}`, async ({ page, baseURL }, testInfo) => {
+    const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+    const prefix = `[${testId}]`;
+    const testStart = Date.now();
+    const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+    const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
+  
+    log('Starting test');
+
     const signInButtonInt = await signInSmokeTest.getSignInButton(
       `${features[16].data.signInButtonInternationalText}`,
     );
@@ -409,7 +549,11 @@ test.describe('Smoke Tests', () => {
 
     await test.step('Sing In, enter user email and password', async () => {
     // entering user email and password
-      await smokeTest.smokeSignIn(page, baseURL, `${features[16].data.partnerLevel}`);
+      await smokeTest.smokeSignIn(page, baseURL, `${features[16].data.partnerLevel}`, log);
+      log('smokeSignIn END');
+      log('wait networkidle START');
+      await page.waitForLoadState('networkidle');
+      log('wait networkidle END');
     });
     await test.step('Cal page verification', async () => {
       // verify APC program guids
@@ -444,22 +588,34 @@ test.describe('Smoke Tests', () => {
   });
 
   // @join-now-button-validation-smoke-test
-  test(`${features[17].name}, ${features[17].tags}`, async ({ page, baseURL }) => {
+  test(`${features[17].name}, ${features[17].tags}`, async ({ page, baseURL }, testInfo) => {
+    const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+    const prefix = `[${testId}]`;
+    const testStart = Date.now();
+    const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+    const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
+  
+    log('Starting test');
+
     const { data, path } = features[17];
+    log('joinNowButton getJoinNowButtonByRegion START');
     const joinNowButton = await smokeTest.getJoinNowButtonByRegion(data.joinNowButtonText);
 
     await test.step('Verify if Join Now button is not visible on international pages', async () => {
       await page.goto(`${baseURL}${path}`);
+      log('goto done');
       await expect(joinNowButton).toBeHidden();
     });
 
     await test.step('Verify if Join Now button is visible on North America pages', async () => {
       await page.goto(data.naLocaleSwitchUrl);
+      log('goto done');
       await expect(joinNowButton).toBeVisible();
     });
 
     await test.step('Verify if Join button is visible on Latin America pages', async () => {
       await page.goto(data.latamLocaleSwitchUrl);
+      log('goto done');
       await expect(joinNowButton).toBeVisible();
     });
 
@@ -524,11 +680,21 @@ test.describe('Smoke Tests', () => {
   });
 
   // @find-partner-validation-smoke-test
-  test(`${features[18].name}, ${features[18].tags}`, async ({ page, baseURL }) => {
+  test(`${features[18].name}, ${features[18].tags}`, async ({ page, baseURL }, testInfo) => {
+    const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+    const prefix = `[${testId}]`;
+    const testStart = Date.now();
+    const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+    const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
+  
+    log('Starting test');
+
     const { data, path } = features[18];
+    log('verifyGeoModalAndPartnerLinks START');
 
     await test.step('Verify if geo modal and Find a Partner link are visible on North America pages', async () => {
       await verifyGeoModalAndPartnerLinks(page, data.geoModalLinkNA, `${baseURL}${path}`, data.findPartnerLinkText);
+      log('verifyGeoModalAndPartnerLinks done');
     });
 
     await test.step('Verify if geo modal and Find a Partner link are visible on German pages', async () => {
