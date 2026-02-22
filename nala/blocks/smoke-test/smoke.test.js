@@ -541,10 +541,12 @@ test.describe('Smoke Tests', () => {
   });
 
   // @sso-integration-between-apc-and-cbc
-  test(`${features[19].name}, ${features[19].tags}`, async ({ page, baseURL }) => {
+  test(`${features[19].name}, ${features[19].tags}`, async ({ page, baseURL }, testInfo) => {
+    const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+    const prefix = `[${testId}]`;
     const testStart = Date.now();
     const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
-    const log = (msg) => console.log(`[${ts()}] ${msg}`);
+    const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
   
@@ -585,10 +587,12 @@ test.describe('Smoke Tests', () => {
   });
 
   // @sso-integration-between-apc-and-finder
-  test(`${features[20].name}, ${features[20].tags}`, async ({ page, baseURL }) => {
+  test(`${features[20].name}, ${features[20].tags}`, async ({ page, baseURL }, testInfo) => {
+    const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+    const prefix = `[${testId}]`;
     const testStart = Date.now();
     const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
-    const log = (msg) => console.log(`[${ts()}] ${msg}`);
+    const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
 
@@ -627,11 +631,13 @@ test.describe('Smoke Tests', () => {
   // @na-footer-and-gnav-validation
   // @kr-footer-and-gnav-validation
   regionBasedFooterAndGnav.forEach((feature) => {
-    test(`${feature.name},${feature.tags}`, async ({ page, baseURL }) => {
+    test(`${feature.name},${feature.tags}`, async ({ page, baseURL }, testInfo) => {
+      const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+      const prefix = `[${testId}]`;
       const { data } = feature;
       const testStart = Date.now();
       const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
-      const log = (msg) => console.log(`[${ts()}] ${msg}`);
+      const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
       log('Starting test');
 
@@ -688,11 +694,14 @@ test.describe('Smoke Tests', () => {
   });
 
   // @logo-redirection-validation-smoke-test
-  test(`${features[23].name}, ${features[23].tags}`, async ({ page, baseURL }) => {
+  test(`${features[23].name}, ${features[23].tags}`, async ({ page, baseURL }, testInfo) => {
     const { data, path } = features[23];
+    const testId = testInfo.title.replace(/\s+/g, '_').slice(0, 30);
+    const prefix = `[${testId}]`;
+
     const testStart = Date.now();
     const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
-    const log = (msg) => console.log(`[${ts()}] ${msg}`);
+    const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
 
