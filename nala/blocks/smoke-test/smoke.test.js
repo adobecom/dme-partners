@@ -542,12 +542,35 @@ test.describe('Smoke Tests', () => {
 
   // @sso-integration-between-apc-and-cbc
   test(`${features[19].name}, ${features[19].tags}`, async ({ page, baseURL }) => {
+    const testStart = Date.now();
+    const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+    const log = (msg) => console.log(`[${ts()}] ${msg}`);
+  
+    log('Starting test');
+  
+    // Slow network logging
+    const starts = new Map();
+    page.on('request', req => starts.set(req, Date.now()));
+    page.on('response', res => {
+      const req = res.request();
+      const t0 = starts.get(req);
+      if (!t0) return;
+      const ms = Date.now() - t0;
+      if (ms > 2000) log(`SLOW ${ms}ms ${req.method()} ${req.url()}`);
+    });
+
     const { data, path } = features[19];
 
     await test.step('Go to home page and sign in', async () => {
+      log('goto start');
       await page.goto(`${baseURL}${path}`);
-      await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`);
+      log('goto done');
+      log('smokeSignIn START');
+      await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`, log);
+      log('smokeSignIn END');
+      log('wait networkidle START');
       await page.waitForLoadState('networkidle');
+      log('wait networkidle END');
     });
 
     await test.step('Verify CBC Learn More link', async () => {
@@ -563,12 +586,24 @@ test.describe('Smoke Tests', () => {
 
   // @sso-integration-between-apc-and-finder
   test(`${features[20].name}, ${features[20].tags}`, async ({ page, baseURL }) => {
-    const { data, path } = features[20];
+    const testStart = Date.now();
+    const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+    const log = (msg) => console.log(`[${ts()}] ${msg}`);
+  
+    log('Starting test');
+
+    const { data, path } = features[20];  
 
     await test.step('Go to home page and sign in', async () => {
+      log('goto start');
       await page.goto(`${baseURL}${path}`);
-      await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`);
+      log('goto done');
+      log('smokeSignIn START');
+      await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`, log);
+      log('smokeSignIn END');
+      log('wait networkidle START');
       await page.waitForLoadState('networkidle');
+      log('wait networkidle END');
     });
 
     await test.step('Verify Find Distributor button and the URL opened in a new tab', async () => {
@@ -594,38 +629,57 @@ test.describe('Smoke Tests', () => {
   regionBasedFooterAndGnav.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, baseURL }) => {
       const { data } = feature;
+      const testStart = Date.now();
+      const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+      const log = (msg) => console.log(`[${ts()}] ${msg}`);
+  
+      log('Starting test');
 
       await test.step('Go to home page', async () => {
+        log('goto start');
         await page.waitForLoadState('networkidle');
+        log('goto done');
       });
 
       await test.step('Click on Change Region and verify the URL', async () => {
+        log('regionPicker waitFor visible START');
         await smokeTest.regionPicker.waitFor({ state: 'visible' });
         await smokeTest.regionPicker.click();
 
+        log('regionPicker click done');
         const regionOption = await smokeTest.getRegionOption(data.defaultURL);
+        log('regionOption waitFor visible START');
         await regionOption.waitFor({ state: 'visible' });
         await regionOption.click();
 
+        log('regionOption click done');
         const urlRegex = new RegExp(`.*${data.defaultURL}.*`);
         await page.waitForURL(urlRegex, { timeout: 5000 });
 
+        log('waitForURL done');
         const pages = await page.context().pages();
         expect(pages[0].url()).toContain(data.defaultURL);
+        log('expect done');
       });
 
       await test.step('Click on the Program and verify the URL', async () => {
+        log('programGnavOption waitFor visible START');
         await smokeTest.programGnavOption.waitFor({ state: 'visible' });
         await smokeTest.programGnavOption.click();
 
+        log('programGnavOption click done');
         await page.waitForLoadState();
         expect(page.url()).toContain(`${baseURL}${data.programURL}`);
+        log('expect done');
       });
 
       await test.step('Click on the Support and verify the URL', async () => {
+        log('supportGnavOption waitFor visible START');
         await smokeTest.supportGnavOption.waitFor({ state: 'visible' });
         await smokeTest.supportGnavOption.click();
+        log('supportGnavOption click done');
         await smokeTest.supportResources.click();
+        log('supportResources click done');
 
         await page.waitForLoadState();
         expect(page.url()).toContain(`${baseURL}${data.supportURL}`);
@@ -636,11 +690,20 @@ test.describe('Smoke Tests', () => {
   // @logo-redirection-validation-smoke-test
   test(`${features[23].name}, ${features[23].tags}`, async ({ page, baseURL }) => {
     const { data, path } = features[23];
+    const testStart = Date.now();
+    const ts = () => `${((Date.now() - testStart) / 1000).toFixed(2)}s`;
+    const log = (msg) => console.log(`[${ts()}] ${msg}`);
+  
+    log('Starting test');
 
     await test.step('Verify logo redirection for public page', async () => {
+      log('goto start');
       await page.goto(`${baseURL}${path}`);
+      log('goto done');
       await smokeTest.supportGnavOption.click();
+      log('supportGnavOption click done');
       await smokeTest.supportResources.click();
+      log('supportResources click done');
       await page.waitForLoadState('networkidle');
       await smokeTest.apcLogo.click();
       await page.waitForURL('**', { timeout: 30000 });
@@ -651,15 +714,24 @@ test.describe('Smoke Tests', () => {
     await test.step('Verify logo redirection for protected page', async () => {
       const signInButtonInt = await signInSmokeTest.getSignInButton(`${features[23].data.signInButtonInternationalText}`);
       await signInButtonInt.click();
-      await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`);
+      log('signInButtonInt click done');
+      await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`, log);
+      log('smokeSignIn END');
       await page.waitForLoadState('networkidle');
+      log('wait networkidle END');
       await smokeTest.profileIcon.waitFor({ state: 'visible', timeout: 10000 });
+      log('profileIcon waitFor visible done');
 
       await smokeTest.announcemnts.click();
+      log('announcemnts click done');
       await page.waitForLoadState('networkidle');
+      log('wait networkidle END');
       await smokeTest.apcLogo.click();
+      log('apcLogo click done');
       await page.waitForURL('**', { timeout: 30000 });
+      log('waitForURL done');
       await page.waitForLoadState('networkidle');
+      log('wait networkidle END');
       await expect(page.url()).toContain(data.logoRedirectionURLProtected);
     });
   });

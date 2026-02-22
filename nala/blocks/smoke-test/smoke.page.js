@@ -49,17 +49,22 @@ export default class SmokeTest {
     this.assetTabs = page.getByLabel('Assets');
   }
 
-  async smokeSignIn(page, baseURL, partnerLevel) {
+  async smokeSignIn(page, baseURL, partnerLevel, log = console.log) {
     const isProduction = baseURL.includes('partners.adobe.com');
+    log('isProduction: ${isProduction}');
     const emailData = isProduction ? process.env.IMS_EMAIL_PROD : process.env.IMS_EMAIL;
     const emailPart = emailData.split(';');
     const emailEntry = emailPart.find((pair) => pair.startsWith(partnerLevel));
     const email = emailEntry ? emailEntry.split(':')[1] : null;
     await page.waitForLoadState('domcontentloaded');
+    log('waitForLoadState domcontentloaded done');
     await this.emailField.fill(email);
+    log('emailField filled');
     await this.emailPageContinueButton.click();
-    await this.passwordField.fill(process.env.IMS_PASS);
+    await this.passwordField.fill(process.env.IMS_PASS);  
+    log('passwordField filled');
     await this.passwordPageContinueButton.click();
+    log('passwordPageContinueButton clicked');
   }
 
   async verifyButtonExist() {
