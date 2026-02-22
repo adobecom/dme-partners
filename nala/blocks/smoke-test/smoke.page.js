@@ -61,6 +61,7 @@ export default class SmokeTest {
     await this.emailField.fill(email);
     log('emailField filled');
     await this.emailPageContinueButton.click();
+    log('emailPageContinueButton clicked');
     await this.passwordField.fill(process.env.IMS_PASS);  
     log('passwordField filled');
     await this.passwordPageContinueButton.click();
