@@ -74,7 +74,6 @@ describe('announcements block', () => {
 
   it('should remove expanded class when clicking mobile filter backdrop', async () => {
     const { announcementsWrapper } = await setupAndCommonTest(500);
-
     const filtersWrapper = announcementsWrapper.shadowRoot.querySelector('.all-filters-wrapper-mobile');
     const filterWrapperMobile = filtersWrapper.querySelector('.filter-wrapper-mobile');
     expect(filterWrapperMobile).to.exist;
