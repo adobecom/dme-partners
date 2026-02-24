@@ -71,6 +71,24 @@ describe('announcements block', () => {
     const firstFilter = filtersWrapper.querySelector('.filter-wrapper-mobile');
     expect(firstFilter).to.exist;
   });
+
+  it('should remove expanded class when clicking mobile filter backdrop', async () => {
+    const { announcementsWrapper } = await setupAndCommonTest(500);
+
+    const filtersWrapper = announcementsWrapper.shadowRoot.querySelector('.all-filters-wrapper-mobile');
+    const filterWrapperMobile = filtersWrapper.querySelector('.filter-wrapper-mobile');
+    expect(filterWrapperMobile).to.exist;
+
+    filterWrapperMobile.classList.add('expanded');
+    expect(filterWrapperMobile.classList.contains('expanded')).to.be.true;
+
+    const backdropClickEvent = {
+      target: filterWrapperMobile,
+      currentTarget: filterWrapperMobile,
+    };
+    announcementsWrapper.handleMobileFilterBackdropClick(backdropClickEvent);
+    expect(filterWrapperMobile.classList.contains('expanded')).to.be.false;
+  });
   it('should have shadow root and render partner cards for desktop', async () => {
     const { announcementsWrapper } = await setupAndCommonTest(1500);
 
