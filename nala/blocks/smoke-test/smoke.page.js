@@ -50,87 +50,17 @@ export default class SmokeTest {
   }
 
   async smokeSignIn(page, baseURL, partnerLevel, log = console.log) {
-    // Set up request/response logging
-    const requestStarts = new Map();
-    const signInStartTime = Date.now();
-    
-    const requestHandler = (request) => {
-      const timestamp = Date.now() - signInStartTime;
-      requestStarts.set(request, Date.now());
-      log(`REQ [${timestamp}ms] ${request.method()} ${request.url()}`);
-    };
-    
-    const responseHandler = (response) => {
-      const request = response.request();
-      const startTime = requestStarts.get(request);
-      if (startTime) {
-        const duration = Date.now() - startTime;
-        const timestamp = Date.now() - signInStartTime;
-        const status = response.status();
-        const statusEmoji = status >= 200 && status < 300 ? '✓' : status >= 400 ? '✗' : '?';
-        log(`RES [${timestamp}ms] ${statusEmoji} ${status} ${duration}ms ${request.method()} ${request.url()}`);
-        requestStarts.delete(request);
-      }
-    };
-    
-    const requestFailedHandler = (request) => {
-      const startTime = requestStarts.get(request);
-      if (startTime) {
-        const duration = Date.now() - startTime;
-        const timestamp = Date.now() - signInStartTime;
-        log(`REQ_FAILED [${timestamp}ms] ${duration}ms ${request.method()} ${request.url()} - ${request.failure()?.errorText || 'Unknown error'}`);
-        requestStarts.delete(request);
-      }
-    };
-    
-    // Attach listeners
-    page.on('request', requestHandler);
-    page.on('response', responseHandler);
-    page.on('requestfailed', requestFailedHandler);
-    
-    try {
-      const isProduction = baseURL.includes('partners.adobe.com');
-      const emailData = isProduction ? process.env.IMS_EMAIL_PROD : process.env.IMS_EMAIL;
-      const emailPart = emailData.split(';');
-      const emailEntry = emailPart.find((pair) => pair.startsWith(partnerLevel));
-      const email = emailEntry ? emailEntry.split(':')[1] : null;
-      await page.waitForLoadState('domcontentloaded');
-      await this.emailField.fill(email);
-      await this.emailPageContinueButton.click();
-      log('emailPageContinueButton clicked');
-      
-      // Log state after clicking continue button
-      const urlAfterClick = page.url();
-      log(`URL after continue click: ${urlAfterClick}`);
-      const waitForPasswordStart = Date.now();
-      log('waiting for password field to appear...');
-      
-      try {
-        await this.passwordField.waitFor({ state: 'visible', timeout: 30000 });
-        const waitDuration = Date.now() - waitForPasswordStart;
-        log(`passwordField visible after ${waitDuration}ms`);
-        const urlWhenPasswordVisible = page.url();
-        log(`URL when password field visible: ${urlWhenPasswordVisible}`);
-      } catch (error) {
-        const waitDuration = Date.now() - waitForPasswordStart;
-        log(`ERROR waiting for password field: ${waitDuration}ms - ${error.message}`);
-        const currentUrl = page.url();
-        log(`Current URL on error: ${currentUrl}`);
-        const emailFieldStillVisible = await this.emailField.isVisible().catch(() => false);
-        log(`Email field still visible: ${emailFieldStillVisible}`);
-        throw error;
-      }
-      
-      await this.passwordField.fill(process.env.IMS_PASS);  
-      log('passwordField filled');
-      await this.passwordPageContinueButton.click();
-      log('passwordPageContinueButton clicked');
-    } finally {
-      // Remove listeners to avoid memory leaks
-      page.off('request', requestHandler);
-      page.off('response', responseHandler);
-      page.off('requestfailed', requestFailedHandler);
-    }
+    const isProduction = baseURL.includes('partners.adobe.com');
+    const emailData = isProduction ? process.env.IMS_EMAIL_PROD : process.env.IMS_EMAIL;
+    const emailPart = emailData.split(';');
+    const emailEntry = emailPart.find((pair) => pair.startsWith(partnerLevel));
+    const email = emailEntry ? emailEntry.split(':')[1] : null;
+    await page.waitForLoadState('domcontentloaded');
+    await this.emailField.fill(email);
+    await this.emailPageContinueButton.click();
+    log('emailPageContinueButton clicked');
+    await this.passwordField.fill(process.env.IMS_PASS);
+    await this.passwordPageContinueButton.click();
   }
 
   async verifyButtonExist() {

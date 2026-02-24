@@ -57,6 +57,34 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
 
     await test.step('Click Sign In button', async () => {
       // finding sign in button
@@ -98,6 +126,34 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
 
     await test.step('Click Sign In button', async () => {
       // finding sign in button
@@ -146,6 +202,35 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
+
     const { data } = features[3];
     await test.step('Click Sign In button', async () => {
       // finding sign in button
@@ -203,6 +288,34 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
 
     await test.step('Click Sign In button', async () => {
       // finding sign in button
@@ -242,6 +355,34 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
 
     await test.step('Click Sign In button', async () => {
       // finding sign in button
@@ -281,6 +422,34 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
 
     await test.step('Click Sign In button', async () => {
       // finding sign in button
@@ -319,6 +488,34 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
 
     await test.step('Click Sign In button', async () => {
       // finding sign in button
@@ -357,6 +554,38 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+  
+      log(`x-debug-id: ${headers['x-debug-id']}`);
+      log(`x-request-id: ${headers['x-request-id']}`);
+      log(`x-trace-id: ${headers['x-trace-id']}`);
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
 
     await test.step('Click Sign In button', async () => {
       // finding sign in button
@@ -396,6 +625,38 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+  
+      log(`x-debug-id: ${headers['x-debug-id']}`);
+      log(`x-request-id: ${headers['x-request-id']}`);
+      log(`x-trace-id: ${headers['x-trace-id']}`);
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
 
     const { data } = features[9]; 
 
@@ -451,6 +712,38 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+  
+      log(`x-debug-id: ${headers['x-debug-id']}`);
+      log(`x-request-id: ${headers['x-request-id']}`);
+      log(`x-trace-id: ${headers['x-trace-id']}`);
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
     await test.step('Veryfy the Select you region is visible', async () => {
       // select you region visible on public page
       const selectYourRegionPublicSection = page.locator('#select-your-region');
@@ -518,6 +811,38 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+  
+      log(`x-debug-id: ${headers['x-debug-id']}`);
+      log(`x-request-id: ${headers['x-request-id']}`);
+      log(`x-trace-id: ${headers['x-trace-id']}`);
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
     const signInButtonInt = await signInSmokeTest.getSignInButton(
       `${features[12].data.signInButtonInternationalText}`,
     );
@@ -547,6 +872,38 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+  
+      log(`x-debug-id: ${headers['x-debug-id']}`);
+      log(`x-request-id: ${headers['x-request-id']}`);
+      log(`x-trace-id: ${headers['x-trace-id']}`);
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
     const signInButtonInt = await signInSmokeTest.getSignInButton(
       `${features[13].data.signInButtonInternationalText}`,
     );
@@ -576,6 +933,38 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+  
+      log(`x-debug-id: ${headers['x-debug-id']}`);
+      log(`x-request-id: ${headers['x-request-id']}`);
+      log(`x-trace-id: ${headers['x-trace-id']}`);
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
     const signInButtonInt = await signInSmokeTest.getSignInButton(
       `${features[14].data.signInButtonInternationalText}`,
     );
@@ -605,6 +994,38 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+  
+      log(`x-debug-id: ${headers['x-debug-id']}`);
+      log(`x-request-id: ${headers['x-request-id']}`);
+      log(`x-trace-id: ${headers['x-trace-id']}`);
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
     const signInButtonInt = await signInSmokeTest.getSignInButton(
       `${features[15].data.signInButtonInternationalText}`,
     );
@@ -654,6 +1075,38 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+  
+      log(`x-debug-id: ${headers['x-debug-id']}`);
+      log(`x-request-id: ${headers['x-request-id']}`);
+      log(`x-trace-id: ${headers['x-trace-id']}`);
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
 
     const signInButtonInt = await signInSmokeTest.getSignInButton(
       `${features[16].data.signInButtonInternationalText}`,
@@ -715,6 +1168,38 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+  
+      log(`x-debug-id: ${headers['x-debug-id']}`);
+      log(`x-request-id: ${headers['x-request-id']}`);
+      log(`x-trace-id: ${headers['x-trace-id']}`);
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
 
     const { data, path } = features[17];
     log('joinNowButton getJoinNowButtonByRegion START');
@@ -812,6 +1297,38 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+  
+      log(`x-debug-id: ${headers['x-debug-id']}`);
+      log(`x-request-id: ${headers['x-request-id']}`);
+      log(`x-trace-id: ${headers['x-trace-id']}`);
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
 
     const { data, path } = features[18];
     log('verifyGeoModalAndPartnerLinks START');
@@ -844,9 +1361,41 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
-  
-    // Slow network logging
     const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+  
+      log(`x-debug-id: ${headers['x-debug-id']}`);
+      log(`x-request-id: ${headers['x-request-id']}`);
+      log(`x-trace-id: ${headers['x-trace-id']}`);
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
+
+    // Slow network logging
+    // Moved 'starts' declaration above selection to avoid redeclaration
     page.on('request', req => starts.set(req, Date.now()));
     page.on('response', res => {
       const req = res.request();
@@ -895,6 +1444,34 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
 
     const { data, path } = features[20];  
 
@@ -945,6 +1522,38 @@ test.describe('Smoke Tests', () => {
       const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
       log('Starting test');
+      const starts = new Map();
+
+      page.on('request', req => {
+        if (!req.url().includes('/signin/v1/audit')) return;
+        starts.set(req, Date.now());
+        log('AUDIT REQUEST STARTED');
+      });
+    
+      page.on('response', async res => {
+        if (!res.url().includes('/signin/v1/audit')) return;
+        const req = res.request();
+        const start = starts.get(req);
+        const duration = start ? Date.now() - start : 'unknown';
+    
+        log('AUDIT RESPONSE RECEIVED');
+        log(`Status: ${res.status()}`);
+        log(`Duration: ${duration}ms`);
+    
+        const headers = res.headers();
+        log('HEADERS:');
+        log(JSON.stringify(headers, null, 2));
+    
+        log(`x-debug-id: ${headers['x-debug-id']}`);
+        log(`x-request-id: ${headers['x-request-id']}`);
+        log(`x-trace-id: ${headers['x-trace-id']}`);
+      });
+    
+      page.on('requestfailed', req => {
+        if (!req.url().includes('/signin/v1/audit')) return;
+        log('AUDIT REQUEST FAILED');
+        log(`Failure: ${req.failure()?.errorText}`);
+      });
 
       await test.step('Go to home page', async () => {
         log('goto start');
@@ -1014,6 +1623,34 @@ test.describe('Smoke Tests', () => {
     const log = (msg) => console.log(`${prefix} [${ts()}] ${msg}`);
   
     log('Starting test');
+    const starts = new Map();
+
+    page.on('request', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      starts.set(req, Date.now());
+      log('AUDIT REQUEST STARTED');
+    });
+  
+    page.on('response', async res => {
+      if (!res.url().includes('/signin/v1/audit')) return;
+      const req = res.request();
+      const start = starts.get(req);
+      const duration = start ? Date.now() - start : 'unknown';
+  
+      log('AUDIT RESPONSE RECEIVED');
+      log(`Status: ${res.status()}`);
+      log(`Duration: ${duration}ms`);
+  
+      const headers = res.headers();
+      log('HEADERS:');
+      log(JSON.stringify(headers, null, 2));
+    });
+  
+    page.on('requestfailed', req => {
+      if (!req.url().includes('/signin/v1/audit')) return;
+      log('AUDIT REQUEST FAILED');
+      log(`Failure: ${req.failure()?.errorText}`);
+    });
 
     await test.step('Verify logo redirection for public page', async () => {
       log('goto start');
