@@ -38,6 +38,30 @@ export default class MarketingResourcesCards extends PartnerCards {
     ];
   }
 
+  // add third column to block since partnerCards is expecting third collumn for filter tags
+  setBlockData() {
+    const tableData = this.blockData?.tableData;
+    if (tableData) {
+      Array.from(tableData).forEach((row) => {
+        const cols = Array.from(row.children);
+        const rowTitle = cols[0]?.innerText?.trim().toLowerCase().replace(/ /g, '-');
+        if (rowTitle === 'filter' && cols.length < 3) {
+          const tagColumn = document.createElement('div');
+          tagColumn.innerHTML = '<ul></ul>';
+          row.appendChild(tagColumn);
+        } else if (rowTitle === 'filter' && cols.length >= 3) {
+          const filterTagsKeysEl = cols[2];
+          const firstUl = filterTagsKeysEl?.querySelectorAll?.('ul')?.[0];
+          if (!firstUl) {
+            const ul = document.createElement('ul');
+            filterTagsKeysEl.appendChild(ul);
+          }
+        }
+      });
+    }
+    super.setBlockData();
+  }
+
   additionalFirstUpdated() {
     this.getAllCardFilters();
   }
