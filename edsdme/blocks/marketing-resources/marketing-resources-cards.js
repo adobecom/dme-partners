@@ -66,6 +66,19 @@ export default class MarketingResourcesCards extends PartnerCards {
     this.getAllCardFilters();
   }
 
+  createTag(tagKey, initialHidden, parentKey) {
+    const placeholder = `{{${String(tagKey).toLowerCase().replace(/ /g, '-')}}}`;
+    const value = this.blockData.localizedText[placeholder]
+      ?? tagKey.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    return {
+      key: tagKey,
+      parentKey,
+      value,
+      checked: false,
+      initialHidden,
+    };
+  }
+
   getAllCardFilters() {
     const filtersMap = {};
     this.cards?.forEach((card) => {
@@ -85,19 +98,18 @@ export default class MarketingResourcesCards extends PartnerCards {
       });
     });
 
-    const newFilters = Object.entries(filtersMap).map(([key, valuesMap]) => ({
-      key,
-      value: this.blockData.localizedText[`{{${key}}}`] ?? key.charAt(0).toUpperCase() + key.slice(1),
-      tags: Object.keys(valuesMap).map((val) => ({
-        key: val,
-        parentKey: key,
-        value: this.blockData.localizedText[`{{${val}}}`] ?? val,
-        checked: false,
-        initialHidden: false,
-      })),
-      hideTags: true,
-      hasHiddenTags: false,
-    }));
+    const newFilters = Object.entries(filtersMap).map(([key, valuesMap]) => {
+      const filterLabel = this.blockData.localizedText[`{{${key}}}`]
+        ?? key.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      const tags = Object.keys(valuesMap).map((val) => this.createTag(val, false, key));
+      return {
+        key,
+        value: filterLabel,
+        tags,
+        hideTags: true,
+        hasHiddenTags: tags.some((tag) => tag.initialHidden),
+      };
+    });
     this.blockData.filters = newFilters;
   }
 
