@@ -434,13 +434,13 @@ export function getCaasUrl(block) {
   let domain = 'https://www.adobe.com/chimera-api';
   const isProd = prodHosts.includes(window.location.host);
 
-  const isPrpCollection = block.collectionTag.includes('caas:adobe-partners/collections/prp-collection');
-  if ((isPrpCollection) && !isProd) {
+  const isPrpCollectionRelated = block.collectionTag.includes('caas:adobe-partners/collections/prp-collection') || block.collectionTag.includes('caas:adobe-partners/collections/marketing-resources');
+  if ((isPrpCollectionRelated) && !isProd) {
     domain = 'https://www.stage.adobe.com/chimera-api';
   }
 
   const api = new URL(`${domain}/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true`);
-  return setApiParams(api, block, !isPrpCollection);
+  return setApiParams(api, block, !isPrpCollectionRelated);
 }
 
 export async function preloadResources(locales, miloLibs) {
@@ -449,8 +449,9 @@ export async function preloadResources(locales, miloLibs) {
     announcements: '"caas:adobe-partners/collections/announcements"',
     'announcements-preview': '"caas:adobe-partners/collections/announcements"',
     'prp-collection': '"caas:adobe-partners/collections/prp-collection"',
+    'marketing-resources': '"caas:adobe-partners/collections/marketing-resources"',
   };
-  const blockWithPlaceholders = ['announcements', 'search-full', 'logos', 'pricelist', 'prp-collection'];
+  const blockWithPlaceholders = ['announcements', 'search-full', 'logos', 'pricelist', 'prp-collection', 'marketing-resources'];
   let isPreloadCalled = false;
   blockWithPlaceholders.forEach(async (item) => {
     const el = document.querySelector(`.${item}`);
