@@ -1,7 +1,7 @@
 import { getLibs } from '../../scripts/utils.js';
 import { horizontalPartnerCardStyles } from '../../components/PartnerCardsStyles.js';
-import PartnerCards from '../../components/PartnerCards.js';
-import { filterRestrictedCardsByCurrentSite, filterExpiredAnnouncements } from '../announcements/AnnouncementsCards.js';
+import PartnerCards, { filterRestrictedCardsByCurrentSite } from '../../components/PartnerCards.js';
+import { filterExpiredAnnouncements } from '../announcements/AnnouncementsCards.js';
 import { getConfig, transformCardUrl } from '../utils/utils.js';
 
 const miloLibs = getLibs();

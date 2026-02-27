@@ -1,5 +1,5 @@
 import { getLibs } from '../../scripts/utils.js';
-import PartnerCards from '../../components/PartnerCards.js';
+import PartnerCards, { filterRestrictedCardsByCurrentSite } from '../../components/PartnerCards.js';
 import './SingleMarketingResourcesCard.js';
 
 const miloLibs = getLibs();
@@ -66,6 +66,12 @@ export default class MarketingResourcesCards extends PartnerCards {
 
   additionalFirstUpdated() {
     this.getAllCardFilters();
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  onDataFetched(apiData) {
+    // Filter prp-collections by current site
+    apiData.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
   }
 
   createTag(tagKey, initialHidden, parentKey) {
