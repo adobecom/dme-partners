@@ -6,6 +6,22 @@ const miloLibs = getLibs();
 const { html, LitElement, css, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
 
+export function filterRestrictedCardsByCurrentSite(cards) {
+  const currentSite = window.location.pathname.split('/')[1];
+  return cards.filter((card) => {
+    const cardUrl = card?.contentArea?.url;
+    if (!cardUrl) return false;
+    try {
+      const cardSite = new URL(cardUrl).pathname.split('/')[1];
+      return currentSite === cardSite;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Invalid URL: ${cardUrl}`, error);
+      return false;
+    }
+  });
+}
+
 export default class PartnerCards extends LitElement {
   static styles = [
     partnerCardsStyles,
