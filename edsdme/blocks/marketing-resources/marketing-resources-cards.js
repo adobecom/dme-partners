@@ -22,11 +22,13 @@ export default class MarketingResourcesCards extends PartnerCards {
           grid-column: 1 / -1;
         }
         .partner-cards-collection .card-wrapper {
-          width: unset;
+          max-width: 480px;
+          width: 100%;
         }
         @media (max-width: 768px) {
           .partner-cards-collection {
             grid-template-columns: 1fr;
+            justify-items: center;
           }
         }
         @media (max-width: 1200px) {
