@@ -437,7 +437,7 @@ export function getCaasUrl(block) {
   const isPrpCollection = block.collectionTag.includes('caas:adobe-partners/collections/prp-collection');
   const isMarketingResources = block.collectionTag.includes('caas:adobe-partners/collections/marketing-resources');
   if ((isPrpCollection || isMarketingResources) && !isProd) {
-    domain = 'https://www.stage.adobe.com/chimera-api';
+    domain = 'https://14257-chimera-stage.adobeioruntime.net/api/v1/web/chimera-0.0.1';
   }
 
   const api = new URL(`${domain}/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true`);
