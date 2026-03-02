@@ -434,13 +434,13 @@ export function getCaasUrl(block) {
   let domain = 'https://www.adobe.com/chimera-api';
   const isProd = prodHosts.includes(window.location.host);
 
-  const isPrpCollectionRelated = block.collectionTag.includes('caas:adobe-partners/collections/prp-collection') || block.collectionTag.includes('caas:adobe-partners/collections/marketing-resources');
-  if ((isPrpCollectionRelated) && !isProd) {
+  const isPrpCollection = block.collectionTag.includes('caas:adobe-partners/collections/prp-collection');
+  if ((isPrpCollection) && !isProd) {
     domain = 'https://www.stage.adobe.com/chimera-api';
   }
 
   const api = new URL(`${domain}/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true`);
-  return setApiParams(api, block, !isPrpCollectionRelated);
+  return setApiParams(api, block, !isPrpCollection);
 }
 
 export async function preloadResources(locales, miloLibs) {
