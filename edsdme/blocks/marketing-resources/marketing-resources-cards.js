@@ -1,5 +1,5 @@
 import { getLibs } from '../../scripts/utils.js';
-import PartnerCards from '../../components/PartnerCards.js';
+import PartnerCards, { filterRestrictedCardsByCurrentSite } from '../../components/PartnerCards.js';
 import './SingleMarketingResourcesCard.js';
 
 const miloLibs = getLibs();
@@ -22,11 +22,13 @@ export default class MarketingResourcesCards extends PartnerCards {
           grid-column: 1 / -1;
         }
         .partner-cards-collection .card-wrapper {
-          width: unset;
+          max-width: 480px;
+          width: 100%;
         }
         @media (max-width: 768px) {
           .partner-cards-collection {
             grid-template-columns: 1fr;
+            justify-items: center;
           }
         }
         @media (max-width: 1200px) {
@@ -38,8 +40,51 @@ export default class MarketingResourcesCards extends PartnerCards {
     ];
   }
 
+  // add third column to block since partnerCards is expecting third collumn for filter tags
+  setBlockData() {
+    const tableData = this.blockData?.tableData;
+    if (tableData) {
+      Array.from(tableData).forEach((row) => {
+        const cols = Array.from(row.children);
+        const rowTitle = cols[0]?.innerText?.trim().toLowerCase().replace(/ /g, '-');
+        if (rowTitle === 'filter' && cols.length < 3) {
+          const tagColumn = document.createElement('div');
+          tagColumn.innerHTML = '<ul></ul>';
+          row.appendChild(tagColumn);
+        } else if (rowTitle === 'filter' && cols.length >= 3) {
+          const filterTagsKeysEl = cols[2];
+          const firstUl = filterTagsKeysEl?.querySelectorAll?.('ul')?.[0];
+          if (!firstUl) {
+            const ul = document.createElement('ul');
+            filterTagsKeysEl.appendChild(ul);
+          }
+        }
+      });
+    }
+    super.setBlockData();
+  }
+
   additionalFirstUpdated() {
     this.getAllCardFilters();
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  onDataFetched(apiData) {
+    // Filter prp-collections by current site
+    apiData.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
+  }
+
+  createTag(tagKey, initialHidden, parentKey) {
+    const placeholder = `{{${String(tagKey).toLowerCase().replace(/ /g, '-')}}}`;
+    const value = this.blockData.localizedText[placeholder]
+      ?? tagKey.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    return {
+      key: tagKey,
+      parentKey,
+      value,
+      checked: false,
+      initialHidden,
+    };
   }
 
   getAllCardFilters() {
@@ -61,19 +106,18 @@ export default class MarketingResourcesCards extends PartnerCards {
       });
     });
 
-    const newFilters = Object.entries(filtersMap).map(([key, valuesMap]) => ({
-      key,
-      value: this.blockData.localizedText[`{{${key}}}`] ?? key.charAt(0).toUpperCase() + key.slice(1),
-      tags: Object.keys(valuesMap).map((val) => ({
-        key: val,
-        parentKey: key,
-        value: this.blockData.localizedText[`{{${val}}}`] ?? val,
-        checked: false,
-        initialHidden: false,
-      })),
-      hideTags: true,
-      hasHiddenTags: false,
-    }));
+    const newFilters = Object.entries(filtersMap).map(([key, valuesMap]) => {
+      const filterLabel = this.blockData.localizedText[`{{${key}}}`]
+        ?? key.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      const tags = Object.keys(valuesMap).map((val) => this.createTag(val, false, key));
+      return {
+        key,
+        value: filterLabel,
+        tags,
+        hideTags: true,
+        hasHiddenTags: tags.some((tag) => tag.initialHidden),
+      };
+    });
     this.blockData.filters = newFilters;
   }
 
