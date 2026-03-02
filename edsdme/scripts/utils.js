@@ -435,7 +435,8 @@ export function getCaasUrl(block) {
   const isProd = prodHosts.includes(window.location.host);
 
   const isPrpCollection = block.collectionTag.includes('caas:adobe-partners/collections/prp-collection');
-  if ((isPrpCollection) && !isProd) {
+  const isMarketingResources = block.collectionTag.includes('caas:adobe-partners/collections/marketing-resources');
+  if ((isPrpCollection || isMarketingResources) && !isProd) {
     domain = 'https://www.stage.adobe.com/chimera-api';
   }
 
