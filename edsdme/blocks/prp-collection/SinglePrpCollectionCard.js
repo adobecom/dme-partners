@@ -50,8 +50,11 @@ class SinglePrpCollectionCard extends LitElement {
   }
 
   hasPreviewOption(url) {
+    const allowedPreviewExtensions = ['gif', 'jpeg', 'jpg', 'mp4', 'pdf', 'png', 'svg'];
     const currentExtension = this.getFileExtensionFromUrl(url);
-    return currentExtension !== 'zip';
+
+    if (!currentExtension) return false;
+    return allowedPreviewExtensions.includes(currentExtension.toLowerCase());
   }
 
   render() {

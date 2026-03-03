@@ -435,8 +435,9 @@ export function getCaasUrl(block) {
   const isProd = prodHosts.includes(window.location.host);
 
   const isPrpCollection = block.collectionTag.includes('caas:adobe-partners/collections/prp-collection');
-  if ((isPrpCollection) && !isProd) {
-    domain = 'https://www.stage.adobe.com/chimera-api';
+  const isMarketingResources = block.collectionTag.includes('caas:adobe-partners/collections/marketing-resources');
+  if ((isPrpCollection || isMarketingResources) && !isProd) {
+    domain = 'https://14257-chimera-stage.adobeioruntime.net/api/v1/web/chimera-0.0.1';
   }
 
   const api = new URL(`${domain}/collection?originSelection=dme-partners&draft=false&debug=true&flatFile=false&expanded=true`);
@@ -449,8 +450,9 @@ export async function preloadResources(locales, miloLibs) {
     announcements: '"caas:adobe-partners/collections/announcements"',
     'announcements-preview': '"caas:adobe-partners/collections/announcements"',
     'prp-collection': '"caas:adobe-partners/collections/prp-collection"',
+    'marketing-resources': '"caas:adobe-partners/collections/marketing-resources"',
   };
-  const blockWithPlaceholders = ['announcements', 'search-full', 'logos', 'pricelist', 'prp-collection'];
+  const blockWithPlaceholders = ['announcements', 'search-full', 'logos', 'pricelist', 'prp-collection', 'marketing-resources'];
   let isPreloadCalled = false;
   blockWithPlaceholders.forEach(async (item) => {
     const el = document.querySelector(`.${item}`);

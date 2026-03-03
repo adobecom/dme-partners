@@ -6,6 +6,22 @@ const miloLibs = getLibs();
 const { html, LitElement, css, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
 
+export function filterRestrictedCardsByCurrentSite(cards) {
+  const currentSite = window.location.pathname.split('/')[1];
+  return cards.filter((card) => {
+    const cardUrl = card?.contentArea?.url;
+    if (!cardUrl) return false;
+    try {
+      const cardSite = new URL(cardUrl).pathname.split('/')[1];
+      return currentSite === cardSite;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Invalid URL: ${cardUrl}`, error);
+      return false;
+    }
+  });
+}
+
 export default class PartnerCards extends LitElement {
   static styles = [
     partnerCardsStyles,
@@ -439,6 +455,13 @@ export default class PartnerCards extends LitElement {
     return this.cards?.length;
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  handleMobileFilterBackdropClick(e) {
+    if (e.target === e.currentTarget) {
+      e.currentTarget.classList.remove('expanded');
+    }
+  }
+
   get filtersMobile() {
     if (!this.blockData.filters.length) return;
 
@@ -452,7 +475,7 @@ export default class PartnerCards extends LitElement {
 
         /* eslint-disable indent */
         return html`
-          <div class="filter-wrapper-mobile">
+          <div class="filter-wrapper-mobile" @click=${this.handleMobileFilterBackdropClick}>
             <div class="filter-mobile">
               <button class="filter-header-mobile" @click=${(e) => this.toggleFilter(e.target.closest('.filter-wrapper-mobile'))} aria-label="${filter.value}">
                 <div class="filter-header-content-mobile">
@@ -573,7 +596,7 @@ export default class PartnerCards extends LitElement {
     this.paginationCounter = 1;
     this.handleActions();
     this.handleFilterAction();
-    if (this.blockData.filters.length) this.handleUrlSearchParams();
+    this.handleUrlSearchParams();
   }
 
   // eslint-disable-next-line class-methods-use-this
