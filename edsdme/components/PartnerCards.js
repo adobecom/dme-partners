@@ -5,6 +5,7 @@ import './SinglePartnerCard.js';
 const miloLibs = getLibs();
 const { html, LitElement, css, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
+const { replaceText } = await import(`${miloLibs}/features/placeholders.js`);
 
 export function filterRestrictedCardsByCurrentSite(cards) {
   const currentSite = window.location.pathname.split('/')[1];
@@ -65,6 +66,7 @@ export default class PartnerCards extends LitElement {
     this.mobileView = window.innerWidth <= 1200;
     this.searchInputPlaceholder = '{{search}}';
     this.searchInputLabel = '';
+    this.cardFiltersSet = new Set();
     this.updateView = this.updateView.bind(this);
   }
 
@@ -229,6 +231,50 @@ export default class PartnerCards extends LitElement {
   // eslint-disable-next-line class-methods-use-this
   additionalFirstUpdated() {}
 
+  removeFiltersWithoutCards() {
+    this.blockData.filters.forEach((filter) => {
+      filter.tags = filter.tags.filter((tag) => this.cardFiltersSet.has(`${tag.parentKey}:${tag.key}`));
+    });
+    this.blockData.filters = this.blockData.filters
+      .filter((filter) => filter.tags.length);
+  }
+
+  async createFilters() {
+    const result = [];
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const filter of this.cardFiltersSet) {
+      const [filterCategoryKey, filterSubcategoryKey] = filter.split(':');
+      const existingCategoryFilterIndex = result.findIndex(
+        (existingFilter) => existingFilter.key === filterCategoryKey,
+      );
+      // eslint-disable-next-line no-await-in-loop
+      const tagLabel = await replaceText(`{{${filterSubcategoryKey}}}`, this.blockData.config);
+      const tag = {
+        key: filterSubcategoryKey,
+        parentKey: filterCategoryKey,
+        value: tagLabel,
+        checked: false,
+        initialHidden: false,
+      };
+
+      if (existingCategoryFilterIndex === -1) {
+        const tags = [tag];
+        result.push({
+          key: filterCategoryKey,
+          value: this.blockData.localizedText[`{{${filterCategoryKey}}}`],
+          tags,
+          hideTags: true,
+          hasHiddenTags: tags.some((t) => t.initialHidden),
+        });
+      } else {
+        result[existingCategoryFilterIndex]?.tags.push(tag);
+      }
+    }
+
+    this.blockData.filters = result;
+  }
+
   async fetchData() {
     try {
       let apiData;
@@ -253,9 +299,23 @@ export default class PartnerCards extends LitElement {
           apiData.cards = apiData.cards.filter((card) => !card.contentArea.url?.includes('/drafts/'));
         }
         // eslint-disable-next-line no-return-assign
-        apiData.cards.forEach((card, index) => card.orderNum = index + 1);
+        apiData.cards.forEach((card, index) => {
+          card.orderNum = index + 1;
+          card.arbitrary?.forEach((filter) => {
+            if (Object.keys(filter).length === 0) {
+              return;
+            }
+            const [key, value] = Object.entries(filter)[0]; // Extract key-value pair
+            this.cardFiltersSet.add(`${key}:${value}`);
+          });
+        });
+
         this.onDataFetched(apiData);
         this.allCards = apiData.cards;
+        if (this.blockData.collectionName === 'marketing-resources') {
+          await this.createFilters();
+        }
+        this.removeFiltersWithoutCards();
         this.cards = apiData.cards;
         this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
         this.hasResponseData = !!apiData.cards;
