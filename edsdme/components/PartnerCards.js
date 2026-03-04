@@ -65,6 +65,7 @@ export default class PartnerCards extends LitElement {
     this.mobileView = window.innerWidth <= 1200;
     this.searchInputPlaceholder = '{{search}}';
     this.searchInputLabel = '';
+    this.cardFiltersSet = new Set();
     this.updateView = this.updateView.bind(this);
   }
 
@@ -229,6 +230,14 @@ export default class PartnerCards extends LitElement {
   // eslint-disable-next-line class-methods-use-this
   additionalFirstUpdated() {}
 
+  removeFiltersWithoutCards() {
+    this.blockData.filters.forEach((filter) => {
+      filter.tags = filter.tags.filter((tag) => this.cardFiltersSet.has(`${tag.parentKey}:${tag.key}`));
+    });
+    this.blockData.filters = this.blockData.filters
+      .filter((filter) => filter.tags.length);
+  }
+
   async fetchData() {
     try {
       let apiData;
@@ -253,9 +262,20 @@ export default class PartnerCards extends LitElement {
           apiData.cards = apiData.cards.filter((card) => !card.contentArea.url?.includes('/drafts/'));
         }
         // eslint-disable-next-line no-return-assign
-        apiData.cards.forEach((card, index) => card.orderNum = index + 1);
+        apiData.cards.forEach((card, index) => {
+          card.orderNum = index + 1;
+          card.arbitrary?.forEach((filter) => {
+            if (Object.keys(filter).length === 0) {
+              return;
+            }
+            const [key, value] = Object.entries(filter)[0]; // Extract key-value pair
+            this.cardFiltersSet.add(`${key}:${value}`);
+          });
+        });
+
         this.onDataFetched(apiData);
         this.allCards = apiData.cards;
+        this.removeFiltersWithoutCards();
         this.cards = apiData.cards;
         this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
         this.hasResponseData = !!apiData.cards;
