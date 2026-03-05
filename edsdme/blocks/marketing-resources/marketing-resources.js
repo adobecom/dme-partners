@@ -65,7 +65,8 @@ export default async function init(el) {
     isArchive,
     caasUrl: getCaasUrl(block),
     ietf: config.locale.ietf,
-    collectionName: 'marketing-resources',
+    collectionName: '',
+    dynamicFilters: true,
     config,
   };
 

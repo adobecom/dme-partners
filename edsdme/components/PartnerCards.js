@@ -231,14 +231,6 @@ export default class PartnerCards extends LitElement {
   // eslint-disable-next-line class-methods-use-this
   additionalFirstUpdated() {}
 
-  removeFiltersWithoutCards() {
-    this.blockData.filters.forEach((filter) => {
-      filter.tags = filter.tags.filter((tag) => this.cardFiltersSet.has(`${tag.parentKey}:${tag.key}`));
-    });
-    this.blockData.filters = this.blockData.filters
-      .filter((filter) => filter.tags.length);
-  }
-
   async createFilters() {
     const result = [];
 
@@ -248,12 +240,15 @@ export default class PartnerCards extends LitElement {
       const existingCategoryFilterIndex = result.findIndex(
         (existingFilter) => existingFilter.key === filterCategoryKey,
       );
+      const filterCategoryLabel = this.blockData.localizedText[`{{${filterCategoryKey}}}`];
+      // eslint-disable-next-line no-continue
+      if (!filterCategoryLabel) continue;
       // eslint-disable-next-line no-await-in-loop
-      const tagLabel = await replaceText(`{{${filterSubcategoryKey.toLowerCase()}}}`, this.blockData.config);
+      const filterSubcategoryLabel = await replaceText(`{{${filterSubcategoryKey.toLowerCase()}}}`, this.blockData.config);
       const tag = {
         key: filterSubcategoryKey,
         parentKey: filterCategoryKey,
-        value: tagLabel,
+        value: filterSubcategoryLabel,
         checked: false,
         initialHidden: false,
       };
@@ -262,7 +257,7 @@ export default class PartnerCards extends LitElement {
         const tags = [tag];
         result.push({
           key: filterCategoryKey,
-          value: this.blockData.localizedText[`{{${filterCategoryKey}}}`],
+          value: filterCategoryLabel,
           tags,
           hideTags: true,
           hasHiddenTags: tags.some((t) => t.initialHidden),
@@ -298,6 +293,7 @@ export default class PartnerCards extends LitElement {
         if (prodHosts.includes(window.location.host)) {
           apiData.cards = apiData.cards.filter((card) => !card.contentArea.url?.includes('/drafts/'));
         }
+        this.onDataFetched(apiData);
         // eslint-disable-next-line no-return-assign
         apiData.cards.forEach((card, index) => {
           card.orderNum = index + 1;
@@ -309,13 +305,10 @@ export default class PartnerCards extends LitElement {
             this.cardFiltersSet.add(`${key}:${value}`);
           });
         });
-
-        this.onDataFetched(apiData);
         this.allCards = apiData.cards;
-        if (this.blockData.collectionName === 'marketing-resources') {
+        if (this.blockData.dynamicFilters) {
           await this.createFilters();
         }
-        this.removeFiltersWithoutCards();
         this.cards = apiData.cards;
         this.paginatedCards = this.cards.slice(0, this.cardsPerPage);
         this.hasResponseData = !!apiData.cards;
