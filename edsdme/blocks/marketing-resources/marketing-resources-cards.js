@@ -70,19 +70,6 @@ export default class MarketingResourcesCards extends PartnerCards {
     apiData.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
   }
 
-  createTag(tagKey, initialHidden, parentKey) {
-    const placeholder = `{{${String(tagKey).toLowerCase().replace(/ /g, '-')}}}`;
-    const value = this.blockData.localizedText[placeholder]
-      ?? tagKey.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-    return {
-      key: tagKey,
-      parentKey,
-      value,
-      checked: false,
-      initialHidden,
-    };
-  }
-
   get resultsText() {
     return this.blockData.localizedText['{{collections}}'];
   }

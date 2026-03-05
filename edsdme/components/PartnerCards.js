@@ -249,7 +249,7 @@ export default class PartnerCards extends LitElement {
         (existingFilter) => existingFilter.key === filterCategoryKey,
       );
       // eslint-disable-next-line no-await-in-loop
-      const tagLabel = await replaceText(`{{${filterSubcategoryKey}}}`, this.blockData.config);
+      const tagLabel = await replaceText(`{{${filterSubcategoryKey.toLowerCase()}}}`, this.blockData.config);
       const tag = {
         key: filterSubcategoryKey,
         parentKey: filterCategoryKey,
