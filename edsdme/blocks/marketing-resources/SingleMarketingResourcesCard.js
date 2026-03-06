@@ -21,7 +21,7 @@ class SingleMarketingResourcesCard extends LitElement {
 
   render() {
     return html`
-    <a class="link-wrapper" href="${transformCardUrl(this.data.contentArea?.url)}" target="_blank" daa-ll="Marketing Resources Card ${this.data.id} | ${processTrackingLabels(this.data.contentArea?.title, getConfig(), 30)}">
+    <a class="link-wrapper" href="${transformCardUrl(this.data.contentArea?.url)}" daa-ll="Marketing Resources Card ${this.data.id} | ${processTrackingLabels(this.data.contentArea?.title, getConfig(), 30)}">
       <div class="single-marketing-resources-card">
         <div class="card-header" style="background-image: url(${this.imageUrl})" alt="${this.data.styles?.backgroundAltText}"></div>
         <div class="card-content">

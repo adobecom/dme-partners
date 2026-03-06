@@ -64,61 +64,10 @@ export default class MarketingResourcesCards extends PartnerCards {
     super.setBlockData();
   }
 
-  additionalFirstUpdated() {
-    this.getAllCardFilters();
-  }
-
   // eslint-disable-next-line class-methods-use-this
   onDataFetched(apiData) {
     // Filter prp-collections by current site
     apiData.cards = filterRestrictedCardsByCurrentSite(apiData.cards);
-  }
-
-  createTag(tagKey, initialHidden, parentKey) {
-    const placeholder = `{{${String(tagKey).toLowerCase().replace(/ /g, '-')}}}`;
-    const value = this.blockData.localizedText[placeholder]
-      ?? tagKey.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-    return {
-      key: tagKey,
-      parentKey,
-      value,
-      checked: false,
-      initialHidden,
-    };
-  }
-
-  getAllCardFilters() {
-    const filtersMap = {};
-    this.cards?.forEach((card) => {
-      const arbitraryArr = card.arbitrary ?? [];
-      const firstObj = arbitraryArr[0];
-      const list = (firstObj && 'id' in firstObj && 'version' in firstObj)
-        ? arbitraryArr.slice(1)
-        : arbitraryArr;
-      list.forEach((arbitraryItem) => {
-        Object.entries(arbitraryItem).forEach(([rawKey, rawValue]) => {
-          if (rawValue == null || rawValue === '') return;
-          const key = rawKey.toLowerCase().replace(/ /g, '-');
-          const tagKey = String(rawValue).replaceAll(' ', '-');
-          if (!filtersMap[key]) filtersMap[key] = {};
-          filtersMap[key][tagKey] = true;
-        });
-      });
-    });
-
-    const newFilters = Object.entries(filtersMap).map(([key, valuesMap]) => {
-      const filterLabel = this.blockData.localizedText[`{{${key}}}`]
-        ?? key.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-      const tags = Object.keys(valuesMap).map((val) => this.createTag(val, false, key));
-      return {
-        key,
-        value: filterLabel,
-        tags,
-        hideTags: true,
-        hasHiddenTags: tags.some((tag) => tag.initialHidden),
-      };
-    });
-    this.blockData.filters = newFilters;
   }
 
   get resultsText() {
