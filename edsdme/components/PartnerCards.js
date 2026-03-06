@@ -232,42 +232,57 @@ export default class PartnerCards extends LitElement {
   additionalFirstUpdated() {}
 
   async createFilters() {
-    const result = [];
+    const filtersArray = Array.from(this.cardFiltersSet);
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const filter of this.cardFiltersSet) {
-      const [filterCategoryKey, filterSubcategoryKey] = filter.split(':');
-      const existingCategoryFilterIndex = result.findIndex(
-        (existingFilter) => existingFilter.key === filterCategoryKey,
-      );
-      const filterCategoryLabel = this.blockData.localizedText[`{{${filterCategoryKey}}}`];
-      // eslint-disable-next-line no-continue
-      if (!filterCategoryLabel) continue;
-      // eslint-disable-next-line no-await-in-loop
-      const filterSubcategoryLabel = await replaceText(`{{${filterSubcategoryKey.toLowerCase()}}}`, this.blockData.config);
-      const tag = {
-        key: filterSubcategoryKey,
-        parentKey: filterCategoryKey,
-        value: filterSubcategoryLabel,
-        checked: false,
-        initialHidden: false,
-      };
+    const tagsData = await Promise.all(
+      filtersArray.map(async (filter) => {
+        const [filterCategoryKey, filterSubcategoryKey] = filter.split(':');
+        const filterCategoryLabel = this.blockData.localizedText[`{{${filterCategoryKey}}}`];
 
-      if (existingCategoryFilterIndex === -1) {
-        const tags = [tag];
-        result.push({
-          key: filterCategoryKey,
-          value: filterCategoryLabel,
-          tags,
-          hideTags: true,
-          hasHiddenTags: tags.some((t) => t.initialHidden),
-        });
-      } else {
-        result[existingCategoryFilterIndex]?.tags.push(tag);
-      }
-    }
+        if (!filterCategoryLabel) {
+          return null;
+        }
 
-    this.blockData.filters = result;
+        const filterSubcategoryLabel = await replaceText(
+          `{{${filterSubcategoryKey.toLowerCase()}}}`,
+          this.blockData.config,
+        );
+
+        return {
+          categoryKey: filterCategoryKey,
+          categoryLabel: filterCategoryLabel,
+          tag: {
+            key: filterSubcategoryKey,
+            parentKey: filterCategoryKey,
+            value: filterSubcategoryLabel,
+            checked: false,
+            initialHidden: false,
+          },
+        };
+      }),
+    );
+
+    const resultMap = new Map();
+
+    tagsData
+      .filter(Boolean)
+      .forEach(({ categoryKey, categoryLabel, tag }) => {
+        if (!resultMap.has(categoryKey)) {
+          resultMap.set(categoryKey, {
+            key: categoryKey,
+            value: categoryLabel,
+            tags: [],
+            hideTags: true,
+            hasHiddenTags: false,
+          });
+        }
+
+        const filterObj = resultMap.get(categoryKey);
+        filterObj.tags.push(tag);
+        filterObj.hasHiddenTags = filterObj.tags.some((t) => t.initialHidden);
+      });
+
+    this.blockData.filters = Array.from(resultMap.values());
   }
 
   async fetchData() {
