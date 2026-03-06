@@ -23,6 +23,37 @@ const LIBS = '/libs';
 
 const imsClientId = prodHosts.includes(window.location.host) ? 'MILO_PARTNERS_PROD' : 'MILO_PARTNERS_STAGE';
 
+const localesDefault = {
+  '': { ietf: 'en-US', tk: 'hah7vzn.css' },
+  na: { ietf: 'en', tk: 'hah7vzn.css' },
+  emea: { ietf: 'en-GB', tk: 'hah7vzn.css' },
+  apac: { ietf: 'en', tk: 'hah7vzn.css' },
+  de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
+  kr: { ietf: 'ko-KR', tk: 'zfo3ouc' },
+  zh: { ietf: 'zh-TW', tk: 'jay0ecd' },
+  cn: { ietf: 'zh-CN', tk: 'puu3xkp' },
+  it: { ietf: 'it-IT', tk: 'bbf5pok.css' },
+  es: { ietf: 'es-ES', tk: 'oln4yqj.css' },
+  fr: { ietf: 'fr-FR', tk: 'vrk5vyv.css' },
+  uk: { ietf: 'en-GB', tk: 'pps7abe.css' },
+  br: { ietf: 'pt-BR', tk: 'inq1xob.css' },
+  pt: { ietf: 'pt-PT', tk: 'inq1xob.css' },
+  latam: { ietf: 'en', tk: 'oln4yqj.css' },
+  jp: { ietf: 'ja-JP', tk: 'dvg6awq' },
+};
+
+const localesSafari = {
+  ...localesDefault,
+  '': { ietf: 'en-US', tk: 'vti0xwb.css' },
+  na: { ietf: 'en', tk: 'vti0xwb.css' },
+  emea: { ietf: 'en-GB', tk: 'vti0xwb.css' },
+  apac: { ietf: 'en', tk: 'vti0xwb.css' },
+  de: { ietf: 'de-DE', tk: 'vti0xwb.css' },
+  kr: { ietf: 'ko-KR', tk: 'qjs5sfm' },
+};
+
+const isSafari = navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
+
 // Add any config options.
 const CONFIG = {
   codeRoot: '/edsdme',
@@ -31,24 +62,7 @@ const CONFIG = {
   clientEnv: prodHosts.includes(window.location.host) ? 'prod' : null,
   geoRouting: enableGeoPopup(),
   // fallbackRouting: 'off',
-  locales: {
-    '': { ietf: 'en-US', tk: 'hah7vzn.css' },
-    na: { ietf: 'en', tk: 'hah7vzn.css' },
-    emea: { ietf: 'en-GB', tk: 'hah7vzn.css' },
-    apac: { ietf: 'en', tk: 'hah7vzn.css' },
-    de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
-    kr: { ietf: 'ko-KR', tk: 'zfo3ouc' },
-    zh: { ietf: 'zh-TW', tk: 'jay0ecd' },
-    cn: { ietf: 'zh-CN', tk: 'puu3xkp' },
-    it: { ietf: 'it-IT', tk: 'bbf5pok.css' },
-    es: { ietf: 'es-ES', tk: 'oln4yqj.css' },
-    fr: { ietf: 'fr-FR', tk: 'vrk5vyv.css' },
-    uk: { ietf: 'en-GB', tk: 'pps7abe.css' },
-    br: { ietf: 'pt-BR', tk: 'inq1xob.css' },
-    pt: { ietf: 'pt-PT', tk: 'inq1xob.css' },
-    latam: { ietf: 'en', tk: 'oln4yqj.css' },
-    jp: { ietf: 'ja-JP', tk: 'dvg6awq' },
-  },
+  locales: isSafari ? localesSafari : localesDefault,
   local: { edgeConfigId: '72b074a6-76d2-43de-a210-124acc734f1c' },
   stage: { edgeConfigId: '72b074a6-76d2-43de-a210-124acc734f1c' },
   prod: { edgeConfigId: '913eac4d-900b-45e8-9ee7-306216765cd2' },
