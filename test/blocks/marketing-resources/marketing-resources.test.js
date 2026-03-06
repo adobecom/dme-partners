@@ -287,5 +287,66 @@ describe('Marketing Resources block', () => {
         expect(topicFilter.tags.length).to.be.greaterThan(0);
       }
     });
+
+    it('adds filter subcategory entries to localizedText when creating filters', async () => {
+      const app = await setupAndRunInit();
+      await app.updateComplete;
+
+      // Set up cardFiltersSet with test data
+      app.cardFiltersSet = new Set([
+        'product:adobe-acrobat',
+        'product:adobe-sign',
+        'topic:onboarding',
+      ]);
+
+      // Ensure localizedText has the filter category keys
+      app.blockData.localizedText = {
+        ...app.blockData.localizedText,
+        '{{product}}': 'Product',
+        '{{topic}}': 'Topic',
+      };
+
+      // Store initial localizedText keys to verify new ones are added
+      const initialKeys = Object.keys(app.blockData.localizedText);
+
+      // Call createFilters
+      await app.createFilters();
+
+      // Verify filters were created
+      expect(app.blockData.filters).to.be.an('array');
+      expect(app.blockData.filters.length).to.be.greaterThan(0);
+
+      // Verify that localizedText now contains entries for filter subcategories
+      expect(app.blockData.localizedText).to.have.property('{{adobe-acrobat}}');
+      expect(app.blockData.localizedText).to.have.property('{{adobe-sign}}');
+      expect(app.blockData.localizedText).to.have.property('{{onboarding}}');
+
+      // Verify the values are strings (from replaceText processing)
+      expect(app.blockData.localizedText['{{adobe-acrobat}}']).to.be.a('string');
+      expect(app.blockData.localizedText['{{adobe-sign}}']).to.be.a('string');
+      expect(app.blockData.localizedText['{{onboarding}}']).to.be.a('string');
+
+      // Verify the values are not empty
+      expect(app.blockData.localizedText['{{adobe-acrobat}}'].length).to.be.greaterThan(0);
+      expect(app.blockData.localizedText['{{adobe-sign}}'].length).to.be.greaterThan(0);
+      expect(app.blockData.localizedText['{{onboarding}}'].length).to.be.greaterThan(0);
+
+      // Verify that the new keys were added (not present initially)
+      expect(initialKeys).to.not.include('{{adobe-acrobat}}');
+      expect(initialKeys).to.not.include('{{adobe-sign}}');
+      expect(initialKeys).to.not.include('{{onboarding}}');
+
+      // Verify the values match the tag values in the filters
+      const productFilter = app.blockData.filters.find((f) => f.key === 'product');
+      const topicFilter = app.blockData.filters.find((f) => f.key === 'topic');
+
+      const adobeAcrobatTag = productFilter.tags.find((t) => t.key === 'adobe-acrobat');
+      const adobeSignTag = productFilter.tags.find((t) => t.key === 'adobe-sign');
+      const onboardingTag = topicFilter.tags.find((t) => t.key === 'onboarding');
+
+      expect(app.blockData.localizedText['{{adobe-acrobat}}']).to.equal(adobeAcrobatTag.value);
+      expect(app.blockData.localizedText['{{adobe-sign}}']).to.equal(adobeSignTag.value);
+      expect(app.blockData.localizedText['{{onboarding}}']).to.equal(onboardingTag.value);
+    });
   });
 });

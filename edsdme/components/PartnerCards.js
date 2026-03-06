@@ -280,6 +280,9 @@ export default class PartnerCards extends LitElement {
         const filterObj = resultMap.get(categoryKey);
         filterObj.tags.push(tag);
         filterObj.hasHiddenTags = filterObj.tags.some((t) => t.initialHidden);
+
+        const localizedKey = `{{${tag.key}}}`;
+        this.blockData.localizedText[localizedKey] = tag.value;
       });
 
     this.blockData.filters = Array.from(resultMap.values());
