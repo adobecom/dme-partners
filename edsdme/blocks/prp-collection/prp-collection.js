@@ -67,6 +67,8 @@ export default async function init(el) {
     caasUrl: getCaasUrl(block),
     ietf: config.locale.ietf,
     collectionName: '',
+    dynamicFilters: true,
+    config,
   };
 
   Array.from(el.children).forEach((row) => {
