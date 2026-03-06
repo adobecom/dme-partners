@@ -63,4 +63,229 @@ describe('Marketing Resources block', () => {
     const app = await setupAndRunInit(1500);
     expect(app.shadowRoot.querySelector('.sidebar-filters-wrapper')).to.exist;
   });
+
+  describe('createFilters method', () => {
+    it('creates filters from cardFiltersSet when dynamicFilters is enabled', async () => {
+      const app = await setupAndRunInit();
+      await app.updateComplete;
+
+      // Verify dynamicFilters is enabled
+      expect(app.blockData.dynamicFilters).to.be.true;
+      expect(app.blockData.config).to.exist;
+
+      // Set up cardFiltersSet with test data
+      app.cardFiltersSet = new Set([
+        'product:adobe-acrobat',
+        'product:adobe-sign',
+        'topic:onboarding',
+        'topic:getting-started',
+      ]);
+
+      // Ensure localizedText has the filter category keys
+      app.blockData.localizedText = {
+        ...app.blockData.localizedText,
+        '{{product}}': 'Product',
+        '{{topic}}': 'Topic',
+      };
+
+      // Call createFilters
+      await app.createFilters();
+
+      // Verify filters were created
+      expect(app.blockData.filters).to.be.an('array');
+      expect(app.blockData.filters.length).to.be.greaterThan(0);
+
+      // Verify filters are grouped by category
+      const productFilter = app.blockData.filters.find((f) => f.key === 'product');
+      const topicFilter = app.blockData.filters.find((f) => f.key === 'topic');
+
+      expect(productFilter).to.exist;
+      expect(topicFilter).to.exist;
+
+      // Verify product filter structure
+      expect(productFilter.value).to.equal('Product');
+      expect(productFilter.tags).to.be.an('array');
+      expect(productFilter.tags.length).to.equal(2);
+      expect(productFilter.hideTags).to.be.true;
+      expect(productFilter.hasHiddenTags).to.be.false;
+
+      // Verify product filter tags
+      const productTags = productFilter.tags.map((t) => t.key);
+      expect(productTags).to.include('adobe-acrobat');
+      expect(productTags).to.include('adobe-sign');
+
+      // Verify topic filter structure
+      expect(topicFilter.value).to.equal('Topic');
+      expect(topicFilter.tags).to.be.an('array');
+      expect(topicFilter.tags.length).to.equal(2);
+
+      // Verify topic filter tags
+      const topicTags = topicFilter.tags.map((t) => t.key);
+      expect(topicTags).to.include('onboarding');
+      expect(topicTags).to.include('getting-started');
+    });
+
+    it('creates filters with correct tag structure', async () => {
+      const app = await setupAndRunInit();
+      await app.updateComplete;
+
+      app.cardFiltersSet = new Set(['product:adobe-acrobat']);
+      app.blockData.localizedText = {
+        ...app.blockData.localizedText,
+        '{{product}}': 'Product',
+      };
+
+      await app.createFilters();
+
+      const productFilter = app.blockData.filters.find((f) => f.key === 'product');
+      expect(productFilter).to.exist;
+
+      const tag = productFilter.tags[0];
+      expect(tag).to.have.property('key', 'adobe-acrobat');
+      expect(tag).to.have.property('parentKey', 'product');
+      expect(tag).to.have.property('value');
+      expect(tag).to.have.property('checked', false);
+      expect(tag).to.have.property('initialHidden', false);
+    });
+
+    it('filters out categories without localized text', async () => {
+      const app = await setupAndRunInit();
+      await app.updateComplete;
+
+      app.cardFiltersSet = new Set([
+        'product:adobe-acrobat',
+        'unknown-category:some-value',
+      ]);
+
+      app.blockData.localizedText = {
+        ...app.blockData.localizedText,
+        '{{product}}': 'Product',
+        // Note: '{{unknown-category}}' is not defined
+      };
+
+      await app.createFilters();
+
+      // Should only have product filter, not unknown-category
+      const productFilter = app.blockData.filters.find((f) => f.key === 'product');
+      const unknownFilter = app.blockData.filters.find((f) => f.key === 'unknown-category');
+
+      expect(productFilter).to.exist;
+      expect(unknownFilter).to.be.undefined;
+    });
+
+    it('handles empty cardFiltersSet gracefully', async () => {
+      const app = await setupAndRunInit();
+      await app.updateComplete;
+
+      app.cardFiltersSet = new Set();
+
+      await app.createFilters();
+
+      expect(app.blockData.filters).to.be.an('array');
+      expect(app.blockData.filters.length).to.equal(0);
+    });
+
+    it('uses replaceText to get localized values for filter subcategories', async () => {
+      const app = await setupAndRunInit();
+      await app.updateComplete;
+
+      app.cardFiltersSet = new Set([
+        'product:adobe-acrobat',
+        'product:adobe-sign',
+        'topic:onboarding',
+      ]);
+
+      app.blockData.localizedText = {
+        ...app.blockData.localizedText,
+        '{{product}}': 'Product',
+        '{{topic}}': 'Topic',
+      };
+
+      await app.createFilters();
+
+      // Verify that filters were created with values (replaceText is called internally)
+      const productFilter = app.blockData.filters.find((f) => f.key === 'product');
+      const topicFilter = app.blockData.filters.find((f) => f.key === 'topic');
+
+      expect(productFilter).to.exist;
+      expect(topicFilter).to.exist;
+
+      // Verify tags have values (from replaceText processing)
+      expect(productFilter.tags[0].value).to.be.a('string');
+      expect(productFilter.tags[0].value.length).to.be.greaterThan(0);
+      expect(topicFilter.tags[0].value).to.be.a('string');
+      expect(topicFilter.tags[0].value.length).to.be.greaterThan(0);
+
+      // Verify config is available (required for replaceText)
+      expect(app.blockData.config).to.exist;
+    });
+
+    it('groups multiple tags under the same category', async () => {
+      const app = await setupAndRunInit();
+      await app.updateComplete;
+
+      app.cardFiltersSet = new Set([
+        'product:adobe-acrobat',
+        'product:adobe-sign',
+        'product:adobe-photoshop',
+      ]);
+
+      app.blockData.localizedText = {
+        ...app.blockData.localizedText,
+        '{{product}}': 'Product',
+      };
+
+      await app.createFilters();
+
+      const productFilter = app.blockData.filters.find((f) => f.key === 'product');
+      expect(productFilter).to.exist;
+      expect(productFilter.tags.length).to.equal(3);
+
+      const tagKeys = productFilter.tags.map((t) => t.key);
+      expect(tagKeys).to.include('adobe-acrobat');
+      expect(tagKeys).to.include('adobe-sign');
+      expect(tagKeys).to.include('adobe-photoshop');
+    });
+
+    it('creates filters from actual card arbitrary data', async () => {
+      const app = await setupAndRunInit();
+      await app.updateComplete;
+
+      // Use the second card from mock data which has arbitrary data
+      const cardWithArbitrary = cards.find((card) => card.arbitrary && card.arbitrary.length > 0);
+      expect(cardWithArbitrary).to.exist;
+
+      // Manually populate cardFiltersSet as fetchData would
+      app.cardFiltersSet = new Set();
+      cardWithArbitrary.arbitrary.forEach((filter) => {
+        if (Object.keys(filter).length > 0) {
+          const [key, value] = Object.entries(filter)[0];
+          app.cardFiltersSet.add(`${key}:${value}`);
+        }
+      });
+
+      // Ensure localizedText has the necessary keys
+      app.blockData.localizedText = {
+        ...app.blockData.localizedText,
+        '{{product}}': 'Product',
+        '{{topic}}': 'Topic',
+      };
+
+      await app.createFilters();
+
+      expect(app.blockData.filters).to.be.an('array');
+      expect(app.blockData.filters.length).to.be.greaterThan(0);
+
+      // Verify filters match the arbitrary data
+      const productFilter = app.blockData.filters.find((f) => f.key === 'product');
+      const topicFilter = app.blockData.filters.find((f) => f.key === 'topic');
+
+      if (productFilter) {
+        expect(productFilter.tags.length).to.be.greaterThan(0);
+      }
+      if (topicFilter) {
+        expect(topicFilter.tags.length).to.be.greaterThan(0);
+      }
+    });
+  });
 });

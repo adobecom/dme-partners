@@ -9,7 +9,7 @@
       },
       "styles": {
         "typeOverride": "default",
-        "backgroundImage": "/media_1d11215b21b90c357777d6fc89f63038a2c205fe0.png",
+        "backgroundImage": "https://test.com/media_1d11215b21b90c357777d6fc89f63038a2c205fe0.png",
         "backgroundAltText": "...",
         "mnemonic": "",
         "icon": "https://www.adobe.com/content/dam/cc/images/shared/icons/9-nothing.svg",
@@ -102,7 +102,7 @@
       },
       "styles": {
         "typeOverride": "default",
-        "backgroundImage": "/media_1d11215b21b90c357777d6fc89f63038a2c205fe0.png",
+        "backgroundImage": "https://test.com/media_1d11215b21b90c357777d6fc89f63038a2c205fe0.png",
         "backgroundAltText": "...",
         "mnemonic": "",
         "icon": "https://www.adobe.com/content/dam/cc/images/shared/icons/9-nothing.svg",
@@ -206,7 +206,7 @@
       },
       "styles": {
         "typeOverride": "default",
-        "backgroundImage": "/media_1d11215b21b90c357777d6fc89f63038a2c205fe0.png",
+        "backgroundImage": "https://test.com/media_1d11215b21b90c357777d6fc89f63038a2c205fe0.png",
         "backgroundAltText": "...",
         "mnemonic": "",
         "icon": "https://www.adobe.com/content/dam/cc/images/shared/icons/9-nothing.svg",
