@@ -66,7 +66,7 @@ export default class PartnerCards extends LitElement {
     this.mobileView = window.innerWidth <= 1200;
     this.searchInputPlaceholder = '{{search}}';
     this.searchInputLabel = '';
-    this.cardFiltersSet = new Set();
+    this.cardFiltersSet = new Map();
     this.updateView = this.updateView.bind(this);
   }
 
@@ -232,17 +232,16 @@ export default class PartnerCards extends LitElement {
   additionalFirstUpdated() {}
 
   async createFilters() {
-    const filtersArray = Array.from(this.cardFiltersSet);
+    const filtersArray = Array.from(this.cardFiltersSet.entries());
 
-    const tagsData = await Promise.all(
-      filtersArray.map(async (filter) => {
-        const [filterCategoryKey, filterSubcategoryKey] = filter.split(':');
-        const filterCategoryLabel = this.blockData.localizedText[`{{${filterCategoryKey}}}`];
+    const allPromises = filtersArray.flatMap(([filterCategoryKey, filterSubcategoryKeys]) => {
+      const filterCategoryLabel = this.blockData.localizedText[`{{${filterCategoryKey}}}`];
 
-        if (!filterCategoryLabel) {
-          return null;
-        }
+      if (!filterCategoryLabel) {
+        return [];
+      }
 
+      return filterSubcategoryKeys.map(async (filterSubcategoryKey) => {
         const filterSubcategoryLabel = await replaceText(
           `{{${filterSubcategoryKey.toLowerCase()}}}`,
           this.blockData.config,
@@ -259,8 +258,10 @@ export default class PartnerCards extends LitElement {
             initialHidden: false,
           },
         };
-      }),
-    );
+      });
+    });
+
+    const tagsData = await Promise.all(allPromises);
 
     const resultMap = new Map();
 
@@ -320,7 +321,13 @@ export default class PartnerCards extends LitElement {
               return;
             }
             const [key, value] = Object.entries(filter)[0]; // Extract key-value pair
-            this.cardFiltersSet.add(`${key}:${value}`);
+            if (!this.cardFiltersSet.has(key)) {
+              this.cardFiltersSet.set(key, []);
+            }
+            const subcategories = this.cardFiltersSet.get(key);
+            if (!subcategories.includes(value)) {
+              subcategories.push(value);
+            }
           });
         });
         this.allCards = apiData.cards;

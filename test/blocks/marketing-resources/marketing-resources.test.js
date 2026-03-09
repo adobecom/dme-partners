@@ -74,11 +74,9 @@ describe('Marketing Resources block', () => {
       expect(app.blockData.config).to.exist;
 
       // Set up cardFiltersSet with test data
-      app.cardFiltersSet = new Set([
-        'product:adobe-acrobat',
-        'product:adobe-sign',
-        'topic:onboarding',
-        'topic:getting-started',
+      app.cardFiltersSet = new Map([
+        ['product', ['adobe-acrobat', 'adobe-sign']],
+        ['topic', ['onboarding', 'getting-started']],
       ]);
 
       // Ensure localizedText has the filter category keys
@@ -129,7 +127,7 @@ describe('Marketing Resources block', () => {
       const app = await setupAndRunInit();
       await app.updateComplete;
 
-      app.cardFiltersSet = new Set(['product:adobe-acrobat']);
+      app.cardFiltersSet = new Map([['product', ['adobe-acrobat']]]);
       app.blockData.localizedText = {
         ...app.blockData.localizedText,
         '{{product}}': 'Product',
@@ -152,9 +150,9 @@ describe('Marketing Resources block', () => {
       const app = await setupAndRunInit();
       await app.updateComplete;
 
-      app.cardFiltersSet = new Set([
-        'product:adobe-acrobat',
-        'unknown-category:some-value',
+      app.cardFiltersSet = new Map([
+        ['product', ['adobe-acrobat']],
+        ['unknown-category', ['some-value']],
       ]);
 
       app.blockData.localizedText = {
@@ -177,7 +175,7 @@ describe('Marketing Resources block', () => {
       const app = await setupAndRunInit();
       await app.updateComplete;
 
-      app.cardFiltersSet = new Set();
+      app.cardFiltersSet = new Map();
 
       await app.createFilters();
 
@@ -189,10 +187,9 @@ describe('Marketing Resources block', () => {
       const app = await setupAndRunInit();
       await app.updateComplete;
 
-      app.cardFiltersSet = new Set([
-        'product:adobe-acrobat',
-        'product:adobe-sign',
-        'topic:onboarding',
+      app.cardFiltersSet = new Map([
+        ['product', ['adobe-acrobat', 'adobe-sign']],
+        ['topic', ['onboarding']],
       ]);
 
       app.blockData.localizedText = {
@@ -224,10 +221,8 @@ describe('Marketing Resources block', () => {
       const app = await setupAndRunInit();
       await app.updateComplete;
 
-      app.cardFiltersSet = new Set([
-        'product:adobe-acrobat',
-        'product:adobe-sign',
-        'product:adobe-photoshop',
+      app.cardFiltersSet = new Map([
+        ['product', ['adobe-acrobat', 'adobe-sign', 'adobe-photoshop']],
       ]);
 
       app.blockData.localizedText = {
@@ -256,11 +251,17 @@ describe('Marketing Resources block', () => {
       expect(cardWithArbitrary).to.exist;
 
       // Manually populate cardFiltersSet as fetchData would
-      app.cardFiltersSet = new Set();
+      app.cardFiltersSet = new Map();
       cardWithArbitrary.arbitrary.forEach((filter) => {
         if (Object.keys(filter).length > 0) {
           const [key, value] = Object.entries(filter)[0];
-          app.cardFiltersSet.add(`${key}:${value}`);
+          if (!app.cardFiltersSet.has(key)) {
+            app.cardFiltersSet.set(key, []);
+          }
+          const subcategories = app.cardFiltersSet.get(key);
+          if (!subcategories.includes(value)) {
+            subcategories.push(value);
+          }
         }
       });
 
@@ -293,10 +294,9 @@ describe('Marketing Resources block', () => {
       await app.updateComplete;
 
       // Set up cardFiltersSet with test data
-      app.cardFiltersSet = new Set([
-        'product:adobe-acrobat',
-        'product:adobe-sign',
-        'topic:onboarding',
+      app.cardFiltersSet = new Map([
+        ['product', ['adobe-acrobat', 'adobe-sign']],
+        ['topic', ['onboarding']],
       ]);
 
       // Ensure localizedText has the filter category keys
