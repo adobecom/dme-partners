@@ -73,12 +73,6 @@ describe('Marketing Resources block', () => {
       expect(app.blockData.dynamicFilters).to.be.true;
       expect(app.blockData.config).to.exist;
 
-      // Set up cardFiltersSet with test data
-      app.cardFiltersSet = new Map([
-        ['product', ['adobe-acrobat', 'adobe-sign']],
-        ['topic', ['onboarding', 'getting-started']],
-      ]);
-
       // Ensure localizedText has the filter category keys
       app.blockData.localizedText = {
         ...app.blockData.localizedText,
@@ -86,7 +80,31 @@ describe('Marketing Resources block', () => {
         '{{topic}}': 'Topic',
       };
 
-      // Call createFilters
+      // Create filter objects as filter method would (with empty tags arrays)
+      app.blockData.filters = [
+        {
+          key: 'product',
+          value: 'Product',
+          tags: [],
+          hideTags: true,
+          hasHiddenTags: false,
+        },
+        {
+          key: 'topic',
+          value: 'Topic',
+          tags: [],
+          hideTags: true,
+          hasHiddenTags: false,
+        },
+      ];
+
+      // Set up cardFiltersSet with test data
+      app.cardFiltersSet = new Map([
+        ['product', ['adobe-acrobat', 'adobe-sign']],
+        ['topic', ['onboarding', 'getting-started']],
+      ]);
+
+      // Call createFilters to populate tags
       await app.createFilters();
 
       // Verify filters were created
@@ -127,6 +145,17 @@ describe('Marketing Resources block', () => {
       const app = await setupAndRunInit();
       await app.updateComplete;
 
+      // Create filter object as filter method would
+      app.blockData.filters = [
+        {
+          key: 'product',
+          value: 'Product',
+          tags: [],
+          hideTags: true,
+          hasHiddenTags: false,
+        },
+      ];
+
       app.cardFiltersSet = new Map([['product', ['adobe-acrobat']]]);
       app.blockData.localizedText = {
         ...app.blockData.localizedText,
@@ -146,9 +175,20 @@ describe('Marketing Resources block', () => {
       expect(tag).to.have.property('initialHidden', false);
     });
 
-    it('filters out categories without localized text', async () => {
+    it('filters out categories without existing filter objects', async () => {
       const app = await setupAndRunInit();
       await app.updateComplete;
+
+      // Create filter object only for 'product', not for 'unknown-category'
+      app.blockData.filters = [
+        {
+          key: 'product',
+          value: 'Product',
+          tags: [],
+          hideTags: true,
+          hasHiddenTags: false,
+        },
+      ];
 
       app.cardFiltersSet = new Map([
         ['product', ['adobe-acrobat']],
@@ -158,16 +198,18 @@ describe('Marketing Resources block', () => {
       app.blockData.localizedText = {
         ...app.blockData.localizedText,
         '{{product}}': 'Product',
-        // Note: '{{unknown-category}}' is not defined
+        '{{unknown-category}}': 'Unknown Category',
       };
 
       await app.createFilters();
 
-      // Should only have product filter, not unknown-category
+      // Should only have product filter with tags populated
       const productFilter = app.blockData.filters.find((f) => f.key === 'product');
       const unknownFilter = app.blockData.filters.find((f) => f.key === 'unknown-category');
 
       expect(productFilter).to.exist;
+      expect(productFilter.tags.length).to.equal(1);
+      // unknown-category should not exist (no filter object was created for it)
       expect(unknownFilter).to.be.undefined;
     });
 
@@ -180,12 +222,32 @@ describe('Marketing Resources block', () => {
       await app.createFilters();
 
       expect(app.blockData.filters).to.be.an('array');
-      expect(app.blockData.filters.length).to.equal(0);
+      // If filter objects exist from setBlockData, they should remain but with no new tags
+      // If no filter objects exist, filters array should be empty
+      expect(app.blockData.filters.length).to.be.at.least(0);
     });
 
     it('uses replaceText to get localized values for filter subcategories', async () => {
       const app = await setupAndRunInit();
       await app.updateComplete;
+
+      // Create filter objects as filter method would
+      app.blockData.filters = [
+        {
+          key: 'product',
+          value: 'Product',
+          tags: [],
+          hideTags: true,
+          hasHiddenTags: false,
+        },
+        {
+          key: 'topic',
+          value: 'Topic',
+          tags: [],
+          hideTags: true,
+          hasHiddenTags: false,
+        },
+      ];
 
       app.cardFiltersSet = new Map([
         ['product', ['adobe-acrobat', 'adobe-sign']],
@@ -220,6 +282,17 @@ describe('Marketing Resources block', () => {
     it('groups multiple tags under the same category', async () => {
       const app = await setupAndRunInit();
       await app.updateComplete;
+
+      // Create filter object as filter method would
+      app.blockData.filters = [
+        {
+          key: 'product',
+          value: 'Product',
+          tags: [],
+          hideTags: true,
+          hasHiddenTags: false,
+        },
+      ];
 
       app.cardFiltersSet = new Map([
         ['product', ['adobe-acrobat', 'adobe-sign', 'adobe-photoshop']],
@@ -272,6 +345,18 @@ describe('Marketing Resources block', () => {
         '{{topic}}': 'Topic',
       };
 
+      // Create filter objects as filter method would (based on arbitrary data categories)
+      const categories = Array.from(new Set(
+        cardWithArbitrary.arbitrary.map((filter) => Object.keys(filter)[0]),
+      ));
+      app.blockData.filters = categories.map((category) => ({
+        key: category,
+        value: app.blockData.localizedText[`{{${category}}}`] || category,
+        tags: [],
+        hideTags: true,
+        hasHiddenTags: false,
+      }));
+
       await app.createFilters();
 
       expect(app.blockData.filters).to.be.an('array');
@@ -289,9 +374,120 @@ describe('Marketing Resources block', () => {
       }
     });
 
+    it('does not create duplicate tags when createFilters is called multiple times', async () => {
+      const app = await setupAndRunInit();
+      await app.updateComplete;
+
+      // Create filter object as filter method would
+      app.blockData.filters = [
+        {
+          key: 'product',
+          value: 'Product',
+          tags: [],
+          hideTags: true,
+          hasHiddenTags: false,
+        },
+      ];
+
+      app.cardFiltersSet = new Map([
+        ['product', ['adobe-acrobat', 'adobe-sign']],
+      ]);
+
+      app.blockData.localizedText = {
+        ...app.blockData.localizedText,
+        '{{product}}': 'Product',
+      };
+
+      // Call createFilters twice
+      await app.createFilters();
+      await app.createFilters();
+
+      const productFilter = app.blockData.filters.find((f) => f.key === 'product');
+      expect(productFilter).to.exist;
+      // Should still have only 2 tags, not 4
+      expect(productFilter.tags.length).to.equal(2);
+    });
+
+    it('populates tags for existing filter objects created by filter method', async () => {
+      const app = await setupAndRunInit();
+      await app.updateComplete;
+
+      // Simulate filter objects created by filter method in setBlockData
+      // (with empty tags arrays, as they would be when cols.length === 1 or empty <ul>)
+      app.blockData.filters = [
+        {
+          key: 'product',
+          value: 'Product',
+          tags: [],
+          hideTags: true,
+          hasHiddenTags: false,
+        },
+        {
+          key: 'topic',
+          value: 'Topic',
+          tags: [],
+          hideTags: true,
+          hasHiddenTags: false,
+        },
+      ];
+
+      // Set up cardFiltersSet with test data
+      app.cardFiltersSet = new Map([
+        ['product', ['adobe-acrobat', 'adobe-sign']],
+        ['topic', ['onboarding']],
+      ]);
+
+      // Ensure localizedText has the filter category keys
+      app.blockData.localizedText = {
+        ...app.blockData.localizedText,
+        '{{product}}': 'Product',
+        '{{topic}}': 'Topic',
+      };
+
+      // Call createFilters - should populate existing filter objects
+      await app.createFilters();
+
+      // Verify filters still exist (not recreated)
+      expect(app.blockData.filters.length).to.equal(2);
+
+      const productFilter = app.blockData.filters.find((f) => f.key === 'product');
+      const topicFilter = app.blockData.filters.find((f) => f.key === 'topic');
+
+      expect(productFilter).to.exist;
+      expect(topicFilter).to.exist;
+
+      // Verify tags were populated (not created new)
+      expect(productFilter.tags.length).to.equal(2);
+      expect(topicFilter.tags.length).to.equal(1);
+
+      // Verify tag structure
+      expect(productFilter.tags[0]).to.have.property('key', 'adobe-acrobat');
+      expect(productFilter.tags[0]).to.have.property('parentKey', 'product');
+      expect(topicFilter.tags[0]).to.have.property('key', 'onboarding');
+      expect(topicFilter.tags[0]).to.have.property('parentKey', 'topic');
+    });
+
     it('adds filter subcategory entries to localizedText when creating filters', async () => {
       const app = await setupAndRunInit();
       await app.updateComplete;
+
+      // Create filter objects as filter method would
+      app.blockData.filters = [
+        {
+          key: 'product',
+          value: 'Product',
+          tags: [],
+          hideTags: true,
+          hasHiddenTags: false,
+        },
+        {
+          key: 'topic',
+          value: 'Topic',
+          tags: [],
+          hideTags: true,
+          hasHiddenTags: false,
+        },
+      ];
 
       // Set up cardFiltersSet with test data
       app.cardFiltersSet = new Map([

@@ -101,6 +101,8 @@ export default class PartnerCards extends LitElement {
         const [filterKeyEl, filterTagsKeysEl] = cols;
         const filterKey = filterKeyEl.innerText.trim().toLowerCase().replace(/ /g, '-');
 
+        if (!filterKey) return;
+
         function createTag(tagKey, initialHidden, blockData) {
           return {
             key: tagKey,
@@ -112,17 +114,25 @@ export default class PartnerCards extends LitElement {
         }
         const filterTagsKeys = [];
 
-        filterTagsKeysEl.querySelectorAll('ul')[0].querySelectorAll('li').forEach((li) => {
-          const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
-          if (key !== '') filterTagsKeys.push(createTag(key, false, this.blockData));
-        });
+        // Only process tags if filterTagsKeysEl exists and has <ul> with <li> elements
+        // (3rd block column is authored with subcategory keys)
+        if (filterTagsKeysEl) {
+          const firstUl = filterTagsKeysEl.querySelectorAll('ul')[0];
+          if (firstUl) {
+            firstUl.querySelectorAll('li').forEach((li) => {
+              const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
+              if (key !== '') filterTagsKeys.push(createTag(key, false, this.blockData));
+            });
+          }
 
-        filterTagsKeysEl.querySelectorAll('ul')[1]?.querySelectorAll('li').forEach((li) => {
-          const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
-          if (key !== '') filterTagsKeys.push(createTag(key, true, this.blockData));
-        });
-
-        if (!filterKey || !filterTagsKeys.length) return;
+          const secondUl = filterTagsKeysEl.querySelectorAll('ul')[1];
+          if (secondUl) {
+            secondUl.querySelectorAll('li').forEach((li) => {
+              const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
+              if (key !== '') filterTagsKeys.push(createTag(key, true, this.blockData));
+            });
+          }
+        }
 
         const filterObj = {
           key: filterKey,
@@ -235,9 +245,8 @@ export default class PartnerCards extends LitElement {
     const filtersArray = Array.from(this.cardFiltersSet.entries());
 
     const allPromises = filtersArray.flatMap(([filterCategoryKey, filterSubcategoryKeys]) => {
-      const filterCategoryLabel = this.blockData.localizedText[`{{${filterCategoryKey}}}`];
-
-      if (!filterCategoryLabel) {
+      const filterObj = this.blockData.filters.find((f) => f.key === filterCategoryKey);
+      if (!filterObj) {
         return [];
       }
 
@@ -248,8 +257,7 @@ export default class PartnerCards extends LitElement {
         );
 
         return {
-          categoryKey: filterCategoryKey,
-          categoryLabel: filterCategoryLabel,
+          filterObj,
           tag: {
             key: filterSubcategoryKey,
             parentKey: filterCategoryKey,
@@ -263,30 +271,22 @@ export default class PartnerCards extends LitElement {
 
     const tagsData = await Promise.all(allPromises);
 
-    const resultMap = new Map();
-
     tagsData
       .filter(Boolean)
-      .forEach(({ categoryKey, categoryLabel, tag }) => {
-        if (!resultMap.has(categoryKey)) {
-          resultMap.set(categoryKey, {
-            key: categoryKey,
-            value: categoryLabel,
-            tags: [],
-            hideTags: true,
-            hasHiddenTags: false,
-          });
+      .forEach(({ filterObj, tag }) => {
+        const tagExists = filterObj.tags.some((t) => t.key === tag.key);
+        if (!tagExists) {
+          filterObj.tags.push(tag);
+          filterObj.hasHiddenTags = filterObj.tags.some((t) => t.initialHidden);
         }
-
-        const filterObj = resultMap.get(categoryKey);
-        filterObj.tags.push(tag);
-        filterObj.hasHiddenTags = filterObj.tags.some((t) => t.initialHidden);
 
         const localizedKey = `{{${tag.key}}}`;
         this.blockData.localizedText[localizedKey] = tag.value;
       });
 
-    this.blockData.filters = Array.from(resultMap.values());
+    this.blockData.filters = this.blockData.filters.filter(
+      (filterObj) => filterObj.tags.length > 0,
+    );
   }
 
   async fetchData() {
