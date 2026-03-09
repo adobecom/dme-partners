@@ -65,7 +65,7 @@ describe('Marketing Resources block', () => {
   });
 
   describe('createFilters method', () => {
-    it('creates filters from cardFiltersSet when dynamicFilters is enabled', async () => {
+    it('creates filters from cardFiltersMap when dynamicFilters is enabled', async () => {
       const app = await setupAndRunInit();
       await app.updateComplete;
 
@@ -98,8 +98,8 @@ describe('Marketing Resources block', () => {
         },
       ];
 
-      // Set up cardFiltersSet with test data
-      app.cardFiltersSet = new Map([
+      // Set up cardFiltersMap with test data
+      app.cardFiltersMap = new Map([
         ['product', ['adobe-acrobat', 'adobe-sign']],
         ['topic', ['onboarding', 'getting-started']],
       ]);
@@ -156,7 +156,7 @@ describe('Marketing Resources block', () => {
         },
       ];
 
-      app.cardFiltersSet = new Map([['product', ['adobe-acrobat']]]);
+      app.cardFiltersMap = new Map([['product', ['adobe-acrobat']]]);
       app.blockData.localizedText = {
         ...app.blockData.localizedText,
         '{{product}}': 'Product',
@@ -190,7 +190,7 @@ describe('Marketing Resources block', () => {
         },
       ];
 
-      app.cardFiltersSet = new Map([
+      app.cardFiltersMap = new Map([
         ['product', ['adobe-acrobat']],
         ['unknown-category', ['some-value']],
       ]);
@@ -213,11 +213,11 @@ describe('Marketing Resources block', () => {
       expect(unknownFilter).to.be.undefined;
     });
 
-    it('handles empty cardFiltersSet gracefully', async () => {
+    it('handles empty cardFiltersMap gracefully', async () => {
       const app = await setupAndRunInit();
       await app.updateComplete;
 
-      app.cardFiltersSet = new Map();
+      app.cardFiltersMap = new Map();
 
       await app.createFilters();
 
@@ -249,7 +249,7 @@ describe('Marketing Resources block', () => {
         },
       ];
 
-      app.cardFiltersSet = new Map([
+      app.cardFiltersMap = new Map([
         ['product', ['adobe-acrobat', 'adobe-sign']],
         ['topic', ['onboarding']],
       ]);
@@ -294,7 +294,7 @@ describe('Marketing Resources block', () => {
         },
       ];
 
-      app.cardFiltersSet = new Map([
+      app.cardFiltersMap = new Map([
         ['product', ['adobe-acrobat', 'adobe-sign', 'adobe-photoshop']],
       ]);
 
@@ -323,15 +323,15 @@ describe('Marketing Resources block', () => {
       const cardWithArbitrary = cards.find((card) => card.arbitrary && card.arbitrary.length > 0);
       expect(cardWithArbitrary).to.exist;
 
-      // Manually populate cardFiltersSet as fetchData would
-      app.cardFiltersSet = new Map();
+      // Manually populate cardFiltersMap as fetchData would
+      app.cardFiltersMap = new Map();
       cardWithArbitrary.arbitrary.forEach((filter) => {
         if (Object.keys(filter).length > 0) {
           const [key, value] = Object.entries(filter)[0];
-          if (!app.cardFiltersSet.has(key)) {
-            app.cardFiltersSet.set(key, []);
+          if (!app.cardFiltersMap.has(key)) {
+            app.cardFiltersMap.set(key, []);
           }
-          const subcategories = app.cardFiltersSet.get(key);
+          const subcategories = app.cardFiltersMap.get(key);
           if (!subcategories.includes(value)) {
             subcategories.push(value);
           }
@@ -389,7 +389,7 @@ describe('Marketing Resources block', () => {
         },
       ];
 
-      app.cardFiltersSet = new Map([
+      app.cardFiltersMap = new Map([
         ['product', ['adobe-acrobat', 'adobe-sign']],
       ]);
 
@@ -431,8 +431,8 @@ describe('Marketing Resources block', () => {
         },
       ];
 
-      // Set up cardFiltersSet with test data
-      app.cardFiltersSet = new Map([
+      // Set up cardFiltersMap with test data
+      app.cardFiltersMap = new Map([
         ['product', ['adobe-acrobat', 'adobe-sign']],
         ['topic', ['onboarding']],
       ]);
@@ -489,8 +489,8 @@ describe('Marketing Resources block', () => {
         },
       ];
 
-      // Set up cardFiltersSet with test data
-      app.cardFiltersSet = new Map([
+      // Set up cardFiltersMap with test data
+      app.cardFiltersMap = new Map([
         ['product', ['adobe-acrobat', 'adobe-sign']],
         ['topic', ['onboarding']],
       ]);

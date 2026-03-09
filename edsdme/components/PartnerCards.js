@@ -66,7 +66,7 @@ export default class PartnerCards extends LitElement {
     this.mobileView = window.innerWidth <= 1200;
     this.searchInputPlaceholder = '{{search}}';
     this.searchInputLabel = '';
-    this.cardFiltersSet = new Map();
+    this.cardFiltersMap = new Map();
     this.updateView = this.updateView.bind(this);
   }
 
@@ -242,7 +242,7 @@ export default class PartnerCards extends LitElement {
   additionalFirstUpdated() {}
 
   async createFilters() {
-    const filtersArray = Array.from(this.cardFiltersSet.entries());
+    const filtersArray = Array.from(this.cardFiltersMap.entries());
 
     const allPromises = filtersArray.flatMap(([filterCategoryKey, filterSubcategoryKeys]) => {
       const filterObj = this.blockData.filters.find((f) => f.key === filterCategoryKey);
@@ -321,10 +321,10 @@ export default class PartnerCards extends LitElement {
               return;
             }
             const [key, value] = Object.entries(filter)[0]; // Extract key-value pair
-            if (!this.cardFiltersSet.has(key)) {
-              this.cardFiltersSet.set(key, []);
+            if (!this.cardFiltersMap.has(key)) {
+              this.cardFiltersMap.set(key, []);
             }
-            const subcategories = this.cardFiltersSet.get(key);
+            const subcategories = this.cardFiltersMap.get(key);
             if (!subcategories.includes(value)) {
               subcategories.push(value);
             }
