@@ -66,7 +66,7 @@ export default class PartnerCards extends LitElement {
     this.mobileView = window.innerWidth <= 1200;
     this.searchInputPlaceholder = '{{search}}';
     this.searchInputLabel = '';
-    this.cardFiltersSet = new Set();
+    this.cardFiltersMap = new Map();
     this.updateView = this.updateView.bind(this);
   }
 
@@ -101,6 +101,8 @@ export default class PartnerCards extends LitElement {
         const [filterKeyEl, filterTagsKeysEl] = cols;
         const filterKey = filterKeyEl.innerText.trim().toLowerCase().replace(/ /g, '-');
 
+        if (!filterKey) return;
+
         function createTag(tagKey, initialHidden, blockData) {
           return {
             key: tagKey,
@@ -112,17 +114,25 @@ export default class PartnerCards extends LitElement {
         }
         const filterTagsKeys = [];
 
-        filterTagsKeysEl.querySelectorAll('ul')[0].querySelectorAll('li').forEach((li) => {
-          const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
-          if (key !== '') filterTagsKeys.push(createTag(key, false, this.blockData));
-        });
+        // Only process tags if filterTagsKeysEl exists and has <ul> with <li> elements
+        // (3rd block column is authored with subcategory keys)
+        if (filterTagsKeysEl) {
+          const firstUl = filterTagsKeysEl.querySelectorAll('ul')[0];
+          if (firstUl) {
+            firstUl.querySelectorAll('li').forEach((li) => {
+              const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
+              if (key !== '') filterTagsKeys.push(createTag(key, false, this.blockData));
+            });
+          }
 
-        filterTagsKeysEl.querySelectorAll('ul')[1]?.querySelectorAll('li').forEach((li) => {
-          const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
-          if (key !== '') filterTagsKeys.push(createTag(key, true, this.blockData));
-        });
-
-        if (!filterKey || !filterTagsKeys.length) return;
+          const secondUl = filterTagsKeysEl.querySelectorAll('ul')[1];
+          if (secondUl) {
+            secondUl.querySelectorAll('li').forEach((li) => {
+              const key = li.innerText.trim().toLowerCase().replace(/ /g, '-');
+              if (key !== '') filterTagsKeys.push(createTag(key, true, this.blockData));
+            });
+          }
+        }
 
         const filterObj = {
           key: filterKey,
@@ -232,25 +242,22 @@ export default class PartnerCards extends LitElement {
   additionalFirstUpdated() {}
 
   async createFilters() {
-    const filtersArray = Array.from(this.cardFiltersSet);
+    const filtersArray = Array.from(this.cardFiltersMap.entries());
 
-    const tagsData = await Promise.all(
-      filtersArray.map(async (filter) => {
-        const [filterCategoryKey, filterSubcategoryKey] = filter.split(':');
-        const filterCategoryLabel = this.blockData.localizedText[`{{${filterCategoryKey}}}`];
+    const allPromises = filtersArray.flatMap(([filterCategoryKey, filterSubcategoryKeys]) => {
+      const filterObj = this.blockData.filters.find((f) => f.key === filterCategoryKey);
+      if (!filterObj) {
+        return [];
+      }
 
-        if (!filterCategoryLabel) {
-          return null;
-        }
-
+      return filterSubcategoryKeys.map(async (filterSubcategoryKey) => {
         const filterSubcategoryLabel = await replaceText(
           `{{${filterSubcategoryKey.toLowerCase()}}}`,
           this.blockData.config,
         );
 
         return {
-          categoryKey: filterCategoryKey,
-          categoryLabel: filterCategoryLabel,
+          filterObj,
           tag: {
             key: filterSubcategoryKey,
             parentKey: filterCategoryKey,
@@ -259,30 +266,27 @@ export default class PartnerCards extends LitElement {
             initialHidden: false,
           },
         };
-      }),
-    );
+      });
+    });
 
-    const resultMap = new Map();
+    const tagsData = await Promise.all(allPromises);
 
     tagsData
       .filter(Boolean)
-      .forEach(({ categoryKey, categoryLabel, tag }) => {
-        if (!resultMap.has(categoryKey)) {
-          resultMap.set(categoryKey, {
-            key: categoryKey,
-            value: categoryLabel,
-            tags: [],
-            hideTags: true,
-            hasHiddenTags: false,
-          });
+      .forEach(({ filterObj, tag }) => {
+        const tagExists = filterObj.tags.some((t) => t.key === tag.key);
+        if (!tagExists) {
+          filterObj.tags.push(tag);
+          filterObj.hasHiddenTags = filterObj.tags.some((t) => t.initialHidden);
         }
 
-        const filterObj = resultMap.get(categoryKey);
-        filterObj.tags.push(tag);
-        filterObj.hasHiddenTags = filterObj.tags.some((t) => t.initialHidden);
+        const localizedKey = `{{${tag.key}}}`;
+        this.blockData.localizedText[localizedKey] = tag.value;
       });
 
-    this.blockData.filters = Array.from(resultMap.values());
+    this.blockData.filters = this.blockData.filters.filter(
+      (filterObj) => filterObj.tags.length > 0,
+    );
   }
 
   async fetchData() {
@@ -317,7 +321,13 @@ export default class PartnerCards extends LitElement {
               return;
             }
             const [key, value] = Object.entries(filter)[0]; // Extract key-value pair
-            this.cardFiltersSet.add(`${key}:${value}`);
+            if (!this.cardFiltersMap.has(key)) {
+              this.cardFiltersMap.set(key, []);
+            }
+            const subcategories = this.cardFiltersMap.get(key);
+            if (!subcategories.includes(value)) {
+              subcategories.push(value);
+            }
           });
         });
         this.allCards = apiData.cards;
