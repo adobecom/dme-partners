@@ -168,7 +168,7 @@ export const singleMarketingResourcesCardStyles = css`
     text-decoration: none;
   }
 
-   @media screen and (max-width: 1200px) {
+   @media screen and (max-width: 768px) {
     .card-description {
       display: none !important;
     }
