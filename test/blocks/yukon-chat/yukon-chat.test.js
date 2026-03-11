@@ -232,6 +232,57 @@ describe('yukon-chat block', () => {
   });
 
   describe('Send flow', () => {
+    it('should show second input placeholder when modal is opened', async () => {
+      const encoder = new TextEncoder();
+      const chunk = encoder.encode('data: [{"generated_text":"Hi"}]\n');
+      fetchStub.callsFake(async (url) => {
+        const urlStr = typeof url === 'string' ? url : url.toString();
+        if (urlStr.includes('placeholders.json')) {
+          return {
+            ok: true,
+            json: async () => ({
+              data: [
+                { key: 'send-message', value: 'Send Message' },
+                { key: 'open-chat', value: 'Open Chat' },
+                { key: 'scroll-to-bottom', value: 'Scroll to bottom' },
+              ],
+            }),
+          };
+        }
+        if (urlStr.includes('yukonAIAssistant')) {
+          return {
+            ok: true,
+            status: 200,
+            body: new ReadableStream({
+              start(controller) {
+                controller.enqueue(chunk);
+                controller.close();
+              },
+            }),
+          };
+        }
+        return { ok: false, status: 404 };
+      });
+
+      const block = document.querySelector('.yukon-chat');
+      await init(block);
+
+      const textarea = document.querySelector('#yc-input-field');
+      const sendButton = document.querySelector('.yc-input-field-button');
+      textarea.value = 'Hello';
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      sendButton.click();
+
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 50));
+
+      const modal = document.querySelector('#yukon-chat-modal');
+      expect(modal).to.exist;
+      const inModalInput = modal.querySelector('#yc-input-field');
+      expect(inModalInput).to.exist;
+      expect(inModalInput.getAttribute('placeholder')).to.equal('Was that all, or do you have some more question?');
+    });
+
     it('should open modal, call fetch, and render AI response', async () => {
       const encoder = new TextEncoder();
       const chunk = encoder.encode('data: [{"generated_text":"Hello from Yukon"}]\n');
