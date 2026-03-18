@@ -119,11 +119,7 @@ export const singlePrpCollectionCardStyles = css`
     height: 100%;
   }
 
-  .single-prp-collection-card .card-text {
-    border-bottom: 1px solid ${borderColor};
-  }
-
-  .single-prp-collection-card .card-btn {
+  .single-prp-collection-card .card-footer ::slotted(.card-btn) {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -146,18 +142,22 @@ export const singlePrpCollectionCardStyles = css`
     transition: border-color .3s ease-in-out,background-color .3s ease-in-out;
   }
 
-  .single-prp-collection-card .card-btn:hover {
+  .single-prp-collection-card .card-footer ::slotted(.card-btn:hover) {
     text-decoration: none;
     border-color: ${darkGrey2};
     background-color: ${darkGrey2};
     color: ${white};
   }
 
-  .single-prp-collection-card .card-open-link {
+  .single-prp-collection-card .card-footer ::slotted(.card-open-link) {
     font-size: .875rem;
     line-height: 1.063rem;
     font-weight: 700;
     color: ${blueColor};
+  }
+
+  .single-prp-collection-card .card-text {
+    border-bottom: 1px solid ${borderColor};
   }
 
   .single-prp-collection-card .card-date {

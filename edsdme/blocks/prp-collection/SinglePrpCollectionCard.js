@@ -2,6 +2,29 @@ import { singlePrpCollectionCardStyles } from './SinglePrpCollectionCardStyles.j
 import { formatDate, getLibs } from '../../scripts/utils.js';
 
 const miloLibs = getLibs();
+
+export function getFileExtensionFromUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+
+  try {
+    const { pathname } = new URL(url, window.location.origin);
+    const fileName = pathname.split('/').pop();
+
+    if (!fileName || !fileName.includes('.')) return '';
+
+    return fileName.split('.').pop().toLowerCase();
+  } catch {
+    return '';
+  }
+}
+
+const ALLOWED_PREVIEW_EXTENSIONS = ['gif', 'jpeg', 'jpg', 'mp4', 'pdf', 'png', 'svg'];
+
+export function hasPreviewOption(url) {
+  const currentExtension = getFileExtensionFromUrl(url);
+  if (!currentExtension) return false;
+  return ALLOWED_PREVIEW_EXTENSIONS.includes(currentExtension.toLowerCase());
+}
 const { html, LitElement } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
 class SinglePrpCollectionCard extends LitElement {
@@ -19,18 +42,7 @@ class SinglePrpCollectionCard extends LitElement {
 
   // eslint-disable-next-line class-methods-use-this
   getFileExtensionFromUrl(url) {
-    if (!url || typeof url !== 'string') return '';
-
-    try {
-      const { pathname } = new URL(url, window.location.origin);
-      const fileName = pathname.split('/').pop();
-
-      if (!fileName || !fileName.includes('.')) return '';
-
-      return fileName.split('.').pop().toLowerCase();
-    } catch {
-      return '';
-    }
+    return getFileExtensionFromUrl(url);
   }
 
   getAssetDetails(arbitrary) {
@@ -49,14 +61,6 @@ class SinglePrpCollectionCard extends LitElement {
     return [...new Set(result)].join(', ');
   }
 
-  hasPreviewOption(url) {
-    const allowedPreviewExtensions = ['gif', 'jpeg', 'jpg', 'mp4', 'pdf', 'png', 'svg'];
-    const currentExtension = this.getFileExtensionFromUrl(url);
-
-    if (!currentExtension) return false;
-    return allowedPreviewExtensions.includes(currentExtension.toLowerCase());
-  }
-
   render() {
     return html`
       <div class="single-prp-collection-card">
@@ -69,8 +73,7 @@ class SinglePrpCollectionCard extends LitElement {
             <p class="card-description">${this.getAssetDetails(this.data.arbitrary)}</p>
           </div>
           <div class="card-footer">
-            ${this.hasPreviewOption(this.data.contentArea?.url) ? html`<a class="card-open-link" daa-ll="${this.localizedText['{{open}}']}" href="${this.data.contentArea?.url}" target="_blank">${this.localizedText['{{open}}']}</a>` : ''}
-            <a class="card-btn" daa-ll="${this.localizedText['{{download}}']}" @click=${(e) => e.stopPropagation()} download="${this.data.contentArea?.title}" href="${this.data.contentArea?.url}">${this.localizedText['{{download}}']}</a>
+            <slot name="card-footer"></slot>
           </div>
         </div>
       </div>

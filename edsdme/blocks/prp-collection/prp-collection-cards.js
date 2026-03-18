@@ -1,6 +1,6 @@
 import { getLibs, getPermissionSpecializations } from '../../scripts/utils.js';
 import PartnerCards from '../../components/PartnerCards.js';
-import './SinglePrpCollectionCard.js';
+import { hasPreviewOption } from './SinglePrpCollectionCard.js';
 
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
@@ -43,7 +43,10 @@ export default class PRPCollectionCards extends PartnerCards {
       return html`${repeat(
         this.paginatedCards,
         (card) => card.id,
-        (card) => html`<single-prp-collection-card  class="card-wrapper"  .data=${card} .ietf=${this.blockData.ietf} .localizedText=${this.blockData.localizedText}></single-partner-card>`,
+        (card) => html`<single-prp-collection-card class="card-wrapper" .data=${card} .ietf=${this.blockData.ietf} .localizedText=${this.blockData.localizedText}>
+          ${hasPreviewOption(card.contentArea?.url) ? html`<a slot="card-footer" class="card-open-link" daa-ll="${this.blockData.localizedText['{{open}}']}" href="${card.contentArea?.url}" target="_blank" rel="noopener noreferrer">${this.blockData.localizedText['{{open}}']}</a>` : ''}
+          <a slot="card-footer" class="card-btn" daa-ll="${this.blockData.localizedText['{{download}}']}" @click=${(e) => e.stopPropagation()} download="${card.contentArea?.title}" href="${card.contentArea?.url}">${this.blockData.localizedText['{{download}}']}</a>
+        </single-prp-collection-card>`,
       )}`;
     }
 
