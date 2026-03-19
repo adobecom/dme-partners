@@ -801,6 +801,79 @@ chat-history-left .user-message {
   align-self: flex-start;
 }
 
+/* Yukun Chat Sources Accordion */
+.yc-sources-accordion {
+  margin-top: 12px;
+  padding-top: 0;
+}
+
+.yc-accordion-header {
+  background: none;
+  border: none;
+  padding: 8px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #292929;
+  font-family: inherit;
+  transition: opacity 0.2s ease;
+}
+
+.yc-accordion-header:hover {
+  opacity: 0.8;
+}
+
+.yc-accordion-icon {
+  transition: transform 0.3s ease;
+  transform: rotate(-90deg);
+  width: 10px;
+  height: 10px;
+}
+
+.yc-accordion-header.expanded .yc-accordion-icon {
+  transform: rotate(0deg);
+}
+
+.yc-accordion-content {
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+.yc-sources-list {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  counter-reset: source-counter;
+}
+
+.yc-sources-list li {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.yc-sources-list li::before {
+  counter-increment: source-counter;
+  content: counter(source-counter);
+  font-weight: 400;
+  color: #292929;
+  margin-right: 8px;
+}
+
+.yc-sources-list a {
+  color: #292929;
+  font-weight: 400;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.yc-sources-list a:hover {
+  color: #000;
+}
+
 .yukon-chat-button.cta {
   background: #1473e6;
   color: var(--yc-container-color);

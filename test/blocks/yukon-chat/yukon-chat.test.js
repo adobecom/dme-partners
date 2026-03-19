@@ -618,5 +618,71 @@ describe('yukon-chat block', () => {
         expect(link.getAttribute('target')).to.equal('_blank');
       });
     });
+
+    it('should render a sources accordion when API provides source data', async () => {
+      const encoder = new TextEncoder();
+      const mockChunk = JSON.stringify([{
+        generated_text: 'Here is some information.',
+        source: {
+          1: {
+            document_id: 'test-id',
+            document_name: 'Test Doc',
+            document_url: 'https://test.com/doc.pdf',
+            title: 'Test Title',
+          },
+        },
+      }]);
+      const chunk = encoder.encode(`data: ${mockChunk}\n`);
+
+      fetchStub.callsFake(async (url) => {
+        const urlStr = typeof url === 'string' ? url : url.toString();
+        if (urlStr.includes('placeholders.json')) {
+          return {
+            ok: true,
+            json: async () => ({
+              data: [
+                { key: 'send-message', value: 'Send Message' },
+                { key: 'open-chat', value: 'Open Chat' },
+                { key: 'sources', value: 'Sources' },
+              ],
+            }),
+          };
+        }
+        return {
+          ok: true,
+          status: 200,
+          body: new ReadableStream({
+            start(controller) {
+              controller.enqueue(chunk);
+              controller.close();
+            },
+          }),
+        };
+      });
+
+      const block = document.querySelector('.yukon-chat');
+      await init(block);
+
+      const textarea = document.querySelector('#yc-input-field');
+      const sendButton = document.querySelector('.yc-input-field-button');
+
+      textarea.value = 'Where is this from?';
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      sendButton.click();
+
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 100));
+
+      const modal = document.querySelector('#yukon-chat-modal');
+      expect(modal).to.exist;
+
+      const accordion = modal.querySelector('.yc-sources-accordion');
+      expect(accordion).to.exist;
+
+      const items = accordion.querySelectorAll('.yc-sources-list li a');
+      expect(items.length).to.equal(1);
+      expect(items[0].textContent).to.equal('Test Title');
+      expect(items[0].getAttribute('href')).to.equal('https://test.com/doc.pdf');
+    });
   });
 });

@@ -1,5 +1,5 @@
 import { getCurrentProgramType, getPartnerCookieObject, partnerIsSignedIn, prodHosts, getLibs } from '../../scripts/utils.js';
-import { parseMarkdown, extractAuthoredConfigs } from './utils.js';
+import { parseMarkdown, extractAuthoredConfigs, createSourcesAccordion } from './utils.js';
 import { getConfig, localizationPromises } from '../utils/utils.js';
 
 const miloLibs = getLibs();
@@ -304,6 +304,7 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
             const data = JSON.parse(jsonStr);
             const generatedText = data[0]?.generated_text || '';
             const source = data[0]?.source || {};
+
             if (generatedText) {
               accumulatedMarkdown += generatedText;
               if (loadingElement && !messageAdded) {
@@ -317,6 +318,11 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
             if (source && Object.keys(source).length > 0) {
               if (!sourcesProcessed) {
                 sourcesProcessed = true;
+                const accordion = createSourcesAccordion(source, localizedText);
+                messageContent.appendChild(accordion);
+                if (chatHistory) {
+                  chatHistory.scrollTop = chatHistory.scrollHeight;
+                }
               }
             }
           }
@@ -377,6 +383,7 @@ export default async function init(el) {
     '{{timeout-error}}': 'This is taking longer than expected. Please try again in a moment.',
     '{{server-error}}': 'We’re having trouble processing your request right now. Please try again later.',
     '{{network-error}}': 'Network error. Please check your connection and try again.',
+    '{{sources}}': 'Sources',
   };
 
   if (config && config.contentRoot) {
