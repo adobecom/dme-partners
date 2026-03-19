@@ -1,5 +1,5 @@
 import { getLibs } from '../../scripts/utils.js';
-import { horizontalPartnerCardStyles } from '../../components/PartnerCardsStyles.js';
+// Styles are loaded via PartnerCards override
 import PartnerCards, { filterRestrictedCardsByCurrentSite } from '../../components/PartnerCards.js';
 import { filterExpiredAnnouncements } from '../announcements/AnnouncementsCards.js';
 import { getConfig, transformCardUrl } from '../utils/utils.js';
@@ -9,19 +9,17 @@ const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
 
 export default class AnnouncementsPreview extends PartnerCards {
-  static styles = [
-    horizontalPartnerCardStyles,
-  ];
+
 
   static properties = { ...PartnerCards.properties };
 
   additionalFirstUpdated() {
     const miloStylesPath = `${miloLibs}/styles/styles.css`;
-    if (!this.shadowRoot.querySelector(`link[href="${miloStylesPath}"]`)) {
+    if (!document.querySelector(`link[href="${miloStylesPath}"]`)) {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
       link.href = miloStylesPath;
-      this.shadowRoot.appendChild(link);
+      document.head.appendChild(link);
     }
   }
 
@@ -43,7 +41,7 @@ export default class AnnouncementsPreview extends PartnerCards {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  shouldDisplayPagination() {}
+  shouldDisplayPagination() { }
 
   getPartnerCardsHeader() {
     return html`
@@ -100,11 +98,11 @@ export default class AnnouncementsPreview extends PartnerCards {
   render() {
     return html`
         ${this.fetchedData
-    ? html`
+        ? html`
             ${this.getPartnerCardsHeader()}
                 ${this.hasResponseData
-    ? this.partnerCards
-    : ''}
+            ? this.partnerCards
+            : ''}
          ` : ''}
       ${this.getViewAllButton()}
     `;

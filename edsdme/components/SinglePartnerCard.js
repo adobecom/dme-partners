@@ -1,4 +1,4 @@
-import { singlePartnerCardStyles } from './PartnerCardsStyles.js';
+// Styles are loaded via PartnerCards.js
 import { formatDate, getLibs, prodHosts } from '../scripts/utils.js';
 import { getConfig, transformCardUrl } from '../blocks/utils/utils.js';
 
@@ -14,7 +14,9 @@ class SinglePartnerCard extends LitElement {
     ietf: { type: String },
   };
 
-  static styles = singlePartnerCardStyles;
+  createRenderRoot() {
+    return this;
+  }
 
   get imageUrl() {
     return `${new URL(this.data.styles?.backgroundImage).pathname}?width=400&format=webp&optimize=small`;
@@ -36,7 +38,7 @@ class SinglePartnerCard extends LitElement {
   }
 
   firstUpdated() {
-    this.checkBackgroundImage(this.shadowRoot.querySelector('.card-header'));
+    this.checkBackgroundImage(this.querySelector('.card-header'));
   }
 
   render() {

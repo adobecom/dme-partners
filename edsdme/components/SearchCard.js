@@ -1,4 +1,4 @@
-import searchCardStyles from './SearchCardStyles.js';
+// Styles are loaded via link tag in connectedCallback
 import { formatDate, getLibs } from '../scripts/utils.js';
 import { getConfig, replaceText } from '../blocks/utils/utils.js';
 
@@ -14,7 +14,19 @@ class SearchCard extends LitElement {
     ietf: { type: String },
   };
 
-  static styles = searchCardStyles;
+  createRenderRoot() {
+    return this;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    if (!document.querySelector('link[href="/edsdme/components/SearchCard.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/edsdme/components/SearchCard.css';
+      document.head.append(link);
+    }
+  }
 
   get cardTags() {
     const tags = this.data.arbitrary;
@@ -74,34 +86,34 @@ class SearchCard extends LitElement {
             <sp-theme theme="spectrum" color="light" scale="medium">
               <sp-action-button daa-ll="Download | ${processTrackingLabels(this.data.contentArea?.title !== 'card-metadata' ? this.data.contentArea?.title : '', getConfig(), 30)}" @click=${(e) => { e.stopPropagation(); if (e.isTrusted) { e.preventDefault(); } }} ?disabled=${this.isDownloadDisabled(this.data.contentArea?.type)} href="${this.data.contentArea?.url}" download="${this.data.contentArea?.title}" aria-label="${this.localizedText['{{download}}']}"><sp-icon-download /></sp-action-button>
               ${this.isPreviewEnabled(this.data.contentArea?.type)
-                ? html`
+        ? html`
                   <sp-action-button daa-ll="Preview | ${processTrackingLabels(this.data.contentArea?.title !== 'card-metadata' ? this.data.contentArea?.title : '', getConfig(), 30)}" @click=${(e) => { e.stopPropagation(); if (e.isTrusted) { e.preventDefault(); } }} href="${this.data.contentArea?.url}"
                                     target="_blank" aria-label="${this.localizedText['{{open-in}}']}">
                     <sp-icon-open-in/>
                   </sp-action-button>`
-                : html`
+        : html`
                   <sp-action-button disabled selected aria-label="${this.localizedText['{{open-in-disabled}}']}">
                     <sp-icon-open-in/>
                   </sp-action-button>`
-              }
+      }
             </sp-theme>
           </div>
         </div>
 
         <div class="card-content">
           ${this.data.styles?.backgroundImage
-            ? html`
+        ? html`
               <div class="card-img" style="background-image: url('${this.data.styles?.backgroundImage}')"
                    alt="${this.data.styles?.backgroundAltText}"></div>`
-            : ''
-          }
+        : ''
+      }
           <div class="card-text">
             <span class="card-date">${this.localizedText['{{last-modified}}']}
               : ${formatDate(this.data.cardDate, this.ietf)}
           ${this.data.contentArea?.type !== 'html' && this.data.contentArea?.type !== 'announcement'
-            ? html`<span class="card-size">${this.localizedText['{{size}}']}: ${this.data.contentArea?.size}</span>`
-            : ''
-          }
+        ? html`<span class="card-size">${this.localizedText['{{size}}']}: ${this.data.contentArea?.size}</span>`
+        : ''
+      }
             </span>
             <p class="card-description">${this.data.contentArea?.description}</p>
             <div class="card-tags-wrapper">${this.cardTags}</div>

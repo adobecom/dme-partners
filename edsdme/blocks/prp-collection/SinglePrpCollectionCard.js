@@ -1,4 +1,4 @@
-import { singlePrpCollectionCardStyles } from './SinglePrpCollectionCardStyles.js';
+// Styles are loaded via link tag in connectedCallback
 import { formatDate, getLibs } from '../../scripts/utils.js';
 
 const miloLibs = getLibs();
@@ -11,7 +11,19 @@ class SinglePrpCollectionCard extends LitElement {
     ietf: { type: String },
   };
 
-  static styles = singlePrpCollectionCardStyles;
+  createRenderRoot() {
+    return this;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    if (!document.querySelector('link[href="/edsdme/blocks/prp-collection/SinglePrpCollectionCard.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/edsdme/blocks/prp-collection/SinglePrpCollectionCard.css';
+      document.head.append(link);
+    }
+  }
 
   get imageUrl() {
     return `${new URL(this.data.styles?.backgroundImage)}?width=400&format=webp&optimize=small`;

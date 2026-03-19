@@ -1,5 +1,5 @@
 import { getLibs, prodHosts } from '../scripts/utils.js';
-import { partnerCardsLoadMoreStyles, partnerCardsPaginationStyles, partnerCardsStyles } from './PartnerCardsStyles.js';
+// Styles are loaded via link tag in connectedCallback
 import './SinglePartnerCard.js';
 
 const miloLibs = getLibs();
@@ -24,14 +24,9 @@ export function filterRestrictedCardsByCurrentSite(cards) {
 }
 
 export default class PartnerCards extends LitElement {
-  static styles = [
-    partnerCardsStyles,
-    partnerCardsLoadMoreStyles,
-    partnerCardsPaginationStyles,
-    css`#search {
-      width: 100%;
-    }`,
-  ];
+  createRenderRoot() {
+    return this;
+  }
 
   static properties = {
     blockData: { type: Object },
@@ -74,6 +69,12 @@ export default class PartnerCards extends LitElement {
     super.connectedCallback();
     this.setBlockData();
     window.addEventListener('resize', this.updateView);
+    if (!document.querySelector('link[href="/edsdme/components/PartnerCards.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/edsdme/components/PartnerCards.css';
+      document.head.append(link);
+    }
   }
 
   setBlockData() {
@@ -208,7 +209,7 @@ export default class PartnerCards extends LitElement {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  onViewUpdate() {}
+  onViewUpdate() { }
 
   async firstUpdated() {
     await super.firstUpdated();
@@ -239,7 +240,7 @@ export default class PartnerCards extends LitElement {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  additionalFirstUpdated() {}
+  additionalFirstUpdated() { }
 
   async createFilters() {
     const filtersArray = Array.from(this.cardFiltersMap.entries());
@@ -346,7 +347,7 @@ export default class PartnerCards extends LitElement {
   }
 
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
-  onDataFetched(apiData) {}
+  onDataFetched(apiData) { }
 
   // eslint-disable-next-line class-methods-use-this
   getFetchOptions() { return {}; }
@@ -513,7 +514,7 @@ export default class PartnerCards extends LitElement {
               ${this.blockData.filtersInfos[filter.key] ? html`<div class="filter-info">
                   <div class="info-icon" style="background-image: url('/edsdme/img/icons/info.svg')"></div>
                  <span class="filter-info-text"> ${this.blockData.filtersInfos[filter.key]}</span> </div>`
-    : ''}
+            : ''}
               <sp-theme theme="spectrum" color="light" scale="medium">
                 ${this.getTagsByFilter(filter)}
                 <a class="hide-filter-option"
@@ -521,7 +522,7 @@ export default class PartnerCards extends LitElement {
                    @click=${(event) => { event.preventDefault(); this.toggleHideTags(filter); }}
                    ?hidden=${!filter.hasHiddenTags}>
                   ${filter.hideTags ? this.blockData.localizedText['{{show-more}}']
-    : this.blockData.localizedText['{{show-less}}']}</a>
+            : this.blockData.localizedText['{{show-less}}']}</a>
               </sp-theme>
             </ul>
           </div>`;
@@ -568,7 +569,7 @@ export default class PartnerCards extends LitElement {
               ${this.blockData.filtersInfos[filter.key] ? html`<div class="filter-info">
                   <div class="info-icon" style="background-image: url('/edsdme/img/icons/info.svg')"></div>
                  <span class="filter-info-text"> ${this.blockData.filtersInfos[filter.key]}</span> </div>`
-                : ''}
+            : ''}
               <ul class="filter-tags-mobile">
                 <sp-theme theme="spectrum" color="light" scale="medium">
                   ${this.getTagsByFilter(filter)}
@@ -629,7 +630,7 @@ export default class PartnerCards extends LitElement {
   }
 
   toggleSort() {
-    const element = this.shadowRoot.querySelector('.sort-list');
+    const element = this.querySelector('.sort-list');
     element.classList.toggle('expanded');
   }
 
@@ -639,12 +640,12 @@ export default class PartnerCards extends LitElement {
   }
 
   openFiltersMobile() {
-    const element = this.shadowRoot.querySelector('.all-filters-wrapper-mobile');
+    const element = this.querySelector('.all-filters-wrapper-mobile');
     element.classList.add('open');
   }
 
   closeFiltersMobile() {
-    const element = this.shadowRoot.querySelector('.all-filters-wrapper-mobile');
+    const element = this.querySelector('.all-filters-wrapper-mobile');
     element.classList.remove('open');
   }
 
@@ -659,7 +660,7 @@ export default class PartnerCards extends LitElement {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  additionalActions() {}
+  additionalActions() { }
 
   handleResetActions() {
     this.searchTerm = '';
@@ -678,7 +679,7 @@ export default class PartnerCards extends LitElement {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  additionalResetActions() {}
+  additionalResetActions() { }
 
   handleSearchAction() {
     // eslint-disable-next-line max-len
@@ -910,7 +911,7 @@ export default class PartnerCards extends LitElement {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getSlider() {}
+  getSlider() { }
 
   /* eslint-disable indent */
   render() {
@@ -931,7 +932,7 @@ export default class PartnerCards extends LitElement {
                 </sp-theme>
 
                 ${!this.mobileView
-                  ? html`
+            ? html`
                     ${this.getSlider()}
                     <div class="sidebar-header">
                       <h3 class="sidebar-title">${this.blockData.localizedText['{{filter}}']}</h3>
@@ -951,18 +952,18 @@ export default class PartnerCards extends LitElement {
                       <div class="title">${this.blockData.filterInfoBox.title}</div>
                       ${this.renderInfoBoxDescription()}
                     </div>` : ''
-                }
+              }
                   `
-                  : ''
-                }
+            : ''
+          }
               </div>
             </div>
             <div class="partner-cards-content">
             ${this.getPartnerCardsHeader()}
               <div class="partner-cards-collection">
                 ${this.hasResponseData
-                  ? this.partnerCards
-                  : html`
+            ? this.partnerCards
+            : html`
                     <div class="progress-circle-wrapper">
                       <sp-theme theme="spectrum" color="light" scale="medium">
                         <sp-progress-circle label="Cards loading" indeterminate="" size="l"
@@ -970,10 +971,10 @@ export default class PartnerCards extends LitElement {
                       </sp-theme>
                     </div>
                   `
-                }
+          }
               </div>
               ${this.shouldDisplayPagination()
-                ? html`
+            ? html`
                   <div
                     class="pagination-wrapper ${this.blockData?.pagination === 'load-more' ? 'pagination-wrapper-load-more' : 'pagination-wrapper-default'}">
                     ${this.pagination}
@@ -981,8 +982,8 @@ export default class PartnerCards extends LitElement {
                       class="pagination-total-results">${this.cardsCounter} ${this.blockData.localizedText['{{of}}']} ${this.cards.length} ${this.blockData.localizedText['{{results}}']}</span>
                   </div>
                 `
-                : ''
-              }
+            : ''
+          }
             </div>
           </div>` : ''}
       ${this.getFilterFullScreenView(this.mobileView && this.fetchData)}
@@ -1018,7 +1019,7 @@ export default class PartnerCards extends LitElement {
             </div>
           </div>
         `
-        : '';
+      : '';
   }
 
   getPartnerCardsHeader() {
@@ -1031,21 +1032,21 @@ export default class PartnerCards extends LitElement {
         </div>
         <div class="partner-cards-sort-wrapper">
           ${this.mobileView
-            ? html`
+        ? html`
               <button class="filters-btn-mobile" @click="${this.openFiltersMobile}"
                       aria-label="${this.blockData.localizedText['{{filters}}']}">
                 <span class="filters-btn-mobile-icon"></span>
                 <span class="filters-btn-mobile-title">${this.blockData.localizedText['{{filters}}']}</span>
                 ${this.chosenFilters?.tagsCount
-                  ? html`<span class="filters-btn-mobile-total">${this.chosenFilters.tagsCount}</span>`
-                  : ''
-                }
-              </button>
-            `
+            ? html`<span class="filters-btn-mobile-total">${this.chosenFilters.tagsCount}</span>`
             : ''
           }
+              </button>
+            `
+        : ''
+      }
           ${this.blockData.sort.items.length
-            ? html`
+        ? html`
               <div class="sort-wrapper">
                 <button class="sort-btn" @click="${this.toggleSort}">
                   <span class="sort-btn-text">${this.selectedSortOrder.value}</span>
@@ -1055,8 +1056,8 @@ export default class PartnerCards extends LitElement {
                   ${this.sortItems}
                 </div>
               </div>`
-            : ''
-          }
+        : ''
+      }
         </div>
       </div>
     `;

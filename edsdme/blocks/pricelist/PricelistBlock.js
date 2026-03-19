@@ -1,7 +1,7 @@
 import PartnerCards from '../../components/PartnerCards.js';
 import { getLibs } from '../../scripts/utils.js';
 import { getConfig } from '../utils/utils.js';
-import { pricelistBlockStyles } from './PricelistBlockStyles.js';
+// Styles are loaded via link tag in connectedCallback
 
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
@@ -21,10 +21,15 @@ export const priceListKeyWords = {
 };
 
 export default class Pricelist extends PartnerCards {
-  static styles = [
-    PartnerCards.styles,
-    pricelistBlockStyles,
-  ];
+  connectedCallback() {
+    super.connectedCallback();
+    if (!document.querySelector('link[href="/edsdme/blocks/pricelist/PricelistBlock.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/edsdme/blocks/pricelist/PricelistBlock.css';
+      document.head.append(link);
+    }
+  }
 
   static properties = { ...PartnerCards.properties, filtersData: { type: Array } };
 
@@ -162,7 +167,7 @@ export default class Pricelist extends PartnerCards {
       (pricelist) => pricelist.id,
       (pricelist) => this.getTableRow(pricelist),
     )
-    }`;
+      }`;
   }
 
   additionalActions() {
@@ -248,21 +253,21 @@ export default class Pricelist extends PartnerCards {
         <div class="partner-cards-header">
             <div class="partner-cards-sort-wrapper">
                 ${this.mobileView
-    ? html`
+        ? html`
     <button class="filters-btn-mobile" @click="${this.openFiltersMobile}"
                                     aria-label="${this.blockData.localizedText['{{filters}}']}">
                                 <span class="filters-btn-mobile-icon"></span>
                                 <span class="filters-btn-mobile-title">${this.blockData.localizedText['{{filters}}']}</span>
                                 ${this.chosenFilters?.tagsCount
-    ? html`<span
+            ? html`<span
                                                 class="filters-btn-mobile-total">${this.chosenFilters.tagsCount}</span>`
-    : ''
-}
+            : ''
+          }
                             </button>
                             ${this.getSlider()}
 `
-    : ''
-}
+        : ''
+      }
             </div>
         </div>
     `;

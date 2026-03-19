@@ -1,6 +1,6 @@
 import { getLibs } from '../../scripts/utils.js';
 import PartnerCards from '../../components/PartnerCards.js';
-import { searchCardsStyles } from '../search-full/SearchCardsStyles.js';
+// Styles loaded via connectedCallback override from PartnerCards/SearchCards
 import '../../components/SearchCard.js';
 import { generateRequestForSearchAPI } from '../utils/utils.js';
 
@@ -8,10 +8,15 @@ const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 
 export default class Logos extends PartnerCards {
-  static styles = [
-    PartnerCards.styles,
-    searchCardsStyles,
-  ];
+  connectedCallback() {
+    super.connectedCallback();
+    if (!document.querySelector('link[href="/edsdme/blocks/search-full/SearchCards.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/edsdme/blocks/search-full/SearchCards.css';
+      document.head.append(link);
+    }
+  }
 
   constructor() {
     super();
@@ -67,15 +72,15 @@ export default class Logos extends PartnerCards {
       <div class="partner-cards-content">
         <div class="partner-cards-collection">
           ${this.hasResponseData
-            ? this.partnerCards
-            : html`
+        ? this.partnerCards
+        : html`
               <div class="progress-circle-wrapper">
                 <sp-theme theme="spectrum" color="light" scale="medium">
                   <sp-progress-circle label="Cards loading" indeterminate="" size="l" role="progressbar"></sp-progress-circle>
                 </sp-theme>
               </div>
             `
-          }
+      }
         </div>
       </div>
     `;

@@ -449,10 +449,10 @@ export async function preloadResources(locales, miloLibs) {
   const cardBlocks = {
     announcements: '"caas:adobe-partners/collections/announcements"',
     'announcements-preview': '"caas:adobe-partners/collections/announcements"',
-    'prp-collection': '"caas:adobe-partners/collections/prp-collection"',
+    //'prp-collection': '"caas:adobe-partners/collections/prp-collection"',
     'marketing-resources': '"caas:adobe-partners/collections/marketing-resources"',
   };
-  const blockWithPlaceholders = ['announcements', 'search-full', 'logos', 'pricelist', 'prp-collection', 'marketing-resources'];
+  const blockWithPlaceholders = ['announcements', 'search-full', 'logos', 'pricelist', 'marketing-resources'];
   let isPreloadCalled = false;
   blockWithPlaceholders.forEach(async (item) => {
     const el = document.querySelector(`.${item}`);

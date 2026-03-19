@@ -1,4 +1,4 @@
-import { singleMarketingResourcesCardStyles } from './SingleMarketingResourcesCardStyles.js';
+// Styles are loaded via link tag in connectedCallback
 import { getLibs } from '../../scripts/utils.js';
 import { transformCardUrl, getConfig } from '../utils/utils.js';
 
@@ -13,7 +13,19 @@ class SingleMarketingResourcesCard extends LitElement {
     ietf: { type: String },
   };
 
-  static styles = singleMarketingResourcesCardStyles;
+  createRenderRoot() {
+    return this;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    if (!document.querySelector('link[href="/edsdme/blocks/marketing-resources/SingleMarketingResourcesCard.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/edsdme/blocks/marketing-resources/SingleMarketingResourcesCard.css';
+      document.head.append(link);
+    }
+  }
 
   get imageUrl() {
     return `${new URL(this.data.styles?.backgroundImage)}?width=400&format=webp&optimize=small`;
