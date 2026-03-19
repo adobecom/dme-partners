@@ -481,6 +481,9 @@ export default async function init(el) {
   };
   // Function to show modal using getModal
   const showModal = async () => {
+    // Set second placeholder in inputField
+    const inModalInputField = document.querySelector('#yc-input-field');
+    inModalInputField.setAttribute('placeholder', configs.secondInputPlaceholder);
     document.body.classList.add('yc-disable-scroll');
     isModalOpen = true;
     if (isSticky) {
@@ -511,6 +514,7 @@ export default async function init(el) {
       class: 'yukon-chat-modal-wrapper',
       closeCallback: async () => {
         document.body.classList.remove('yc-disable-scroll');
+        inModalInputField.setAttribute('placeholder', configs.inputPlaceholder);
         if (modalInstance) {
           modalInstance.classList.add('closing');
           // eslint-disable-next-line no-promise-executor-return

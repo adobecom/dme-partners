@@ -69,8 +69,8 @@ class SinglePrpCollectionCard extends LitElement {
             <p class="card-description">${this.getAssetDetails(this.data.arbitrary)}</p>
           </div>
           <div class="card-footer">
-            ${this.hasPreviewOption(this.data.contentArea?.url) ? html`<a class="card-open-link" href="${this.data.contentArea?.url}" target="_blank">${this.localizedText['{{open}}']}</a>` : ''}
-            <a class="card-btn" @click=${(e) => e.stopPropagation()} download="${this.data.contentArea?.title}" href="${this.data.contentArea?.url}">${this.localizedText['{{download}}']}</a>
+            ${this.hasPreviewOption(this.data.contentArea?.url) ? html`<a class="card-open-link" daa-ll="${this.localizedText['{{open}}']}" href="${this.data.contentArea?.url}" target="_blank">${this.localizedText['{{open}}']}</a>` : ''}
+            <a class="card-btn" daa-ll="${this.localizedText['{{download}}']}" @click=${(e) => e.stopPropagation()} download="${this.data.contentArea?.title}" href="${this.data.contentArea?.url}">${this.localizedText['{{download}}']}</a>
           </div>
         </div>
       </div>
