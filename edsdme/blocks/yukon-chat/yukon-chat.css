@@ -1,5 +1,5 @@
 /* stylelint-disable */
-#yukon-chat-modal, .yukon-chat-block, .yukon-chat-sticky {
+#yukon-chat-modal, .yukon-chat-block {
   --yc-header-color: #131313;
   --yc-container-color: #fff;
   --yc-card-radius: 12px;
@@ -11,8 +11,6 @@
   --yc-button-radius: 50%;
   --yc-button-color: #292929;
   --yc-keyboard-focus-color: #5574F7;
-  --yc-sticky-mobile-height: 44px;
-  --yc-sticky-delay: 3s;
   --yukon-chat-bg: linear-gradient(122.87deg, #E1E9FF 20.72%, #EFE3FA34 .96%, #F5DFF8 42.08%, #FCDCD5 49.2%, #FFDEC3 91.6%);
 
 }
@@ -44,12 +42,6 @@
     text-align: center;
   }
 }
-
-/* Hide the SVG's original fill color to show only the gradient */
-.yc-mobile-button svg path {
-  fill: transparent !important;
-}
-
 
 .yukon-chat-pill {
   box-sizing: border-box;
@@ -408,16 +400,6 @@
 
   #yukon-chat-modal .modal-input-wrapper {
     width: 90%;
-  }
-
-  .yukon-chat-sticky {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: min-content;
-    z-index: 999;
-    background: transparent;
-    padding: 0;
   }
 
   .dialog-modal .modal-input-wrapper {
