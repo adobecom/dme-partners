@@ -1,5 +1,5 @@
 import PartnerCards from '../../components/PartnerCards.js';
-import { getLibs } from '../../scripts/utils.js';
+import { getLibs, includeStyleLink } from '../../scripts/utils.js';
 import { getConfig } from '../utils/utils.js';
 // Styles are loaded via link tag in connectedCallback
 
@@ -23,12 +23,8 @@ export const priceListKeyWords = {
 export default class Pricelist extends PartnerCards {
   connectedCallback() {
     super.connectedCallback();
-    if (!document.querySelector('link[href="/edsdme/blocks/pricelist/PricelistBlock.css"]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = '/edsdme/blocks/pricelist/PricelistBlock.css';
-      document.head.append(link);
-    }
+    const stylePath = '/edsdme/blocks/pricelist/PricelistBlock.css';
+    includeStyleLink(stylePath);
   }
 
   static properties = { ...PartnerCards.properties, filtersData: { type: Array } };
@@ -198,7 +194,7 @@ export default class Pricelist extends PartnerCards {
   get partnerCards() {
     if (this.paginatedCards.length) {
       return html`
-            <div class="table-container" tabindex="0" role="region" aria-label="Scrollable table with data"">
+            <div class="pricelist-table-container" tabindex="0" role="region" aria-label="Scrollable table with data"">
             <table>
                 <thead>
                 <tr>

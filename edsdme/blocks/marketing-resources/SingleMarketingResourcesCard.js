@@ -1,5 +1,5 @@
 // Styles are loaded via link tag in connectedCallback
-import { getLibs } from '../../scripts/utils.js';
+import { getLibs, includeStyleLink } from '../../scripts/utils.js';
 import { transformCardUrl, getConfig } from '../utils/utils.js';
 
 const miloLibs = getLibs();
@@ -19,12 +19,8 @@ class SingleMarketingResourcesCard extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    if (!document.querySelector('link[href="/edsdme/blocks/marketing-resources/SingleMarketingResourcesCard.css"]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = '/edsdme/blocks/marketing-resources/SingleMarketingResourcesCard.css';
-      document.head.append(link);
-    }
+    const stylePath = '/edsdme/blocks/marketing-resources/SingleMarketingResourcesCard.css';
+    includeStyleLink(stylePath);
   }
 
   get imageUrl() {
@@ -33,7 +29,7 @@ class SingleMarketingResourcesCard extends LitElement {
 
   render() {
     return html`
-    <a class="link-wrapper" href="${transformCardUrl(this.data.contentArea?.url)}" daa-ll="Marketing Resources Card ${this.data.id} | ${processTrackingLabels(this.data.contentArea?.title, getConfig(), 30)}">
+    <a class="single-marketing-link-wrapper" href="${transformCardUrl(this.data.contentArea?.url)}" daa-ll="Marketing Resources Card ${this.data.id} | ${processTrackingLabels(this.data.contentArea?.title, getConfig(), 30)}">
       <div class="single-marketing-resources-card">
         <div class="card-header" style="background-image: url(${this.imageUrl})" alt="${this.data.styles?.backgroundAltText}"></div>
         <div class="card-content">

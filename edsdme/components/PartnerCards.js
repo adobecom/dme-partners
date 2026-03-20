@@ -1,4 +1,4 @@
-import { getLibs, prodHosts } from '../scripts/utils.js';
+import { getLibs, prodHosts, includeStyleLink } from '../scripts/utils.js';
 // Styles are loaded via link tag in connectedCallback
 import './SinglePartnerCard.js';
 
@@ -69,12 +69,8 @@ export default class PartnerCards extends LitElement {
     super.connectedCallback();
     this.setBlockData();
     window.addEventListener('resize', this.updateView);
-    if (!document.querySelector('link[href="/edsdme/components/PartnerCards.css"]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = '/edsdme/components/PartnerCards.css';
-      document.head.append(link);
-    }
+    const stylePath = '/edsdme/components/PartnerCards.css';
+    includeStyleLink(stylePath);
   }
 
   setBlockData() {

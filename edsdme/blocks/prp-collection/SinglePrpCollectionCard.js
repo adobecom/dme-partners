@@ -1,5 +1,5 @@
 // Styles are loaded via link tag in connectedCallback
-import { formatDate, getLibs } from '../../scripts/utils.js';
+import { formatDate, getLibs, includeStyleLink } from '../../scripts/utils.js';
 
 const miloLibs = getLibs();
 const { html, LitElement } = await import(`${miloLibs}/deps/lit-all.min.js`);
@@ -17,12 +17,8 @@ class SinglePrpCollectionCard extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    if (!document.querySelector('link[href="/edsdme/blocks/prp-collection/SinglePrpCollectionCard.css"]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = '/edsdme/blocks/prp-collection/SinglePrpCollectionCard.css';
-      document.head.append(link);
-    }
+    const stylePath = '/edsdme/blocks/prp-collection/SinglePrpCollectionCard.css';
+    includeStyleLink(stylePath);
   }
 
   get imageUrl() {

@@ -1,4 +1,4 @@
-import { getLibs } from '../../scripts/utils.js';
+import { getLibs, includeStyleLink } from '../../scripts/utils.js';
 import PartnerCards from '../../components/PartnerCards.js';
 // Styles are loaded via link tag in connectedCallback
 import '../../components/SearchCard.js';
@@ -14,12 +14,8 @@ const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.j
 export default class Search extends PartnerCards {
   connectedCallback() {
     super.connectedCallback();
-    if (!document.querySelector('link[href="/edsdme/blocks/search-full/SearchCards.css"]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = '/edsdme/blocks/search-full/SearchCards.css';
-      document.head.append(link);
-    }
+    const stylePath = '/edsdme/blocks/search-full/SearchCards.css';
+    includeStyleLink(stylePath);
   }
 
   static properties = {

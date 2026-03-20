@@ -1481,7 +1481,3 @@ horizontal-cards:not(:has(> h3)) .horizontal-partner-card:first-of-type{
 .horizontal-partner-card:hover {
   box-shadow: 0px 2px 4px #00000029;
 }
-
-.partner-cards {
-    grid-template-columns: auto;
-}

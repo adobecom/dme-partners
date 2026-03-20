@@ -1,4 +1,4 @@
-import { getLibs } from '../../scripts/utils.js';
+import { getLibs, includeStyleLink } from '../../scripts/utils.js';
 // Styles are loaded via PartnerCards override
 import PartnerCards, { filterRestrictedCardsByCurrentSite } from '../../components/PartnerCards.js';
 import { filterExpiredAnnouncements } from '../announcements/AnnouncementsCards.js';
@@ -14,12 +14,7 @@ export default class AnnouncementsPreview extends PartnerCards {
   // eslint-disable-next-line class-methods-use-this
   additionalFirstUpdated() {
     const miloStylesPath = `${miloLibs}/styles/styles.css`;
-    if (!document.querySelector(`link[href="${miloStylesPath}"]`)) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = miloStylesPath;
-      document.head.appendChild(link);
-    }
+    includeStyleLink(miloStylesPath);
   }
 
   // eslint-disable-next-line class-methods-use-this

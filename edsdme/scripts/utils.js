@@ -449,10 +449,10 @@ export async function preloadResources(locales, miloLibs) {
   const cardBlocks = {
     announcements: '"caas:adobe-partners/collections/announcements"',
     'announcements-preview': '"caas:adobe-partners/collections/announcements"',
-    //'prp-collection': '"caas:adobe-partners/collections/prp-collection"',
+    'prp-collection': '"caas:adobe-partners/collections/prp-collection"',
     'marketing-resources': '"caas:adobe-partners/collections/marketing-resources"',
   };
-  const blockWithPlaceholders = ['announcements', 'search-full', 'logos', 'pricelist', 'marketing-resources'];
+  const blockWithPlaceholders = ['announcements', 'search-full', 'logos', 'pricelist', 'prp-collection', 'marketing-resources'];
   let isPreloadCalled = false;
   blockWithPlaceholders.forEach(async (item) => {
     const el = document.querySelector(`.${item}`);
@@ -551,5 +551,14 @@ export async function setFeedback(getConfig) {
     console.error('Error fetching plain html of feedback fragment:', error);
     // eslint-disable-next-line consistent-return
     return null;
+  }
+}
+
+export function includeStyleLink(path) {
+  if (!document.querySelector(`link[href="${path}"]`)) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = path;
+    document.head.append(link);
   }
 }

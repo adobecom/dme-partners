@@ -1,5 +1,5 @@
 // Styles are loaded via link tag in connectedCallback
-import { formatDate, getLibs } from '../scripts/utils.js';
+import { formatDate, getLibs, includeStyleLink } from '../scripts/utils.js';
 import { getConfig, replaceText } from '../blocks/utils/utils.js';
 
 const miloLibs = getLibs();
@@ -20,12 +20,8 @@ class SearchCard extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    if (!document.querySelector('link[href="/edsdme/components/SearchCard.css"]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = '/edsdme/components/SearchCard.css';
-      document.head.append(link);
-    }
+    const stylePath = '/edsdme/components/SearchCard.css';
+    includeStyleLink(stylePath);
   }
 
   get cardTags() {

@@ -155,12 +155,12 @@
   padding: 0;
 }
 
-.link-wrapper {
+.single-marketing-link-wrapper {
   text-decoration: none;
 }
 
 @media screen and (max-width: 1200px) {
-  .card-description {
+  .single-marketing-resources-card .card-description {
     display: none !important;
   }
 }

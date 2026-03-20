@@ -17,23 +17,23 @@
   }
 }
 
-table {
+.pricelist-table-container table {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
 }
 
-tr {
+.pricelist-table-container tr {
   border: 1px solid #eaeaea;
   box-sizing: content-box;
 }
 
-thead tr {
+.pricelist-table-container thead tr {
   border: none;
 }
 
-th,
-td {
+.pricelist-table-container th,
+.pricelist-table-container td {
   font-size: 14px;
   font-family: inherit;
   line-height: 17px;
@@ -45,44 +45,44 @@ td {
 }
 
 /* Container for horizontal scrolling on mobile */
-.table-container {
+.pricelist-table-container {
   overflow-x: auto;
   margin: 20px 0;
 }
 
-tr td:nth-child(5),
-tr th:nth-child(5) {
+.pricelist-table-container tr td:nth-child(5),
+.pricelist-table-container tr th:nth-child(5) {
   text-align: right;
   width: 50%;
 }
 
-tr td:nth-child(1),
-tr th:nth-child(1) {
+.pricelist-table-container tr td:nth-child(1),
+.pricelist-table-container tr th:nth-child(1) {
   width: 30%;
   min-width: 200px;
 }
 
 /* Mobile-specific styles */
 @media (max-width: 1200px) {
-  table {
+  .pricelist-table-container table {
     display: flex;
     flex-direction: column;
     width: 100%;
     overflow-x: auto;
   }
 
-  tbody {
+  .pricelist-table-container tbody {
     min-width: fit-content;
   }
 
-  tr {
+  .pricelist-table-container tr {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
   }
 
-  th,
-  td {
+  .pricelist-table-container th,
+  .pricelist-table-container td {
     flex: 1;
     display: flex;
     justify-content: flex-start;
@@ -90,8 +90,8 @@ tr th:nth-child(1) {
   }
 
   /* Move 5th column to the first position */
-  tr td:nth-child(5),
-  tr th:nth-child(5) {
+  .pricelist-table-container tr td:nth-child(5),
+  .pricelist-table-container tr th:nth-child(5) {
     order: -1;
   }
 }
