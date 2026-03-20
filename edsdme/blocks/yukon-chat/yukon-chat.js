@@ -383,7 +383,8 @@ export default async function init(el) {
     await localizationPromises(localizedText, config);
   }
 
-  const isSticky = el.classList.contains('sticky');
+//   const isSticky = el.classList.contains('sticky'); enable in second phase
+  const isSticky = false;
   extractAuthoredConfigs(configs, el.children);
   const chatBlock = createTag('div', { class: 'yukon-chat-block' });
   chatBlock.setAttribute('daa-lh', 'Yukon Chat Block');
@@ -606,10 +607,5 @@ export default async function init(el) {
     );
     updateReplicatedValue(textareaWrapper, textArea, scrollToBottomBtn, modalInputWrapper);
   });
-
-  if (mobileButton) {
-    mobileButton.addEventListener('click', async () => {
-      await showModal();
-    });
-  }
+  updateButtonState(textArea, inputFieldButton);
 }
