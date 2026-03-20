@@ -23,8 +23,6 @@ export function filterExpiredAnnouncements(cards, blockData) {
 }
 
 export default class Announcements extends PartnerCards {
-
-
   static properties = {
     ...PartnerCards.properties,
     selectedDateFilter: { type: Object },

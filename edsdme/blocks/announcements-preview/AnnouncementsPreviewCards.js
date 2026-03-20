@@ -9,10 +9,9 @@ const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
 
 export default class AnnouncementsPreview extends PartnerCards {
-
-
   static properties = { ...PartnerCards.properties };
 
+  // eslint-disable-next-line class-methods-use-this
   additionalFirstUpdated() {
     const miloStylesPath = `${miloLibs}/styles/styles.css`;
     if (!document.querySelector(`link[href="${miloStylesPath}"]`)) {
@@ -41,7 +40,7 @@ export default class AnnouncementsPreview extends PartnerCards {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  shouldDisplayPagination() { }
+  shouldDisplayPagination() {}
 
   getPartnerCardsHeader() {
     return html`
@@ -98,11 +97,11 @@ export default class AnnouncementsPreview extends PartnerCards {
   render() {
     return html`
         ${this.fetchedData
-        ? html`
+    ? html`
             ${this.getPartnerCardsHeader()}
                 ${this.hasResponseData
-            ? this.partnerCards
-            : ''}
+    ? this.partnerCards
+    : ''}
          ` : ''}
       ${this.getViewAllButton()}
     `;

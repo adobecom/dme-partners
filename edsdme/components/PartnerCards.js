@@ -3,7 +3,7 @@ import { getLibs, prodHosts } from '../scripts/utils.js';
 import './SinglePartnerCard.js';
 
 const miloLibs = getLibs();
-const { html, LitElement, css, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
+const { html, LitElement, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
 const { replaceText } = await import(`${miloLibs}/features/placeholders.js`);
 
@@ -209,7 +209,7 @@ export default class PartnerCards extends LitElement {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  onViewUpdate() { }
+  onViewUpdate() {}
 
   async firstUpdated() {
     await super.firstUpdated();
@@ -240,7 +240,7 @@ export default class PartnerCards extends LitElement {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  additionalFirstUpdated() { }
+  additionalFirstUpdated() {}
 
   async createFilters() {
     const filtersArray = Array.from(this.cardFiltersMap.entries());
@@ -347,7 +347,7 @@ export default class PartnerCards extends LitElement {
   }
 
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
-  onDataFetched(apiData) { }
+  onDataFetched(apiData) {}
 
   // eslint-disable-next-line class-methods-use-this
   getFetchOptions() { return {}; }
@@ -512,17 +512,15 @@ export default class PartnerCards extends LitElement {
             </button>
             <ul class="filter-list">
               ${this.blockData.filtersInfos[filter.key] ? html`<div class="filter-info">
-                  <div class="info-icon" style="background-image: url('/edsdme/img/icons/info.svg')"></div>
-                 <span class="filter-info-text"> ${this.blockData.filtersInfos[filter.key]}</span> </div>`
-            : ''}
+                <div class="info-icon" style="background-image: url('/edsdme/img/icons/info.svg')"></div>
+                <span class="filter-info-text"> ${this.blockData.filtersInfos[filter.key]}</span> </div>` : ''}
               <sp-theme theme="spectrum" color="light" scale="medium">
                 ${this.getTagsByFilter(filter)}
                 <a class="hide-filter-option"
                    href="#"
                    @click=${(event) => { event.preventDefault(); this.toggleHideTags(filter); }}
                    ?hidden=${!filter.hasHiddenTags}>
-                  ${filter.hideTags ? this.blockData.localizedText['{{show-more}}']
-            : this.blockData.localizedText['{{show-less}}']}</a>
+                  ${filter.hideTags ? this.blockData.localizedText['{{show-more}}'] : this.blockData.localizedText['{{show-less}}']}</a>
               </sp-theme>
             </ul>
           </div>`;
@@ -660,7 +658,7 @@ export default class PartnerCards extends LitElement {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  additionalActions() { }
+  additionalActions() {}
 
   handleResetActions() {
     this.searchTerm = '';
@@ -679,7 +677,7 @@ export default class PartnerCards extends LitElement {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  additionalResetActions() { }
+  additionalResetActions() {}
 
   handleSearchAction() {
     // eslint-disable-next-line max-len
@@ -927,12 +925,12 @@ export default class PartnerCards extends LitElement {
                 <sp-theme class="search-wrapper" theme="spectrum" color="light" scale="medium">
                   ${this.searchInputLabel && !this.mobileView ? html`<sp-field-label for="search" size="m">${this.blockData.localizedText[this.searchInputLabel]}</sp-field-label>` : ''}
                   <sp-search id="search" size="m" value="${this.searchTerm}" @input="${this.handleSearch}"
-                             @submit="${(event) => event.preventDefault()}"
-                             placeholder="${this.blockData.localizedText[this.searchInputPlaceholder]}"></sp-search>
+                            @submit="${(event) => event.preventDefault()}"
+                            placeholder="${this.blockData.localizedText[this.searchInputPlaceholder]}"></sp-search>
                 </sp-theme>
 
                 ${!this.mobileView
-            ? html`
+                  ? html`
                     ${this.getSlider()}
                     <div class="sidebar-header">
                       <h3 class="sidebar-title">${this.blockData.localizedText['{{filter}}']}</h3>
@@ -952,18 +950,18 @@ export default class PartnerCards extends LitElement {
                       <div class="title">${this.blockData.filterInfoBox.title}</div>
                       ${this.renderInfoBoxDescription()}
                     </div>` : ''
-              }
+                }
                   `
-            : ''
-          }
+                  : ''
+                }
               </div>
             </div>
             <div class="partner-cards-content">
             ${this.getPartnerCardsHeader()}
               <div class="partner-cards-collection">
                 ${this.hasResponseData
-            ? this.partnerCards
-            : html`
+                  ? this.partnerCards
+                  : html`
                     <div class="progress-circle-wrapper">
                       <sp-theme theme="spectrum" color="light" scale="medium">
                         <sp-progress-circle label="Cards loading" indeterminate="" size="l"
@@ -971,10 +969,10 @@ export default class PartnerCards extends LitElement {
                       </sp-theme>
                     </div>
                   `
-          }
+                }
               </div>
               ${this.shouldDisplayPagination()
-            ? html`
+                ? html`
                   <div
                     class="pagination-wrapper ${this.blockData?.pagination === 'load-more' ? 'pagination-wrapper-load-more' : 'pagination-wrapper-default'}">
                     ${this.pagination}
@@ -982,8 +980,8 @@ export default class PartnerCards extends LitElement {
                       class="pagination-total-results">${this.cardsCounter} ${this.blockData.localizedText['{{of}}']} ${this.cards.length} ${this.blockData.localizedText['{{results}}']}</span>
                   </div>
                 `
-            : ''
-          }
+                : ''
+              }
             </div>
           </div>` : ''}
       ${this.getFilterFullScreenView(this.mobileView && this.fetchData)}
@@ -1032,21 +1030,21 @@ export default class PartnerCards extends LitElement {
         </div>
         <div class="partner-cards-sort-wrapper">
           ${this.mobileView
-        ? html`
+            ? html`
               <button class="filters-btn-mobile" @click="${this.openFiltersMobile}"
                       aria-label="${this.blockData.localizedText['{{filters}}']}">
                 <span class="filters-btn-mobile-icon"></span>
                 <span class="filters-btn-mobile-title">${this.blockData.localizedText['{{filters}}']}</span>
                 ${this.chosenFilters?.tagsCount
-            ? html`<span class="filters-btn-mobile-total">${this.chosenFilters.tagsCount}</span>`
-            : ''
-          }
+                  ? html`<span class="filters-btn-mobile-total">${this.chosenFilters.tagsCount}</span>`
+                  : ''
+                }
               </button>
             `
-        : ''
-      }
+            : ''
+          }
           ${this.blockData.sort.items.length
-        ? html`
+            ? html`
               <div class="sort-wrapper">
                 <button class="sort-btn" @click="${this.toggleSort}">
                   <span class="sort-btn-text">${this.selectedSortOrder.value}</span>
@@ -1056,8 +1054,8 @@ export default class PartnerCards extends LitElement {
                   ${this.sortItems}
                 </div>
               </div>`
-        : ''
-      }
+            : ''
+          }
         </div>
       </div>
     `;

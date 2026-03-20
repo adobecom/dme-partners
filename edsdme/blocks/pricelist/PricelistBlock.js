@@ -166,8 +166,7 @@ export default class Pricelist extends PartnerCards {
       this.paginatedCards,
       (pricelist) => pricelist.id,
       (pricelist) => this.getTableRow(pricelist),
-    )
-      }`;
+    )}`;
   }
 
   additionalActions() {
@@ -253,21 +252,21 @@ export default class Pricelist extends PartnerCards {
         <div class="partner-cards-header">
             <div class="partner-cards-sort-wrapper">
                 ${this.mobileView
-        ? html`
+    ? html`
     <button class="filters-btn-mobile" @click="${this.openFiltersMobile}"
                                     aria-label="${this.blockData.localizedText['{{filters}}']}">
                                 <span class="filters-btn-mobile-icon"></span>
                                 <span class="filters-btn-mobile-title">${this.blockData.localizedText['{{filters}}']}</span>
                                 ${this.chosenFilters?.tagsCount
-            ? html`<span
+    ? html`<span
                                                 class="filters-btn-mobile-total">${this.chosenFilters.tagsCount}</span>`
-            : ''
-          }
+    : ''
+}
                             </button>
                             ${this.getSlider()}
 `
-        : ''
-      }
+    : ''
+}
             </div>
         </div>
     `;

@@ -369,9 +369,9 @@ export default class Search extends PartnerCards {
         <div class="search-box content">
           <h3 class="partner-cards-title">
              ${this.searchTerm && this.urlSearchParams instanceof URLSearchParams && this.urlSearchParams.get('term') === this.searchTerm
-        ? `${this.blockData.localizedText['{{showing-results-for}}']} ${this.searchTerm}`
-        : this.blockData.title
-      }
+              ? `${this.blockData.localizedText['{{showing-results-for}}']} ${this.searchTerm}`
+              : this.blockData.title
+            }
           </h3>
           <sp-theme class="search-wrapper" theme="spectrum" color="light" scale="medium">
             <sp-search @keydown="${this.handleEnter}" id="search" size="m" maxlength="${MAX_SEARCH_LENGTH}" value="${this.searchTerm}" @input="${this.onSearchInput}" @submit="${(event) => event.preventDefault()}" placeholder="${this.blockData.localizedText['{{search-topics-resources-files}}']}"></sp-search>
@@ -395,7 +395,7 @@ export default class Search extends PartnerCards {
         <div class="partner-cards-sidebar-wrapper">
           <div class="partner-cards-sidebar">
             ${!this.mobileView
-        ? html`
+              ? html`
                 <div class="sidebar-header">
                   <h3 class="sidebar-title">${this.blockData.localizedText['{{filters}}']}</h3>
                   <button class="sidebar-clear-btn" @click="${this.handleResetActions}" aria-label="${this.blockData.localizedText['{{clear-all}}']}">${this.blockData.localizedText['{{clear-all}}']}</button>
@@ -407,8 +407,8 @@ export default class Search extends PartnerCards {
                   ${this.filters}
                 </div>
               `
-        : ''
-      }
+              : ''
+            }
           </div>
         </div>
         <div class="partner-cards-content">
@@ -428,20 +428,20 @@ export default class Search extends PartnerCards {
             </div>
             <div class="partner-cards-sort-wrapper">
               ${this.mobileView
-        ? html`
+                ? html`
                   <button class="filters-btn-mobile" @click="${this.openFiltersMobile}" aria-label="${this.blockData.localizedText['{{filters}}']}">
                     <span class="filters-btn-mobile-icon"></span>
                     <span class="filters-btn-mobile-title">${this.blockData.localizedText['{{filters}}']}</span>
                     ${this.chosenFilters?.tagsCount
-            ? html`<span class="filters-btn-mobile-total">${this.chosenFilters.tagsCount}</span>`
-            : ''
-          }
+                      ? html`<span class="filters-btn-mobile-total">${this.chosenFilters.tagsCount}</span>`
+                      : ''
+                    }
                   </button>
                 `
-        : ''
-      }
+                : ''
+              }
               ${this.blockData.sort.items.length
-        ? html`
+                ? html`
                   <div class="sort-wrapper">
                     <button class="sort-btn" @click="${this.toggleSort}">
                       <span class="sort-btn-text">${this.selectedSortOrder.value}</span>
@@ -451,37 +451,37 @@ export default class Search extends PartnerCards {
                       ${this.sortItems}
                     </div>
                   </div>`
-        : ''
-      }
+                : ''
+              }
             </div>
           </div>
           <div class="partner-cards-collection">
             ${this.hasResponseData
-        ? this.partnerCards
-        : html`
+              ? this.partnerCards
+              : html`
                 <div class="progress-circle-wrapper">
                   <sp-theme theme="spectrum" color="light" scale="medium">
                     <sp-progress-circle label="Cards loading" indeterminate="" size="l" role="progressbar"></sp-progress-circle>
                   </sp-theme>
                 </div>
               `
-      }
+            }
           </div>
           ${this.cards.length
-        ? html`
+            ? html`
               <div class="pagination-wrapper ${this.blockData?.pagination === 'load-more' ? 'pagination-wrapper-load-more' : 'pagination-wrapper-default'}">
                 ${this.pagination}
                 <span class="pagination-total-results">${this.numOfLoadedCards} <span>${this.blockData.localizedText['{{of}}']} ${this.getTotalResults()} ${this.blockData.localizedText['{{results}}']}</span></span>
               </div>
             `
-        : ''
-      }
+            : ''
+          }
         </div>
       </div>
       </div>
 
       ${this.getFilterFullScreenView(this.mobileView)}
     `;
-  }
+    }
   /* eslint-enable indent */
 }

@@ -72,15 +72,15 @@ export default class Logos extends PartnerCards {
       <div class="partner-cards-content">
         <div class="partner-cards-collection">
           ${this.hasResponseData
-        ? this.partnerCards
-        : html`
+            ? this.partnerCards
+            : html`
               <div class="progress-circle-wrapper">
                 <sp-theme theme="spectrum" color="light" scale="medium">
                   <sp-progress-circle label="Cards loading" indeterminate="" size="l" role="progressbar"></sp-progress-circle>
                 </sp-theme>
               </div>
             `
-      }
+          }
         </div>
       </div>
     `;
