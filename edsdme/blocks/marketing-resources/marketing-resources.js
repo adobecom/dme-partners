@@ -1,14 +1,14 @@
 import { getLibs, getCaasUrl } from '../../scripts/utils.js';
 import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
-import PRPCollectionCards from './prp-collection-cards.js';
+import MarketingResourcesCards from './marketing-resources-cards.js';
 
 function declareCollection() {
-  if (customElements.get('prp-collection-cards')) return;
-  customElements.define('prp-collection-cards', PRPCollectionCards);
+  if (customElements.get('marketing-resources-cards')) return;
+  customElements.define('marketing-resources-cards', MarketingResourcesCards);
 }
 
 export default async function init(el) {
-  performance.mark('prp-collection-cards:start');
+  performance.mark('marketing-resources-cards:start');
 
   const miloLibs = getLibs();
   const config = getConfig();
@@ -20,7 +20,6 @@ export default async function init(el) {
     '{{apply}}': 'Apply',
     '{{back}}': 'Back',
     '{{clear-all}}': 'Clear all',
-    '{{download}}': 'Download',
     '{{filter}}': 'Filter',
     '{{filter-by}}': 'Filter by',
     '{{filters}}': 'Filters',
@@ -30,11 +29,11 @@ export default async function init(el) {
     '{{no-results-description}}': 'Try checking your spelling or broadening your search.',
     '{{no-results-title}}': 'No Results Found',
     '{{of}}': 'Of',
-    '{{open}}': 'Open',
     '{{page}}': 'Page',
     '{{prev}}': 'Prev',
     '{{previous-page}}': 'Previous Page',
     '{{results}}': 'Results',
+    '{{collections}}': 'Collections',
     '{{search}}': 'Search',
     '{{type}}': 'Type',
   };
@@ -54,14 +53,14 @@ export default async function init(el) {
 
   const block = {
     el,
-    collectionTag: '"caas:adobe-partners/collections/prp-collection"',
+    collectionTag: '"caas:adobe-partners/collections/marketing-resources"',
     ietf: config.locale.ietf,
   };
 
   const blockData = {
     localizedText,
     tableData: el.children,
-    cardsPerPage: 9,
+    cardsPerPage: 8,
     pagination: 'load-more',
     isArchive,
     caasUrl: getCaasUrl(block),
@@ -71,26 +70,15 @@ export default async function init(el) {
     config,
   };
 
-  Array.from(el.children).forEach((row) => {
-    const cols = Array.from(row.children);
-
-    if (cols.length === 0) return;
-    const rowTitle = cols[0].innerText.trim().toLowerCase().replace(/ /g, '-');
-
-    if (rowTitle && rowTitle === 'collection-name') {
-      blockData.collectionName = cols[1].innerText;
-    }
-  });
-
-  const app = document.createElement('prp-collection-cards');
-  app.className = 'content prp-collection-wrapper';
+  const app = document.createElement('marketing-resources-cards');
+  app.className = 'content marketing-resources-wrapper';
   app.blockData = blockData;
   app.setAttribute('data-idx', sectionIndex);
-  app.setAttribute('daa-lh', 'PRP Collection Cards');
+  app.setAttribute('daa-lh', 'Marketing Resources Cards');
   el.replaceWith(app);
 
   await deps;
-  performance.mark('prp-collection-cards:end');
-  performance.measure('prp-collection-cards block', 'prp-collection-cards:start', 'prp-collection-cards:end');
+  performance.mark('marketing-resources-cards:end');
+  performance.measure('marketing-resources-cards block', 'marketing-resources-cards:start', 'marketing-resources-cards:end');
   return app;
 }
