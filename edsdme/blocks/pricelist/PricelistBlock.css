@@ -12,7 +12,7 @@ pricelist-block .partner-cards {
   pricelist-block .partner-cards-sidebar {
     width: 200px;
     max-width: 200px;
-    padding: 8px 0 0 0;
+    padding: 8px 0 0;
   }
 }
 
@@ -74,8 +74,7 @@ pricelist-block tr th:nth-child(1) {
 
   pricelist-block tr {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    flex-flow: row nowrap;
   }
 
   pricelist-block th,
@@ -107,7 +106,7 @@ pricelist-block sp-icon-download {
 }
 
 pricelist-block .partner-cards-header .partner-cards-sort-wrapper .filters-btn-mobile {
-  background: #FFFFFF;
+  background: #FFF;
   border: 1px solid #D3D3D3;
   font-weight: normal;
   font-size: 14px;

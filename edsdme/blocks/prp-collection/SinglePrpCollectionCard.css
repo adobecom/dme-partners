@@ -14,7 +14,7 @@
 }
 
 .single-prp-collection-card:hover {
-  box-shadow: 0 3px 6px 0 rgba(0,0,0,.16);
+  box-shadow: 0 3px 6px 0 rgb(0 0 0 / 16%);
   transition: box-shadow .3s ease-in-out;
 }
 
@@ -30,11 +30,7 @@
   position: relative;
 }
 
-.single-prp-collection-card:hover .card-header:after {
-  opacity: 1;
-}
-
-.single-prp-collection-card .card-header:after {
+.single-prp-collection-card .card-header::after {
   position: absolute;
   content: "";
   top: 0;
@@ -43,9 +39,13 @@
   right: 0;
   margin: auto;
   z-index: 0;
-  background-color: rgba(0,0,0,.35);
+  background-color: rgb(0 0 0 / 35%);
   opacity: 0;
   transition: opacity .3s ease-in-out;
+}
+
+.single-prp-collection-card:hover .card-header::after {
+  opacity: 1;
 }
 
 .single-prp-collection-card .card-file-type {
@@ -58,7 +58,7 @@
   line-height: 14px;
   border-radius: 5px;
   border: 1px solid #676767;
-  color: #444444;
+  color: #444;
   text-transform: uppercase;
 }
 
@@ -66,7 +66,7 @@
   display: flex;
   flex-direction: column;
   background-color: #fff;
-  padding: 16px 16px 0px;
+  padding: 16px 16px 0;
   height: 100%;
 }
 
@@ -77,7 +77,8 @@
   line-height: 1.375rem;
   word-break: break-word;
   max-height: 2.75rem;
-  margin: 7px 0 7px;
+  margin: 7px 0;
+  /* stylelint-disable-next-line value-no-vendor-prefix */
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -92,6 +93,7 @@
   word-break: break-word;
   margin: 0 0 40px;
   max-height: 3.9375rem;
+  /* stylelint-disable-next-line value-no-vendor-prefix */
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -126,18 +128,18 @@
   padding-left: 14px;
   padding-right: 14px;
   text-decoration: none;
-  color: #222222;
-  border: 2px solid #222222;
+  color: #222;
+  border: 2px solid #222;
   border-radius: 16px;
-  background-color: #ffffff00;
+  background-color: #fff0;
   cursor: pointer;
   transition: border-color .3s ease-in-out,background-color .3s ease-in-out;
 }
 
 .single-prp-collection-card .card-btn:hover {
   text-decoration: none;
-  border-color: #222222;
-  background-color: #222222;
+  border-color: #222;
+  background-color: #222;
   color: #fff;
 }
 
