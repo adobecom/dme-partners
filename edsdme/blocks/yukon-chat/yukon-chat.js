@@ -296,10 +296,9 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
         if (!line.trim()) continue;
         try {
           let jsonStr = line.slice(6).trim();
-
           // eslint-disable-next-line no-continue
-          if (!jsonStr || !jsonStr.startsWith('[')) continue;
-          const data = JSON.parse(jsonStr);
+          if (!line || !line.startsWith('[')) continue;
+          const data = JSON.parse(line);
           const generatedText = data[0]?.generated_text || '';
           const source = data[0]?.source || {};
 
