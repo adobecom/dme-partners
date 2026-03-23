@@ -1,4 +1,4 @@
-import { getLibs } from '../../scripts/utils.js';
+import { getLibs, loadStylesheetOnce } from '../../scripts/utils.js';
 import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
 import Search from './SearchCards.js';
 
@@ -61,6 +61,10 @@ export default async function init(el) {
     import(`${miloLibs}/features/spectrum-web-components/dist/icons-workflow.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/button-group.js`),
   ]);
+
+  loadStylesheetOnce('/edsdme/components/PartnerCards.css');
+  loadStylesheetOnce('/edsdme/components/SearchCard.css');
+  loadStylesheetOnce('/edsdme/blocks/search-full/SearchCards.css');
 
   declareSearch();
 

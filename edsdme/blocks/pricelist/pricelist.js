@@ -5,7 +5,7 @@ import {
   localizationPromises,
   populateLocalizedTextFromListItems,
 } from '../utils/utils.js';
-import { getLibs } from '../../scripts/utils.js';
+import { getLibs, loadStylesheetOnce } from '../../scripts/utils.js';
 
 function declarePricelist() {
   if (customElements.get('pricelist-block')) return;
@@ -66,6 +66,9 @@ export default async function init(el) {
     import(`${miloLibs}/features/spectrum-web-components/dist/progress-circle.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/action-button.js`),
   ]);
+
+  loadStylesheetOnce('/edsdme/components/PartnerCards.css');
+  loadStylesheetOnce('/edsdme/blocks/pricelist/PricelistBlock.css');
 
   declarePricelist();
 

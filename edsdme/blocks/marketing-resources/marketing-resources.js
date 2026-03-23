@@ -1,4 +1,4 @@
-import { getLibs, getCaasUrl } from '../../scripts/utils.js';
+import { getLibs, getCaasUrl, loadStylesheetOnce } from '../../scripts/utils.js';
 import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
 import MarketingResourcesCards from './marketing-resources-cards.js';
 
@@ -48,6 +48,10 @@ export default async function init(el) {
     import(`${miloLibs}/features/spectrum-web-components/dist/button.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/progress-circle.js`),
   ]);
+
+  loadStylesheetOnce('/edsdme/components/PartnerCards.css');
+  loadStylesheetOnce('/edsdme/blocks/marketing-resources/MarketingResourcesCards.css');
+  loadStylesheetOnce('/edsdme/blocks/marketing-resources/SingleMarketingResourcesCard.css');
 
   declareCollection();
 

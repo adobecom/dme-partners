@@ -348,6 +348,17 @@ function preloadLit(miloLibs) {
   document.head.appendChild(preloadLink);
 }
 
+export function loadStylesheetOnce(href) {
+  const id = `stylesheet-${href.replace(/\W/g, '-')}`;
+  if (!document.getElementById(id)) {
+    const link = document.createElement('link');
+    link.id = id;
+    link.rel = 'stylesheet';
+    link.href = href;
+    document.head.appendChild(link);
+  }
+}
+
 export function getPermissionSpecializations() {
   const permissionSpecializations = getPartnerCookieValue(getCurrentProgramType(), 'permissionspecializations');
   return permissionSpecializations.toLowerCase();

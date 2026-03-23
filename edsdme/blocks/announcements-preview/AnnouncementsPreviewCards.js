@@ -1,5 +1,4 @@
 import { getLibs } from '../../scripts/utils.js';
-import { horizontalPartnerCardStyles } from '../../components/PartnerCardsStyles.js';
 import PartnerCards, { filterRestrictedCardsByCurrentSite } from '../../components/PartnerCards.js';
 import { filterExpiredAnnouncements } from '../announcements/AnnouncementsCards.js';
 import { getConfig, transformCardUrl } from '../utils/utils.js';
@@ -9,21 +8,7 @@ const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
 
 export default class AnnouncementsPreview extends PartnerCards {
-  static styles = [
-    horizontalPartnerCardStyles,
-  ];
-
   static properties = { ...PartnerCards.properties };
-
-  additionalFirstUpdated() {
-    const miloStylesPath = `${miloLibs}/styles/styles.css`;
-    if (!this.shadowRoot.querySelector(`link[href="${miloStylesPath}"]`)) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = miloStylesPath;
-      this.shadowRoot.appendChild(link);
-    }
-  }
 
   // eslint-disable-next-line class-methods-use-this
   handleSortAction(cards) {

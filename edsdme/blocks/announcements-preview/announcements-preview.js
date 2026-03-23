@@ -1,4 +1,4 @@
-import { getCaasUrl } from '../../scripts/utils.js';
+import { getCaasUrl, loadStylesheetOnce } from '../../scripts/utils.js';
 import { getConfig, localizationPromises } from '../utils/utils.js';
 import AnnouncementsPreview from './AnnouncementsPreviewCards.js';
 
@@ -22,6 +22,8 @@ export default async function init(el) {
   const deps = await Promise.all([
     localizationPromises(localizedText, config),
   ]);
+
+  loadStylesheetOnce('/edsdme/components/HorizontalPartnerCard.css');
 
   declareAnnouncementsPreview();
 
