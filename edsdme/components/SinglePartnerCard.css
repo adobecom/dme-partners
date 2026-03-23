@@ -14,7 +14,7 @@
 }
 
 .single-partner-card:hover {
-  box-shadow: 0 3px 6px 0 rgba(0,0,0,.16);
+  box-shadow: 0 3px 6px 0 rgb(0 0 0 / 16%);
   transition: box-shadow .3s ease-in-out;
 }
 
@@ -30,11 +30,7 @@
   position: relative;
 }
 
-.single-partner-card:hover .card-header:after {
-  opacity: 1;
-}
-
-.single-partner-card .card-header:after {
+.single-partner-card .card-header::after {
   position: absolute;
   content: "";
   top: 0;
@@ -43,9 +39,13 @@
   right: 0;
   margin: auto;
   z-index: 0;
-  background-color: rgba(0,0,0,.35);
+  background-color: rgb(0 0 0 / 35%);
   opacity: 0;
   transition: opacity .3s ease-in-out;
+}
+
+.single-partner-card:hover .card-header::after {
+  opacity: 1;
 }
 
 .single-partner-card .card-content {
@@ -65,6 +65,7 @@
   word-break: break-word;
   max-height: 2.75rem;
   margin: 0 0 7px;
+  /* stylelint-disable-next-line value-no-vendor-prefix */
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -79,6 +80,7 @@
   word-break: break-word;
   margin: 0 0 14px;
   max-height: 3.9375rem;
+  /* stylelint-disable-next-line value-no-vendor-prefix */
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -106,19 +108,19 @@
   padding-left: 14px;
   padding-right: 14px;
   text-decoration: none;
-  color: #222222;
-  border: 2px solid #222222;
+  color: #222;
+  border: 2px solid #222;
   border-radius: 16px;
-  background-color: #ffffff00;
+  background-color: #fff0;
   cursor: pointer;
   transition: border-color .3s ease-in-out,background-color .3s ease-in-out;
 }
 
 .single-partner-card .card-btn:hover {
   text-decoration: none;
-  border-color: #222222;
-  background-color: #222222;
-  color: #ffffff;
+  border-color: #222;
+  background-color: #222;
+  color: #fff;
 }
 
 .single-partner-card .card-date {

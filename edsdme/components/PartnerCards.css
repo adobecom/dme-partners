@@ -1,6 +1,6 @@
 h3, p, span, button, li, input {
   margin: 0;
-  font-family: adobe-clean, Segoe UI, Roboto, sans-serif;
+  font-family: adobe-clean, "Segoe UI", Roboto, sans-serif;
 }
 
 .partner-cards,
@@ -135,7 +135,7 @@ h3, p, span, button, li, input {
   border-color: #1473e6;
 }
 
-.partner-cards-sidebar .sidebar-chosen-filter-btn:after {
+.partner-cards-sidebar .sidebar-chosen-filter-btn::after {
   padding-left: 3px;
   content: "\00d7";
   font-size: .875rem;
@@ -351,6 +351,7 @@ h3, p, span, button, li, input {
   align-items: center;
   min-width: 89px;
   max-width: 100%;
+  /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
   padding: 0 0 0 11px;
   border-radius: 5px;
   font-size: .875rem;
@@ -368,8 +369,7 @@ h3, p, span, button, li, input {
   width: 18px;
   height: 18px;
   margin-right: 8px;
-  background-color: #fff;
-  background: no-repeat url(/edsdme/img/icons/filters.svg) 0 0;
+  background: #fff url("/edsdme/img/icons/filters.svg") no-repeat 0 0;
 }
 
 .partner-cards-header .partner-cards-sort-wrapper .filters-btn-mobile-title {
@@ -453,9 +453,10 @@ h3, p, span, button, li, input {
   background-color: #fff;
   border-radius: 5px;
   border: 1px solid #eaeaea;
-  box-shadow: 0 3px 15px rgba(80, 80, 80, .1);
+  box-shadow: 0 3px 15px rgb(80 80 80 / 10%);
   max-width: 200px;
   min-width: 150px;
+  /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
   display: flex;
   flex-direction: column;
 }
@@ -603,7 +604,7 @@ h3, p, span, button, li, input {
   line-height: 0;
   border: none;
   border-radius: 50%;
-  background: transparent url(/edsdme/img/icons/back.svg) no-repeat 50% 50%;
+  background: transparent url("/edsdme/img/icons/back.svg") no-repeat 50% 50%;
   outline: 0;
   cursor: pointer;
 }
@@ -618,7 +619,7 @@ h3, p, span, button, li, input {
   text-align: left;
 }
 
-.all-filters-wrapper-mobile .all-filters-header-title-mobile:first-letter {
+.all-filters-wrapper-mobile .all-filters-header-title-mobile::first-letter {
   text-transform: uppercase;
 }
 
@@ -655,7 +656,7 @@ h3, p, span, button, li, input {
   border-color: #1473e6;
 }
 
-.all-filters-wrapper-mobile .chosen-filter-btn-mobile:after {
+.all-filters-wrapper-mobile .chosen-filter-btn-mobile::after {
   padding-left: 3px;
   content: "\00d7";
   font-size: .875rem;
@@ -691,7 +692,7 @@ h3, p, span, button, li, input {
   right: 0;
   margin: auto;
   z-index: 4;
-  background-color: rgba(80, 80, 80, .8);
+  background-color: rgb(80 80 80 / 80%);
 }
 
 .filter-wrapper-mobile .filter-mobile {
@@ -961,10 +962,10 @@ a.hide-filter-option:active {
   max-height: 32px;
   padding-left: 14px;
   padding-right: 14px;
-  color: #222222;
-  border: 2px solid #222222;
+  color: #222;
+  border: 2px solid #222;
   border-radius: 16px;
-  background-color: #ffffff00;
+  background-color: #fff0;
   cursor: pointer;
   transition: border-color .3s ease-in-out,background-color .3s ease-in-out;
 }
@@ -972,9 +973,9 @@ a.hide-filter-option:active {
 @media (hover: hover) {
   .pagination-wrapper-load-more .load-more-btn:hover {
     text-decoration: none;
-    border-color: #222222;
-    background-color: #222222;
-    color: #ffffff;
+    border-color: #222;
+    background-color: #222;
+    color: #fff;
   }
 }
 
@@ -1032,15 +1033,6 @@ a.hide-filter-option:active {
 }
 
 .pagination-wrapper-default .pagination-prev-btn.disabled,
-.pagination-wrapper-default .pagination-prev-btn.disabled:hover,
-.pagination-wrapper-default .pagination-next-btn.disabled,
-.pagination-wrapper-default .pagination-next-btn.disabled:hover,
-.pagination-wrapper-default .page-btn.selected:hover {
-  text-decoration: none;
-  cursor: default;
-}
-
-.pagination-wrapper-default .pagination-prev-btn.disabled,
 .pagination-wrapper-default .pagination-next-btn.disabled {
   color: #9d9d9d;
 }
@@ -1048,6 +1040,15 @@ a.hide-filter-option:active {
 .pagination-wrapper-default .page-btn.selected {
   background-color: #e5e5e5;
   border-radius: 50%;
+}
+
+.pagination-wrapper-default .pagination-prev-btn.disabled,
+.pagination-wrapper-default .pagination-prev-btn.disabled:hover,
+.pagination-wrapper-default .pagination-next-btn.disabled,
+.pagination-wrapper-default .pagination-next-btn.disabled:hover,
+.pagination-wrapper-default .page-btn.selected:hover {
+  text-decoration: none;
+  cursor: default;
 }
 
 /* Search input */

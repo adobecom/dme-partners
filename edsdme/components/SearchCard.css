@@ -45,6 +45,7 @@
   font-size: 16px;
   font-weight: bold;
   overflow: hidden;
+  /* stylelint-disable-next-line value-no-vendor-prefix */
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -118,7 +119,7 @@
   font-size: 12px;
 }
 
-.search-card .card-tags-wrapper .card-tag:first-letter {
+.search-card .card-tags-wrapper .card-tag::first-letter {
   text-transform: uppercase;
 }
 
@@ -138,6 +139,7 @@
   }
 
   .search-card .card-title {
+    /* stylelint-disable-next-line value-no-vendor-prefix */
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
