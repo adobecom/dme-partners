@@ -295,7 +295,6 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
         // eslint-disable-next-line no-continue
         if (!line.trim()) continue;
         try {
-          let jsonStr = line.slice(6).trim();
           // eslint-disable-next-line no-continue
           if (!line || !line.startsWith('[')) continue;
           const data = JSON.parse(line);
