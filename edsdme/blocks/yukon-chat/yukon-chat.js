@@ -236,8 +236,10 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
 
     const origin = prodHosts.includes(window.location.host) ? 'https://partners.adobe.com' : 'https://partners.stage.adobe.com';
     const url = new URL(`${origin}/services/gravity/yukonAIAssistant`);
+
     url.searchParams.append('question', encodeURIComponent(question));
     url.searchParams.append('tags', tags);
+
     url.searchParams.append('requestId', requestId);
     url.searchParams.append('yukonProfile', configs.yukonProfile);
 
@@ -293,36 +295,31 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
         // eslint-disable-next-line no-continue
         if (!line.trim()) continue;
         try {
-          if (line.startsWith('data: ')) {
-            let jsonStr = line.slice(6).trim();
+          let jsonStr = line.slice(6).trim();
 
-            if (jsonStr.startsWith('data: ')) {
-              jsonStr = jsonStr.slice(6).trim();
-            }
-            // eslint-disable-next-line no-continue
-            if (!jsonStr || !jsonStr.startsWith('[')) continue;
-            const data = JSON.parse(jsonStr);
-            const generatedText = data[0]?.generated_text || '';
-            const source = data[0]?.source || {};
+          // eslint-disable-next-line no-continue
+          if (!jsonStr || !jsonStr.startsWith('[')) continue;
+          const data = JSON.parse(jsonStr);
+          const generatedText = data[0]?.generated_text || '';
+          const source = data[0]?.source || {};
 
-            if (generatedText) {
-              accumulatedMarkdown += generatedText;
-              if (loadingElement && !messageAdded) {
-                removeLoadingMessage(loadingElement);
-                chatHistory.appendChild(chatMessage);
-                messageAdded = true;
-              }
-              // eslint-disable-next-line no-await-in-loop
-              messageText.innerHTML = await parseMarkdown(accumulatedMarkdown);
+          if (generatedText) {
+            accumulatedMarkdown += generatedText;
+            if (loadingElement && !messageAdded) {
+              removeLoadingMessage(loadingElement);
+              chatHistory.appendChild(chatMessage);
+              messageAdded = true;
             }
-            if (source && Object.keys(source).length > 0) {
-              if (!sourcesProcessed) {
-                sourcesProcessed = true;
-                const accordion = createSourcesAccordion(source, localizedText);
-                messageContent.appendChild(accordion);
-                if (chatHistory) {
-                  chatHistory.scrollTop = chatHistory.scrollHeight;
-                }
+            // eslint-disable-next-line no-await-in-loop
+            messageText.innerHTML = await parseMarkdown(accumulatedMarkdown);
+          }
+          if (source && Object.keys(source).length > 0) {
+            if (!sourcesProcessed) {
+              sourcesProcessed = true;
+              const accordion = createSourcesAccordion(source, localizedText);
+              messageContent.appendChild(accordion);
+              if (chatHistory) {
+                chatHistory.scrollTop = chatHistory.scrollHeight;
               }
             }
           }

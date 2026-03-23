@@ -36,7 +36,8 @@ async function initMarkdownIt() {
 export async function parseMarkdown(markdown) {
   if (!markdown) return '';
   const markdownParser = await initMarkdownIt();
-  return markdownParser.render(markdown);
+  const cleanedMarkdown = markdown.replace(/\[\^([^\]]+)\]/g, '[$1]');
+  return markdownParser.render(cleanedMarkdown);
 }
 
 export function extractAuthoredConfigs(configs, elementChildren) {
