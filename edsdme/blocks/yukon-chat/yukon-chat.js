@@ -218,21 +218,23 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
   const { signal } = currentAbortController;
   // Show loading indicator first, right after user message
   const loadingElement = showLoadingMessage(chatHistory, scrollToBottomBtn);
-  let level = 'public';
-  let region = 'worldwide';
+  let level = 'partner-level-public';
+  let region = 'region-worldwide';
+  let specializations = '';
   // TODO: the partner data must be sent to the servlet and parsed there
   if (partnerIsSignedIn()) {
     try {
       const profileData = getPartnerCookieObject(getCurrentProgramType());
-      level = profileData.level.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '');
-      region = profileData.permissionRegion.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '');
+      level = `partner-level-${profileData.level.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '')}`;
+      region = `region-${profileData.permissionRegion.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '')}`;
+      specializations = `specializations-${profileData.permissionSpecializations.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '')}`;
     } catch (error) {
       // eslint-disable-next-line no-console
       console.info('Failed to parse profileData from cookie:', error);
     }
   }
   try {
-    const tags = [level, region].filter((tag) => tag && tag !== '').join(',');
+    const tags = [level, region, specializations].filter((tag) => tag && tag !== '').join(',');
 
     const origin = prodHosts.includes(window.location.host) ? 'https://partners.adobe.com' : 'https://partners.stage.adobe.com';
     const url = new URL(`${origin}/services/gravity/yukonAIAssistant`);
