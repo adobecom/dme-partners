@@ -304,7 +304,6 @@
   box-sizing: border-box;
   padding-left: 16px;
   padding-right: 16px;
-  border-radius: 6px 6px 0 0;
 }
 
 @media (min-width: 1024px) {
@@ -410,7 +409,6 @@
 @media (max-width: 768px) {
   .yc-textarea-grow-wrap textarea {
     padding-left: 0;
-    font-size: 16px;
   }
 
   #yc-input-field:placeholder-shown {
@@ -848,6 +846,7 @@ chat-history-left .user-message {
   #yukon-chat-modal.dialog-modal {
     width: 100%;
     border-radius: 24px 24px 0 0;
+    height: 100%;
   }
 
   .yukon-chat-button {
@@ -861,7 +860,6 @@ chat-history-left .user-message {
   .yc-textarea-grow-wrap textarea {
     font-size: 16px;
   }
-
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
@@ -878,7 +876,6 @@ chat-history-left .user-message {
   }
 
   #yukon-chat-modal.dialog-modal {
-    width: 100%;
     border-radius: 24px 24px 0 0;
     height: 100%;
   }
@@ -886,10 +883,15 @@ chat-history-left .user-message {
   .yc-textarea-grow-wrap textarea {
     font-size: 16px;
   }
+}
 
-  .yukon-chat-container {
-    padding-bottom: 0;
-  }
+#yukon-chat-modal .yc-modal-header {
+  left: 50%;
+  transform: translateX(-50%);
+  height: 57px;
+  z-index: 1002;
+  background: #fff;
+  box-sizing: border-box;
 }
 
 .chat-loader {
