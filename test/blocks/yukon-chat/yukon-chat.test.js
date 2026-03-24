@@ -234,7 +234,7 @@ describe('yukon-chat block', () => {
   describe('Send flow', () => {
     it('should show second input placeholder when modal is opened', async () => {
       const encoder = new TextEncoder();
-      const chunk = encoder.encode('data: [{"generated_text":"Hi"}]\n');
+      const chunk = encoder.encode('[{"generated_text":"Hi"}]\n');
       fetchStub.callsFake(async (url) => {
         const urlStr = typeof url === 'string' ? url : url.toString();
         if (urlStr.includes('placeholders.json')) {
@@ -285,7 +285,7 @@ describe('yukon-chat block', () => {
 
     it('should open modal, call fetch, and render AI response', async () => {
       const encoder = new TextEncoder();
-      const chunk = encoder.encode('data: [{"generated_text":"Hello from Yukon"}]\n');
+      const chunk = encoder.encode('[{"generated_text":"Hello from Yukon"}]\n');
 
       fetchStub.callsFake(async (url) => {
         const urlStr = typeof url === 'string' ? url : url.toString();
@@ -562,7 +562,7 @@ describe('yukon-chat block', () => {
       expect(modal).to.exist;
 
       const loadingMessage = modal.querySelector('.chat-loader');
-      expect(loadingMessage).to.not.exist;
+      await expect(loadingMessage).to.not.exist;
 
       const errorMessage = modal.querySelector('.error-message');
       expect(errorMessage).to.exist;
@@ -577,7 +577,7 @@ describe('yukon-chat block', () => {
     it('should render multiple links with target="_blank" in AI responses', async () => {
       const encoder = new TextEncoder();
       const responseWithLinks = 'Visit [Adobe](https://adobe.com) and [Partners Portal](https://partners.adobe.com).';
-      const chunk = encoder.encode(`data: [{"generated_text":"${responseWithLinks}"}]\n`);
+      const chunk = encoder.encode(`[{"generated_text":"${responseWithLinks}"}]\n`);
 
       fetchStub.callsFake(async () => ({
         ok: true,
@@ -632,7 +632,7 @@ describe('yukon-chat block', () => {
           },
         },
       }]);
-      const chunk = encoder.encode(`data: ${mockChunk}\n`);
+      const chunk = encoder.encode(`${mockChunk}\n`);
 
       fetchStub.callsFake(async (url) => {
         const urlStr = typeof url === 'string' ? url : url.toString();
