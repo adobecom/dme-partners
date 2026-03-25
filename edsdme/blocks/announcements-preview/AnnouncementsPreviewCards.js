@@ -32,7 +32,7 @@ export default class AnnouncementsPreview extends PartnerCards {
 
   getPartnerCardsHeader() {
     return html`
-            <h3 class="text horizontal-cards-title ${this.blockData.heading}">
+            <h3 class="text announcements-preview-cards-title ${this.blockData.heading}">
               <strong>${this.blockData.title}</strong>
             </h3>
       `;
@@ -61,7 +61,7 @@ export default class AnnouncementsPreview extends PartnerCards {
 
           return html`
             <a class="link-wrapper" href="${transformCardUrl(card.contentArea.url)}" target="_blank" daa-ll="Announcement Preview Horizontal Card ${index + 1} | ${processTrackingLabels(card.contentArea.title, getConfig(), 30)}">
-              <div class="horizontal-partner-card">
+              <div class="announcements-preview-card">
                 <div class="card-image">
                   <picture>
                     <source srcset="${imageUrl}" type="image/webp" />
