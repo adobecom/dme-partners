@@ -297,9 +297,16 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
         // eslint-disable-next-line no-continue
         if (!line.trim()) continue;
         try {
+          if (line.startsWith('<!DOCTYPE html') || line.startsWith('<html')) {
+            removeLoadingMessage(loadingElement);
+            showChatError(chatHistory, localizedText['{{server-error}}']);
+            reader.cancel();
+            break;
+          }
           // eslint-disable-next-line no-continue
           if (!line || !line.startsWith('[')) continue;
           const data = JSON.parse(line);
+
           const generatedText = data[0]?.generated_text || '';
           const source = data[0]?.source || {};
 
@@ -322,12 +329,6 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
                 chatHistory.scrollTop = chatHistory.scrollHeight;
               }
             }
-          }
-          if (line.startsWith('<!DOCTYPE html') || line.startsWith('<html')) {
-            removeLoadingMessage(loadingElement);
-            showChatError(chatHistory, localizedText['{{server-error}}']);
-            reader.cancel();
-            break;
           }
         } catch (parseError) {
           // eslint-disable-next-line no-console
