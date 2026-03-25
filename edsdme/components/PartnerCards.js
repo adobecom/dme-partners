@@ -50,6 +50,7 @@ export default class PartnerCards extends LitElement {
   };
 
   constructor() {
+    console.log('PSI');
     super();
     this.allCards = [];
     this.cards = [];
