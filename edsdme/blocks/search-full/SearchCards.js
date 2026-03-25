@@ -1,6 +1,5 @@
 import { getLibs } from '../../scripts/utils.js';
 import PartnerCards from '../../components/PartnerCards.js';
-import { searchCardsStyles } from './SearchCardsStyles.js';
 import '../../components/SearchCard.js';
 import { generateRequestForSearchAPI } from '../utils/utils.js';
 import { debounce } from '../utils/action.js';
@@ -12,11 +11,6 @@ const MAX_SEARCH_LENGTH = 200;
 const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
 
 export default class Search extends PartnerCards {
-  static styles = [
-    PartnerCards.styles,
-    searchCardsStyles,
-  ];
-
   static properties = {
     ...PartnerCards.properties,
     contentType: { type: String },
@@ -50,17 +44,17 @@ export default class Search extends PartnerCards {
 
   // eslint-disable-next-line no-underscore-dangle
   get _typeaheadDialog() {
-    return this.renderRoot.querySelector('dialog#typeahead');
+    return this.querySelector('dialog#typeahead');
   }
 
   // eslint-disable-next-line no-underscore-dangle
   get _searchInput() {
-    return this.renderRoot.querySelector('#search');
+    return this.querySelector('#search');
   }
 
   // eslint-disable-next-line no-underscore-dangle
   get _dialog() {
-    return this.renderRoot.querySelector('.suggestion-dialog');
+    return this.querySelector('.suggestion-dialog');
   }
 
   onSearchInput(event) {

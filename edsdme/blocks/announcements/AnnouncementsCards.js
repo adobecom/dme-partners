@@ -1,5 +1,4 @@
 import { getLibs } from '../../scripts/utils.js';
-import { partnerCardsDateFilterStyles } from '../../components/PartnerCardsStyles.js';
 import PartnerCards, { filterRestrictedCardsByCurrentSite } from '../../components/PartnerCards.js';
 
 const miloLibs = getLibs();
@@ -23,11 +22,6 @@ export function filterExpiredAnnouncements(cards, blockData) {
 }
 
 export default class Announcements extends PartnerCards {
-  static styles = [
-    PartnerCards.styles,
-    partnerCardsDateFilterStyles,
-  ];
-
   static properties = {
     ...PartnerCards.properties,
     selectedDateFilter: { type: Object },

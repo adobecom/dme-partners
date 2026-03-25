@@ -107,10 +107,7 @@ export default class SmokeTest {
         'announcements-cards.content.announcements-wrapper',
       )
       .elementHandle();
-    const shadowRootCard = await shadowHostCard.evaluateHandle(
-      (node) => node.shadowRoot,
-    );
-    const announcementsCrad = await shadowRootCard.$$('.card-wrapper');
+    const announcementsCrad = await shadowHostCard.$$('.card-wrapper');
     const firstCard = announcementsCrad[0];
     await expect(async () => {
       await firstCard.isVisible();

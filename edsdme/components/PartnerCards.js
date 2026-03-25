@@ -1,9 +1,8 @@
 import { getLibs, prodHosts } from '../scripts/utils.js';
-import { partnerCardsLoadMoreStyles, partnerCardsPaginationStyles, partnerCardsStyles } from './PartnerCardsStyles.js';
 import './SinglePartnerCard.js';
 
 const miloLibs = getLibs();
-const { html, LitElement, css, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
+const { html, LitElement, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
 const { replaceText } = await import(`${miloLibs}/features/placeholders.js`);
 
@@ -24,14 +23,7 @@ export function filterRestrictedCardsByCurrentSite(cards) {
 }
 
 export default class PartnerCards extends LitElement {
-  static styles = [
-    partnerCardsStyles,
-    partnerCardsLoadMoreStyles,
-    partnerCardsPaginationStyles,
-    css`#search {
-      width: 100%;
-    }`,
-  ];
+  createRenderRoot() { return this; }
 
   static properties = {
     blockData: { type: Object },
@@ -629,7 +621,7 @@ export default class PartnerCards extends LitElement {
   }
 
   toggleSort() {
-    const element = this.shadowRoot.querySelector('.sort-list');
+    const element = this.querySelector('.sort-list');
     element.classList.toggle('expanded');
   }
 
@@ -639,12 +631,12 @@ export default class PartnerCards extends LitElement {
   }
 
   openFiltersMobile() {
-    const element = this.shadowRoot.querySelector('.all-filters-wrapper-mobile');
+    const element = this.querySelector('.all-filters-wrapper-mobile');
     element.classList.add('open');
   }
 
   closeFiltersMobile() {
-    const element = this.shadowRoot.querySelector('.all-filters-wrapper-mobile');
+    const element = this.querySelector('.all-filters-wrapper-mobile');
     element.classList.remove('open');
   }
 
