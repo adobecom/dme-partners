@@ -1,4 +1,4 @@
-import { getCaasUrl, loadStylesheetOnce } from '../../scripts/utils.js';
+import { getCaasUrl, getLibs } from '../../scripts/utils.js';
 import { getConfig, localizationPromises } from '../utils/utils.js';
 import AnnouncementsPreview from './AnnouncementsPreviewCards.js';
 
@@ -8,8 +8,12 @@ function declareAnnouncementsPreview() {
 }
 
 export default async function init(el) {
+  const miloLibs = getLibs();
   const config = getConfig();
   const newestCards = [];
+
+  const { loadStyle } = await import(`${miloLibs}/utils/utils.js`);
+  loadStyle('/edsdme/components/HorizontalPartnerCard.css');
 
   const block = {
     el,
@@ -22,8 +26,6 @@ export default async function init(el) {
   const deps = await Promise.all([
     localizationPromises(localizedText, config),
   ]);
-
-  loadStylesheetOnce('/edsdme/components/HorizontalPartnerCard.css');
 
   declareAnnouncementsPreview();
 

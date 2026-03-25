@@ -1,4 +1,4 @@
-import { getLibs, loadStylesheetOnce } from '../../scripts/utils.js';
+import { getLibs } from '../../scripts/utils.js';
 import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
 import Logos from './LogosCards.js';
 
@@ -10,6 +10,11 @@ function declareLogos() {
 export default async function init(el) {
   const miloLibs = getLibs();
   const config = getConfig();
+
+  const { loadStyle } = await import(`${miloLibs}/utils/utils.js`);
+  loadStyle('/edsdme/components/PartnerCards.css');
+  loadStyle('/edsdme/components/SearchCard.css');
+  loadStyle('/edsdme/blocks/search-full/SearchCards.css');
 
   const sectionIndex = el.parentNode.getAttribute('data-idx');
   const isMain = el.classList.contains('main');
@@ -30,10 +35,6 @@ export default async function init(el) {
     import(`${miloLibs}/features/spectrum-web-components/dist/action-button.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/icons-workflow.js`),
   ]);
-
-  loadStylesheetOnce('/edsdme/components/PartnerCards.css');
-  loadStylesheetOnce('/edsdme/components/SearchCard.css');
-  loadStylesheetOnce('/edsdme/blocks/search-full/SearchCards.css');
 
   declareLogos();
 

@@ -1,4 +1,4 @@
-import { getLibs, loadStylesheetOnce } from '../../scripts/utils.js';
+import { getLibs } from '../../scripts/utils.js';
 import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
 import Search from './SearchCards.js';
 
@@ -12,6 +12,11 @@ export default async function init(el) {
 
   const miloLibs = getLibs();
   const config = getConfig();
+
+  const { loadStyle } = await import(`${miloLibs}/utils/utils.js`);
+  loadStyle('/edsdme/components/PartnerCards.css');
+  loadStyle('/edsdme/components/SearchCard.css');
+  loadStyle('/edsdme/blocks/search-full/SearchCards.css');
 
   const sectionIndex = el.parentNode.getAttribute('data-idx');
 
@@ -61,10 +66,6 @@ export default async function init(el) {
     import(`${miloLibs}/features/spectrum-web-components/dist/icons-workflow.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/button-group.js`),
   ]);
-
-  loadStylesheetOnce('/edsdme/components/PartnerCards.css');
-  loadStylesheetOnce('/edsdme/components/SearchCard.css');
-  loadStylesheetOnce('/edsdme/blocks/search-full/SearchCards.css');
 
   declareSearch();
 

@@ -1,4 +1,4 @@
-import { getLibs, getCaasUrl, loadStylesheetOnce } from '../../scripts/utils.js';
+import { getLibs, getCaasUrl } from '../../scripts/utils.js';
 import { getConfig, populateLocalizedTextFromListItems, localizationPromises } from '../utils/utils.js';
 import Announcements from './AnnouncementsCards.js';
 
@@ -12,6 +12,11 @@ export default async function init(el) {
 
   const miloLibs = getLibs();
   const config = getConfig();
+
+  const { loadStyle } = await import(`${miloLibs}/utils/utils.js`);
+  loadStyle('/edsdme/components/PartnerCards.css');
+  loadStyle('/edsdme/components/PartnerCardsDateFilter.css');
+  loadStyle('/edsdme/components/SinglePartnerCard.css');
 
   const isArchive = el.classList.contains('archive');
   const sectionIndex = el.parentNode.getAttribute('data-idx');
@@ -53,10 +58,6 @@ export default async function init(el) {
     import(`${miloLibs}/features/spectrum-web-components/dist/button.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/progress-circle.js`),
   ]);
-
-  loadStylesheetOnce('/edsdme/components/PartnerCards.css');
-  loadStylesheetOnce('/edsdme/components/PartnerCardsDateFilter.css');
-  loadStylesheetOnce('/edsdme/components/SinglePartnerCard.css');
 
   declareAnnouncements();
 

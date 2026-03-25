@@ -5,7 +5,7 @@ import {
   localizationPromises,
   populateLocalizedTextFromListItems,
 } from '../utils/utils.js';
-import { getLibs, loadStylesheetOnce } from '../../scripts/utils.js';
+import { getLibs } from '../../scripts/utils.js';
 
 function declarePricelist() {
   if (customElements.get('pricelist-block')) return;
@@ -14,6 +14,11 @@ function declarePricelist() {
 export default async function init(el) {
   const miloLibs = getLibs();
   const config = getConfig();
+
+  const { loadStyle } = await import(`${miloLibs}/utils/utils.js`);
+  loadStyle('/edsdme/components/PartnerCards.css');
+  loadStyle('/edsdme/blocks/pricelist/PricelistBlock.css');
+
   const sectionIndex = el.parentNode.getAttribute('data-idx');
   const localizedText = {
     '{{filter}}': 'Filter',
@@ -66,9 +71,6 @@ export default async function init(el) {
     import(`${miloLibs}/features/spectrum-web-components/dist/progress-circle.js`),
     import(`${miloLibs}/features/spectrum-web-components/dist/action-button.js`),
   ]);
-
-  loadStylesheetOnce('/edsdme/components/PartnerCards.css');
-  loadStylesheetOnce('/edsdme/blocks/pricelist/PricelistBlock.css');
 
   declarePricelist();
 
