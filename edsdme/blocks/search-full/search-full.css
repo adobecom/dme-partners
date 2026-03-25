@@ -147,10 +147,10 @@ logos-cards .partner-cards-collection .card-wrapper:hover {
     color: blue;
 }
 
-.option span.bold {
+.suggestion-dialog .option span.bold {
     font-weight: bold;
 }
 
-.option.footer {
+.suggestion-dialog .option.footer {
     color: blue;
 }

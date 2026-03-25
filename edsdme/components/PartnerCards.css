@@ -1,4 +1,9 @@
-h3, p, span, button, li, input {
+.partner-cards h3,
+.partner-cards p,
+.partner-cards span,
+.partner-cards button,
+.partner-cards li,
+.partner-cards input {
   margin: 0;
   font-family: adobe-clean, "Segoe UI", Roboto, sans-serif;
 }

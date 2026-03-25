@@ -67,10 +67,6 @@ horizontal-cards .card-description {
   text-overflow: ellipsis;
 }
 
-.announcements-preview {
-  width: 100%;
-}
-
 horizontal-cards .partner-cards {
   grid-template-columns: auto;
 }
