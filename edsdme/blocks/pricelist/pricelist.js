@@ -17,7 +17,6 @@ export default async function init(el) {
 
   const { loadStyle } = await import(`${miloLibs}/utils/utils.js`);
   loadStyle('/edsdme/components/PartnerCards.css');
-  loadStyle('/edsdme/blocks/pricelist/PricelistBlock.css');
 
   const sectionIndex = el.parentNode.getAttribute('data-idx');
   const localizedText = {

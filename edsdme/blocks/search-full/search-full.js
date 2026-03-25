@@ -16,7 +16,6 @@ export default async function init(el) {
   const { loadStyle } = await import(`${miloLibs}/utils/utils.js`);
   loadStyle('/edsdme/components/PartnerCards.css');
   loadStyle('/edsdme/components/SearchCard.css');
-  loadStyle('/edsdme/blocks/search-full/SearchCards.css');
 
   const sectionIndex = el.parentNode.getAttribute('data-idx');
 
