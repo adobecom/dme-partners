@@ -184,7 +184,7 @@ export function getMetadata(name) {
   return document.querySelector(`meta[name="${name}"]`);
 }
 
-export function redirectLoggedinPartner() {
+export function redirectLoggedinPartner(win = window) {
   if (!isMember()) return;
   const partnerErrorRedirectsCount = getCookieValue(PARTNER_ERROR_REDIRECTS_COUNT_COOKIE);
   if (partnerErrorRedirectsCount) {
@@ -197,7 +197,7 @@ export function redirectLoggedinPartner() {
   const target = getMetadataContent('adobe-target-after-login');
   if (!target || target === 'NONE') return;
   document.body.style.display = 'none';
-  window.location.assign(target);
+  win.location.assign(target);
 }
 
 export function isRenew() {
