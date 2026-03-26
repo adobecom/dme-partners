@@ -1,9 +1,8 @@
 import { getLibs, prodHosts } from '../scripts/utils.js';
-import { partnerCardsLoadMoreStyles, partnerCardsPaginationStyles, partnerCardsStyles } from './PartnerCardsStyles.js';
 import './SinglePartnerCard.js';
 
 const miloLibs = getLibs();
-const { html, LitElement, css, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
+const { html, LitElement, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
 const { replaceText } = await import(`${miloLibs}/features/placeholders.js`);
 
@@ -24,14 +23,7 @@ export function filterRestrictedCardsByCurrentSite(cards) {
 }
 
 export default class PartnerCards extends LitElement {
-  static styles = [
-    partnerCardsStyles,
-    partnerCardsLoadMoreStyles,
-    partnerCardsPaginationStyles,
-    css`#search {
-      width: 100%;
-    }`,
-  ];
+  createRenderRoot() { return this; }
 
   static properties = {
     blockData: { type: Object },
@@ -109,6 +101,7 @@ export default class PartnerCards extends LitElement {
             parentKey: filterKey,
             value: blockData.localizedText[`{{${tagKey}}}`],
             checked: false,
+            paramValue: tagKey.includes('-&-') ? tagKey.replace('-&-', '-and-') : null,
             initialHidden,
           };
         }
@@ -367,7 +360,8 @@ export default class PartnerCards extends LitElement {
           const filtersSearchTags = this.urlSearchParams.get(filter.key).split(',');
 
           filtersSearchTags.forEach((searchTag) => {
-            const filterTag = filter.tags.find((tag) => tag.key === searchTag);
+            // eslint-disable-next-line max-len
+            const filterTag = filter.tags.find((tag) => tag.paramValue === searchTag || tag.key === searchTag);
             if (filterTag) {
               filterTag.checked = true;
               this.selectedFilters = {
@@ -629,7 +623,7 @@ export default class PartnerCards extends LitElement {
   }
 
   toggleSort() {
-    const element = this.shadowRoot.querySelector('.sort-list');
+    const element = this.querySelector('.sort-list');
     element.classList.toggle('expanded');
   }
 
@@ -639,12 +633,12 @@ export default class PartnerCards extends LitElement {
   }
 
   openFiltersMobile() {
-    const element = this.shadowRoot.querySelector('.all-filters-wrapper-mobile');
+    const element = this.querySelector('.all-filters-wrapper-mobile');
     element.classList.add('open');
   }
 
   closeFiltersMobile() {
-    const element = this.shadowRoot.querySelector('.all-filters-wrapper-mobile');
+    const element = this.querySelector('.all-filters-wrapper-mobile');
     element.classList.remove('open');
   }
 
@@ -785,7 +779,7 @@ export default class PartnerCards extends LitElement {
       };
 
       let filterSearchValue = this.urlSearchParams.get(filterKey);
-      filterSearchValue += `,${tag.key}`;
+      filterSearchValue += tag.paramValue ? `,${tag.paramValue}` : `,${tag.key}`;
       this.urlSearchParams.set(filterKey, filterSearchValue);
     } else {
       if (!Object.keys(this.selectedFilters).length) {
@@ -797,7 +791,8 @@ export default class PartnerCards extends LitElement {
         [filterKey]: [tag],
       };
 
-      this.urlSearchParams.append(filterKey, tag.key);
+      const tagParamValue = tag.paramValue ? tag.paramValue : tag.key;
+      this.urlSearchParams.append(filterKey, tagParamValue);
     }
 
     this.paginationCounter = 1;
@@ -807,7 +802,7 @@ export default class PartnerCards extends LitElement {
 
   handleRemoveTag(tag) {
     tag.checked = false;
-    const { key: tagKey, parentKey: filterKey } = tag;
+    const { key: tagKey, parentKey: filterKey, paramValue } = tag;
 
     // eslint-disable-next-line max-len
     const updatedFilterTags = [...this.selectedFilters[filterKey]].filter((filterTag) => filterTag.key !== tagKey);
@@ -819,7 +814,8 @@ export default class PartnerCards extends LitElement {
       };
 
       const filterSearchParams = this.urlSearchParams.get(filterKey).split(',');
-      const updatedSearchFilterTags = filterSearchParams.filter((param) => param !== tagKey);
+      // eslint-disable-next-line max-len
+      const updatedSearchFilterTags = filterSearchParams.filter((param) => param !== paramValue && param !== tagKey);
       this.urlSearchParams.set(filterKey, updatedSearchFilterTags.toString());
     } else {
       const { [filterKey]: _removedKeyFilters, ...updatedSelectedFilters } = this.selectedFilters;
