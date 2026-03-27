@@ -323,7 +323,7 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
     const reader = resp.body.getReader();
     const decoder = new TextDecoder('utf-8');
     let buffer = '';
-    let sourcesProcessed = false;
+    const accumulatedSources = {};
     let accumulatedMarkdown = '';
     let messageAdded = false;
 
@@ -368,19 +368,19 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
             messageText.innerHTML = await parseMarkdown(accumulatedMarkdown);
           }
           if (source && Object.keys(source).length > 0) {
-            if (!sourcesProcessed) {
-              sourcesProcessed = true;
-              const accordion = createSourcesAccordion(source, localizedText);
-              messageContent.appendChild(accordion);
-              if (chatHistory) {
-                chatHistory.scrollTop = chatHistory.scrollHeight;
-              }
-            }
+            Object.assign(accumulatedSources, source);
           }
         } catch (parseError) {
           // eslint-disable-next-line no-console
           console.debug('Skipping non-JSON line:', line);
         }
+      }
+    }
+    if (messageAdded && Object.keys(accumulatedSources).length > 0) {
+      const accordion = createSourcesAccordion(accumulatedSources, localizedText);
+      messageContent.appendChild(accordion);
+      if (chatHistory) {
+        chatHistory.scrollTop = chatHistory.scrollHeight;
       }
     }
     textArea.removeAttribute('disabled');
