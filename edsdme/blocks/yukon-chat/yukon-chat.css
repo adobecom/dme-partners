@@ -846,21 +846,19 @@ chat-history-left .user-message {
   margin: 0;
   padding-left: 0;
   list-style: none;
-  counter-reset: source-counter;
 }
 
 .yc-sources-list li {
   margin-bottom: 8px;
   display: flex;
   align-items: flex-start;
+  gap: 4px;
 }
 
-.yc-sources-list li::before {
-  counter-increment: source-counter;
-  content: counter(source-counter);
+.yc-source-citation-refs {
+  flex-shrink: 0;
   font-weight: 400;
   color: #292929;
-  margin-right: 8px;
 }
 
 .yc-sources-list a {

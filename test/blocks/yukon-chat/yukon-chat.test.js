@@ -2,6 +2,7 @@ import { expect } from '@esm-bundle/chai';
 import sinon from 'sinon';
 import { readFile } from '@web/test-runner-commands';
 import { setLibs } from '../../../edsdme/scripts/utils.js';
+import { createMockYukonMultiSourceResponse } from './mocks/multi-source-stream.js';
 
 describe('yukon-chat block', () => {
   let fetchStub;
@@ -683,6 +684,67 @@ describe('yukon-chat block', () => {
       expect(items.length).to.equal(1);
       expect(items[0].textContent).to.equal('Test Title');
       expect(items[0].getAttribute('href')).to.equal('https://test.com/doc.pdf');
+      const citeRefs = accordion.querySelector('.yc-source-citation-refs');
+      expect(citeRefs.textContent.trim()).to.equal('1');
+    });
+
+    it('should group sources by document_id when the stream emits multiple source objects', async () => {
+      fetchStub.callsFake(async (url, fetchInit) => {
+        const urlStr = typeof url === 'string' ? url : url.toString();
+        if (urlStr.includes('placeholders.json')) {
+          return {
+            ok: true,
+            json: async () => ({
+              data: [
+                { key: 'send-message', value: 'Send Message' },
+                { key: 'open-chat', value: 'Open Chat' },
+                { key: 'scroll-to-bottom', value: 'Scroll to bottom' },
+                { key: 'timeout-error', value: 'This is taking longer than expected. Please try again in a moment.' },
+                { key: 'server-error', value: 'We’re having trouble processing your request right now. Please try again later.' },
+                { key: 'network-error', value: 'Network error. Please check your connection and try again.' },
+                { key: 'sources', value: 'Sources' },
+              ],
+            }),
+          };
+        }
+        if (urlStr.includes('yukonAIAssistant')) {
+          return createMockYukonMultiSourceResponse({ signal: fetchInit?.signal });
+        }
+        return { ok: false, status: 404 };
+      });
+
+      const block = document.querySelector('.yukon-chat');
+      await init(block);
+
+      const textarea = document.querySelector('#yc-input-field');
+      const sendButton = document.querySelector('.yc-input-field-button');
+
+      textarea.value = 'Mock multi-source stream';
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      sendButton.click();
+
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 150));
+
+      const modal = document.querySelector('#yukon-chat-modal');
+      expect(modal).to.exist;
+
+      const accordion = modal.querySelector('.yc-sources-accordion');
+      expect(accordion).to.exist;
+
+      const items = accordion.querySelectorAll('.yc-sources-list li a');
+      expect(items.length).to.equal(3);
+      expect(items[0].getAttribute('href')).to.equal('https://example.com/mock-yukon-source.pdf');
+      expect(items[1].getAttribute('href')).to.equal('https://example.com/mock-partner-guide.pdf');
+      expect(items[2].getAttribute('href')).to.equal('https://example.com/mock-partner-faq.pdf');
+      expect(items[0].textContent).to.include('DE-yukon-doc-distributor-china-education.pdf');
+      expect(items[1].textContent).to.include('Adobe-Partner-Program-Overview.pdf');
+      expect(items[2].textContent).to.include('Partner-Portal-FAQ-Short.pdf');
+      const citeRefs = accordion.querySelectorAll('.yc-source-citation-refs');
+      expect(citeRefs.length).to.equal(3);
+      expect(citeRefs[0].textContent.trim()).to.equal('1, 2');
+      expect(citeRefs[1].textContent.trim()).to.equal('3, 4');
+      expect(citeRefs[2].textContent.trim()).to.equal('5');
     });
   });
 });

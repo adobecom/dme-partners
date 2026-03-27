@@ -203,6 +203,45 @@ function showChatError(chatHistory, text) {
   chatHistory.appendChild(chatMessage);
 }
 
+/**
+ * Groups footnote keys by document_id. Entries without a usable id are kept separate.
+ * @returns {{ citationKeys: string[], item: object }[]}
+ */
+function groupSourcesByDocumentId(sourceObj) {
+  const sortedKeys = Object.keys(sourceObj).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+
+  const groupKeyFor = (item, key) => {
+    const id = item?.document_id;
+    if (id != null && String(id).trim() !== '') {
+      return String(id);
+    }
+    return `__unique_${key}`;
+  };
+
+  const byId = new Map();
+  sortedKeys.forEach((key) => {
+    const item = sourceObj[key];
+    const gk = groupKeyFor(item, key);
+    if (!byId.has(gk)) {
+      byId.set(gk, { citationKeys: [], item });
+    }
+    byId.get(gk).citationKeys.push(key);
+  });
+
+  const groups = [];
+  const seen = new Set();
+  sortedKeys.forEach((key) => {
+    const item = sourceObj[key];
+    const gk = groupKeyFor(item, key);
+    if (!seen.has(gk)) {
+      seen.add(gk);
+      groups.push(byId.get(gk));
+    }
+  });
+
+  return groups;
+}
+
 function createSourcesAccordion(sourceObj, localizedText) {
   const accordionContainer = document.createElement('div');
   accordionContainer.className = 'yc-sources-accordion';
@@ -227,16 +266,22 @@ function createSourcesAccordion(sourceObj, localizedText) {
   const ol = document.createElement('ol');
   ol.className = 'yc-sources-list';
 
-  const sourceKeys = Object.keys(sourceObj).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+  const groups = groupSourcesByDocumentId(sourceObj);
 
-  sourceKeys.forEach((key) => {
-    const item = sourceObj[key];
+  groups.forEach(({ citationKeys, item }) => {
     const li = document.createElement('li');
+    const citeLabel = citationKeys.join(', ');
+    const prefix = document.createElement('span');
+    prefix.className = 'yc-source-citation-refs';
+    prefix.textContent = `${citeLabel} `;
+
     const a = document.createElement('a');
     a.href = item.document_url;
     a.textContent = item.title || item.document_name || item.document_url;
     a.target = '_blank';
     a.rel = 'noopener noreferrer';
+
+    li.appendChild(prefix);
     li.appendChild(a);
     ol.appendChild(li);
   });
