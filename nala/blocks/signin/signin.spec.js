@@ -79,7 +79,7 @@ export default {
       baseURL: 'http://www.stage.adobe.com?akamaiLocale=us',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
-        partnerLevel: 'tpp-platinum:',
+        partnerLevel: 'dxp-platinum:',
         expectedRedirectedURL: 'https://partners.stage.adobe.com/na/channelpartners/error/contact-not-found',
         page: 'restricted home',
         signInButtonText: 'Sign In',
@@ -92,7 +92,7 @@ export default {
       baseURL: 'http://www.stage.adobe.com?akamaiLocale=us',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
-        partnerLevel: 'tpp-platinum:',
+        partnerLevel: 'dxp-platinum:',
         expectedRedirectedURL: 'https://partners.stage.adobe.com/channelpartners/',
         page: 'public page',
         signInButtonText: 'Sign In',
@@ -105,7 +105,7 @@ export default {
       baseURL: 'http://www.stage.adobe.com?akamaiLocale=us',
       tags: '@dme-signin @regression @login @circleCi',
       data: {
-        partnerLevel: 'tpp-platinum:',
+        partnerLevel: 'dxp-platinum:',
         expectedPublicURL: 'https://partners.stage.adobe.com/channelpartners/',
         restrictedHomePath: 'https://partners.stage.adobe.com/channelpartners/home/?georouting=off&martech=off',
         expectedToSeeInURL: 'https://partners.stage.adobe.com/channelpartners/home/',
