@@ -100,7 +100,7 @@ describe('Test utils.js', () => {
     it('Protected footer is fetched based on locale if footer-loggeding-source metadata is not present', async () => {
       const cookieObject = { CPP: { status: 'MEMBER' } };
       jest.spyOn(document, 'cookie', 'get').mockReturnValue(
-        `partner_data=${encodeURIComponent(JSON.stringify(cookieObject))}; partner_info=${encodeURIComponent(JSON.stringify({}))}`
+        `partner_data=${encodeURIComponent(JSON.stringify(cookieObject))}; partner_info=${encodeURIComponent(JSON.stringify({}))}`,
       );
       window.history.pushState({}, '', '/de/channelpartners/');
       const locales = {
@@ -160,7 +160,7 @@ describe('Test utils.js', () => {
     it('Protected gnav is fetched based on locale if gnav-loggeding-source metadata is not present', async () => {
       const cookieObject = { CPP: { status: 'MEMBER' } };
       jest.spyOn(document, 'cookie', 'get').mockReturnValue(
-        `partner_data=${encodeURIComponent(JSON.stringify(cookieObject))}; partner_info=${encodeURIComponent(JSON.stringify({}))}`
+        `partner_data=${encodeURIComponent(JSON.stringify(cookieObject))}; partner_info=${encodeURIComponent(JSON.stringify({}))}`,
       );
       window.history.pushState({}, '', '/de/channelpartners/');
       const locales = {
