@@ -167,6 +167,96 @@ function showChatError(chatHistory, text) {
   chatHistory.appendChild(chatMessage);
 }
 
+/**
+ * Groups footnote keys by document_id. Entries without a usable id are kept separate.
+ * @returns {{ citationKeys: string[], item: object }[]}
+ */
+function groupSourcesByDocumentId(sourceObj) {
+  const sortedKeys = Object.keys(sourceObj).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+
+  const groupKeyFor = (item, key) => {
+    const id = item?.document_id;
+    if (id != null && String(id).trim() !== '') {
+      return String(id);
+    }
+    return `__unique_${key}`;
+  };
+
+  const byId = new Map();
+  sortedKeys.forEach((key) => {
+    const item = sourceObj[key];
+    const gk = groupKeyFor(item, key);
+    if (!byId.has(gk)) {
+      byId.set(gk, { citationKeys: [], item });
+    }
+    byId.get(gk).citationKeys.push(key);
+  });
+
+  const groups = [];
+  const seen = new Set();
+  sortedKeys.forEach((key) => {
+    const item = sourceObj[key];
+    const gk = groupKeyFor(item, key);
+    if (!seen.has(gk)) {
+      seen.add(gk);
+      groups.push(byId.get(gk));
+    }
+  });
+
+  return groups;
+}
+
+function createSourcesAccordion(sourceObj, localizedText) {
+  const accordionContainer = document.createElement('div');
+  accordionContainer.className = 'yc-sources-accordion';
+
+  const accordionHeader = document.createElement('button');
+  accordionHeader.className = 'yc-accordion-header';
+  accordionHeader.setAttribute('aria-expanded', 'false');
+  accordionHeader.innerHTML = `<svg class="yc-accordion-icon" width="10" height="11" viewBox="0 0 10 11" fill="none"><path d="M5.59375 7.99866L9.2168 4.37561C9.54492 4.04749 9.54492 3.51623 9.2168 3.18811C8.88868 2.85999 8.35742 2.85999 8.0293 3.18811L5 6.21741L1.9707 3.18811C1.64258 2.85999 1.11132 2.85999 0.783201 3.18811C0.619142 3.35217 0.537111 3.56702 0.537111 3.78186C0.537111 3.9967 0.619142 4.21155 0.783201 4.37561L4.40625 7.99866C4.73437 8.32678 5.26563 8.32678 5.59375 7.99866Z" fill="currentColor"></path></svg><span>${localizedText['{{sources}}'] || 'Sources'}</span>`;
+
+  const accordionContent = document.createElement('div');
+  accordionContent.className = 'yc-accordion-content';
+  accordionContent.style.display = 'none';
+
+  accordionHeader.addEventListener('click', () => {
+    const isExpanded = accordionHeader.getAttribute('aria-expanded') === 'true';
+    accordionHeader.setAttribute('aria-expanded', !isExpanded);
+    accordionContent.style.display = isExpanded ? 'none' : 'block';
+    if (!isExpanded) accordionHeader.classList.add('expanded');
+    else accordionHeader.classList.remove('expanded');
+  });
+
+  const ol = document.createElement('ol');
+  ol.className = 'yc-sources-list';
+
+  const groups = groupSourcesByDocumentId(sourceObj);
+
+  groups.forEach(({ citationKeys, item }) => {
+    const li = document.createElement('li');
+    const citeLabel = citationKeys.join(', ');
+    const prefix = document.createElement('span');
+    prefix.className = 'yc-source-citation-refs';
+    prefix.textContent = `${citeLabel} `;
+
+    const a = document.createElement('a');
+    a.href = item.document_url;
+    a.textContent = item.title || item.document_name || item.document_url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+
+    li.appendChild(prefix);
+    li.appendChild(a);
+    ol.appendChild(li);
+  });
+
+  accordionContent.appendChild(ol);
+  accordionContainer.appendChild(accordionHeader);
+  accordionContainer.appendChild(accordionContent);
+
+  return accordionContainer;
+}
+
 // eslint-disable-next-line no-shadow, max-len
 const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBottomBtn, modalInputWrapper, inputFieldButton, localizedText) => {
   if (!chatHistory) return;
@@ -182,14 +272,18 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
   const { signal } = currentAbortController;
   // Show loading indicator first, right after user message
   const loadingElement = showLoadingMessage(chatHistory, scrollToBottomBtn);
-  let level = 'public';
-  let region = 'worldwide';
+  let level = 'partner-level-public';
+  let region = 'region-worldwide';
+  // const specializations = '';
   // TODO: the partner data must be sent to the servlet and parsed there
   if (partnerIsSignedIn()) {
     try {
       const profileData = getPartnerCookieObject(getCurrentProgramType());
-      level = profileData.level.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '');
-      region = profileData.permissionRegion.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '');
+      level = `partner-level-${profileData.level.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '')}`;
+      region = `region-${profileData.permissionRegion.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '')}`;
+      // For now, we ignore specializations in Yukon chat
+      // specializations = `specializations-${profileData.permissionSpecializations.toLowerCase()
+      // .replace(/\s+/g, '').replace(/[()]/g, '')}`;
     } catch (error) {
       // eslint-disable-next-line no-console
       console.info('Failed to parse profileData from cookie:', error);
@@ -200,8 +294,10 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
 
     const origin = prodHosts.includes(window.location.host) ? 'https://partners.adobe.com' : 'https://partners.stage.adobe.com';
     const url = new URL(`${origin}/services/gravity/yukonAIAssistant`);
+
     url.searchParams.append('question', encodeURIComponent(question));
     url.searchParams.append('tags', tags);
+
     url.searchParams.append('requestId', requestId);
     url.searchParams.append('yukonProfile', configs.yukonProfile);
 
@@ -236,7 +332,7 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
     const reader = resp.body.getReader();
     const decoder = new TextDecoder('utf-8');
     let buffer = '';
-    let sourcesProcessed = false;
+    const accumulatedSources = {};
     let accumulatedMarkdown = '';
     let messageAdded = false;
 
@@ -257,43 +353,43 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
         // eslint-disable-next-line no-continue
         if (!line.trim()) continue;
         try {
-          if (line.startsWith('data: ')) {
-            let jsonStr = line.slice(6).trim();
-
-            if (jsonStr.startsWith('data: ')) {
-              jsonStr = jsonStr.slice(6).trim();
-            }
-            // eslint-disable-next-line no-continue
-            if (!jsonStr || !jsonStr.startsWith('[')) continue;
-            const data = JSON.parse(jsonStr);
-            const generatedText = data[0]?.generated_text || '';
-            const source = data[0]?.source || {};
-            if (generatedText) {
-              accumulatedMarkdown += generatedText;
-              if (loadingElement && !messageAdded) {
-                removeLoadingMessage(loadingElement);
-                chatHistory.appendChild(chatMessage);
-                messageAdded = true;
-              }
-              // eslint-disable-next-line no-await-in-loop
-              messageText.innerHTML = await parseMarkdown(accumulatedMarkdown);
-            }
-            if (source && Object.keys(source).length > 0) {
-              if (!sourcesProcessed) {
-                sourcesProcessed = true;
-              }
-            }
-          }
           if (line.startsWith('<!DOCTYPE html') || line.startsWith('<html')) {
             removeLoadingMessage(loadingElement);
             showChatError(chatHistory, localizedText['{{server-error}}']);
             reader.cancel();
             break;
           }
+          // eslint-disable-next-line no-continue
+          if (!line || !line.startsWith('[')) continue;
+          const data = JSON.parse(line);
+
+          const generatedText = data[0]?.generated_text || '';
+          const source = data[0]?.source || {};
+
+          if (generatedText) {
+            accumulatedMarkdown += generatedText;
+            if (loadingElement && !messageAdded) {
+              removeLoadingMessage(loadingElement);
+              chatHistory.appendChild(chatMessage);
+              messageAdded = true;
+            }
+            // eslint-disable-next-line no-await-in-loop
+            messageText.innerHTML = await parseMarkdown(accumulatedMarkdown);
+          }
+          if (source && Object.keys(source).length > 0) {
+            Object.assign(accumulatedSources, source);
+          }
         } catch (parseError) {
           // eslint-disable-next-line no-console
           console.debug('Skipping non-JSON line:', line);
         }
+      }
+    }
+    if (messageAdded && Object.keys(accumulatedSources).length > 0) {
+      const accordion = createSourcesAccordion(accumulatedSources, localizedText);
+      messageContent.appendChild(accordion);
+      if (chatHistory) {
+        chatHistory.scrollTop = chatHistory.scrollHeight;
       }
     }
     textArea.removeAttribute('disabled');
@@ -340,6 +436,7 @@ export default async function init(el) {
     '{{timeout-error}}': 'This is taking longer than expected. Please try again in a moment.',
     '{{server-error}}': 'We’re having trouble processing your request right now. Please try again later.',
     '{{network-error}}': 'Network error. Please check your connection and try again.',
+    '{{sources}}': 'Sources',
   };
 
   if (config && config.contentRoot) {
