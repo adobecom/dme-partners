@@ -44,7 +44,7 @@ pricelist-block td {
 }
 
 pricelist-block .table-container {
-    overflow-x: auto;
+    overflow-x: clip;
     margin: 20px 0;
 }
 
