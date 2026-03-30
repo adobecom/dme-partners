@@ -35,23 +35,18 @@ import {
 describe('Test utils.js', () => {
   beforeEach(() => {
     window = Object.create(window);
-    Object.defineProperty(window, 'location', {
-      value: {
-        pathname: '/channelpartners',
-        // eslint-disable-next-line no-return-assign
-        assign: (pathname) => window.location.pathname = pathname,
-        origin: 'https://partners.stage.adobe.com',
-        href: 'https://partners.stage.adobe.com/channelpartners',
-      },
-      writable: true,
-    });
+    window.history.pushState({}, '', '/channelpartners/');
   });
   afterEach(() => {
     document.getElementsByTagName('html')[0].innerHTML = '';
   });
   it('Milo libs', () => {
-    window.location.hostname = 'partners.stage.adobe.com';
-    const libs = setLibs('/libs');
+    const location = {
+      origin: 'https://partners.stage.adobe.com',
+      hostname: 'partners.stage.adobe.com',
+      search: '',
+    };
+    const libs = setLibs('/libs', location);
     expect(libs).toEqual('https://partners.stage.adobe.com/libs');
   });
   describe('Test update footer and gnav', () => {
@@ -91,7 +86,7 @@ describe('Test utils.js', () => {
     it('Public footer is fetched based on locale', async () => {
       const cookieObject = { CPP: { status: 'NOT_MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-      window.location.pathname = '/de/channelpartners/';
+      window.history.pushState({}, '', '/de/channelpartners/');
       const locales = {
         '': { ietf: 'en-US', tk: 'hah7vzn.css' },
         de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
@@ -104,9 +99,10 @@ describe('Test utils.js', () => {
     });
     it('Protected footer is fetched based on locale if footer-loggeding-source metadata is not present', async () => {
       const cookieObject = { CPP: { status: 'MEMBER' } };
-      document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-      document.cookie = `partner_info=${JSON.stringify({})}`;
-      window.location.pathname = '/de/channelpartners/';
+      jest.spyOn(document, 'cookie', 'get').mockReturnValue(
+        `partner_data=${encodeURIComponent(JSON.stringify(cookieObject))}; partner_info=${encodeURIComponent(JSON.stringify({}))}`,
+      );
+      window.history.pushState({}, '', '/de/channelpartners/');
       const locales = {
         '': { ietf: 'en-US', tk: 'hah7vzn.css' },
         de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
@@ -118,6 +114,7 @@ describe('Test utils.js', () => {
       const footerPathModified = document.querySelector('meta[name="footer-source"]')?.content;
       expect(footerPath).not.toEqual(footerPathModified);
       expect(footerPathModified).toEqual('/de/edsdme/partners-shared/loggedin-footer');
+      jest.restoreAllMocks();
     });
     it('Public navigation is shown for non member', async () => {
       const cookieObject = { SPP: { status: 'MEMBER' } };
@@ -149,7 +146,7 @@ describe('Test utils.js', () => {
     it('Public gnav is fetched based on locale', async () => {
       const cookieObject = { CPP: { status: 'NOT_MEMBER' } };
       document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-      window.location.pathname = '/de/channelpartners/';
+      window.history.pushState({}, '', '/de/channelpartners/');
       const locales = {
         '': { ietf: 'en-US', tk: 'hah7vzn.css' },
         de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
@@ -162,9 +159,10 @@ describe('Test utils.js', () => {
     });
     it('Protected gnav is fetched based on locale if gnav-loggeding-source metadata is not present', async () => {
       const cookieObject = { CPP: { status: 'MEMBER' } };
-      document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-      document.cookie = `partner_info=${JSON.stringify({})}`;
-      window.location.pathname = '/de/channelpartners/';
+      jest.spyOn(document, 'cookie', 'get').mockReturnValue(
+        `partner_data=${encodeURIComponent(JSON.stringify(cookieObject))}; partner_info=${encodeURIComponent(JSON.stringify({}))}`,
+      );
+      window.history.pushState({}, '', '/de/channelpartners/');
       const locales = {
         '': { ietf: 'en-US', tk: 'hah7vzn.css' },
         de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
@@ -176,6 +174,7 @@ describe('Test utils.js', () => {
       const gnavPathModified = document.querySelector('meta[name="gnav-source"]')?.content;
       expect(gnavPath).not.toEqual(gnavPathModified);
       expect(gnavPathModified).toEqual('/de/edsdme/partners-shared/loggedin-gnav');
+      jest.restoreAllMocks();
     });
   });
   it('formatDate should return correct locale date string', () => {
@@ -203,7 +202,6 @@ describe('Test utils.js', () => {
     expect(getProgramHomePage(invalidPath)).toEqual('');
   });
   it('Should get current program based on url path', () => {
-    window.location.pathname = '/channelpartners/';
     expect(getCurrentProgramType()).toEqual('cpp');
   });
   it('Should get correct cookie value for given cookie name', () => {
@@ -269,15 +267,16 @@ describe('Test utils.js', () => {
     expect(redirectLoggedinPartner()).toBeFalsy();
   });
   it('Redirect logged in partner to protected home', () => {
-    window.location.pathname = '/channelpartners/';
+    const fakeWindow = { location: { assign: jest.fn() } };
     const cookieObjectMember = { CPP: { status: 'MEMBER' } };
     document.cookie = `partner_data=${JSON.stringify(cookieObjectMember)}`;
     const metaTag = document.createElement('meta');
     metaTag.name = 'adobe-target-after-login';
     metaTag.content = '/channelpartners/home';
     document.head.appendChild(metaTag);
-    redirectLoggedinPartner();
-    expect(window.location.pathname).toEqual(metaTag.content);
+    redirectLoggedinPartner(fakeWindow);
+    const { calls } = fakeWindow.location.assign.mock;
+    expect(calls[0][0]).toBe(metaTag.content);
   });
   it('Check if partners account is expired', () => {
     const expiredDate = new Date();
@@ -428,7 +427,7 @@ describe('Test utils.js', () => {
       '': { ietf: 'en-US', tk: 'hah7vzn.css' },
       de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
     };
-    window.location.pathname = '/de/channelpartners';
+    window.history.pushState({}, '', '/de/channelpartners/');
     const locale = getLocale(locales);
     expect(locale).toStrictEqual({ ietf: 'de-DE', tk: 'hah7vzn.css', prefix: '/de', region: 'de' });
   });
@@ -493,16 +492,16 @@ describe('Test utils.js', () => {
     expect(hasSalesCenterAccess()).toBe(false);
   });
   it('Disable geo popup for milo urls', () => {
-    window.location.hostname = 'main--dme-partners--adobecom.aem.live';
-    expect(enableGeoPopup()).toEqual('off');
+    const fakeWindow = { location: { hostname: 'main--dme-partners--adobecom.aem.live' } };
+    expect(enableGeoPopup(fakeWindow)).toEqual('off');
   });
   it('Disable geo popup for non milo urls if the user is signed in', () => {
-    window.location.hostname = 'partners.stage.adobe.com';
-    expect(enableGeoPopup()).toEqual('off');
+    const fakeWindow = { location: { hostname: 'partners.stage.adobe.com' } };
+    expect(enableGeoPopup(fakeWindow)).toEqual('off');
   });
   it('Enables geo popup for non milo urls if the user is not signed in', () => {
-    window.location.hostname = 'partners.stage.adobe.com';
+    const fakeWindow = { location: { hostname: 'partners.stage.adobe.com' } };
     document.cookie = 'partner_data=';
-    expect(enableGeoPopup()).toEqual('on');
+    expect(enableGeoPopup(fakeWindow)).toEqual('on');
   });
 });
