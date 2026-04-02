@@ -1,7 +1,6 @@
 import PartnerCards from '../../components/PartnerCards.js';
 import { getLibs } from '../../scripts/utils.js';
 import { getConfig } from '../utils/utils.js';
-import { pricelistBlockStyles } from './PricelistBlockStyles.js';
 
 const miloLibs = getLibs();
 const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
@@ -21,11 +20,6 @@ export const priceListKeyWords = {
 };
 
 export default class Pricelist extends PartnerCards {
-  static styles = [
-    PartnerCards.styles,
-    pricelistBlockStyles,
-  ];
-
   static properties = { ...PartnerCards.properties, filtersData: { type: Array } };
 
   constructor() {
