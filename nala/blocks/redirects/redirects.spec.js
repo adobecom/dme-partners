@@ -61,7 +61,6 @@ export default {
         cbcEnablementLink: 'https://cbconnection-stage.adobe.com/zh_cn/news/enablement-news-partner-lock',
         cbcEnablementLinkSignInUser: 'https://cbconnection-stage.adobe.com/bin/fusion/modalImsLogin?resource=%2Fzh_cn%2Fnews%2Fenablement-news-partner-lock',
         helpXAdobeLink: 'https://helpx.adobe.com/cn/',
-        oldPortalMainLink: 'https://io-partners-dx.adobe.com/api/v1/web/dx-partners-runtime/sfdc-redirect?program_type=channel&request_type=distributor_finder',
         salesCenterMainLink: 'https://channelpartners.adobe.com/s/salescenter/dashboard',
         salesCenterLink: 'https://channelpartners.stage2.adobe.com/s/salescenter/dashboard',
         adobeLink: 'https://www.adobe.com/cn/',
