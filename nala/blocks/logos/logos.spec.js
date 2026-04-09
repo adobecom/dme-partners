@@ -8,7 +8,7 @@ export default {
       tags: '@dme-logos @regression @circleCi',
       data: {
         partnerLevel: 'cpp-na-certified:',
-        downloadButtonLink: 'https://partners.stage.adobe.com/channelpartnerassets/assets/apc-assets/restricted/apc-1/logo_all_levels_allregions.pptx',
+        downloadButtonLink: '/channelpartnerassets/prp-assets/restricted/prp-267-release-stage/region-tag1.pdf',
       },
     },
   ],
