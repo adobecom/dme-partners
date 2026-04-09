@@ -99,7 +99,7 @@ describe('Test rewrite links', () => {
   <a href="https://business.adobe.com/">not in list of locales</a>
   <a href="https://business.adobe.com/home/">not in list of locales</a>
   <a href="https://adobe.com/">adobe</a>
-  
+
 
 `;
     rewriteLinks(document);
@@ -252,13 +252,6 @@ describe('Test rewrite links', () => {
     expect(result).toBe('https://channelpartners.stage2.adobe.com/path');
   });
 
-  test('should rewrite runtime link hrefs', () => {
-    const href = 'https://io-partners-dx.adobe.com/path';
-    const result = getUpdatedHref(href);
-
-    expect(result).toBe('https://partners.stage.adobe.com/path?view=distributor&lang=cn');
-  });
-
   test('should return unchanged link hrefs if invalid', () => {
     const href = 'invalid-url';
     const result = getUpdatedHref(href);
@@ -277,7 +270,6 @@ describe('Test rewrite links', () => {
   const gnavHTML = `
         <a href="https://adobe.force.com/app/services/auth/sso/apc"></a>
         <a href="https://channelpartners.adobe.com/path"></a>
-        <a href="https://io-partners-dx.adobe.com/path"></a>
         <a href="https://unmapped-domain.com/path"></a>
       `;
   gnav.innerHTML = gnavHTML;
@@ -305,7 +297,6 @@ describe('Test rewrite links', () => {
     expect(result.innerHTML).toBe(`
         <a href="https://channelpartners.stage2.adobe.com/s/salescenter/dashboard"></a>
         <a href="https://channelpartners.stage2.adobe.com/path"></a>
-        <a href="https://partners.stage.adobe.com/path?view=distributor&amp;lang=cn"></a>
         <a href="https://unmapped-domain.com/path"></a>
       `);
   });

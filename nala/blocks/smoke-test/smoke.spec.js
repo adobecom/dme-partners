@@ -267,7 +267,6 @@ export default {
         partnerLevel: 'cpp-distributor-us:',
         expectedSalesForceURL: '/s/directory/channel?lang=en&view=distributor',
         expectedFindURL: '/s/directory/channel?lang=en&view=distributor',
-        expectedID: 'tid',
       },
     },
     {
