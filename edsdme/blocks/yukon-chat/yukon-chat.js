@@ -238,15 +238,21 @@ function createSourcesAccordion(sourceObj, localizedText) {
     const prefix = document.createElement('span');
     prefix.className = 'yc-source-citation-refs';
     prefix.textContent = `${citeLabel} `;
-
-    const a = document.createElement('a');
-    a.href = item.document_url;
-    a.textContent = item.title || item.document_name || item.document_url;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-
     li.appendChild(prefix);
-    li.appendChild(a);
+
+    if (item.document_url) {
+      const a = document.createElement('a');
+      a.href = item.document_url; // todo handle emptu url
+      a.textContent = item.title || item.document_name || item.document_url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      li.appendChild(a);
+    } else {
+      const p = document.createElement('span');
+      p.textContent = item.title;
+      li.appendChild(p);
+    }
+
     ol.appendChild(li);
   });
 
@@ -274,23 +280,22 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
   const loadingElement = showLoadingMessage(chatHistory, scrollToBottomBtn);
   let level = 'partner-level-public';
   let region = 'region-worldwide';
-  // const specializations = '';
+  let specializations = 'specializations-none';
   // TODO: the partner data must be sent to the servlet and parsed there
   if (partnerIsSignedIn()) {
     try {
       const profileData = getPartnerCookieObject(getCurrentProgramType());
       level = `partner-level-${profileData.level.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '')}`;
       region = `region-${profileData.permissionRegion.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '')}`;
-      // For now, we ignore specializations in Yukon chat
-      // specializations = `specializations-${profileData.permissionSpecializations.toLowerCase()
-      // .replace(/\s+/g, '').replace(/[()]/g, '')}`;
+      specializations = `specializations-${profileData.permissionSpecializations.toLowerCase()
+        .replace(/\s+/g, '').replace(/[()]/g, '')}`;
     } catch (error) {
       // eslint-disable-next-line no-console
       console.info('Failed to parse profileData from cookie:', error);
     }
   }
   try {
-    const tags = [level, region].filter((tag) => tag && tag !== '').join(',');
+    const tags = [level, region, specializations].filter((tag) => tag && tag !== '').join(','); // todo: we need to send specializations - can be removed once this is handled in Gravity
 
     const origin = prodHosts.includes(window.location.host) ? 'https://partners.adobe.com' : 'https://partners.stage.adobe.com';
     const url = new URL(`${origin}/services/gravity/yukonAIAssistant`);
