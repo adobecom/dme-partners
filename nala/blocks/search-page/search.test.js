@@ -370,8 +370,12 @@ test.describe('Search Page validation', () => {
         searchTest.openPreviewPages.click(),
       ]);
 
-      const newTabUrl = newTab.url();
-      expect(newTabUrl).toContain(data.expectedUrl);
+      // Wait for the popup to navigate; toHaveURL() only accepts string/RegExp, not a predicate.
+      await newTab.waitForURL(
+        (url) => url.href.includes(data.expectedUrl),
+        { timeout: 30000 },
+      );
+      expect(newTab.url()).toContain(data.expectedUrl);
 
       await newTab.close();
     });
