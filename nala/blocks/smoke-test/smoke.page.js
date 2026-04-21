@@ -384,9 +384,9 @@ export default class SmokeTest {
   }
 
   async selectDateSort(value) {
-    await this.sortButton.click(); 
+    await this.sortButton.click();
     const option = this.page.locator(`button.sort-item[value="${value}"]`);
-    await option.waitFor({ state: 'visible' }); 
+    await option.waitFor({ state: 'visible' });
     await option.click();
   }
 
@@ -395,7 +395,7 @@ export default class SmokeTest {
   }
 
   async getCollectionLink(page) {
-    const links = page.locator('a.link-wrapper').nth(0);
+    const links = this.page.locator('a.link-wrapper').nth(0);
     const href = await links.getAttribute('href');
     return href;
   }
