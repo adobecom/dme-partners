@@ -47,6 +47,12 @@ export default class SmokeTest {
     this.firstCardMetadata = page.locator('.card-metadata').first().locator('div[data-valign="middle"]').nth(1);
     this.apcLogo = page.getByRole('link', { name: 'Adobe Partner Connection', exact: true });
     this.assetTabs = page.getByLabel('Assets');
+    this.numberOfCollections = page.locator('.partner-cards-cards-results');
+    this.cards = page.locator('.card-wrapper');
+    this.sortButton = page.locator('.sort-btn');
+    this.fisrtFilter = page.locator('.filter-header').nth(0);
+    this.secondFilter = page.locator('.filter-header').nth(1);
+    this.clearAll = page.getByLabel('Clear all');
   }
 
   async smokeSignIn(page, baseURL, partnerLevel) {
@@ -363,5 +369,34 @@ export default class SmokeTest {
 
   async getRegionOption(link) {
     return this.page.locator(`.region-nav a[href*="${link}"]`);
+  }
+
+  async getNumberOfCollectionsCount() {
+    const numberOfCollections = await this.numberOfCollections.textContent();
+    return parseInt(numberOfCollections.match(/\d+/)[0], 10);
+  }
+
+  async getCardTitle() {
+    const cardTitle = await this.cards.nth(0)
+      .locator('.card-title')
+      .textContent();
+    return cardTitle.trim();
+  }
+
+  async selectDateSort(value) {
+    await this.sortButton.click(); 
+    const option = this.page.locator(`button.sort-item[value="${value}"]`);
+    await option.waitFor({ state: 'visible' }); 
+    await option.click();
+  }
+
+  filterCheckbox(role, name) {
+    return this.page.getByRole(role, { name, exact: true });
+  }
+
+  async getCollectionLink(page) {
+    const links = page.locator('a.link-wrapper').nth(0);
+    const href = await links.getAttribute('href');
+    return href;
   }
 }
