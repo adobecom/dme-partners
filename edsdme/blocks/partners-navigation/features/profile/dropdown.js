@@ -38,12 +38,14 @@ const decorateProfileLink = (service, path = '') => {
 
   let serviceUrl;
   const { env } = getConfig();
+
   if (!env?.[service]) {
     serviceUrl = defaultServiceUrls[service];
   } else {
     serviceUrl = new URL(defaultServiceUrls[service]);
     serviceUrl.hostname = env[service];
   }
+
   return `${serviceUrl}${path}`;
 };
 
@@ -79,7 +81,7 @@ class ProfileDropdown {
     this.sections = sections;
     this.openOnInit = openOnInit;
     this.localMenu = rawElem.querySelector('h5')?.parentElement;
-    logErrorFor(this.init.bind(this), 'ProfileDropdown.init()', 'gnav-profile', 'error');
+    logErrorFor(this.init.bind(this), 'ProfileDropdown.init()', 'gnav-profile', 'e');
   }
 
   async init() {
@@ -152,9 +154,9 @@ class ProfileDropdown {
             <p data-cs-mask class="feds-profile-name">${this.profileData.displayName}</p>
             <p data-cs-mask class="feds-profile-email">${this.decorateEmail(this.profileData.email)}</p>
             <a  href="${decorateProfileLinkBasedOnAccountStatus('account', `?lang=${lang}`)}"
-                target="_blank" 
+                target="_blank"
                 daa-ll="${this.placeholders.viewAccount}"
-                aria-label="${isUserActiveMember ? this.placeholders.editProfile : this.placeholders.viewAccount}" 
+                aria-label="${isUserActiveMember ? this.placeholders.editProfile : this.placeholders.viewAccount}"
                 class="feds-profile-account">
                     ${isUserActiveMember ? this.placeholders.editProfile : this.placeholders.viewAccount}
             </a>

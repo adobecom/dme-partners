@@ -1,14 +1,25 @@
 // MWPW-159021
 /* eslint-disable */
+
 import { loadBlock, decorateAutoBlock } from '../../../../utils/utils.js';
 import { toFragment, lanaLog } from '../../utilities/utilities.js';
-import { processTrackingLabels } from '../../../../martech/attributes.js';
+
+// MWPW-192601 START
+import { getLibs } from '../../../../scripts/utils.js';
+
+const miloLibs = getLibs();
+const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
+// MWPW-192601 END
 
 export default async function decorateAside({ headerElem, fedsPromoWrapper, promoPath } = {}) {
   const onError = () => {
     fedsPromoWrapper?.remove();
     headerElem?.classList.remove('has-promo');
-    lanaLog({ message: 'Gnav Promo fragment not replaced, potential CLS' });
+    lanaLog({
+      message: 'Gnav Promo fragment not replaced, potential CLS',
+      tags: 'aside',
+      severity: 'warning',
+    });
     return '';
   };
 
