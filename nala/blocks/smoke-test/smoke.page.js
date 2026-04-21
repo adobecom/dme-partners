@@ -394,7 +394,7 @@ export default class SmokeTest {
     return this.page.getByRole(role, { name, exact: true });
   }
 
-  async getCollectionLink(page) {
+  async getCollectionLink() {
     const links = this.page.locator('a.link-wrapper').nth(0);
     const href = await links.getAttribute('href');
     return href;
