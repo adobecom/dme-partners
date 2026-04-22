@@ -43,7 +43,6 @@ module.exports = {
   overrides: [
     {
       files: ['test/**/*.js', 'nala/**'],
-      rules: { 
       rules: {
         'no-console': 'off',
         'max-len': 'off',
