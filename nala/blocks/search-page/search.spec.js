@@ -268,5 +268,15 @@ export default {
         searchKeyWord6: 'Floccinaucinihilipilification',
       },
     },
+    {
+      tcid: '16',
+      name: '@predefined-filter-case-search-page',
+      path: '/na/channelpartners/drafts/automation/regression/search-page?filters=yes&content-type=plans-and-pricing',
+      tags: '@dme-search @regression @circleCi',
+      data: {
+        partnerLevel: 'cpp-distributor-us:',
+        assetTitle: 'MAPC stage Tag with -and-',
+      }
+    },
   ],
 };

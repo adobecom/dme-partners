@@ -24,6 +24,7 @@ export default class SearchTest {
     this.searchCard = page.locator('.search-card');
     this.showMoreLanguage = page.getByRole('link', { name: 'Show more' });
     this.noResultsTitle = page.locator('.no-results-title');
+    this.appleydFilter = page.getByLabel('plans & pricing');
   }
 
   async cardTitle(text) {
