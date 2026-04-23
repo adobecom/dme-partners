@@ -276,7 +276,7 @@ export default {
       data: {
         partnerLevel: 'cpp-distributor-us:',
         assetTitle: 'MAPC stage Tag with -and-',
-      }
+      },
     },
   ],
 };
