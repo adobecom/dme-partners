@@ -307,7 +307,7 @@ export default {
       tcid: '25',
       name: '@smoke-test-feedback-mechanism-restricted-page-validation',
       path: '/channelpartners/',
-      tags: '@da-dx-smoke-test',
+      tags: '@dme-smoke-test',
       data: {
         partnerLevel: 'cpp-distributor-us:',
         feedbackTitle: 'Rate this page',
