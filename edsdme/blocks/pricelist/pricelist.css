@@ -50,8 +50,11 @@ pricelist-block .table-container {
 
 pricelist-block tr td:nth-child(5),
 pricelist-block tr th:nth-child(5) {
+  width: 50%;
+}
+
+pricelist-block tr th:nth-child(5) {
     text-align: right;
-    width: 50%;
 }
 
 pricelist-block tr td:nth-child(1),
@@ -101,8 +104,34 @@ pricelist-block .partner-cards-content {
     width: 100%;
 }
 
+pricelist-block .download-btn-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+pricelist-block .download-btn {
+  display: flex;
+  align-items: center;
+  color: inherit;
+  border: 1px solid #b1b1b1;
+  border-radius: 4px;
+  padding: 6px 10px;
+  background: #fff;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+pricelist-block .download-btn:hover {
+  border-color: #909090;
+  background: #e6e6e6;
+}
+
 pricelist-block sp-icon-download {
-    color: #747474;
+  color: #747474;
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  margin-right: 8px;
 }
 
 pricelist-block .partner-cards-header .partner-cards-sort-wrapper .filters-btn-mobile {
