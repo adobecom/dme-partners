@@ -47,6 +47,11 @@ export default class SmokeTest {
     this.firstCardMetadata = page.locator('.card-metadata').first().locator('div[data-valign="middle"]').nth(1);
     this.apcLogo = page.getByRole('link', { name: 'Adobe Partner Connection', exact: true });
     this.assetTabs = page.getByLabel('Assets');
+    this.feedbackButton = page.locator('.feedback-mechanism');
+    this.feedbackTitle = page.locator('.feedback-title');
+    this.feedbackTextArea = page.locator('.feedback-textarea');
+    this.feedbackSendButton = page.locator('.feedback-dialog-button.cta');
+    this.feedBackStars3 = page.locator('sp-action-button[data-rating="3"]');
   }
 
   async smokeSignIn(page, baseURL, partnerLevel) {
