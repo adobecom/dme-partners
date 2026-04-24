@@ -57,7 +57,7 @@ function removeCitations(text) {
     return lines.slice(0, cutoffIndex).join('\n').trim();
   }
 
-  return lines;
+  return lines.join('\n');
 }
 
 export async function parseMarkdown(markdown) {
