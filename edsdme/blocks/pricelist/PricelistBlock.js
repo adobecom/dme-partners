@@ -134,18 +134,17 @@ export default class Pricelist extends PartnerCards {
                 ${this.getArbitraryValue(rowData.arbitrary, priceListKeyWords.MONTH)}
             </td>
             <td headers="download">
-                <sp-theme theme="spectrum" color="light" scale="medium">
-                    <sp-action-button
-                            size="m"
-                            href="${rowData.contentArea?.url}"
-                            download="${rowData.contentArea?.filename}"
-                            aria-label="${this.blockData.localizedText['{{download}}']}"
-                            @click=${(e) => { if (e.isTrusted) { e.preventDefault(); } }}
-                            daa-ll="${processTrackingLabels(this.blockData.localizedText['{{download}}'], getConfig(), 30)}">
-                        <sp-icon-download slot="icon"></sp-icon-download>
-                        ${this.blockData.localizedText['{{download}}']}
-                    </sp-action-button>
-                </sp-theme>
+              <div class="download-btn-wrapper">
+                <a class="download-btn"
+                   href="${rowData.contentArea?.url}"
+                   download="${rowData.contentArea?.filename}"
+                   aria-label="${this.blockData.localizedText['{{download}}']}"
+                   daa-ll="${processTrackingLabels(this.blockData.localizedText['{{download}}'], getConfig(), 30)}"
+                >
+                  <sp-icon-download slot="icon"></sp-icon-download>
+                  ${this.blockData.localizedText['{{download}}']}
+                </a>
+              </div>
             </td>
         </tr>`;
   }
