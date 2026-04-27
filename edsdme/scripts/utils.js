@@ -38,6 +38,7 @@ export const [setLibs, getLibs] = (() => {
         }
         const partnerBranch = hostname.startsWith('main') ? 'main' : 'stage';
         const branch = new URLSearchParams(search).get('milolibs') || partnerBranch;
+        if (!/^[a-zA-Z0-9_-]+$/.test(branch)) throw new Error('Invalid branch name.');
         if (branch === 'local') {
           return 'http://localhost:6456/libs';
         }
