@@ -701,9 +701,11 @@ test.describe('Smoke Tests', () => {
       await smokeTest.cards.nth(0).click();
       await page.waitForURL('**', { timeout: 30000 });
       await expect(page.url()).toContain(hrefLink);
+    });
+  });
 
-  test(`${features[24].name},${features[24].tags}`, async ({ page, baseURL }) => {
-    const { data, path } = features[24];
+  test(`${features[25].name},${features[25].tags}`, async ({ page, baseURL }) => {
+    const { data, path } = features[25];
 
     await test.step('Log in', async () => {
       await page.goto(`${baseURL}${path}`);
