@@ -601,6 +601,60 @@ describe('yukon-chat block', () => {
       });
     });
 
+    it('should remove citations and everything after them from AI responses', async () => {
+      const encoder = new TextEncoder();
+      const responseWithCitations = 'Here is the answer.\\n\\n### Citations:\\n* [1] https://example.com\\n* [2] https://adobe.com';
+      const chunk = encoder.encode(`[{"generated_text":"${responseWithCitations}"}]\n`);
+
+      fetchStub.callsFake(async (url) => {
+        const urlStr = typeof url === 'string' ? url : url.toString();
+        if (urlStr.includes('placeholders.json')) {
+          return {
+            ok: true,
+            json: async () => ({
+              data: [
+                { key: 'send-message', value: 'Send Message' },
+                { key: 'open-chat', value: 'Open Chat' },
+              ],
+            }),
+          };
+        }
+        return {
+          ok: true,
+          status: 200,
+          body: new ReadableStream({
+            start(controller) {
+              controller.enqueue(chunk);
+              controller.close();
+            },
+          }),
+        };
+      });
+
+      const block = document.querySelector('.yukon-chat');
+      await init(block);
+
+      const textarea = document.querySelector('#yc-input-field');
+      const sendButton = document.querySelector('.yc-input-field-button');
+
+      textarea.value = 'What is the answer?';
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+
+      sendButton.click();
+
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 100));
+
+      const modal = document.querySelector('#yukon-chat-modal');
+      expect(modal).to.exist;
+
+      const yukonMessage = modal.querySelector('.yukon-message .message-text');
+      expect(yukonMessage).to.exist;
+      expect(yukonMessage.textContent).to.include('Here is the answer.');
+      expect(yukonMessage.textContent).to.not.include('Citations:');
+      expect(yukonMessage.textContent).to.not.include('https://example.com');
+    });
+
     it('should render a sources accordion when API provides source data', async () => {
       const encoder = new TextEncoder();
       const mockChunk = JSON.stringify([{
