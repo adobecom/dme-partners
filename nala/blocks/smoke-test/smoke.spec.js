@@ -318,7 +318,7 @@ export default {
       },
     },
     {
-      tcid: '25',
+      tcid: '26',
       name: '@smoke-test-feedback-mechanism-restricted-page-validation',
       path: '/channelpartners/?georouting=off&martech=off',
       tags: '@dme-smoke-test',

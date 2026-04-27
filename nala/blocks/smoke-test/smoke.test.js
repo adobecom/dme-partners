@@ -703,7 +703,7 @@ test.describe('Smoke Tests', () => {
       await expect(page.url()).toContain(hrefLink);
     });
   });
-
+  // @smoke-test-feedback-mechanism-restricted-page-validation
   test(`${features[25].name},${features[25].tags}`, async ({ page, baseURL }) => {
     const { data, path } = features[25];
 
