@@ -53,12 +53,12 @@ export default {
       path: 'https://partners.stage.adobe.com/channelpartners/?georouting=off&martech=off',
       tags: '@dme-accessing-assets @regression @login @circleCi',
       data: {
-        partnerLevel: 'cpp-china-registered:',
+        partnerLevel: 'cpp-platinum-china:',
         signInButtonText: 'Sign In',
         assetURL: 'https://partners.stage.adobe.com/channelpartnerassets/assets/restricted/restricted_1/MAPC-stage-government.mp4',
         forbiddenAsset: 'https://partners.stage.adobe.com/channelpartnerassets/assets/restricted/restricted_1/MAPC-education.xlsx',
         expectedToSeeInURL: 'https://partners.stage.adobe.com/channelpartnerassets/apc-assets/restricted/restricted_1/MAPC-education.xlsx',
-        httpStatusCode: 200,
+        httpStatusCode: 301,
       },
     },
     {

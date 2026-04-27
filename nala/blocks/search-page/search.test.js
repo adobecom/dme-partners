@@ -84,17 +84,17 @@ test.describe('Search Page validation', () => {
       page.on('response', (response) => {
         if (response.url().includes(`${data.assetURL}`) && response.status() === data.httpStatusCode) {
           resolve(true);
-        }
+      }
       });
     });
 
-    await test.step('Open pdf preview', async () => {
+      await test.step('Open pdf preview', async () => {
       const hrefLink = await searchTest.openPreview.getAttribute('href');
 
-      await page.evaluate((navigationUrl) => {
-        window.location.href = navigationUrl;
-      }, hrefLink);
-      await page.waitForLoadState('load');
+        await page.evaluate((navigationUrl) => {
+          window.location.href = navigationUrl;
+        }, hrefLink);
+        await page.waitForLoadState('load');
     });
     const resourceSuccessfullyLoaded = await promise;
 

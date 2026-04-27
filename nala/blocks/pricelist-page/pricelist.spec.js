@@ -40,6 +40,7 @@ export default {
         signInButtonInternationalText: 'Sign In',
         keyword: 'Korea',
         asiaPacificKorea: 'Asia Pacific,Korea',
+        asiaChina: 'China',
         tlp5CommercialCheckBox: 'TLP 5 Commercial',
         europeEastCheckBox: 'Europe East',
         expectedURL: '/na/channelpartners/#',
