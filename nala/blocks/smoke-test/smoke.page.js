@@ -53,6 +53,11 @@ export default class SmokeTest {
     this.fisrtFilter = page.locator('.filter-header').nth(0);
     this.secondFilter = page.locator('.filter-header').nth(1);
     this.clearAll = page.getByLabel('Clear all');
+    this.feedbackButton = page.locator('.feedback-mechanism');
+    this.feedbackTitle = page.locator('.feedback-title');
+    this.feedbackTextArea = page.locator('.feedback-textarea');
+    this.feedbackSendButton = page.locator('.feedback-dialog-button.cta');
+    this.feedBackStars3 = page.locator('sp-action-button[data-rating="3"]');
   }
 
   async smokeSignIn(page, baseURL, partnerLevel) {

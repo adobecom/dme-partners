@@ -315,6 +315,13 @@ export default {
         checkBoxRole: 'checkbox',
         checkBox: 'Adobe Sign',
         checkBoxOffers: 'Offers',
+      name: '@smoke-test-feedback-mechanism-restricted-page-validation',
+      path: '/channelpartners/',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-distributor-us:',
+        feedbackTitle: 'Rate this page',
+        feedbackTextArea: 'Automation Test Keywords',
       },
     },
   ],

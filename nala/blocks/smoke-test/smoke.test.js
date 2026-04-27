@@ -701,6 +701,38 @@ test.describe('Smoke Tests', () => {
       await smokeTest.cards.nth(0).click();
       await page.waitForURL('**', { timeout: 30000 });
       await expect(page.url()).toContain(hrefLink);
+
+  test(`${features[24].name},${features[24].tags}`, async ({ page, baseURL }) => {
+    const { data, path } = features[24];
+
+    await test.step('Log in', async () => {
+      await page.goto(`${baseURL}${path}`);
+      await smokeTest.signInButton.waitFor({ state: 'visible', timeout: 30000 });
+      await smokeTest.signInButton.click();
+      await smokeTest.smokeSignIn(page, baseURL, data.partnerLevel);
+      await smokeTest.profileIcon.waitFor({ state: 'visible', timeout: 30000 });
+    });
+    await test.step('Check Feedback Dialog', async () => {
+      await smokeTest.feedbackButton.waitFor({ state: 'visible', timeout: 30000 });
+      expect(smokeTest.feedbackButton).toBeVisible();
+      expect(smokeTest.feedbackButton).toBeEnabled();
+      await smokeTest.feedbackButton.click();
+
+      await smokeTest.feedbackTitle.waitFor({ state: 'visible', timeout: 30000 });
+      await expect(smokeTest.feedbackTitle).toBeVisible();
+      await expect(smokeTest.feedbackTitle).toHaveText(data.feedbackTitle);
+
+      await smokeTest.feedbackTextArea.waitFor({ state: 'visible', timeout: 30000 });
+
+      await smokeTest.feedbackTextArea.fill(data.feedbackTextArea);
+      await smokeTest.feedbackTextArea.press('Enter');
+
+      await expect(smokeTest.feedbackSendButton).toBeVisible();
+      await expect(smokeTest.feedbackSendButton).toBeDisabled();
+
+      await smokeTest.feedBackStars3.waitFor({ state: 'visible', timeout: 30000 });
+      await smokeTest.feedBackStars3.click();
+      await expect(smokeTest.feedbackSendButton).toBeEnabled();
     });
   });
 });
