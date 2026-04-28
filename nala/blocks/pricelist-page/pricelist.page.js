@@ -6,6 +6,7 @@ export default class PricelistsTest {
     this.buyingProgramTypesFilter = page.getByLabel('Buying program types');
     this.clearAllFilters = page.locator('.sidebar-clear-btn');
     this.regionFilter = page.locator('[aria-label="Region"].filter-header');
+    this.koreRegionFilter = page.locator('[aria-label="지역"].filter-header');
     this.profile = page.locator('.feds-profile');
     this.signOut = page.locator('.feds-profile-action');
     this.firstRegionCell = page.locator('td[headers="region"]').first();

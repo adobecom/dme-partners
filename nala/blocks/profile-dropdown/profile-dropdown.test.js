@@ -204,7 +204,7 @@ test.describe('Validate profile dropdown', () => {
     });
 
     await test.step('Logout', async () => {
-      await profileDropdownPage.getLogoutByText('注销').click();
+      await profileDropdownPage.getLogoutByText('sign out').click();
       const pages = await page.context().pages();
       await page.waitForLoadState();
       await expect(pages[0].url())

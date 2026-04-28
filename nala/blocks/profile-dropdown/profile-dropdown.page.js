@@ -3,7 +3,7 @@ import { expect } from '@playwright/test';
 export default class ProfileDropdownPage {
   constructor(page) {
     this.page = page;
-    this.signInButton = page.locator('button[daa-ll="Sign In"].feds-signIn');
+    this.signInButton = page.locator('.feds-signIn');
     this.profileIconButton = page.locator('.feds-profile-button');
     this.profileImage = page.locator('div#feds-profile-menu img[alt="profile avatar"]');
     this.profileName = page.locator('.feds-profile-name');
@@ -17,7 +17,7 @@ export default class ProfileDropdownPage {
   }
 
   async toggleProfileDropdown() {
-    await this.page.locator('.feds-profile-button').click();
+    await this.profileIconButton.click();
   }
 
   getRenewNotification(type) {

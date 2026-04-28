@@ -278,7 +278,7 @@ test.describe('Pricelist Page Validation', () => {
         await page.waitForLoadState('networkidle');
         await expect(pricelistPage.firstRegionCell).toBeVisible({ timeout: 30000 });
         await expect(pricelistPage.firstRegionCell).not.toHaveText('', { timeout: 30000 });
-        await pricelistPage.filterPricelists(pricelistPage.regionFilter, data.checkBox, true);
+        await pricelistPage.filterPricelists(pricelistPage.koreRegionFilter, data.checkBox, true);
         await expect(pricelistPage.firstRegionCell).toContainText(data.text);
       });
     });
