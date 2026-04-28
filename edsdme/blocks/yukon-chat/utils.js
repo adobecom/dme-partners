@@ -34,8 +34,12 @@ async function initMarkdownIt() {
 }
 
 function removeCitations(text) {
+  // Remove ^ from citations [^1], [^2]
+  let cleaned = text.replace(/\[\^(\d+)\]/g, '[$1]');
+  cleaned = cleaned.replace(/\(\d+\)/g, '');
+
   // Remove Citations/References section and everything after
-  const lines = text.split('\n');
+  const lines = cleaned.split('\n');
   let cutoffIndex = -1;
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < lines.length; i++) {
@@ -57,7 +61,7 @@ function removeCitations(text) {
     return lines.slice(0, cutoffIndex).join('\n').trim();
   }
 
-  return lines.join('\n');
+  return cleaned;
 }
 
 export async function parseMarkdown(markdown) {
