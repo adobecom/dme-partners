@@ -169,7 +169,7 @@ test.describe('Validate profile dropdown', () => {
       await profileDropdownPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
       await profileDropdownPage.toggleProfileDropdown();
 
-      await page.click('body');
+      await profileDropdownPage.clickOnBodyOutside();
       await expect(profileDropdownPage.profileMenu).toBeHidden();
 
       await profileDropdownPage.toggleProfileDropdown();

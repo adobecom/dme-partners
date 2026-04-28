@@ -36,6 +36,13 @@ export default class ProfileDropdownPage {
     return this.page.locator(`a:has-text("${text}")`);
   }
 
+  async clickOnBodyOutside() {
+    const vp = this.page.viewportSize();
+    const width = vp?.width ?? (await this.page.evaluate(() => window.innerWidth));
+    const height = vp?.height ?? (await this.page.evaluate(() => window.innerHeight));
+    await this.page.mouse.click(width / 2, height * 0.8);
+  }
+
   async verifyProfileDropdownAfterLogin(data) {
     await this.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
     await this.toggleProfileDropdown();

@@ -6,7 +6,6 @@ export default class PricelistsTest {
     this.buyingProgramTypesFilter = page.getByLabel('Buying program types');
     this.clearAllFilters = page.locator('.sidebar-clear-btn');
     this.regionFilter = page.locator('[aria-label="Region"].filter-header');
-    this.koreRegionFilter = page.locator('[aria-label="지역"].filter-header');
     this.profile = page.locator('.feds-profile');
     this.signOut = page.locator('.feds-profile-action');
     this.firstRegionCell = page.locator('td[headers="region"]').first();
@@ -15,6 +14,10 @@ export default class PricelistsTest {
     this.xButton = page.getByLabel('Reset');
     this.cells = page.locator('td[headers="type"]');
     this.priceListGNav = page.locator('a.feds-navLink[href*="/channelpartners/home/pricelists/"]');
+  }
+
+  filterHeaderByAriaLabel(label) {
+    return this.page.locator(`[aria-label="${label}"].filter-header`);
   }
 
   async checkBox(checkBox, exact) {

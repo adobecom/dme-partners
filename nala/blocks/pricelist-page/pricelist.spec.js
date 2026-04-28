@@ -113,6 +113,7 @@ export default {
         partnerLevel: 'cpp-distributor-india:',
         text: 'Asia Pacific,Korea',
         checkBox: 'Asia Pacific',
+        regionFilter: 'Region',
       },
     },
     {
@@ -136,6 +137,7 @@ export default {
         partnerLevel: 'cpp-latam-distributor:',
         checkBox: 'Latin America (NA based)',
         text: 'Latin America (NA based)',
+        regionFilter: 'Region',
       },
     },
     {
@@ -147,6 +149,7 @@ export default {
         partnerLevel: 'cpp-distributor-us:',
         checkBox: 'North America',
         text: 'North America',
+        regionFilter: 'Region',
       },
     },
   ],
