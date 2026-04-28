@@ -348,9 +348,12 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
           if (generatedText) {
             accumulatedMarkdown += generatedText;
             if (loadingElement && !messageAdded) {
+              const currentScrollTop = chatHistory.scrollTop;
               removeLoadingMessage(loadingElement);
               chatHistory.appendChild(chatMessage);
               messageAdded = true;
+              chatHistory.scrollTop = currentScrollTop;
+              checkScrollPosition(chatHistory, scrollToBottomBtn);
             }
             // eslint-disable-next-line no-await-in-loop
             messageText.innerHTML = await parseMarkdown(accumulatedMarkdown);
@@ -365,11 +368,11 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
       }
     }
     if (messageAdded && Object.keys(accumulatedSources).length > 0) {
+      const currentScrollTop = chatHistory.scrollTop;
       const accordion = createSourcesAccordion(accumulatedSources, localizedText);
       messageContent.appendChild(accordion);
-      if (chatHistory) {
-        chatHistory.scrollTop = chatHistory.scrollHeight;
-      }
+      chatHistory.scrollTop = currentScrollTop;
+      checkScrollPosition(chatHistory, scrollToBottomBtn);
     }
     textArea.removeAttribute('disabled');
     inputFieldButton.removeAttribute('disabled');
