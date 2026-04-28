@@ -695,7 +695,7 @@ test.describe('Smoke Tests', () => {
       // check number after filter
       const numberOfCollectionsAfterFilterOffers = await smokeTest.getNumberOfCollectionsCount();
       expect(numberOfCollectionsAfterFilterOffers).toBeGreaterThan(0);
-      
+
       // get href link
       const hrefLink = await smokeTest.getCollectionLink(page);
       await smokeTest.cards.nth(0).click();
