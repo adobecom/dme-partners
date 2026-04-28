@@ -112,6 +112,7 @@ export default {
       data: {
         partnerLevel: 'cpp-distributor-india:',
         text: 'Asia Pacific,Korea',
+        checkBox: 'Asia Pacific',
       },
     },
     {
@@ -122,6 +123,8 @@ export default {
       data: {
         partnerLevel: 'cpp-kr-distributor:',
         text: 'Asia Pacific,Korea',
+        checkBox: 'Korea',
+        regionFilter: '지역',
       },
     },
     {
