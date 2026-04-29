@@ -1,0 +1,301 @@
+{
+  "cards": [
+    {
+      "id": "edbc498a-5d28-5287-a9f5-f681ca3e6511",
+      "eid": "edbc498a-5d28-5287-a9f5-f681ca3e6511",
+      "showCard": {
+        "from": "",
+        "until": ""
+      },
+      "styles": {
+        "typeOverride": "default",
+        "backgroundImage": "https://test.com/media_1d11215b21b90c357777d6fc89f63038a2c205fe0.png",
+        "backgroundAltText": "...",
+        "mnemonic": "",
+        "icon": "https://www.adobe.com/content/dam/cc/images/shared/icons/9-nothing.svg",
+        "iconAlt": ""
+      },
+      "overlays": {
+        "banner": {
+          "backgroundColor": "#EAEAEA",
+          "fontColor": "#323232",
+          "description": "",
+          "icon": ""
+        },
+        "logo": {
+          "src": ""
+        },
+        "label": {
+          "description": ""
+        },
+        "videoButton": {
+          "url": ""
+        }
+      },
+      "tags": [
+        {
+          "id": "caas:adobe-partners/collections/marketing-resources"
+        },
+        {
+          "id": "caas:adobe-partners/cpp"
+        },
+        {
+          "id": "caas:adobe-partners/cpp/partner-level/public"
+        }
+      ],
+      "contentArea": {
+        "detailText": "Language(s): EN",
+        "title": "Marketing Resources",
+        "url": "https://test.com",
+        "description": "Description",
+        "dateDetailText": {
+          "type": "date-interval",
+          "startTime": "",
+          "endTime": ""
+        }
+      },
+      "footer": [
+        {
+          "divider": false,
+          "left": [
+            {
+              "type": "bookmark",
+              "saveCardIcon": "",
+              "unsaveCardIcon": "",
+              "cardSaveText": "",
+              "unsaveCardText": ""
+            }
+          ],
+          "center": [],
+          "right": [
+            {
+              "type": "button",
+              "style": "",
+              "text": "Read More",
+              "href": "https://adobe.com"
+            }
+          ],
+          "altCta": []
+        }
+      ],
+      "search": {
+
+      },
+      "cardDate": "2026-02-23T10:46:50.000Z",
+      "createdDate": "2026-02-23T10:46:50.000Z",
+      "modifiedDate": "2026-02-23T10:46:50.000Z",
+      "startDate": "",
+      "endDate": "",
+      "ctaLink": "https://adobe.com",
+      "arbitrary": [],
+      "overlayLink": "https://adobe.com",
+      "origin": "dme-partners",
+      "lang": "en",
+      "country": "us"
+    },
+    {
+      "id": "e55ab337-0616-5e60-8b0d-94661ecc8eaa",
+      "eid": "e55ab337-0616-5e60-8b0d-94661ecc8eaa",
+      "showCard": {
+        "from": "",
+        "until": ""
+      },
+      "styles": {
+        "typeOverride": "default",
+        "backgroundImage": "https://test.com/media_1d11215b21b90c357777d6fc89f63038a2c205fe0.png",
+        "backgroundAltText": "...",
+        "mnemonic": "",
+        "icon": "https://www.adobe.com/content/dam/cc/images/shared/icons/9-nothing.svg",
+        "iconAlt": ""
+      },
+      "overlays": {
+        "banner": {
+          "backgroundColor": "#EAEAEA",
+          "fontColor": "#323232",
+          "description": "",
+          "icon": ""
+        },
+        "logo": {
+          "src": ""
+        },
+        "label": {
+          "description": ""
+        },
+        "videoButton": {
+          "url": ""
+        }
+      },
+      "tags": [
+        {
+          "id": "caas:adobe-partners/collections/marketing-resources"
+        },
+        {
+          "id": "caas:adobe-partners/cpp"
+        },
+        {
+          "id": "caas:adobe-partners/cpp/partner-level/public"
+        }
+      ],
+      "contentArea": {
+        "detailText": "Language(s): EN",
+        "title": "Marketing Resources test",
+        "url": "https://adobe.com",
+        "description": "Description test",
+        "dateDetailText": {
+          "type": "date-interval",
+          "startTime": "",
+          "endTime": ""
+        }
+      },
+      "footer": [
+        {
+          "divider": false,
+          "left": [
+            {
+              "type": "bookmark",
+              "saveCardIcon": "",
+              "unsaveCardIcon": "",
+              "cardSaveText": "",
+              "unsaveCardText": ""
+            }
+          ],
+          "center": [],
+          "right": [
+            {
+              "type": "button",
+              "style": "",
+              "text": "Read More",
+              "href": "https://adobe.com"
+            }
+          ],
+          "altCta": []
+        }
+      ],
+      "search": {
+        "product": "adobe-sign",
+        "topic": "onboarding"
+      },
+      "cardDate": "2026-02-23T12:11:50.000Z",
+      "createdDate": "2026-02-23T12:11:50.000Z",
+      "modifiedDate": "2026-02-23T12:11:50.000Z",
+      "startDate": "",
+      "endDate": "",
+      "ctaLink": "https://adobe.com",
+      "arbitrary": [
+        {
+          "product": "adobe-acrobat"
+        },
+        {
+          "product": "adobe-sign"
+        },
+        {
+          "topic": "onboarding"
+        }
+      ],
+      "overlayLink": "https://adobe.com",
+      "origin": "dme-partners",
+      "lang": "en",
+      "country": "us"
+    },
+    {
+      "id": "81f45e80-9009-5942-acc6-a6938fc38691",
+      "eid": "81f45e80-9009-5942-acc6-a6938fc38691",
+      "showCard": {
+        "from": "",
+        "until": ""
+      },
+      "styles": {
+        "typeOverride": "default",
+        "backgroundImage": "https://test.com/media_1d11215b21b90c357777d6fc89f63038a2c205fe0.png",
+        "backgroundAltText": "...",
+        "mnemonic": "",
+        "icon": "https://www.adobe.com/content/dam/cc/images/shared/icons/9-nothing.svg",
+        "iconAlt": ""
+      },
+      "overlays": {
+        "banner": {
+          "backgroundColor": "#EAEAEA",
+          "fontColor": "#323232",
+          "description": "",
+          "icon": ""
+        },
+        "logo": {
+          "src": ""
+        },
+        "label": {
+          "description": ""
+        },
+        "videoButton": {
+          "url": ""
+        }
+      },
+      "tags": [
+        {
+          "id": "caas:adobe-partners/collections/marketing-resources"
+        },
+        {
+          "id": "caas:adobe-partners/cpp"
+        },
+        {
+          "id": "caas:adobe-partners/cpp/partner-level/platinum"
+        }
+      ],
+      "contentArea": {
+        "detailText": "Language(s): EN",
+        "title": "Marketing Resources Test title",
+        "url": "https://adobe.com",
+        "description": "This is description",
+        "dateDetailText": {
+          "type": "date-interval",
+          "startTime": "",
+          "endTime": ""
+        }
+      },
+      "footer": [
+        {
+          "divider": false,
+          "left": [
+            {
+              "type": "bookmark",
+              "saveCardIcon": "",
+              "unsaveCardIcon": "",
+              "cardSaveText": "",
+              "unsaveCardText": ""
+            }
+          ],
+          "center": [],
+          "right": [
+            {
+              "type": "button",
+              "style": "",
+              "text": "Read More",
+              "href": "https://adobe.com"
+            }
+          ],
+          "altCta": []
+        }
+      ],
+      "search": {
+
+      },
+      "cardDate": "2026-02-25T09:28:44.000Z",
+      "createdDate": "2026-02-25T09:28:44.000Z",
+      "modifiedDate": "2026-02-25T09:28:44.000Z",
+      "startDate": "",
+      "endDate": "",
+      "ctaLink": "https://adobe.com",
+      "arbitrary": [],
+      "overlayLink": "https://adobe.com",
+      "origin": "dme-partners",
+      "lang": "en",
+      "country": "us"
+    }
+  ],
+  "filters": [],
+  "debug": [
+    {
+      "missingIds": []
+    }
+  ],
+  "isHashed": false
+}
