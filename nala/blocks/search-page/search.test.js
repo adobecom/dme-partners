@@ -412,7 +412,7 @@ test.describe('Search Page validation', () => {
       await searchTest.checkFileIcon(`${data.iconAnnouncement}`);
 
       // check if the download icon is disabled
-      await expect(searchTest.download).toBeDisabled();
+      await expect(searchTest.downloadDisabled).toHaveAttribute('aria-disabled', 'true');;
 
       // check if the preview icon is enabled
       await expect(searchTest.openPreview).toBeEnabled();
