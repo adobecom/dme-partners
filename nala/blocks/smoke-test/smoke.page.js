@@ -396,13 +396,7 @@ export default class SmokeTest {
   }
 
   filterFirstCheckbox(filterSectionLabel) {
-    return this.page
-      .locator('div.filter')
-      .filter({
-        has: this.page.locator(`button.filter-header[aria-label="${filterSectionLabel}"]`),
-      })
-      .locator('.filter-list sp-checkbox')
-      .first();
+    return this.page.locator('div.filter').filter({ has: this.page.locator(`button.filter-header[aria-label="${filterSectionLabel}"]`) }).locator('.filter-list sp-checkbox').first();
   }
 
   async getCollectionLink() {
