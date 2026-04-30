@@ -55,6 +55,36 @@
 .search-card .card-header .card-icons {
   z-index: 1;
   flex-shrink: 0;
+  display: flex;
+  height: 32px;
+  gap: 3px;
+}
+
+.search-card .card-header .card-icons .card-btn {
+  color: #222;
+  background: #fff;
+  border: 1px solid #b1b1b1;
+  display: flex;
+  border-radius: 4px;
+  padding: 6px 11px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.search-card .card-header .card-icons .card-btn:hover {
+  background: #e6e6e6;
+  border-color: #909090;
+}
+
+.search-card .card-header .card-icons .card-btn[aria-disabled="true"] {
+  color: #b1b1b1;
+  border-color: #e6e6e6;
+  background: #fff;
+  pointer-events: none;
+}
+
+.search-card .card-header .card-icons .card-btn .icon {
+  width: 18px;
+  height: 18px;
 }
 
 .search-card .card-content {

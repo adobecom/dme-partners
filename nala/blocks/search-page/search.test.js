@@ -470,4 +470,18 @@ test.describe('Search Page validation', () => {
       await expect(searchTest.noResultsTitle).toBeVisible();
     });
   });
+  test(`${features[15].name}, ${features[15].tags}`, async ({ page }) => {
+    const { data, path } = features[15];
+
+    await test.step('Sign In with user', async () => {
+      await page.goto(path);
+      await page.waitForLoadState('domcontentloaded');
+
+      await signInSearchTest.signIn(page, data.partnerLevel);
+      await searchTest.searchCard.first().waitFor({ state: 'visible', timeout: 40000 });
+      await page.pause();
+      await searchTest.appleydFilter.waitFor({ state: 'visible', timeout: 10000 });
+      await searchTest.checkCardTitle(`${data.assetTitle}`);
+    });
+  });
 });
