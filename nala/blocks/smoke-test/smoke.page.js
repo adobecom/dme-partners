@@ -395,8 +395,8 @@ export default class SmokeTest {
     await option.click();
   }
 
-  filterCheckbox(role, name) {
-    return this.page.getByRole(role, { name, exact: true });
+  filterFirstCheckbox(filterSectionLabel) {
+    return this.page.locator('div.filter').filter({ has: this.page.locator(`button.filter-header[aria-label="${filterSectionLabel}"]`) }).locator('.filter-list sp-checkbox').first();
   }
 
   async getCollectionLink() {
