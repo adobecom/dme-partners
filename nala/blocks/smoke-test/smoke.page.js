@@ -103,7 +103,7 @@ export default class SmokeTest {
     const firstRowWithDownload = this.page
       .locator(`${this.tableSelector} tr:has(td[headers="download"])`)
       .first();
-    const downloadButton = firstRowWithDownload.locator('#button');
+    const downloadButton = firstRowWithDownload.locator('.download-btn');
     await downloadButton.click();
   }
 
