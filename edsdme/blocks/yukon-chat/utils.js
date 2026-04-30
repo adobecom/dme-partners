@@ -33,10 +33,41 @@ async function initMarkdownIt() {
   return md;
 }
 
+function removeCitations(text) {
+  // Remove ^ from citations [^1], [^2]
+  let cleaned = text.replace(/\[\^(\d+)\]/g, '[$1]');
+  cleaned = cleaned.replace(/\(\d+\)/g, '');
+
+  // Remove Citations/References section and everything after
+  const lines = cleaned.split('\n');
+  let cutoffIndex = -1;
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    const plainLine = line
+      .replace(/\*\*/g, '')
+      .replace(/__/g, '')
+      .replace(/\*/g, '')
+      .replace(/_/g, '')
+      .trim();
+
+    if (/^#{0,6}\s*(citations?|references?):?\s*$/i.test(plainLine)) {
+      cutoffIndex = i;
+      break;
+    }
+  }
+
+  if (cutoffIndex !== -1) {
+    return lines.slice(0, cutoffIndex).join('\n').trim();
+  }
+
+  return cleaned;
+}
+
 export async function parseMarkdown(markdown) {
   if (!markdown) return '';
   const markdownParser = await initMarkdownIt();
-  const cleanedMarkdown = markdown.replace(/\[\^([^\]]+)\]/g, '[$1]');
+  const cleanedMarkdown = removeCitations(markdown);
   return markdownParser.render(cleanedMarkdown);
 }
 

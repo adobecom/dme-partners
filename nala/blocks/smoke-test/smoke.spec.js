@@ -303,5 +303,30 @@ export default {
         logoRedirectionURLPublic: '/na/channelpartners/',
       },
     },
+    {
+      tcid: '25',
+      name: '@prp-collection-smoke-test',
+      path: '/na/channelpartners/home/marketing/resources/?georouting=off&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-emea-platinum:',
+        signInButtonInternationalText: 'Sign In',
+        sortOldest: 'oldest',
+        checkBoxRole: 'checkbox',
+        checkBox: 'Adobe Sign',
+        checkBoxOffers: 'Offers',
+      },
+    },
+    {
+      tcid: '26',
+      name: '@smoke-test-feedback-mechanism-restricted-page-validation',
+      path: '/channelpartners/?georouting=off&martech=off',
+      tags: '@dme-smoke-test',
+      data: {
+        partnerLevel: 'cpp-distributor-us:',
+        feedbackTitle: 'Rate this page',
+        feedbackTextArea: 'Automation Test Keywords',
+      },
+    },
   ],
 };
