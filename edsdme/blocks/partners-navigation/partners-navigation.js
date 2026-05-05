@@ -1,16 +1,11 @@
-// MWPW-159021
 /* eslint import/no-relative-packages: 0 */
 /* eslint-disable no-async-promise-executor */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable no-await-in-loop */
-/* eslint-disable import/no-unresolved */
-
-// MWPW-157751
-import { getLibs } from '../../scripts/utils.js';// MWPW-157751
 import { applyGnavPersonalization } from '../../scripts/personalization.js';
+import { getLibs } from '../../scripts/utils.js';// MWPW-157751
 import { rewriteLinks } from '../../scripts/rewriteLinks.js';
 
 const miloLibs = getLibs();
+
 const {
   getConfig,
   getMetadata,
@@ -23,8 +18,9 @@ const {
   getFederatedUrl,
   getFedsPlaceholderConfig,
   shouldBlockFreeTrialLinks,
+  getLingoRegion,
+  lingoActive,
 } = await import(`${miloLibs}/utils/utils.js`);
-// End
 
 const cssPromise = (async () => {
   const { codeRoot, theme } = getConfig();
@@ -67,15 +63,17 @@ const asideJsPromise = getMetadata('gnav-promo-source') ? import('./features/asi
 
 const breadCrumbsJsPromise = document.querySelector('header')?.classList.contains('has-breadcrumbs') ? import('./features/breadcrumbs/breadcrumbs.js') : null;
 
-// MWPW-192601 START
-const { replaceKey, replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
-const [utilities, merch, { processTrackingLabels }] = await Promise.all([
+// PARTNERS_NAVIGATION START
+// MWPW-192601 - Sync Milo Codebase
+const [utilities, placeholders, merch, { processTrackingLabels }] = await Promise.all([
   import('./utilities/utilities.js'),
+  import(`${miloLibs}/features/placeholders.js`),
   import(`${miloLibs}/blocks/merch/merch.js`),
   import(`${miloLibs}/martech/attributes.js`),
 ]);
-// MWPW-192601 END
+// PARTNERS_NAVIGATION END
 
+const { replaceKey, replaceKeyArray } = placeholders;
 const { getMiloLocaleSettings, isMasGeoDetectionEnabled } = merch;
 
 const {
@@ -184,9 +182,10 @@ const getMessageEventListener = () => {
 };
 
 const handleSignIn = async () => {
-  // MWPW-192601 START
+  // PARTNERS_NAVIGATION START
+  // MWPW-192601 - Sync Milo Codebase
   const { getModal } = await import(`${miloLibs}/blocks/modal/modal.js`);
-  // MWPW-192601 END
+  // PARTNERS_NAVIGATION END
   const details = document.createElement('div');
   details.className = 'feds-signin-modal-content';
 
@@ -200,6 +199,7 @@ const handleSignIn = async () => {
 
   // Map to SUSI authParams cleanly
   const { locale, imsClientId, imsScope } = getConfig();
+  const lingoRegion = lingoActive() ? await getLingoRegion() : null;
 
   let redirectUri = SIGNIN_CONTEXT.redirect_uri || window.location.href;
   try {
@@ -215,7 +215,7 @@ const handleSignIn = async () => {
     scope: imsScope || SIGNIN_CONTEXT.scope || 'AdobeID,openid,gnav',
     response_type: 'token',
     redirect_uri: redirectUri,
-    locale: locale?.ietf || 'en-US',
+    locale: lingoRegion?.ietf || locale?.ietf || 'en-US',
   };
 
   const dctxId = getMetadata('susi-light-dctx-id');
@@ -859,7 +859,10 @@ class Gnav {
         if (!this.useUniversalNav) {
           const [{ default: ProfileDropdown }] = await Promise.all([
             import('./features/profile/dropdown.js'),
-            loadStyles('/edsdme/blocks/partners-navigation/features/profile/dropdown.css'), // MWPW-157751
+            // PARTNERS_NAVIGATION START
+            // MWPW-157751 - Text is visible through Gnav when scrolling on mobile view
+            loadStyles('/eds/blocks/partners-navigation/features/profile/dropdown.css'),
+            // PARTNERS_NAVIGATION END
           ]);
           this.ProfileDropdown = ProfileDropdown;
         }
@@ -974,7 +977,10 @@ class Gnav {
       this.blocks.universalNav?.style.setProperty('min-width', width);
     }
     const config = getConfig();
-    const locale = getUniversalNavLocale(config.locale);
+    const lingoRegion = lingoActive() ? await getLingoRegion() : null;
+    const locale = lingoRegion?.ietf
+      ? lingoRegion.ietf.replace('-', '_')
+      : getUniversalNavLocale(config.locale);
     const environment = config.env.name === 'prod' ? 'prod' : 'stage';
     const visitorGuid = window.alloy ? await window.alloy('getIdentity')
       .then((data) => data?.identity?.ECID).catch(() => undefined) : undefined;
@@ -1090,7 +1096,7 @@ class Gnav {
     const [
       webappPrompt,
     ] = await Promise.all([
-      import('../../features/webapp-prompt/webapp-prompt.js'),
+      import(`${base}/features/webapp-prompt/webapp-prompt.js`),
       loadStyles(`${base}/features/webapp-prompt/webapp-prompt.css`),
     ]);
 
@@ -1662,17 +1668,22 @@ class Gnav {
         case 'secondaryCta':
           // Remove its 'em' or 'strong' wrapper
           item.parentElement.replaceWith(item);
-
+          // PARTNERS_NAVIGATION START
+          // MWPW-192601 - Sync Milo Codebase
           return addMepHighlightAndTargetId(toFragment`<div class="feds-navItem feds-navItem--centered" role="listitem">
               ${decorateCta({ elem: item.classList.contains('merch') ? await (await import(`${miloLibs}/blocks/merch/merch.js`)).default(item) : item, type: itemType, index: index + 1 })}
             </div>`, item);
+          // PARTNERS_NAVIGATION END
         case 'link': {
           let customLinkModifier = '';
           let removeCustomLink = false;
           let linkElem = item.querySelector('a');
           if (shouldBlockFreeTrialLinks(linkElem)) return null;
           if (linkElem.classList.contains('merch')) {
+            // PARTNERS_NAVIGATION START
+            // MWPW-192601 - Sync Milo Codebase
             linkElem = await (await import(`${miloLibs}/blocks/merch/merch.js`)).default(linkElem);
+            // PARTNERS_NAVIGATION END
           }
           const customLinksSection = item.closest('.link-group');
           linkElem.className = 'feds-navLink';
@@ -1715,7 +1726,10 @@ class Gnav {
             // Remove (black) from the text content so merch.default sees the clean text
             item.textContent = item.textContent.replace(/\s*\(black\)$/i, '');
           }
+          // PARTNERS_NAVIGATION START
+          // MWPW-192601 - Sync Milo Codebase
           const content = isMerch ? await (await import(`${miloLibs}/blocks/merch/merch.js`)).default(item) : item.textContent;
+          // PARTNERS_NAVIGATION END
           if (isBlack && content instanceof HTMLElement) {
             content.classList.add('feds-navLink--black');
           }
@@ -1801,9 +1815,14 @@ export default async function init(block) {
   }
   setAsyncDropdownCount(content.querySelectorAll('.large-menu').length);
 
-  block.classList.add('global-navigation'); // MWPW-157751
-  content = applyGnavPersonalization(content); // MWPW-157751
-  content = rewriteLinks(content); // MWPW-165727
+  // PARTNERS_NAVIGATION START
+  // MWPW-157751 - Text is visible through Gnav when scrolling on mobile view
+  block.classList.add('global-navigation');
+  // Enable personalization and link rewriting in the profile dropdown
+  // this happens directly after the profile dropdown is loaded, it's not injected into DOM yet
+  content = applyGnavPersonalization(content);
+  content = rewriteLinks(content);
+  // PARTNERS_NAVIGATION END
 
   const gnav = new Gnav({
     content,

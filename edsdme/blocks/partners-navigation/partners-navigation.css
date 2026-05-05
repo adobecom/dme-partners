@@ -1,5 +1,8 @@
-/* MWPW-159021 */
+/* PARTNERS_NAVIGATION START */
+
+/* MWPW-159021 - Fix eslint errors */
 /* stylelint-disable */
+/* PARTNERS_NAVIGATION END */
 /* Base */
 .global-navigation ul {
   list-style-type: none;
@@ -9,11 +12,13 @@
   text-decoration: none;
 }
 
-/* MWPW-157753 */
+/* PARTNERS_NAVIGATION START */
+/* MWPW-157753 - Make profile picture, firstName, lastName and email unclickable */
 .global-navigation .feds-profile-details a:hover {
   text-decoration: underline;
   color: var(--link-color);
 }
+/* PARTNERS_NAVIGATION END */
 
 .global-navigation button:not(.feds-client-desktop-apps button) {
   background: none;

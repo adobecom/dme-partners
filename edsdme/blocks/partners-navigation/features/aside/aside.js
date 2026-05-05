@@ -1,15 +1,17 @@
-// MWPW-159021
+// PARTNERS_NAVIGATION START
+// MWPW-159021 - Fix eslint errors
 /* eslint-disable */
-
-import { loadBlock, decorateAutoBlock } from '../../../../utils/utils.js';
+// PARTNERS_NAVIGATION END
 import { toFragment, lanaLog } from '../../utilities/utilities.js';
 
-// MWPW-192601 START
+// PARTNERS_NAVIGATION START
+// MWPW-192601 - Sync Milo Codebase
 import { getLibs } from '../../../../scripts/utils.js';
 
 const miloLibs = getLibs();
 const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
-// MWPW-192601 END
+const { loadBlock, decorateAutoBlock } = await import(`${miloLibs}/utils/utils.js`);
+// PARTNERS_NAVIGATION END
 
 export default async function decorateAside({ headerElem, fedsPromoWrapper, promoPath } = {}) {
   const onError = () => {

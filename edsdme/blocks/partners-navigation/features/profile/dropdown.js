@@ -1,12 +1,15 @@
 import { toFragment, trigger, closeAllDropdowns, logErrorFor } from '../../utilities/utilities.js';
 
-// MWPW-157751
-import { getLibs, isMember } from '../../../../scripts/utils.js';
+import { getLibs } from '../../../../scripts/utils.js';
 
 const miloLibs = getLibs();
+// PARTNERS_NAVIGATION START
+// MWPW-185175 - Investigate Profile dropdown view account
 const { replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
+// PARTNERS_NAVIGATION END
 
 const { getConfig, getFedsPlaceholderConfig } = await import(`${miloLibs}/utils/utils.js`);
+
 const getLanguage = (ietfLocale) => {
   if (!ietfLocale.length) return 'en';
 
@@ -18,15 +21,6 @@ const getLanguage = (ietfLocale) => {
 
   return ietfLocale.split('-')[0];
 };
-
-const decorateEditProfileLink = () => {
-  const { env } = getConfig();
-  if (env.name === 'prod') {
-    return 'https://channelpartners.adobe.com/s/manageprofile/?appid=mp';
-  }
-  return 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp';
-};
-// End
 
 const decorateProfileLink = (service, path = '') => {
   const defaultServiceUrls = {
@@ -48,19 +42,6 @@ const decorateProfileLink = (service, path = '') => {
 
   return `${serviceUrl}${path}`;
 };
-
-// MWPW-166173
-function getProfileLinkFunction(isUserActiveMember) {
-  return (...args) => {
-    if (isUserActiveMember) {
-      return decorateEditProfileLink();
-    }
-    return decorateProfileLink(...args);
-  };
-}
-const isUserActiveMember = isMember();
-const decorateProfileLinkBasedOnAccountStatus = getProfileLinkFunction(isUserActiveMember);
-// end of MWPW-166173
 
 const decorateAction = (label, path) => toFragment`<li><a class="feds-profile-action" href="${decorateProfileLink('adminconsole', path)}">${label}</a></li>`;
 
@@ -90,7 +71,7 @@ class ProfileDropdown {
     this.dropdown = this.decorateDropdown();
     this.addEventListeners();
 
-    if (this.openOnInit) trigger({ element: this.buttonElem, type: 'profile' }); // MWPW-157752
+    if (this.openOnInit) trigger({ element: this.buttonElem });
 
     this.decoratedElem.append(this.dropdown);
   }
@@ -105,21 +86,12 @@ class ProfileDropdown {
         this.placeholders.manageEnterprise,
         this.placeholders.profileAvatar,
       ],
-      [
-        this.placeholders.editProfile, // MWPW-157751
-      ],
       { displayName: this.profileData.displayName, email: this.profileData.email },
     ] = await Promise.all([
       replaceKeyArray(
         ['profile-button', 'sign-out', 'view-account', 'manage-teams', 'manage-enterprise', 'profile-avatar'],
         getFedsPlaceholderConfig(),
       ),
-      // MWPW-157751
-      replaceKeyArray(
-        ['edit-profile'],
-        getConfig(),
-      ),
-      // End
       window.adobeIMS.getProfile(),
     ]);
   }
@@ -129,10 +101,8 @@ class ProfileDropdown {
   }
 
   decorateDropdown() {
-    // MWPW-157751
     const { locale } = getConfig();
     const lang = getLanguage(locale.ietf);
-    // End
 
     // TODO: the account name and email might need a bit of adaptive behavior;
     // historically we shrunk the font size and displayed the account name on two lines;
@@ -144,24 +114,22 @@ class ProfileDropdown {
       src="${this.avatar}"
       tabindex="0"
       alt="${this.placeholders.profileAvatar}"
-      data-url="${decorateProfileLinkBasedOnAccountStatus('account', `?lang=${lang}`)}"></img>`;
-    // MWPW-157753 - only Edit user profile link should be clickable
+      data-url="${decorateProfileLink('account', `profile?lang=${lang}`)}"></img>`;
     return toFragment`
       <div id="feds-profile-menu" class="feds-profile-menu">
-        <div class="feds-profile-header">
+        <a
+          href="${decorateProfileLink('account', `?lang=${lang}`)}"
+          class="feds-profile-header"
+          daa-ll="${this.placeholders.viewAccount}"
+          aria-label="${this.placeholders.viewAccount}"
+        >
           ${this.avatarElem}
           <div class="feds-profile-details">
             <p data-cs-mask class="feds-profile-name">${this.profileData.displayName}</p>
             <p data-cs-mask class="feds-profile-email">${this.decorateEmail(this.profileData.email)}</p>
-            <a  href="${decorateProfileLinkBasedOnAccountStatus('account', `?lang=${lang}`)}"
-                target="_blank"
-                daa-ll="${this.placeholders.viewAccount}"
-                aria-label="${isUserActiveMember ? this.placeholders.editProfile : this.placeholders.viewAccount}"
-                class="feds-profile-account">
-                    ${isUserActiveMember ? this.placeholders.editProfile : this.placeholders.viewAccount}
-            </a>
+            <p class="feds-profile-account">${this.placeholders.viewAccount}</p>
           </div>
-        </div>
+        </a>
         ${this.localMenu ? this.decorateLocalMenu() : ''}
         <ul class="feds-profile-actions">
           ${this.sections?.manage?.items?.team?.id ? decorateAction(this.placeholders.manageTeams, '/team') : ''}
@@ -211,7 +179,7 @@ class ProfileDropdown {
   }
 
   addEventListeners() {
-    this.buttonElem.addEventListener('click', (e) => trigger({ element: this.buttonElem, event: e, type: 'profile' })); // MWPW-157752
+    this.buttonElem.addEventListener('click', (e) => trigger({ element: this.buttonElem, event: e }));
     this.buttonElem.addEventListener('keydown', (e) => e.code === 'Escape' && closeAllDropdowns());
     this.dropdown.addEventListener('keydown', (e) => e.code === 'Escape' && closeAllDropdowns());
     this.avatarElem.addEventListener('click', (e) => {

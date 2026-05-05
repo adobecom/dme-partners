@@ -1,5 +1,8 @@
-/* MWPW-159021 */
+/* PARTNERS_NAVIGATION START */
+
+/* MWPW-159021 - Fix eslint errors */
 /* stylelint-disable */
+/* PARTNERS_NAVIGATION END */
 :root {
   --text-color: #f2f2f2;
   --background-color: #111;
