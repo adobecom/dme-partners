@@ -166,6 +166,7 @@ export default class Announcements extends PartnerCards {
 
   handleFilterAction() {
     super.handleFilterAction();
+    // eslint-disable-next-line max-len
     const isDateActive = !this.selectedDateFilter.default && Object.keys(this.selectedDateFilter).length;
     if (isDateActive && !this.urlSearchParams.has('filters')) {
       this.urlSearchParams.append('filters', 'yes');
