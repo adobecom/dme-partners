@@ -136,6 +136,16 @@ export default class Announcements extends PartnerCards {
     return { htmlContent, tagsCount };
   }
 
+  get filtersLabel() {
+    const parentLabel = super.filtersLabel;
+    // eslint-disable-next-line max-len
+    const isDateActive = !this.selectedDateFilter.default && Object.keys(this.selectedDateFilter).length;
+    if (!isDateActive) return parentLabel;
+    return parentLabel === 'No Filters'
+      ? this.selectedDateFilter.value
+      : `${this.selectedDateFilter.value}, ${parentLabel}`;
+  }
+
   getDateFilterTags(filter) {
     if (filter.key !== 'date') return;
 
