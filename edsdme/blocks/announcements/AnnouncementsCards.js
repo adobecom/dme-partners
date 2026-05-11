@@ -160,18 +160,39 @@ export default class Announcements extends PartnerCards {
 
   additionalResetActions() {
     this.initDateTags(this.blockData.dateFilter.tags);
+    this.urlSearchParams.delete('date');
+  }
+
+  initUrlSearchParams() {
+    super.initUrlSearchParams();
+
+    if (!this.blockData.dateFilter || !this.urlSearchParams.has('date')) return;
+    const dateKey = this.urlSearchParams.get('date');
+    const dateTag = this.blockData.dateFilter.tags.find((t) => t.key === dateKey);
+    if (dateTag) {
+      this.initDateTags(this.blockData.dateFilter.tags);
+      dateTag.checked = true;
+      this.selectedDateFilter = dateTag;
+    }
   }
 
   handleDateTag(tags, tag) {
     if (tag.checked) {
       this.initDateTags(tags);
+      this.urlSearchParams.delete('date');
+      if (!Object.keys(this.selectedFilters).length && !this.urlSearchParams.has('term')) {
+        this.urlSearchParams.delete('filters');
+      }
     } else {
       this.selectedDateFilter = tag;
       // eslint-disable-next-line no-return-assign
       tags.forEach((filterTag) => filterTag.checked = filterTag.key === tag.key);
+      if (!this.urlSearchParams.has('filters')) this.urlSearchParams.append('filters', 'yes');
+      this.urlSearchParams.set('date', tag.key);
     }
 
     this.paginationCounter = 1;
+    this.handleUrlSearchParams();
     this.handleActions();
   }
 
@@ -188,6 +209,11 @@ export default class Announcements extends PartnerCards {
 
   handleResetDateTags(tags) {
     this.initDateTags(tags);
+    this.urlSearchParams.delete('date');
+    if (!Object.keys(this.selectedFilters).length && !this.urlSearchParams.has('term')) {
+      this.urlSearchParams.delete('filters');
+    }
+    this.handleUrlSearchParams();
     this.handleActions();
   }
 
