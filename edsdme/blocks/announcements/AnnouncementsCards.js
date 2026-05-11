@@ -164,6 +164,14 @@ export default class Announcements extends PartnerCards {
     )}`;
   }
 
+  handleFilterAction() {
+    super.handleFilterAction();
+    const isDateActive = !this.selectedDateFilter.default && Object.keys(this.selectedDateFilter).length;
+    if (isDateActive && !this.urlSearchParams.has('filters')) {
+      this.urlSearchParams.append('filters', 'yes');
+    }
+  }
+
   additionalActions() {
     this.handleDateFilterAction();
   }
