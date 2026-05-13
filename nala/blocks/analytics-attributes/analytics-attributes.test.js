@@ -55,7 +55,7 @@ test.describe('Analytics Attributes', () => {
         await analyticsAttributesPage.getFilter(feature.data.filter);
         await analyticsAttributesPage.getCheckBox(feature.data.checkBoxName).click();
         await analyticsAttributesPage.byDaaLh(feature.data.daaLhAfterSearch).waitFor({ state: 'visible', timeout: 20000 });
-      }); 
+      });
     });
   });
   analyticsAttributesYukonAndFeedback.forEach((feature) => {
@@ -69,7 +69,6 @@ test.describe('Analytics Attributes', () => {
       await test.step('Verify attributes', async () => {
         await analyticsAttributesPage.feedbackButton.waitFor({ state: 'visible', timeout: 20000 });
         await analyticsAttributesPage.byDaaLh(feature.data.daaLh).waitFor({ state: 'visible', timeout: 20000 });
-       
       });
     });
   });

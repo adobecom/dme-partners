@@ -16,12 +16,12 @@ export default class AnalyticsAttributesPage {
     await searchField.press('Enter');
   }
 
-  getFilter(filter) {
-    const filterElement = this.page.getByLabel(`${filter}`);
-    filterElement.click();
+  async getFilter(filter) {
+    const filterElement = this.page.getByLabel(filter);
+    await filterElement.click();
   }
 
   getCheckBox(checkBoxName) {
-    return this.page.getByRole('checkbox', { name: `${checkBoxName}` });
+    return this.page.getByRole('checkbox', { name: checkBoxName });
   }
 }
