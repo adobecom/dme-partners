@@ -294,8 +294,11 @@ export async function loadBaseStyles() {
   const { standaloneGnav } = getConfig();
   if (standaloneGnav) return;
   if (isDarkMode()) {
-    new Promise((resolve) => { loadStyle(rootPath('base.css'), resolve); })
-      .then(() => loadStyles(rootPath('dark-nav.css')));
+    // PARTNERS_NAVIGATION START
+    // MWPW-192601 - Sync Milo Codebase (Gnav, localized links)
+    new Promise((resolve) => { loadStyle('/eds/blocks/partners-navigation/base.css', resolve); })
+      .then(() => loadStyles('/eds/blocks/partners-navigation/dark-nav.css'));
+    // PARTNERS_NAVIGATION END
   } else {
     const url = rootPath('base.css');
     await loadStyles(url);
@@ -313,7 +316,10 @@ export async function loadDecorateMenu() {
 
   const [menu] = await Promise.all([
     import('./menu/menu.js'),
-    loadStyles(rootPath('utilities/menu/menu.css')),
+    // PARTNERS_NAVIGATION START
+    // MWPW-192601 - Sync Milo Codebase (Gnav, localized links)
+    loadStyles('/edsdme/blocks/partners-navigation/utilities/menu/menu.css'),
+    // PARTNERS_NAVIGATION END
   ]);
 
   resolve(menu.default);

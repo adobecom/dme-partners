@@ -1,10 +1,11 @@
 import { toFragment, trigger, closeAllDropdowns, logErrorFor } from '../../utilities/utilities.js';
 
-import { getLibs } from '../../../../scripts/utils.js';
-
-const miloLibs = getLibs();
 // PARTNERS_NAVIGATION START
+// MWPW-157751 - Text is visible through Gnav when scrolling on mobile view
+import { getLibs, isMember } from '../../../../scripts/utils.js';
+
 // MWPW-185175 - Investigate Profile dropdown view account
+const miloLibs = getLibs();
 const { replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
 // PARTNERS_NAVIGATION END
 
@@ -21,6 +22,17 @@ const getLanguage = (ietfLocale) => {
 
   return ietfLocale.split('-')[0];
 };
+
+// PARTNERS_NAVIGATION START
+// MWPW-166173 - Clicking on Edit Profile for Abandoned account redirects to error page
+const decorateEditProfileLink = () => {
+  const { env } = getConfig();
+  if (env.name === 'prod') {
+    return 'https://channelpartners.adobe.com/s/manageprofile/?appid=mp';
+  }
+  return 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp';
+};
+// PARTNERS_NAVIGATION END
 
 const decorateProfileLink = (service, path = '') => {
   const defaultServiceUrls = {
@@ -42,6 +54,20 @@ const decorateProfileLink = (service, path = '') => {
 
   return `${serviceUrl}${path}`;
 };
+
+// PARTNERS_NAVIGATION START
+// MWPW-166173 - Clicking on Edit Profile for Abandoned account redirects to error page
+function getProfileLinkFunction(isUserActiveMember) {
+  return (...args) => {
+    if (isUserActiveMember) {
+      return decorateEditProfileLink();
+    }
+    return decorateProfileLink(...args);
+  };
+}
+const isUserActiveMember = isMember();
+const decorateProfileLinkBasedOnAccountStatus = getProfileLinkFunction(isUserActiveMember);
+// PARTNERS_NAVIGATION END
 
 const decorateAction = (label, path) => toFragment`<li><a class="feds-profile-action" href="${decorateProfileLink('adminconsole', path)}">${label}</a></li>`;
 
@@ -71,7 +97,10 @@ class ProfileDropdown {
     this.dropdown = this.decorateDropdown();
     this.addEventListeners();
 
-    if (this.openOnInit) trigger({ element: this.buttonElem });
+    // PARTNERS_NAVIGATION START
+    // MWPW-157752 - Profile dropdown is not closing when clicking
+    if (this.openOnInit) trigger({ element: this.buttonElem, type: 'profile' });
+    // PARTNERS_NAVIGATION END
 
     this.decoratedElem.append(this.dropdown);
   }
@@ -86,12 +115,25 @@ class ProfileDropdown {
         this.placeholders.manageEnterprise,
         this.placeholders.profileAvatar,
       ],
+      // PARTNERS_NAVIGATION START
+      // MWPW-157751 - Text is visible through Gnav when scrolling on mobile view
+      [
+        this.placeholders.editProfile,
+      ],
+      // PARTNERS_NAVIGATION END
       { displayName: this.profileData.displayName, email: this.profileData.email },
     ] = await Promise.all([
       replaceKeyArray(
         ['profile-button', 'sign-out', 'view-account', 'manage-teams', 'manage-enterprise', 'profile-avatar'],
         getFedsPlaceholderConfig(),
       ),
+      // PARTNERS_NAVIGATION START
+      // MWPW-157751 -Text is visible through Gnav when scrolling on mobile view
+      replaceKeyArray(
+        ['edit-profile'],
+        getConfig(),
+      ),
+      // PARTNERS_NAVIGATION END
       window.adobeIMS.getProfile(),
     ]);
   }
@@ -101,8 +143,11 @@ class ProfileDropdown {
   }
 
   decorateDropdown() {
+    // PARTNERS_NAVIGATION START
+    // MWPW-157751 -Text is visible through Gnav when scrolling on mobile view
     const { locale } = getConfig();
     const lang = getLanguage(locale.ietf);
+    // PARTNERS_NAVIGATION END
 
     // TODO: the account name and email might need a bit of adaptive behavior;
     // historically we shrunk the font size and displayed the account name on two lines;
@@ -114,22 +159,30 @@ class ProfileDropdown {
       src="${this.avatar}"
       tabindex="0"
       alt="${this.placeholders.profileAvatar}"
-      data-url="${decorateProfileLink('account', `profile?lang=${lang}`)}"></img>`;
+      <!-- PARTNERS_NAVIGATION START -->
+      <!-- MWPW-166173 - Clicking on Edit Profile for Abandoned account redirects to error page -->
+      data-url="${decorateProfileLinkBasedOnAccountStatus('account', `?lang=${lang}`)}"></img>
+      <!-- PARTNERS_NAVIGATION END -->
+      `;
+
+    // PARTNERS_NAVIGATION START
+    // // MWPW-157753 - Only Edit user profile link should be clickable
     return toFragment`
       <div id="feds-profile-menu" class="feds-profile-menu">
-        <a
-          href="${decorateProfileLink('account', `?lang=${lang}`)}"
-          class="feds-profile-header"
-          daa-ll="${this.placeholders.viewAccount}"
-          aria-label="${this.placeholders.viewAccount}"
-        >
+        <div class="feds-profile-header">
           ${this.avatarElem}
           <div class="feds-profile-details">
             <p data-cs-mask class="feds-profile-name">${this.profileData.displayName}</p>
             <p data-cs-mask class="feds-profile-email">${this.decorateEmail(this.profileData.email)}</p>
-            <p class="feds-profile-account">${this.placeholders.viewAccount}</p>
+            <a  href="${decorateProfileLinkBasedOnAccountStatus('account', `?lang=${lang}`)}"
+                target="_blank"
+                daa-ll="${this.placeholders.viewAccount}"
+                aria-label="${isUserActiveMember ? this.placeholders.editProfile : this.placeholders.viewAccount}"
+                class="feds-profile-account">
+                    ${isUserActiveMember ? this.placeholders.editProfile : this.placeholders.viewAccount}
+            </a>
           </div>
-        </a>
+        </div>
         ${this.localMenu ? this.decorateLocalMenu() : ''}
         <ul class="feds-profile-actions">
           ${this.sections?.manage?.items?.team?.id ? decorateAction(this.placeholders.manageTeams, '/team') : ''}
@@ -138,6 +191,7 @@ class ProfileDropdown {
         </ul>
       </div>
     `;
+    // PARTNERS_NAVIGATION END
   }
 
   decorateEmail() {
@@ -179,7 +233,10 @@ class ProfileDropdown {
   }
 
   addEventListeners() {
-    this.buttonElem.addEventListener('click', (e) => trigger({ element: this.buttonElem, event: e }));
+    // PARTNERS_NAVIGATION START
+    // MWPW-157752 - Profile dropdown is not closing when clicking
+    this.buttonElem.addEventListener('click', (e) => trigger({ element: this.buttonElem, event: e, type: 'profile' }));
+    // PARTNERS_NAVIGATION END
     this.buttonElem.addEventListener('keydown', (e) => e.code === 'Escape' && closeAllDropdowns());
     this.dropdown.addEventListener('keydown', (e) => e.code === 'Escape' && closeAllDropdowns());
     this.avatarElem.addEventListener('click', (e) => {

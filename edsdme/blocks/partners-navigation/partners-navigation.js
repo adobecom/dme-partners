@@ -1,11 +1,12 @@
 /* eslint import/no-relative-packages: 0 */
 /* eslint-disable no-async-promise-executor */
 import { applyGnavPersonalization } from '../../scripts/personalization.js';
-import { getLibs } from '../../scripts/utils.js';// MWPW-157751
 import { rewriteLinks } from '../../scripts/rewriteLinks.js';
+// PARTNERS_NAVIGATION START
+// MWPW-157751 - Text is visible through Gnav when scrolling on mobile view
+import { getLibs } from '../../scripts/utils.js';
 
 const miloLibs = getLibs();
-
 const {
   getConfig,
   getMetadata,
@@ -21,7 +22,7 @@ const {
   getLingoRegion,
   lingoActive,
 } = await import(`${miloLibs}/utils/utils.js`);
-
+// PARTNERS_NAVIGATION END
 const cssPromise = (async () => {
   const { codeRoot, theme } = getConfig();
   const url = `${miloLibs || codeRoot}/blocks/global-navigation/`;
