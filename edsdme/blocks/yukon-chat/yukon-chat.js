@@ -15,20 +15,27 @@ let currentAbortController = null; // Store abort controller for ongoing request
 const requestId = crypto.randomUUID();
 const configs = {};
 
-const yukonCustomEventName = 'aep:TrackEvent';
-const yukonAppName = 'dme-yukon-chat';
-
-function dispatchYukonAnalyticsEvent(eventType, metadata = {}) {
-  window.dispatchEvent(new CustomEvent(yukonCustomEventName, {
-    detail: {
-      appName: yukonAppName,
-      eventType,
-      timestamp: Date.now(),
-      metadata,
-      xdm: {},
+/* eslint-disable no-underscore-dangle */
+function dispatchYukonAnalyticsEvent(eventName, metadata = {}) {
+  if (!window._satellite?.track) return;
+  window._satellite.track('event', {
+    xdm: {},
+    data: {
+      web: { webInteraction: { name: 'yukonChat' } },
+      _adobe_corpnew: {
+        digitalData: {
+          primaryEvent: {
+            eventInfo: {
+              eventName,
+              ...metadata,
+            },
+          },
+        },
+      },
     },
-  }));
+  });
 }
+/* eslint-enable no-underscore-dangle */
 
 const createInputField = (textareaEl, buttonEl) => {
   const container = createTag('div', { class: 'yc-input-field-container' });
@@ -384,20 +391,23 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
       }
     }
     if (messageAdded) {
-      const sources = groupSourcesByDocumentId(accumulatedSources)
+      const references = groupSourcesByDocumentId(accumulatedSources)
         .map(({ citationKeys, item }) => ({
           citationKeys,
           title: item.title || item.document_name || item.document_url,
           url: item.document_url,
         }));
-      if (sources.length > 0) {
+      if (references.length > 0) {
         const currentScrollTop = chatHistory.scrollTop;
         const accordion = createSourcesAccordion(accumulatedSources, localizedText);
         messageContent.appendChild(accordion);
         chatHistory.scrollTop = currentScrollTop;
         checkScrollPosition(chatHistory, scrollToBottomBtn);
       }
-      dispatchYukonAnalyticsEvent('yukonResponseReceived', { messageText: accumulatedMarkdown, sources });
+      dispatchYukonAnalyticsEvent('yukonAnswerReceived', {
+        answer: accumulatedMarkdown,
+        references,
+      });
     }
     textArea.removeAttribute('disabled');
     inputFieldButton.removeAttribute('disabled');
