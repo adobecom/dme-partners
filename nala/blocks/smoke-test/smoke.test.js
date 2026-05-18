@@ -682,7 +682,7 @@ test.describe('Smoke Tests', () => {
     });
     await test.step('Verify filter checkbox', async () => {
       await smokeTest.fisrtFilter.click();
-      const filterCheckbox = smokeTest.filterCheckbox(data.checkBoxRole, data.checkBox);
+      const filterCheckbox = smokeTest.filterFirstCheckbox(data.firstFilterSection);
       await filterCheckbox.click();
       // check number after filter
       const numberOfCollectionsAfterFilter = await smokeTest.getNumberOfCollectionsCount();
@@ -690,7 +690,7 @@ test.describe('Smoke Tests', () => {
 
       await smokeTest.clearAll.click();
       await smokeTest.secondFilter.click();
-      const filterCheckboxOffers = smokeTest.filterCheckbox(data.checkBoxRole, data.checkBoxOffers);
+      const filterCheckboxOffers = smokeTest.filterFirstCheckbox(data.secondFilterSection);
       await filterCheckboxOffers.click();
       // check number after filter
       const numberOfCollectionsAfterFilterOffers = await smokeTest.getNumberOfCollectionsCount();

@@ -476,6 +476,10 @@
   text-overflow: ellipsis;
 }
 
+.partner-cards-header .partner-cards-sort-wrapper .sort-btn .sort-btn-text wbr { /* MWPW-192813 */
+  display: none;
+}
+
 .partner-cards-header .partner-cards-sort-wrapper .sort-btn .filter-chevron-icon {
   border: solid #505050;
   border-width: 0 1px 1px 0;

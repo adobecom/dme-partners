@@ -312,9 +312,8 @@ export default {
         partnerLevel: 'cpp-emea-platinum:',
         signInButtonInternationalText: 'Sign In',
         sortOldest: 'oldest',
-        checkBoxRole: 'checkbox',
-        checkBox: 'Adobe Sign',
-        checkBoxOffers: 'Offers',
+        firstFilterSection: 'Product',
+        secondFilterSection: 'Topic',
       },
     },
     {

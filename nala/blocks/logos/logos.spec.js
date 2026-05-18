@@ -8,7 +8,7 @@ export default {
       tags: '@dme-logos @regression @circleCi',
       data: {
         partnerLevel: 'cpp-na-certified:',
-        downloadButtonLink: '/channelpartnerassets/prp-assets/restricted/prp-267-release-stage/region-tag1.pdf',
+        downloadButtonLink: '/channelpartnerassets/apc-assets/restricted/prod/restricted_4/InDesign_CC_mnemonic.zip',
       },
     },
   ],
