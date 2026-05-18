@@ -38,7 +38,7 @@ describe('yukon-chat block', () => {
               { key: 'open-chat', value: 'Open Chat' },
               { key: 'scroll-to-bottom', value: 'Scroll to bottom' },
               { key: 'timeout-error', value: 'This is taking longer than expected. Please try again in a moment.' },
-              { key: 'server-error', value: 'We’re having trouble processing your request right now. Please try again later.' },
+              { key: 'server-error', value: "We're having trouble processing your request right now. Please try again later." },
               { key: 'network-error', value: 'Network error. Please check your connection and try again.' },
             ],
           }),
@@ -280,7 +280,7 @@ describe('yukon-chat block', () => {
                 { key: 'open-chat', value: 'Open Chat' },
                 { key: 'scroll-to-bottom', value: 'Scroll to bottom' },
                 { key: 'timeout-error', value: 'This is taking longer than expected. Please try again in a moment.' },
-                { key: 'server-error', value: 'We’re having trouble processing your request right now. Please try again later.' },
+                { key: 'server-error', value: "We're having trouble processing your request right now. Please try again later." },
                 { key: 'network-error', value: 'Network error. Please check your connection and try again.' },
               ],
             }),
@@ -387,7 +387,7 @@ describe('yukon-chat block', () => {
       const errorMessage = modal.querySelector('.error-message');
       expect(errorMessage).to.exist;
       expect(errorMessage.textContent).to.include(
-        'We’re having trouble processing your request right now. Please try again later',
+        "We're having trouble processing your request right now. Please try again later",
       );
     });
 
@@ -481,7 +481,7 @@ describe('yukon-chat block', () => {
       const errorMessage = modal.querySelector('.error-message');
       expect(errorMessage).to.exist;
       expect(errorMessage.textContent).to.include(
-        'We’re having trouble processing your request right now. Please try again later',
+        "We're having trouble processing your request right now. Please try again later",
       );
 
       expect(sendButton.hasAttribute('disabled')).to.be.false;
@@ -503,7 +503,7 @@ describe('yukon-chat block', () => {
                 { key: 'open-chat', value: 'Open Chat' },
                 { key: 'scroll-to-bottom', value: 'Scroll to bottom' },
                 { key: 'timeout-error', value: 'This is taking longer than expected. Please try again in a moment.' },
-                { key: 'server-error', value: 'We’re having trouble processing your request right now. Please try again later.' },
+                { key: 'server-error', value: "We're having trouble processing your request right now. Please try again later." },
                 { key: 'network-error', value: 'Network error. Please check your connection and try again.' },
               ],
             }),
@@ -548,7 +548,7 @@ describe('yukon-chat block', () => {
       const errorMessage = modal.querySelector('.error-message');
       expect(errorMessage).to.exist;
       expect(errorMessage.textContent).to.include(
-        'We’re having trouble processing your request right now. Please try again later',
+        "We're having trouble processing your request right now. Please try again later",
       );
 
       expect(sendButton.hasAttribute('disabled')).to.be.false;
@@ -734,7 +734,7 @@ describe('yukon-chat block', () => {
                 { key: 'open-chat', value: 'Open Chat' },
                 { key: 'scroll-to-bottom', value: 'Scroll to bottom' },
                 { key: 'timeout-error', value: 'This is taking longer than expected. Please try again in a moment.' },
-                { key: 'server-error', value: 'We’re having trouble processing your request right now. Please try again later.' },
+                { key: 'server-error', value: "We're having trouble processing your request right now. Please try again later." },
                 { key: 'network-error', value: 'Network error. Please check your connection and try again.' },
                 { key: 'sources', value: 'Sources' },
               ],
@@ -780,5 +780,240 @@ describe('yukon-chat block', () => {
       expect(citeRefs[1].textContent.trim()).to.equal('3, 4');
       expect(citeRefs[2].textContent.trim()).to.equal('5');
     });
+  });
+
+  describe('Analytics events', () => {
+    /* eslint-disable no-underscore-dangle */
+    let trackStub;
+
+    beforeEach(() => {
+      window._satellite = { track: sinon.stub() };
+      trackStub = window._satellite.track;
+    });
+
+    afterEach(() => {
+      delete window._satellite;
+    });
+
+    const getEventInfo = (eventName) => {
+      const call = trackStub.getCalls().find(
+        (c) => c.args[1]?.data?._adobe_corpnew?.digitalData?.primaryEvent?.eventInfo?.eventName === eventName,
+      );
+      return call?.args[1]?.data?._adobe_corpnew?.digitalData?.primaryEvent?.eventInfo;
+    };
+
+    const waitForEvent = async (eventName, timeout = 2000) => {
+      const start = Date.now();
+      while (Date.now() - start < timeout) {
+        const info = getEventInfo(eventName);
+        if (info) return info;
+        // eslint-disable-next-line no-await-in-loop, no-promise-executor-return
+        await new Promise((r) => setTimeout(r, 20));
+      }
+      return getEventInfo(eventName);
+    };
+
+    it('should not throw when _satellite is not defined', async () => {
+      delete window._satellite;
+      const block = document.querySelector('.yukon-chat');
+      await init(block);
+
+      const textarea = document.querySelector('#yc-input-field');
+      expect(() => textarea.dispatchEvent(new MouseEvent('click', { bubbles: true }))).to.not.throw();
+    });
+
+    it('should fire yukonChatInputClick with correct payload when textarea is clicked', async () => {
+      const block = document.querySelector('.yukon-chat');
+      await init(block);
+
+      const textarea = document.querySelector('#yc-input-field');
+      textarea.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+      expect(trackStub.calledOnce).to.be.true;
+      expect(trackStub.firstCall.args[0]).to.equal('event');
+      expect(trackStub.firstCall.args[1].xdm).to.deep.equal({});
+      expect(trackStub.firstCall.args[1].data.web.webInteraction.name).to.equal('yukonChat');
+
+      const eventInfo = getEventInfo('yukonChatInputClick');
+      expect(eventInfo).to.exist;
+      expect(eventInfo.eventName).to.equal('yukonChatInputClick');
+    });
+
+    it('should fire yukonQuestionAsked with the question text when send button is clicked', async () => {
+      const encoder = new TextEncoder();
+      const chunk = encoder.encode('[{"generated_text":"Test response"}]\n');
+      fetchStub.callsFake(async (url) => {
+        const urlStr = typeof url === 'string' ? url : url.toString();
+        if (urlStr.includes('yukonAIAssistant')) {
+          return {
+            ok: true,
+            status: 200,
+            body: new ReadableStream({
+              start(controller) {
+                controller.enqueue(chunk);
+                controller.close();
+              },
+            }),
+          };
+        }
+        return { ok: false, status: 404 };
+      });
+
+      const block = document.querySelector('.yukon-chat');
+      await init(block);
+
+      const textarea = document.querySelector('#yc-input-field');
+      const sendButton = document.querySelector('.yc-input-field-button');
+
+      textarea.value = 'What is Adobe?';
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      sendButton.click();
+
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 50));
+
+      const eventInfo = getEventInfo('yukonQuestionAsked');
+      expect(eventInfo).to.exist;
+      expect(eventInfo.eventName).to.equal('yukonQuestionAsked');
+      expect(eventInfo.question).to.equal('What is Adobe?');
+    });
+
+    it('should fire yukonQuestionAsked with the question text when Enter key is pressed', async () => {
+      const encoder = new TextEncoder();
+      const chunk = encoder.encode('[{"generated_text":"Test response"}]\n');
+      fetchStub.callsFake(async (url) => {
+        const urlStr = typeof url === 'string' ? url : url.toString();
+        if (urlStr.includes('yukonAIAssistant')) {
+          return {
+            ok: true,
+            status: 200,
+            body: new ReadableStream({
+              start(controller) {
+                controller.enqueue(chunk);
+                controller.close();
+              },
+            }),
+          };
+        }
+        return { ok: false, status: 404 };
+      });
+
+      const block = document.querySelector('.yukon-chat');
+      await init(block);
+
+      const textarea = document.querySelector('#yc-input-field');
+      textarea.value = 'Tell me about partners';
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      textarea.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', shiftKey: false, bubbles: true }));
+
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 50));
+
+      const eventInfo = getEventInfo('yukonQuestionAsked');
+      expect(eventInfo).to.exist;
+      expect(eventInfo.question).to.equal('Tell me about partners');
+    });
+
+    it('should fire yukonAnswerReceived with messageText and empty sources when response has no sources', async () => {
+      const encoder = new TextEncoder();
+      const chunk = encoder.encode('[{"generated_text":"Hello from Yukon"}]\n');
+      fetchStub.callsFake(async (url) => {
+        const urlStr = typeof url === 'string' ? url : url.toString();
+        if (urlStr.includes('yukonAIAssistant')) {
+          return {
+            ok: true,
+            status: 200,
+            body: new ReadableStream({
+              start(controller) {
+                controller.enqueue(chunk);
+                controller.close();
+              },
+            }),
+          };
+        }
+        return { ok: false, status: 404 };
+      });
+
+      const block = document.querySelector('.yukon-chat');
+      await init(block);
+
+      const textarea = document.querySelector('#yc-input-field');
+      const sendButton = document.querySelector('.yc-input-field-button');
+
+      textarea.value = 'A question with no sources';
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      sendButton.click();
+
+      const eventInfo = await waitForEvent('yukonAnswerReceived');
+      expect(eventInfo).to.exist;
+      expect(eventInfo.eventName).to.equal('yukonAnswerReceived');
+      expect(eventInfo.answer).to.include('Hello from Yukon');
+      expect(eventInfo.references).to.deep.equal([]);
+    });
+
+    it('should fire yukonAnswerReceived with populated sources when response includes source data', async () => {
+      fetchStub.callsFake(async (url, fetchInit) => {
+        const urlStr = typeof url === 'string' ? url : url.toString();
+        if (urlStr.includes('placeholders.json')) {
+          return {
+            ok: true,
+            json: async () => ({ data: [{ key: 'sources', value: 'Sources' }] }),
+          };
+        }
+        if (urlStr.includes('yukonAIAssistant')) {
+          return createMockYukonMultiSourceResponse({ signal: fetchInit?.signal });
+        }
+        return { ok: false, status: 404 };
+      });
+
+      const block = document.querySelector('.yukon-chat');
+      await init(block);
+
+      const textarea = document.querySelector('#yc-input-field');
+      const sendButton = document.querySelector('.yc-input-field-button');
+
+      textarea.value = 'Question with sources';
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      sendButton.click();
+
+      const eventInfo = await waitForEvent('yukonAnswerReceived');
+      expect(eventInfo).to.exist;
+      expect(eventInfo.answer).to.be.a('string').and.not.empty;
+
+      const { references } = eventInfo;
+      expect(references).to.be.an('array').with.lengthOf(3);
+      expect(references[0].url).to.equal('https://example.com/mock-yukon-source.pdf');
+      expect(references[0].citationKeys).to.deep.equal(['1', '2']);
+      expect(references[0].title).to.equal('DE-yukon-doc-distributor-china-education.pdf');
+      expect(references[1].url).to.equal('https://example.com/mock-partner-guide.pdf');
+      expect(references[1].citationKeys).to.deep.equal(['3', '4']);
+      expect(references[2].url).to.equal('https://example.com/mock-partner-faq.pdf');
+      expect(references[2].citationKeys).to.deep.equal(['5']);
+    });
+
+    it('should not fire yukonAnswerReceived when the server returns an error', async () => {
+      fetchStub.callsFake(async (url) => {
+        const urlStr = typeof url === 'string' ? url : url.toString();
+        if (urlStr.includes('yukonAIAssistant')) return { ok: false, status: 500 };
+        return { ok: false, status: 404 };
+      });
+
+      const block = document.querySelector('.yukon-chat');
+      await init(block);
+
+      const textarea = document.querySelector('#yc-input-field');
+      const sendButton = document.querySelector('.yc-input-field-button');
+
+      textarea.value = 'Error case';
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      sendButton.click();
+
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 100));
+
+      const eventInfo = getEventInfo('yukonAnswerReceived');
+      expect(eventInfo).to.not.exist;
+    });
+    /* eslint-enable no-underscore-dangle */
   });
 });
