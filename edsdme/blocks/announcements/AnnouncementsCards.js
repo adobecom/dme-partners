@@ -206,8 +206,15 @@ export default class Announcements extends PartnerCards {
       this.selectedDateFilter = tag;
       // eslint-disable-next-line no-return-assign
       tags.forEach((filterTag) => filterTag.checked = filterTag.key === tag.key);
-      if (!this.urlSearchParams.has('filters')) this.urlSearchParams.append('filters', 'yes');
-      this.urlSearchParams.set('date', tag.key);
+      if (tag.default) {
+        this.urlSearchParams.delete('date');
+        if (!Object.keys(this.selectedFilters).length && !this.urlSearchParams.has('term')) {
+          this.urlSearchParams.delete('filters');
+        }
+      } else {
+        if (!this.urlSearchParams.has('filters')) this.urlSearchParams.append('filters', 'yes');
+        this.urlSearchParams.set('date', tag.key);
+      }
     }
 
     this.paginationCounter = 1;
