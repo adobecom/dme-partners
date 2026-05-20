@@ -30,7 +30,7 @@ test.describe('Analytics Attributes', () => {
   });
   test(`${features[0].name},${features[0].tags}`, async ({ page, baseURL }) => {
     await test.step('Go to  page', async () => {
-      await page.goto(`${baseURL}${features[0].path}`, { waitUntil: 'networkidle' });
+      await page.goto(`${baseURL}${features[0].path}`);
       await page.waitForLoadState('domcontentloaded');
       await signInPage.signIn(page, `${features[0].data.partnerLevel}`);
       await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
@@ -44,7 +44,7 @@ test.describe('Analytics Attributes', () => {
   analyticsAttributesPages.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, baseURL }) => {
       await test.step('Go to  page', async () => {
-        await page.goto(`${baseURL}${feature.path}`, { waitUntil: 'networkidle' });
+        await page.goto(`${baseURL}${feature.path}`);
         await page.waitForLoadState('domcontentloaded');
         await signInPage.signIn(page, `${feature.data.partnerLevel}`);
         await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
@@ -61,7 +61,7 @@ test.describe('Analytics Attributes', () => {
   analyticsAttributesYukonAndFeedback.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, baseURL }) => {
       await test.step('Go to  page', async () => {
-        await page.goto(`${baseURL}${feature.path}`, { waitUntil: 'networkidle' });
+        await page.goto(`${baseURL}${feature.path}`);
         await page.waitForLoadState('domcontentloaded');
         await signInPage.signIn(page, `${feature.data.partnerLevel}`);
         await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 20000 });
