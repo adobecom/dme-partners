@@ -60,8 +60,8 @@ export default {
       tags: '@dme-profile @regression @login @circleCi @mobile',
       data: {
         partnerLevel: 'cpp-china-registered:',
-        profileName: 'Yugo CPP Stage China-Registered',
-        profileEmail: 'yugo-stage-c…@yopmail.com',
+        profileName: 'DONOT USE Yugo Stage Registered China',
+        profileEmail: 'yugo-test+cp…@adobetest.com',
         profilePartnerLevel: 'Registered',
         editProfileURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
         accountManagementURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
@@ -76,8 +76,8 @@ export default {
       tags: '@dme-profile @regression @login @circleCi @mobile',
       data: {
         partnerLevel: 'cpp-distributor-apac:',
-        profileName: 'Stage CPP Distributor',
-        profileEmail: 'yugo-stage-c…@mailinator.com',
+        profileName: 'DONOT USE Yugo Stage Distributor APAC',
+        profileEmail: 'yugo-test+cp…@adobetest.com',
         profilePartnerLevel: 'Distributor',
         editProfileURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
         accountManagementURL: 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp',
