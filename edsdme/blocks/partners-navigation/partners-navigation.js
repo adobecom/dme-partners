@@ -852,7 +852,10 @@ class Gnav {
             { default: Search },
           ] = await Promise.all([
             import('./features/search/gnav-search.js'),
-            loadStyles(rootPath('features/search/gnav-search.css')),
+            // PARTNERS_NAVIGATION START
+            // MWPW-192601 - Sync Milo Codebase (Gnav, localized links)
+            loadStyles('/eds/blocks/partners-navigation/features/search/gnav-search.css'),
+            // PARTNERS_NAVIGATION END
           ]);
           this.Search = Search;
         }
