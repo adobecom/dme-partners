@@ -5,7 +5,7 @@ import { generateRequestForSearchAPI } from '../utils/utils.js';
 import { debounce } from '../utils/action.js';
 
 const miloLibs = getLibs();
-const { html, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
+const { html, repeat, unsafeHTML } = await import(`${miloLibs}/deps/lit-all.min.js`);
 const SEE_ALL = 'SEE_ALL';
 const MAX_SEARCH_LENGTH = 200;
 const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
@@ -433,7 +433,7 @@ export default class Search extends PartnerCards {
                 ? html`
                   <div class="sort-wrapper">
                     <button class="sort-btn" @click="${this.toggleSort}">
-                      <span class="sort-btn-text">${this.selectedSortOrder.value}</span>
+                      <span class="sort-btn-text">${unsafeHTML(this.selectedSortOrder.value)}</span>
                       <span class="filter-chevron-icon" />
                     </button>
                     <div class="sort-list">

@@ -11,7 +11,7 @@ export default {
         signInButtonInternationalText: 'Sign In',
         searchKeyWord: 'automationregressionkeyword',
         asset1: 'MAPC public stage (no partner level, no program type, no region, no specializations)',
-        assetURL: '/assets/public/public_1/MAPC_public_stage.pdf',
+        assetURL: '/apc-assets/public/public_1/MAPC_public_stage.pdf',
         iconPdf: 'pdf',
         asset1Tag1: 'Advertising',
         asset1Tag2: 'Arabic',
