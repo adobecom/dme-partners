@@ -12,6 +12,7 @@ import {
   prodHosts,
   previewHosts,
   setFeedback,
+  loadPageToAnchor,
 } from './utils.js';
 import { rewriteLinks } from './rewriteLinks.js';
 import { sidekickListener } from '../blocks/utils/utils.js';
@@ -131,4 +132,9 @@ function setUpPage() {
   if (previewHosts.includes(window.location.host)) {
     sidekickListener(CONFIG.locales);
   }
+
+  // Run when navigating back/forward
+  window.addEventListener('pageshow', () => {
+    loadPageToAnchor();
+  });
 }());

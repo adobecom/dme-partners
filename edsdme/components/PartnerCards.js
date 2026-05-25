@@ -1,4 +1,4 @@
-import { getLibs, prodHosts } from '../scripts/utils.js';
+import { getLibs, prodHosts, loadPageToAnchor } from '../scripts/utils.js';
 import './SinglePartnerCard.js';
 
 const miloLibs = getLibs();
@@ -211,6 +211,23 @@ export default class PartnerCards extends LitElement {
     this.additionalFirstUpdated();
     this.initUrlSearchParams();
     this.handleActions();
+
+    if (window.location.hash) {
+      await this.updateComplete;
+
+      const childCards = [...this.querySelectorAll('single-partner-card, single-partner-card-half-height')];
+      await Promise.all(childCards.map((card) => card.updateComplete));
+
+      if (document.readyState !== 'complete') {
+        await new Promise((resolve) => { window.addEventListener('load', resolve, { once: true }); });
+      }
+
+      if (document.fonts) await document.fonts.ready;
+      await new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+      });
+      loadPageToAnchor();
+    }
   }
 
   // gets text content from node,
