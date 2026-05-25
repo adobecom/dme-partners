@@ -89,7 +89,6 @@ const {
   isTangentToViewport,
   lanaLog,
   loadDecorateMenu,
-  rootPath,
   loadStyles,
   logErrorFor,
   selectors,
