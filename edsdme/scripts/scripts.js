@@ -1,4 +1,5 @@
 import { applyPagePersonalization } from './personalization.js';
+import { prependContent } from './portalMessaging.js';
 import {
   setLibs,
   redirectLoggedinPartner,
@@ -116,6 +117,7 @@ function setUpPage() {
 }
 
 (async function loadPage() {
+  await prependContent();
   applyPagePersonalization();
   setUpPage();
   redirectLoggedinPartner();
