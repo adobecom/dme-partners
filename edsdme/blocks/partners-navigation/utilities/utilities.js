@@ -296,8 +296,8 @@ export async function loadBaseStyles() {
   if (isDarkMode()) {
     // PARTNERS_NAVIGATION START
     // MWPW-192601 - Sync Milo Codebase (Gnav, localized links)
-    new Promise((resolve) => { loadStyle('/eds/blocks/partners-navigation/base.css', resolve); })
-      .then(() => loadStyles('/eds/blocks/partners-navigation/dark-nav.css'));
+    new Promise((resolve) => { loadStyle('/edsdme/blocks/partners-navigation/base.css', resolve); })
+      .then(() => loadStyles('/edsdme/blocks/partners-navigation/dark-nav.css'));
     // PARTNERS_NAVIGATION END
   } else {
     const url = rootPath('base.css');

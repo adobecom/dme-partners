@@ -853,7 +853,7 @@ class Gnav {
             import('./features/search/gnav-search.js'),
             // PARTNERS_NAVIGATION START
             // MWPW-192601 - Sync Milo Codebase (Gnav, localized links)
-            loadStyles('/eds/blocks/partners-navigation/features/search/gnav-search.css'),
+            loadStyles('/edsdme/blocks/partners-navigation/features/search/gnav-search.css'),
             // PARTNERS_NAVIGATION END
           ]);
           this.Search = Search;
@@ -864,7 +864,7 @@ class Gnav {
             import('./features/profile/dropdown.js'),
             // PARTNERS_NAVIGATION START
             // MWPW-157751 - Text is visible through Gnav when scrolling on mobile view
-            loadStyles('/eds/blocks/partners-navigation/features/profile/dropdown.css'),
+            loadStyles('/edsdme/blocks/partners-navigation/features/profile/dropdown.css'),
             // PARTNERS_NAVIGATION END
           ]);
           this.ProfileDropdown = ProfileDropdown;
