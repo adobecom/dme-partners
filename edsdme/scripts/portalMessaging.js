@@ -3,6 +3,7 @@ import { getMetadataContent } from './utils.js';
 async function loadPopupFragment(fragmentPath) {
   const response = await fetch(fragmentPath);
   if (!response.ok) {
+    // eslint-disable-next-line no-console
     console.error(`Fetching fragment failed, status ${response.status}`);
     return null;
   }
@@ -17,6 +18,7 @@ async function loadPopupFragment(fragmentPath) {
 async function loadBannerContent(bannerType) {
   const bannerFragmentPath = getMetadataContent(bannerType);
   if (!bannerFragmentPath) {
+    // eslint-disable-next-line no-console
     console.warn(`${bannerType} should be displayed but banner fragment path is not found`);
     return;
   }
@@ -26,12 +28,14 @@ async function loadBannerContent(bannerType) {
   }
 
   if (!bannerFragmentPath.startsWith('/')) {
+    // eslint-disable-next-line no-console
     console.warn(`Invalid ${bannerType} path: ${bannerFragmentPath}`);
     return;
   }
 
   const bannerContent = await loadPopupFragment(bannerFragmentPath);
   if (!bannerContent) {
+    // eslint-disable-next-line no-console
     console.warn(`Banner fragment for ${bannerFragmentPath} not found`);
     return;
   }

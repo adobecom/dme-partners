@@ -22,7 +22,10 @@ class SearchCard extends LitElement {
     if (!filteredTags.length) return;
     // eslint-disable-next-line consistent-return
     return html`${repeat(
-      filteredTags,
+      filteredTags.filter((tag) => {
+        const key = Object.values(tag)[0];
+        return key !== 'cpp' && key !== 'collections';
+      }),
       (tag) => tag.key,
       (tag) => {
         const key = Object.values(tag)[0];
