@@ -18,14 +18,13 @@ class SearchCard extends LitElement {
   get cardTags() {
     const tags = this.data.arbitrary;
     if (!tags.length) return;
-    const filteredTags = tags.filter((tag) => !Object.keys(tag).includes('partnerlevel'));
+    const filteredTags = tags.filter((tag) => !Object.keys(tag).includes('partnerlevel') &&
+      !Object.values(tag).includes('cpp') &&
+      !Object.values(tag).includes('collections'));
     if (!filteredTags.length) return;
     // eslint-disable-next-line consistent-return
     return html`${repeat(
-      filteredTags.filter((tag) => {
-        const key = Object.values(tag)[0];
-        return key !== 'cpp' && key !== 'collections';
-      }),
+      filteredTags,
       (tag) => tag.key,
       (tag) => {
         const key = Object.values(tag)[0];
