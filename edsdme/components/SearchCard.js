@@ -18,9 +18,9 @@ class SearchCard extends LitElement {
   get cardTags() {
     const tags = this.data.arbitrary;
     if (!tags.length) return;
-    const filteredTags = tags.filter((tag) => !Object.keys(tag).includes('partnerlevel') &&
-      !Object.values(tag).includes('cpp') &&
-      !Object.values(tag).includes('collections'));
+    const filteredTags = tags.filter((tag) => !Object.keys(tag).includes('partnerlevel')
+      && !Object.values(tag).includes('cpp')
+      && !Object.values(tag).includes('collections'));
     if (!filteredTags.length) return;
     // eslint-disable-next-line consistent-return
     return html`${repeat(
@@ -78,8 +78,8 @@ class SearchCard extends LitElement {
           <div class="card-icons">
               <a class="card-btn"
                  daa-ll=${`Download | ${trackingTitle}`}
-                 @click=${(e) => { e.stopPropagation(); }} 
-                 href=${isDlDisabled ? nothing : this.data.contentArea?.url}          
+                 @click=${(e) => { e.stopPropagation(); }}
+                 href=${isDlDisabled ? nothing : this.data.contentArea?.url}
                  download=${this.data.contentArea?.title}
                  aria-label=${this.localizedText['{{download}}']}
                  aria-disabled=${isDlDisabled}>
@@ -91,7 +91,7 @@ class SearchCard extends LitElement {
                      daa-ll=${`Preview | ${trackingTitle}`}
                      @click=${(e) => { e.stopPropagation(); }}
                      href=${this.data.contentArea?.url}
-                     target="_blank" 
+                     target="_blank"
                      aria-label=${this.localizedText['{{open-in}}']}
                      aria-disabled=${false}>
                     <sp-icon-open-in class="icon"/>
