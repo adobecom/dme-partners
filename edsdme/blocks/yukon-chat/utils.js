@@ -38,6 +38,9 @@ function removeCitations(text) {
   let cleaned = text.replace(/\[\^(\d+)\]/g, '[$1]');
   cleaned = cleaned.replace(/\(\d+\)/g, '');
 
+  // Remove individual footnote definition lines (e.g. \n[^1]: ...)
+  cleaned = cleaned.replace(/\n\[\^\d+\]:[^\n]*/g, '');
+
   // Remove Citations/References section and everything after
   const lines = cleaned.split('\n');
   let cutoffIndex = -1;
@@ -51,7 +54,7 @@ function removeCitations(text) {
       .replace(/_/g, '')
       .trim();
 
-    if (/^#{0,6}\s*(citations?|references?):?\s*$/i.test(plainLine)) {
+    if (/^#{0,6}\s*(citations?|references?|cited\s+sources?):?\s*$/i.test(plainLine)) {
       cutoffIndex = i;
       break;
     }
