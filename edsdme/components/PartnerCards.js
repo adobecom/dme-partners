@@ -1,4 +1,4 @@
-import { getLibs, prodHosts } from '../scripts/utils.js';
+import { getLibs, prodHosts, loadPageToAnchor } from '../scripts/utils.js';
 import './SinglePartnerCard.js';
 
 const miloLibs = getLibs();
@@ -211,6 +211,23 @@ export default class PartnerCards extends LitElement {
     this.additionalFirstUpdated();
     this.initUrlSearchParams();
     this.handleActions();
+
+    if (window.location.hash) {
+      await this.updateComplete;
+
+      const childCards = [...this.querySelectorAll('single-partner-card, single-partner-card-half-height')];
+      await Promise.all(childCards.map((card) => card.updateComplete));
+
+      if (document.readyState !== 'complete') {
+        await new Promise((resolve) => { window.addEventListener('load', resolve, { once: true }); });
+      }
+
+      if (document.fonts) await document.fonts.ready;
+      await new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+      });
+      loadPageToAnchor();
+    }
   }
 
   // gets text content from node,
@@ -908,6 +925,12 @@ export default class PartnerCards extends LitElement {
   // eslint-disable-next-line class-methods-use-this
   getSlider() {}
 
+  get filtersLabel() {
+    return Object.keys(this.selectedFilters).length > 0
+      ? Object.values(this.selectedFilters).flat().map((item) => item.value).join(', ')
+      : 'No Filters';
+  }
+
   /* eslint-disable indent */
   render() {
     return html`
@@ -915,7 +938,7 @@ export default class PartnerCards extends LitElement {
         ? html`
           <div
             class="partner-cards"
-            daa-lh="Card Collection | Filters: ${processTrackingLabels(Object.keys(this.selectedFilters).length > 0 ? Object.values(this.selectedFilters).flat().map((item) => item.value).join(', ') : 'No Filters')} | Search Query: ${processTrackingLabels(this.searchTerm.trim() ? this.searchTerm : 'None')}"
+            daa-lh="Card Collection | Filters: ${processTrackingLabels(this.filtersLabel)} | Search Query: ${processTrackingLabels(this.searchTerm.trim() ? this.searchTerm : 'None')}"
           >
             <div class="partner-cards-sidebar-wrapper">
               <div class="partner-cards-sidebar">

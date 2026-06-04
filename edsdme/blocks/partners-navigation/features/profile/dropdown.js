@@ -1,12 +1,16 @@
 import { toFragment, trigger, closeAllDropdowns, logErrorFor } from '../../utilities/utilities.js';
 
-// MWPW-157751
+// PARTNERS_NAVIGATION START
+// MWPW-157751 - Text is visible through Gnav when scrolling on mobile view
 import { getLibs, isMember } from '../../../../scripts/utils.js';
 
+// MWPW-185175 - Investigate Profile dropdown view account
 const miloLibs = getLibs();
 const { replaceKeyArray } = await import(`${miloLibs}/features/placeholders.js`);
+// PARTNERS_NAVIGATION END
 
 const { getConfig, getFedsPlaceholderConfig } = await import(`${miloLibs}/utils/utils.js`);
+
 const getLanguage = (ietfLocale) => {
   if (!ietfLocale.length) return 'en';
 
@@ -19,6 +23,8 @@ const getLanguage = (ietfLocale) => {
   return ietfLocale.split('-')[0];
 };
 
+// PARTNERS_NAVIGATION START
+// MWPW-166173 - Clicking on Edit Profile for Abandoned account redirects to error page
 const decorateEditProfileLink = () => {
   const { env } = getConfig();
   if (env.name === 'prod') {
@@ -26,7 +32,7 @@ const decorateEditProfileLink = () => {
   }
   return 'https://channelpartners.stage2.adobe.com/s/manageprofile/?appid=mp';
 };
-// End
+// PARTNERS_NAVIGATION END
 
 const decorateProfileLink = (service, path = '') => {
   const defaultServiceUrls = {
@@ -38,16 +44,19 @@ const decorateProfileLink = (service, path = '') => {
 
   let serviceUrl;
   const { env } = getConfig();
+
   if (!env?.[service]) {
     serviceUrl = defaultServiceUrls[service];
   } else {
     serviceUrl = new URL(defaultServiceUrls[service]);
     serviceUrl.hostname = env[service];
   }
+
   return `${serviceUrl}${path}`;
 };
 
-// MWPW-166173
+// PARTNERS_NAVIGATION START
+// MWPW-166173 - Clicking on Edit Profile for Abandoned account redirects to error page
 function getProfileLinkFunction(isUserActiveMember) {
   return (...args) => {
     if (isUserActiveMember) {
@@ -58,7 +67,7 @@ function getProfileLinkFunction(isUserActiveMember) {
 }
 const isUserActiveMember = isMember();
 const decorateProfileLinkBasedOnAccountStatus = getProfileLinkFunction(isUserActiveMember);
-// end of MWPW-166173
+// PARTNERS_NAVIGATION END
 
 const decorateAction = (label, path) => toFragment`<li><a class="feds-profile-action" href="${decorateProfileLink('adminconsole', path)}">${label}</a></li>`;
 
@@ -79,7 +88,7 @@ class ProfileDropdown {
     this.sections = sections;
     this.openOnInit = openOnInit;
     this.localMenu = rawElem.querySelector('h5')?.parentElement;
-    logErrorFor(this.init.bind(this), 'ProfileDropdown.init()', 'gnav-profile', 'error');
+    logErrorFor(this.init.bind(this), 'ProfileDropdown.init()', 'gnav-profile', 'e');
   }
 
   async init() {
@@ -88,7 +97,10 @@ class ProfileDropdown {
     this.dropdown = this.decorateDropdown();
     this.addEventListeners();
 
-    if (this.openOnInit) trigger({ element: this.buttonElem, type: 'profile' }); // MWPW-157752
+    // PARTNERS_NAVIGATION START
+    // MWPW-157752 - Profile dropdown is not closing when clicking
+    if (this.openOnInit) trigger({ element: this.buttonElem, type: 'profile' });
+    // PARTNERS_NAVIGATION END
 
     this.decoratedElem.append(this.dropdown);
   }
@@ -103,21 +115,25 @@ class ProfileDropdown {
         this.placeholders.manageEnterprise,
         this.placeholders.profileAvatar,
       ],
+      // PARTNERS_NAVIGATION START
+      // MWPW-157751 - Text is visible through Gnav when scrolling on mobile view
       [
-        this.placeholders.editProfile, // MWPW-157751
+        this.placeholders.editProfile,
       ],
+      // PARTNERS_NAVIGATION END
       { displayName: this.profileData.displayName, email: this.profileData.email },
     ] = await Promise.all([
       replaceKeyArray(
         ['profile-button', 'sign-out', 'view-account', 'manage-teams', 'manage-enterprise', 'profile-avatar'],
         getFedsPlaceholderConfig(),
       ),
-      // MWPW-157751
+      // PARTNERS_NAVIGATION START
+      // MWPW-157751 -Text is visible through Gnav when scrolling on mobile view
       replaceKeyArray(
         ['edit-profile'],
         getConfig(),
       ),
-      // End
+      // PARTNERS_NAVIGATION END
       window.adobeIMS.getProfile(),
     ]);
   }
@@ -127,10 +143,11 @@ class ProfileDropdown {
   }
 
   decorateDropdown() {
-    // MWPW-157751
+    // PARTNERS_NAVIGATION START
+    // MWPW-157751 -Text is visible through Gnav when scrolling on mobile view
     const { locale } = getConfig();
     const lang = getLanguage(locale.ietf);
-    // End
+    // PARTNERS_NAVIGATION END
 
     // TODO: the account name and email might need a bit of adaptive behavior;
     // historically we shrunk the font size and displayed the account name on two lines;
@@ -142,8 +159,14 @@ class ProfileDropdown {
       src="${this.avatar}"
       tabindex="0"
       alt="${this.placeholders.profileAvatar}"
-      data-url="${decorateProfileLinkBasedOnAccountStatus('account', `?lang=${lang}`)}"></img>`;
-    // MWPW-157753 - only Edit user profile link should be clickable
+      <!-- PARTNERS_NAVIGATION START -->
+      <!-- MWPW-166173 - Clicking on Edit Profile for Abandoned account redirects to error page -->
+      data-url="${decorateProfileLinkBasedOnAccountStatus('account', `?lang=${lang}`)}"></img>
+      <!-- PARTNERS_NAVIGATION END -->
+      `;
+
+    // PARTNERS_NAVIGATION START
+    // // MWPW-157753 - Only Edit user profile link should be clickable
     return toFragment`
       <div id="feds-profile-menu" class="feds-profile-menu">
         <div class="feds-profile-header">
@@ -152,9 +175,9 @@ class ProfileDropdown {
             <p data-cs-mask class="feds-profile-name">${this.profileData.displayName}</p>
             <p data-cs-mask class="feds-profile-email">${this.decorateEmail(this.profileData.email)}</p>
             <a  href="${decorateProfileLinkBasedOnAccountStatus('account', `?lang=${lang}`)}"
-                target="_blank" 
+                target="_blank"
                 daa-ll="${this.placeholders.viewAccount}"
-                aria-label="${isUserActiveMember ? this.placeholders.editProfile : this.placeholders.viewAccount}" 
+                aria-label="${isUserActiveMember ? this.placeholders.editProfile : this.placeholders.viewAccount}"
                 class="feds-profile-account">
                     ${isUserActiveMember ? this.placeholders.editProfile : this.placeholders.viewAccount}
             </a>
@@ -168,6 +191,7 @@ class ProfileDropdown {
         </ul>
       </div>
     `;
+    // PARTNERS_NAVIGATION END
   }
 
   decorateEmail() {
@@ -209,7 +233,10 @@ class ProfileDropdown {
   }
 
   addEventListeners() {
-    this.buttonElem.addEventListener('click', (e) => trigger({ element: this.buttonElem, event: e, type: 'profile' })); // MWPW-157752
+    // PARTNERS_NAVIGATION START
+    // MWPW-157752 - Profile dropdown is not closing when clicking
+    this.buttonElem.addEventListener('click', (e) => trigger({ element: this.buttonElem, event: e, type: 'profile' }));
+    // PARTNERS_NAVIGATION END
     this.buttonElem.addEventListener('keydown', (e) => e.code === 'Escape' && closeAllDropdowns());
     this.dropdown.addEventListener('keydown', (e) => e.code === 'Escape' && closeAllDropdowns());
     this.avatarElem.addEventListener('click', (e) => {
