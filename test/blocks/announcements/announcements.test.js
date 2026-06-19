@@ -186,4 +186,102 @@ describe('announcements block', () => {
 
     replaceStateStub.restore();
   });
+
+  describe('date filter URL sync', () => {
+    let component;
+    let announcementsWrapper;
+    let replaceStateStub;
+
+    beforeEach(async () => {
+      replaceStateStub = sinon.stub(window.history, 'replaceState');
+      const block = document.querySelector('.announcements');
+      component = await init(block);
+      await component.updateComplete;
+      announcementsWrapper = document.querySelector('.announcements-wrapper');
+      announcementsWrapper.urlSearchParams = new URLSearchParams();
+      const [firstTag] = announcementsWrapper.blockData.dateFilter.tags;
+      announcementsWrapper.selectedDateFilter = firstTag;
+    });
+
+    afterEach(() => {
+      replaceStateStub.restore();
+    });
+
+    it('should add date and filters params to URL when a date filter is selected', async () => {
+      const { tags } = announcementsWrapper.blockData.dateFilter;
+      const currentMonthTag = tags.find((t) => t.key === 'current-month');
+
+      announcementsWrapper.handleDateTag(tags, currentMonthTag);
+      await component.updateComplete;
+
+      expect(announcementsWrapper.urlSearchParams.get('date')).to.equal('current-month');
+      expect(announcementsWrapper.urlSearchParams.get('filters')).to.equal('yes');
+      expect(replaceStateStub.called).to.be.true;
+    });
+
+    it('should remove date and filters params from URL when the active date filter is toggled off', async () => {
+      const { tags } = announcementsWrapper.blockData.dateFilter;
+      const currentMonthTag = tags.find((t) => t.key === 'current-month');
+
+      announcementsWrapper.handleDateTag(tags, currentMonthTag);
+      await component.updateComplete;
+      announcementsWrapper.handleDateTag(tags, currentMonthTag);
+      await component.updateComplete;
+
+      expect(announcementsWrapper.urlSearchParams.has('date')).to.be.false;
+      expect(announcementsWrapper.urlSearchParams.has('filters')).to.be.false;
+    });
+
+    it('should keep filters=yes in URL when deselecting date but other regular filters remain active', async () => {
+      const { tags } = announcementsWrapper.blockData.dateFilter;
+      const currentMonthTag = tags.find((t) => t.key === 'current-month');
+
+      announcementsWrapper.selectedFilters = { applications: [{ key: 'sign', value: 'Sign' }] };
+      announcementsWrapper.urlSearchParams.append('filters', 'yes');
+      announcementsWrapper.urlSearchParams.set('applications', 'sign');
+
+      announcementsWrapper.handleDateTag(tags, currentMonthTag);
+      await component.updateComplete;
+      announcementsWrapper.handleDateTag(tags, currentMonthTag);
+      await component.updateComplete;
+
+      expect(announcementsWrapper.urlSearchParams.has('date')).to.be.false;
+      expect(announcementsWrapper.urlSearchParams.get('filters')).to.equal('yes');
+    });
+
+    it('should clear date param from URL and call replaceState when resetting date filter', async () => {
+      const { tags } = announcementsWrapper.blockData.dateFilter;
+      const currentMonthTag = tags.find((t) => t.key === 'current-month');
+
+      announcementsWrapper.handleDateTag(tags, currentMonthTag);
+      await component.updateComplete;
+      replaceStateStub.resetHistory();
+
+      announcementsWrapper.handleResetDateTags(tags);
+      await component.updateComplete;
+
+      expect(announcementsWrapper.urlSearchParams.has('date')).to.be.false;
+      expect(replaceStateStub.called).to.be.true;
+    });
+
+    it('should restore date filter selection from URL on initUrlSearchParams', () => {
+      window.history.pushState({}, '', '?filters=yes&date=last-90-days');
+      announcementsWrapper.initUrlSearchParams();
+
+      const { tags } = announcementsWrapper.blockData.dateFilter;
+      const last90Tag = tags.find((t) => t.key === 'last-90-days');
+
+      expect(last90Tag.checked).to.be.true;
+      expect(announcementsWrapper.selectedDateFilter.key).to.equal('last-90-days');
+
+      window.history.pushState({}, '', window.location.pathname);
+    });
+
+    it('should clear date param in additionalResetActions', () => {
+      announcementsWrapper.urlSearchParams.set('date', 'previous-month');
+      announcementsWrapper.additionalResetActions();
+
+      expect(announcementsWrapper.urlSearchParams.has('date')).to.be.false;
+    });
+  });
 });

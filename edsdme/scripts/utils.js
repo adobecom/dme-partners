@@ -351,7 +351,7 @@ function preloadLit(miloLibs) {
 
 export function getPermissionSpecializations() {
   const permissionSpecializations = getPartnerCookieValue(getCurrentProgramType(), 'permissionspecializations');
-  return permissionSpecializations.toLowerCase();
+  return permissionSpecializations?.replace(/\s+/g, '-').toLowerCase() || '';
 }
 
 function getPartnerLevelParams(portal) {
@@ -552,5 +552,17 @@ export async function setFeedback(getConfig) {
     console.error('Error fetching plain html of feedback fragment:', error);
     // eslint-disable-next-line consistent-return
     return null;
+  }
+}
+
+export function loadPageToAnchor() {
+  const urlHash = window.location.hash;
+
+  if (urlHash) {
+    const anchorElement = document.querySelector(urlHash);
+
+    if (anchorElement) {
+      window.scrollTo({ top: anchorElement.offsetTop, behavior: 'smooth' });
+    }
   }
 }

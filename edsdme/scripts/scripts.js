@@ -1,4 +1,5 @@
 import { applyPagePersonalization } from './personalization.js';
+import { prependContent } from './portalMessaging.js';
 import {
   setLibs,
   redirectLoggedinPartner,
@@ -12,6 +13,7 @@ import {
   prodHosts,
   previewHosts,
   setFeedback,
+  loadPageToAnchor,
 } from './utils.js';
 import { rewriteLinks } from './rewriteLinks.js';
 import { sidekickListener } from '../blocks/utils/utils.js';
@@ -115,6 +117,7 @@ function setUpPage() {
 }
 
 (async function loadPage() {
+  await prependContent();
   applyPagePersonalization();
   setUpPage();
   redirectLoggedinPartner();
@@ -131,4 +134,9 @@ function setUpPage() {
   if (previewHosts.includes(window.location.host)) {
     sidekickListener(CONFIG.locales);
   }
+
+  // Run when navigating back/forward
+  window.addEventListener('pageshow', () => {
+    loadPageToAnchor();
+  });
 }());

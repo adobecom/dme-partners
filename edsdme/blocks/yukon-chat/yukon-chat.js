@@ -454,6 +454,7 @@ export default async function init(el) {
     '{{server-error}}': "We're having trouble processing your request right now. Please try again later.",
     '{{network-error}}': 'Network error. Please check your connection and try again.',
     '{{sources}}': 'Sources',
+    '{{modal-disclaimer}}': 'AI can make mistakes. Please verify important information.',
   };
 
   if (config && config.contentRoot) {
@@ -490,6 +491,7 @@ export default async function init(el) {
 
   let chatHistory;
   let modalInputWrapper;
+  let modalDisclaimer = null;
   let modalInstance = null; // Store modal
   let chatHistoryCreated = false; // Track if chat history was already created
   let scrollToBottomBtn = null;
@@ -530,6 +532,10 @@ export default async function init(el) {
     }
     // Modal input wrapper
     modalInputWrapper = createTag('div', { class: 'modal-input-wrapper' });
+    if (configs.modalDisclaimer) {
+      modalDisclaimer = createTag('div', { class: 'modal-disclaimer' }, configs.modalDisclaimer);
+      modalInputWrapper.appendChild(modalDisclaimer);
+    }
     chatInterface.appendChild(chatHistory);
     if (scrollToBottomBtn) {
       chatInterface.appendChild(scrollToBottomBtn);
@@ -550,7 +556,11 @@ export default async function init(el) {
     // Check if modal already exists in DOM
     if (modalInstance && document.body.contains(modalInstance)) {
       if (modalInputWrapper && !modalInputWrapper.contains(sharedInputField)) {
-        modalInputWrapper.appendChild(sharedInputField);
+        if (modalDisclaimer && modalInputWrapper.contains(modalDisclaimer)) {
+          modalInputWrapper.insertBefore(sharedInputField, modalDisclaimer);
+        } else {
+          modalInputWrapper.appendChild(sharedInputField);
+        }
       }
       setTimeout(() => {
         textArea.focus();
@@ -602,7 +612,11 @@ export default async function init(el) {
       }, 500);
     });
     if (modalInputWrapper) {
-      modalInputWrapper.appendChild(sharedInputField);
+      if (modalDisclaimer) {
+        modalInputWrapper.insertBefore(sharedInputField, modalDisclaimer);
+      } else {
+        modalInputWrapper.appendChild(sharedInputField);
+      }
       setTimeout(() => {
         updateScrollButtonPosition(scrollToBottomBtn, modalInputWrapper);
       }, 100);
