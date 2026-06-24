@@ -287,5 +287,23 @@ export default {
         enrollmentURL: '/na/channelpartners/enrollment/',
       },
     },
+    {
+      tcid: '20',
+      name: '@desc-regression-banners-global-banner',
+      path: 'https://partners.stage.adobe.com/es/channelpartners/drafts/automation/regression/public-page-with-global-banner?georouting=off&martech=off',
+      tags: '@dme-banners @regression @circleCi',
+      data: { bannerTitle: 'Notification without image' },
+    },
+    {
+      tcid: '21',
+      name: '@desc-regression-banners-global-banner-logged-in-user',
+      path: 'https://partners.stage.adobe.com/na/channelpartners/drafts/automation/regression/home/?georouting=off&martech=off',
+      tags: '@dme-banners @regression @circleCi',
+      data: {
+        partnerLevel: 'cpp-distributor-us:',
+        signInButtonInternationalText: 'Iniciar sesión',
+        bannerTitle: 'Notification with an image',
+      },
+    },
   ],
 };
