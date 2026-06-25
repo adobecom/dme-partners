@@ -364,7 +364,6 @@ test.describe('MAPC sign in flow', () => {
       await signInPage.signIn(page, `${data.partnerLevel}`);
       await signInPage.profileIconButton.waitFor({ state: 'visible', timeout: 30000 });
     });
-  
     await test.step('Verify redirection to the contact-not-found page', async () => {
       await expect(page.url()).toContain(`${data.expectedRedirectedURL}`);
     });
