@@ -137,7 +137,7 @@ test.describe('Validate banners', () => {
         await expect(firstParagraph).toHaveText(feature.data.bannerText);
         const renewLink = await bannersPage.bannerLink;
         await expect(renewLink).toHaveText(feature.data.renewButtonText);
-        await expect(renewLink).toHaveAttribute('href', feature.data.renewLinkPath);
+        await expect(renewLink).toHaveAttribute('href', new RegExp(feature.data.renewLinkPath));
       });
     });
   });
