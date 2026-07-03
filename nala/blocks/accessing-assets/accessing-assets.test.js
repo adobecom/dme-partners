@@ -8,7 +8,7 @@ const { features } = AccessingAssets;
 const localesAssetAccess = features.slice(3, 8);
 const memberUserLoggedInToAdobe = features.slice(9, 11);
 const restrictedAssetAccess = features.slice(11, 13);
-let accessingAssetPage; 
+let accessingAssetPage;
 
 test.describe('Validate popups', () => {
   test.beforeEach(async ({ page, baseURL, browserName, context }) => {
@@ -180,67 +180,67 @@ test.describe('Validate popups', () => {
   // @accessing-restricted-asset-user-logged-in-to-adobe
   memberUserLoggedInToAdobe.forEach((feature) => {
     test(`${feature.name},${feature.tags}`, async ({ page, context }) => {
-    const { data, path } = feature;
-    await test.step('Go to adobe homepage', async () => {
-      await page.goto(path);
+      const { data, path } = feature;
+      await test.step('Go to adobe homepage', async () => {
+        await page.goto(path);
 
-      const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
-      await signInButton.waitFor({ state: 'visible', timeout: 30000 });
-      await signInButton.click();
-      await page.waitForLoadState('domcontentloaded');
-      await signInPage.signIn(page, `${data.partnerLevel}`);
-      await accessingAssetPage.navBar.waitFor({ state: 'visible', timeout: 30000 });
-    });
-
-    await test.step('Open asset in new tab and verify status code', async () => {
-      const newTab = await context.newPage();
-
-      const promise = new Promise((resolve) => {
-        newTab.on('response', (response) => {
-          if (response.url().includes(`${data.expectedToSeeInURL}`) && response.status() === data.httpStatusCode) {
-            resolve(true);
-          }
-          console.log(response.url(), response.status());
-        });
+        const signInButton = await signInPage.getSignInButton(`${data.signInButtonText}`);
+        await signInButton.waitFor({ state: 'visible', timeout: 30000 });
+        await signInButton.click();
+        await page.waitForLoadState('domcontentloaded');
+        await signInPage.signIn(page, `${data.partnerLevel}`);
+        await accessingAssetPage.navBar.waitFor({ state: 'visible', timeout: 30000 });
       });
 
-      try {
-        await newTab.goto(data.assetURL);
-        await newTab.waitForLoadState('load');
-      } catch (e) {
-        if (!e.message.includes('Download is starting')) throw e;
-      }
+      await test.step('Open asset in new tab and verify status code', async () => {
+        const newTab = await context.newPage();
 
-      const resourceSuccessfullyLoaded = await promise;
-      expect(resourceSuccessfullyLoaded).toBe(true);
+        const promise = new Promise((resolve) => {
+          newTab.on('response', (response) => {
+            if (response.url().includes(`${data.expectedToSeeInURL}`) && response.status() === data.httpStatusCode) {
+              resolve(true);
+            }
+            console.log(response.url(), response.status());
+          });
+        });
+
+        try {
+          await newTab.goto(data.assetURL);
+          await newTab.waitForLoadState('load');
+        } catch (e) {
+          if (!e.message.includes('Download is starting')) throw e;
+        }
+
+        const resourceSuccessfullyLoaded = await promise;
+        expect(resourceSuccessfullyLoaded).toBe(true);
+      });
     });
   });
-});
   // @accessing-restricted-asset-mp4
   restrictedAssetAccess.forEach((feature) => {
-    test(`${feature.name},${feature.tags}`, async ({ page, context }) => {
-    const { data, path } = feature;
-    await test.step('Go to adobe homepage', async () => {
-      const promise = new Promise((resolve) => {
-        page.on('response', (response) => {
-          if (response.url().includes(`${data.expectedToSeeInURL}`) && response.status() === data.httpStatusCode) {
-            resolve(true);
-          }
+    test(`${feature.name},${feature.tags}`, async ({ page }) => {
+      const { data, path } = feature;
+      await test.step('Go to adobe homepage', async () => {
+        const promise = new Promise((resolve) => {
+          page.on('response', (response) => {
+            if (response.url().includes(`${data.expectedToSeeInURL}`) && response.status() === data.httpStatusCode) {
+              resolve(true);
+            }
+          });
         });
-      });
-      await page.goto(path);
-      await page.waitForLoadState('domcontentloaded');
-      await signInPage.signIn(page, `${data.partnerLevel}`);
-      await page.waitForLoadState('load');
-      const resourceSuccessfullyLoaded = await promise;
-      expect(resourceSuccessfullyLoaded).toBe(true);
+        await page.goto(path);
+        await page.waitForLoadState('domcontentloaded');
+        await signInPage.signIn(page, `${data.partnerLevel}`);
+        await page.waitForLoadState('load');
+        const resourceSuccessfullyLoaded = await promise;
+        expect(resourceSuccessfullyLoaded).toBe(true);
       });
     });
   });
-  
+  // @accessing-restricted-asset-with-non-member-user
   test(`${features[13].name},${features[13].tags}`, async ({ page, context }) => {
     const { data, path } = features[13];
-    await test.step('Go to adobe homepage', async () => { 
+    await test.step('Go to adobe homepage', async () => {
       await page.goto(path);
       await page.waitForLoadState('domcontentloaded');
       await signInPage.signIn(page, `${data.partnerLevel}`);

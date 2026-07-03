@@ -174,6 +174,6 @@ export default {
         expectedToSee: 'https://partners.stage.adobe.com/channelpartners/error/contact-not-found#',
         assetURL: 'https://partners.stage.adobe.com/channelpartnerassets/assets/restricted/restricted_1/MAPC-stage-no-specialization.pptx',
       },
-    }
+    },
   ],
 };
