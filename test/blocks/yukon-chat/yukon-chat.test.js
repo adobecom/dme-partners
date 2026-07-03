@@ -724,18 +724,17 @@ describe('yukon-chat block', () => {
       const items = accordion.querySelectorAll('.yc-sources-list li a');
       expect(items.length).to.equal(2);
 
-      // Order is based on keys: 1 comes first (Page), then 2 (PDF Asset)
       expect(items[0].textContent).to.equal('Test Page');
       expect(items[0].getAttribute('href')).to.equal('https://test.com/index.html');
 
-      expect(items[1].textContent.trim().replace(/\s+/g, ' ')).to.equal('PDF Test Title PDF');
+      expect(items[1].textContent.trim().replace(/\s+/g, ' ')).to.equal('Test Title PDF');
       expect(items[1].getAttribute('href')).to.equal('https://test.com/doc.pdf');
 
-      // The page should have a link icon
+      // The page should have a page icon
       const pageIcon = items[0].querySelector('.yc-page-icon');
       expect(pageIcon).to.exist;
 
-      // The asset should have a pdf icon
+      // The asset should have a asset icon
       const assetIcon = items[1].querySelector('.yc-asset-icon');
       expect(assetIcon).to.exist;
 
