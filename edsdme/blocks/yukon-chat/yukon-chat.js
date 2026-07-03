@@ -273,10 +273,11 @@ function createSourcesAccordion(sourceObj, localizedText) {
 
     const textSpan = document.createElement('span');
     textSpan.textContent = displayName;
+    textSpan.className = 'yc-source-content';
 
     a.appendChild(iconSpan);
     a.appendChild(textSpan);
-    a.style.display = 'inline-flex';
+    a.style.display = 'flex';
     a.style.alignItems = 'center';
 
     a.target = '_blank';
