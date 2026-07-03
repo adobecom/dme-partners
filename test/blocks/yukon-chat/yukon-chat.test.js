@@ -27,6 +27,7 @@ describe('yukon-chat block', () => {
     window.crypto.randomUUID = sinon.stub().returns('test-uuid-12345');
 
     fetchStub = sinon.stub(window, 'fetch');
+    sinon.stub(console, 'error');
     fetchStub.callsFake(async (url) => {
       const urlStr = typeof url === 'string' ? url : url.toString();
       if (urlStr.includes('placeholders.json')) {
@@ -660,10 +661,16 @@ describe('yukon-chat block', () => {
         generated_text: 'Here is some information.',
         source: {
           1: {
-            document_id: 'test-id',
+            document_id: 'test-id-1',
+            document_name: 'index.html',
+            document_url: 'https://test.com/index.html',
+            title: 'Test Page',
+          },
+          2: {
+            document_id: 'test-id-2',
             document_name: 'Test Doc',
             document_url: 'https://test.com/doc.pdf',
-            title: 'Test Title',
+            title: 'Test Title PDF',
           },
         },
       }]);
@@ -715,11 +722,26 @@ describe('yukon-chat block', () => {
       expect(accordion).to.exist;
 
       const items = accordion.querySelectorAll('.yc-sources-list li a');
-      expect(items.length).to.equal(1);
-      expect(items[0].textContent).to.equal('Test Title');
-      expect(items[0].getAttribute('href')).to.equal('https://test.com/doc.pdf');
-      const citeRefs = accordion.querySelector('.yc-source-citation-refs');
-      expect(citeRefs.textContent.trim()).to.equal('1');
+      expect(items.length).to.equal(2);
+
+      expect(items[0].textContent).to.equal('Test Page');
+      expect(items[0].getAttribute('href')).to.equal('https://test.com/index.html');
+
+      expect(items[1].textContent.trim().replace(/\s+/g, ' ')).to.equal('Test Title PDF');
+      expect(items[1].getAttribute('href')).to.equal('https://test.com/doc.pdf');
+
+      // The page should have a page icon
+      const pageIcon = items[0].querySelector('.yc-page-icon');
+      expect(pageIcon).to.exist;
+
+      // The asset should have a asset icon
+      const assetIcon = items[1].querySelector('.yc-asset-icon');
+      expect(assetIcon).to.exist;
+
+      // Check citation numbers
+      const citeRefs = accordion.querySelectorAll('.yc-source-citation-refs');
+      expect(citeRefs[0].textContent.trim()).to.equal('1');
+      expect(citeRefs[1].textContent.trim()).to.equal('2');
     });
 
     it('should render modal disclaimer below the input field container', async () => {
