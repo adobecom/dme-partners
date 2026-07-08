@@ -601,6 +601,42 @@ describe('yukon-chat block', () => {
       });
     });
 
+    it('should collapse adjacent duplicate citations in AI responses', async () => {
+      const encoder = new TextEncoder();
+      const responseWithDuplicateCitations = 'TD Synnex is a distributor [^1][^1][^1] in France [^2] and Japan [^3][^3].';
+      const chunk = encoder.encode(`[{"generated_text":"${responseWithDuplicateCitations}"}]\n`);
+
+      fetchStub.callsFake(async () => ({
+        ok: true,
+        status: 200,
+        body: new ReadableStream({
+          start(controller) {
+            controller.enqueue(chunk);
+            controller.close();
+          },
+        }),
+      }));
+
+      const block = document.querySelector('.yukon-chat');
+      await init(block);
+
+      const textarea = document.querySelector('#yc-input-field');
+      const sendButton = document.querySelector('.yc-input-field-button');
+
+      textarea.value = 'Tell me about TD Synnex';
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      sendButton.click();
+
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 100));
+
+      const yukonMessage = document.querySelector('#yukon-chat-modal .yukon-message .message-text');
+      expect(yukonMessage).to.exist;
+      expect(yukonMessage.textContent).to.include('TD Synnex is a distributor [1] in France [2] and Japan [3].');
+      expect(yukonMessage.textContent).to.not.include('[1][1]');
+      expect(yukonMessage.textContent).to.not.include('[3][3]');
+    });
+
     it('should remove citations and everything after them from AI responses', async () => {
       const encoder = new TextEncoder();
       const responseWithCitations = 'Here is the answer.\\n\\n### Citations:\\n* [1] https://example.com\\n* [2] https://adobe.com';

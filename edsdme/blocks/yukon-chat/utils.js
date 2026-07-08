@@ -34,8 +34,10 @@ async function initMarkdownIt() {
 }
 
 function removeCitations(text) {
+  // Collapse adjacent duplicate citations: [^1][^1][^1] → [^1]
+  let cleaned = text.replace(/(\[\^\d+\])(?:\s*\1)+/g, '$1');
   // Remove ^ from citations [^1], [^2]
-  let cleaned = text.replace(/\[\^(\d+)\]/g, '[$1]');
+  cleaned = cleaned.replace(/\[\^(\d+)\]/g, '[$1]');
   cleaned = cleaned.replace(/\(\d+\)/g, '');
 
   // Remove individual footnote definition lines (e.g. \n[1]: ...)
