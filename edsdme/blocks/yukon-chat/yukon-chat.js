@@ -16,6 +16,16 @@ let currentAbortController = null; // Store abort controller for ongoing request
 const requestId = crypto.randomUUID();
 const configs = {};
 
+/* eslint-disable no-underscore-dangle */
+function dispatchYukonAnalyticsEvent(eventName) {
+  if (!window._satellite?.track) return;
+  window._satellite.track('event', {
+    xdm: {},
+    data: { web: { webInteraction: { name: eventName } } },
+  });
+}
+/* eslint-enable no-underscore-dangle */
+
 const createInputField = (textareaEl, buttonEl) => {
   const container = createTag('div', { class: 'yc-input-field-container' });
 
@@ -300,6 +310,7 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
   if (!chatHistory) return;
   const question = textArea.value.trim();
   if (!question) return;
+  dispatchYukonAnalyticsEvent('yukonQuestionAsked');
   const textareaWrapper = sharedInputField.querySelector('.yc-textarea-grow-wrap');
   textArea.value = '';
   updateReplicatedValue(textareaWrapper, textArea, scrollToBottomBtn, modalInputWrapper);
@@ -405,12 +416,21 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
         }
       }
     }
-    if (messageAdded && Object.keys(accumulatedSources).length > 0) {
-      const currentScrollTop = chatHistory.scrollTop;
-      const accordion = createSourcesAccordion(accumulatedSources, localizedText);
-      messageContent.appendChild(accordion);
-      chatHistory.scrollTop = currentScrollTop;
-      checkScrollPosition(chatHistory, scrollToBottomBtn);
+    if (messageAdded) {
+      const references = groupSourcesByDocumentId(accumulatedSources)
+        .map(({ citationKeys, item }) => ({
+          citationKeys,
+          title: item.title || item.document_name || item.document_url,
+          url: item.document_url,
+        }));
+      if (references.length > 0) {
+        const currentScrollTop = chatHistory.scrollTop;
+        const accordion = createSourcesAccordion(accumulatedSources, localizedText);
+        messageContent.appendChild(accordion);
+        chatHistory.scrollTop = currentScrollTop;
+        checkScrollPosition(chatHistory, scrollToBottomBtn);
+      }
+      dispatchYukonAnalyticsEvent('yukonAnswerReceived');
     }
     textArea.removeAttribute('disabled');
     inputFieldButton.removeAttribute('disabled');
@@ -454,7 +474,7 @@ export default async function init(el) {
     '{{send-message}}': 'Send Message',
     '{{scroll-to-bottom}}': 'Scroll to bottom',
     '{{timeout-error}}': 'This is taking longer than expected. Please try again in a moment.',
-    '{{server-error}}': 'We’re having trouble processing your request right now. Please try again later.',
+    '{{server-error}}': "We're having trouble processing your request right now. Please try again later.",
     '{{network-error}}': 'Network error. Please check your connection and try again.',
     '{{sources}}': 'Sources',
     '{{modal-disclaimer}}': 'AI can make mistakes. Please verify important information.',
@@ -629,6 +649,7 @@ export default async function init(el) {
     }, 100);
     return modal;
   };
+  textArea.addEventListener('click', () => dispatchYukonAnalyticsEvent('yukonChatInputClick'));
   textArea.addEventListener('input', () => {
     updateButtonState(textArea, inputFieldButton);
     updateReplicatedValue(textareaWrapper, textArea, scrollToBottomBtn, modalInputWrapper);
