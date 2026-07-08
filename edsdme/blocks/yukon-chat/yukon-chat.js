@@ -22,7 +22,7 @@ function dispatchYukonAnalyticsEvent(eventName, metadata = {}) {
   window._satellite.track('event', {
     xdm: {},
     data: {
-      web: { webInteraction: { name: 'yukonChat' } },
+      web: { webInteraction: { name: eventName } },
       _adobe_corpnew: {
         digitalData: {
           primaryEvent: {
