@@ -17,23 +17,11 @@ const requestId = crypto.randomUUID();
 const configs = {};
 
 /* eslint-disable no-underscore-dangle */
-function dispatchYukonAnalyticsEvent(eventName, metadata = {}) {
+function dispatchYukonAnalyticsEvent(eventName) {
   if (!window._satellite?.track) return;
   window._satellite.track('event', {
     xdm: {},
-    data: {
-      web: { webInteraction: { name: eventName } },
-      _adobe_corpnew: {
-        digitalData: {
-          primaryEvent: {
-            eventInfo: {
-              eventName,
-              ...metadata,
-            },
-          },
-        },
-      },
-    },
+    data: { web: { webInteraction: { name: eventName } } },
   });
 }
 /* eslint-enable no-underscore-dangle */
@@ -322,7 +310,7 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
   if (!chatHistory) return;
   const question = textArea.value.trim();
   if (!question) return;
-  dispatchYukonAnalyticsEvent('yukonQuestionAsked', { question });
+  dispatchYukonAnalyticsEvent('yukonQuestionAsked');
   const textareaWrapper = sharedInputField.querySelector('.yc-textarea-grow-wrap');
   textArea.value = '';
   updateReplicatedValue(textareaWrapper, textArea, scrollToBottomBtn, modalInputWrapper);
@@ -442,10 +430,7 @@ const sendMessage = async (textArea, chatHistory, sharedInputField, scrollToBott
         chatHistory.scrollTop = currentScrollTop;
         checkScrollPosition(chatHistory, scrollToBottomBtn);
       }
-      dispatchYukonAnalyticsEvent('yukonAnswerReceived', {
-        answer: accumulatedMarkdown,
-        references,
-      });
+      dispatchYukonAnalyticsEvent('yukonAnswerReceived');
     }
     textArea.removeAttribute('disabled');
     inputFieldButton.removeAttribute('disabled');

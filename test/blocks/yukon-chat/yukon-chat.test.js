@@ -908,22 +908,19 @@ describe('yukon-chat block', () => {
       delete window._satellite;
     });
 
-    const getEventInfo = (eventName) => {
-      const call = trackStub.getCalls().find(
-        (c) => c.args[1]?.data?._adobe_corpnew?.digitalData?.primaryEvent?.eventInfo?.eventName === eventName,
-      );
-      return call?.args[1]?.data?._adobe_corpnew?.digitalData?.primaryEvent?.eventInfo;
-    };
+    const getTrackingCall = (eventName) => trackStub.getCalls().find(
+      (c) => c.args[1]?.data?.web?.webInteraction?.name === eventName,
+    );
 
-    const waitForEvent = async (eventName, timeout = 2000) => {
+    const waitForTrackingCall = async (eventName, timeout = 2000) => {
       const start = Date.now();
       while (Date.now() - start < timeout) {
-        const info = getEventInfo(eventName);
-        if (info) return info;
+        const call = getTrackingCall(eventName);
+        if (call) return call;
         // eslint-disable-next-line no-await-in-loop, no-promise-executor-return
         await new Promise((r) => setTimeout(r, 20));
       }
-      return getEventInfo(eventName);
+      return getTrackingCall(eventName);
     };
 
     it('should not throw when _satellite is not defined', async () => {
@@ -945,14 +942,10 @@ describe('yukon-chat block', () => {
       expect(trackStub.calledOnce).to.be.true;
       expect(trackStub.firstCall.args[0]).to.equal('event');
       expect(trackStub.firstCall.args[1].xdm).to.deep.equal({});
-      expect(trackStub.firstCall.args[1].data.web.webInteraction.name).to.equal('yukonChat');
-
-      const eventInfo = getEventInfo('yukonChatInputClick');
-      expect(eventInfo).to.exist;
-      expect(eventInfo.eventName).to.equal('yukonChatInputClick');
+      expect(trackStub.firstCall.args[1].data.web.webInteraction.name).to.equal('yukonChatInputClick');
     });
 
-    it('should fire yukonQuestionAsked with the question text when send button is clicked', async () => {
+    it('should fire yukonQuestionAsked when send button is clicked', async () => {
       const encoder = new TextEncoder();
       const chunk = encoder.encode('[{"generated_text":"Test response"}]\n');
       fetchStub.callsFake(async (url) => {
@@ -985,13 +978,13 @@ describe('yukon-chat block', () => {
       // eslint-disable-next-line no-promise-executor-return
       await new Promise((r) => setTimeout(r, 50));
 
-      const eventInfo = getEventInfo('yukonQuestionAsked');
-      expect(eventInfo).to.exist;
-      expect(eventInfo.eventName).to.equal('yukonQuestionAsked');
-      expect(eventInfo.question).to.equal('What is Adobe?');
+      const call = getTrackingCall('yukonQuestionAsked');
+      expect(call).to.exist;
+      expect(call.args[0]).to.equal('event');
+      expect(call.args[1].data.web.webInteraction.name).to.equal('yukonQuestionAsked');
     });
 
-    it('should fire yukonQuestionAsked with the question text when Enter key is pressed', async () => {
+    it('should fire yukonQuestionAsked when Enter key is pressed', async () => {
       const encoder = new TextEncoder();
       const chunk = encoder.encode('[{"generated_text":"Test response"}]\n');
       fetchStub.callsFake(async (url) => {
@@ -1022,12 +1015,12 @@ describe('yukon-chat block', () => {
       // eslint-disable-next-line no-promise-executor-return
       await new Promise((r) => setTimeout(r, 50));
 
-      const eventInfo = getEventInfo('yukonQuestionAsked');
-      expect(eventInfo).to.exist;
-      expect(eventInfo.question).to.equal('Tell me about partners');
+      const call = getTrackingCall('yukonQuestionAsked');
+      expect(call).to.exist;
+      expect(call.args[1].data.web.webInteraction.name).to.equal('yukonQuestionAsked');
     });
 
-    it('should fire yukonAnswerReceived with messageText and empty sources when response has no sources', async () => {
+    it('should fire yukonAnswerReceived when response has no sources', async () => {
       const encoder = new TextEncoder();
       const chunk = encoder.encode('[{"generated_text":"Hello from Yukon"}]\n');
       fetchStub.callsFake(async (url) => {
@@ -1057,14 +1050,12 @@ describe('yukon-chat block', () => {
       textarea.dispatchEvent(new Event('input', { bubbles: true }));
       sendButton.click();
 
-      const eventInfo = await waitForEvent('yukonAnswerReceived');
-      expect(eventInfo).to.exist;
-      expect(eventInfo.eventName).to.equal('yukonAnswerReceived');
-      expect(eventInfo.answer).to.include('Hello from Yukon');
-      expect(eventInfo.references).to.deep.equal([]);
+      const call = await waitForTrackingCall('yukonAnswerReceived');
+      expect(call).to.exist;
+      expect(call.args[1].data.web.webInteraction.name).to.equal('yukonAnswerReceived');
     });
 
-    it('should fire yukonAnswerReceived with populated sources when response includes source data', async () => {
+    it('should fire yukonAnswerReceived when response includes source data', async () => {
       fetchStub.callsFake(async (url, fetchInit) => {
         const urlStr = typeof url === 'string' ? url : url.toString();
         if (urlStr.includes('placeholders.json')) {
@@ -1089,19 +1080,9 @@ describe('yukon-chat block', () => {
       textarea.dispatchEvent(new Event('input', { bubbles: true }));
       sendButton.click();
 
-      const eventInfo = await waitForEvent('yukonAnswerReceived');
-      expect(eventInfo).to.exist;
-      expect(eventInfo.answer).to.be.a('string').and.not.empty;
-
-      const { references } = eventInfo;
-      expect(references).to.be.an('array').with.lengthOf(3);
-      expect(references[0].url).to.equal('https://example.com/mock-yukon-source.pdf');
-      expect(references[0].citationKeys).to.deep.equal(['1', '2']);
-      expect(references[0].title).to.equal('DE-yukon-doc-distributor-china-education.pdf');
-      expect(references[1].url).to.equal('https://example.com/mock-partner-guide.pdf');
-      expect(references[1].citationKeys).to.deep.equal(['3', '4']);
-      expect(references[2].url).to.equal('https://example.com/mock-partner-faq.pdf');
-      expect(references[2].citationKeys).to.deep.equal(['5']);
+      const call = await waitForTrackingCall('yukonAnswerReceived');
+      expect(call).to.exist;
+      expect(call.args[1].data.web.webInteraction.name).to.equal('yukonAnswerReceived');
     });
 
     it('should not fire yukonAnswerReceived when the server returns an error', async () => {
@@ -1124,8 +1105,8 @@ describe('yukon-chat block', () => {
       // eslint-disable-next-line no-promise-executor-return
       await new Promise((r) => setTimeout(r, 100));
 
-      const eventInfo = getEventInfo('yukonAnswerReceived');
-      expect(eventInfo).to.not.exist;
+      const call = getTrackingCall('yukonAnswerReceived');
+      expect(call).to.not.exist;
     });
     /* eslint-enable no-underscore-dangle */
   });
