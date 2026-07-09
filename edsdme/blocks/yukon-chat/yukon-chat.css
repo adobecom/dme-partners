@@ -757,6 +757,8 @@ chat-history-left .user-message {
   flex-shrink: 0;
   font-weight: 400;
   color: #292929;
+  text-align: right;
+  width: 24px;
 }
 
 .yc-sources-list a {
@@ -764,10 +766,24 @@ chat-history-left .user-message {
   font-weight: 400;
   text-decoration: underline;
   transition: color 0.3s ease;
+  min-width: 0;
 }
 
 .yc-sources-list a:hover {
   color: #000;
+}
+
+.yc-sources-list a .yc-asset-icon {
+  justify-content: center;
+  width: 18px;
+}
+
+.yc-sources-list a .yc-source-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .yukon-chat-button.cta {
