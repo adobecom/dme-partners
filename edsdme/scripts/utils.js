@@ -238,6 +238,10 @@ export function isRenew() {
 }
 
 export async function getRenewBanner(getConfig) {
+  const programType = getCurrentProgramType();
+  const countryCode = getPartnerCookieValue(programType, 'countrycode');
+  if (countryCode === 'ru' || countryCode === 'by') return;
+
   const renew = isRenew();
   if (!renew) return;
   const { accountStatus, daysNum } = renew;
