@@ -240,7 +240,9 @@ export function isRenew() {
 export async function getRenewBanner(getConfig) {
   const programType = getCurrentProgramType();
   const countryCode = getPartnerCookieValue(programType, 'countrycode');
-  if (countryCode === 'ru' || countryCode === 'by') return;
+  const dontShowBannerTo = ['ru', 'by'];
+
+  if (dontShowBannerTo.includes(countryCode)) return;
 
   const renew = isRenew();
   if (!renew) return;
