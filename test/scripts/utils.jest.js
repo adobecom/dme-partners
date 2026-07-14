@@ -389,6 +389,54 @@ describe('Test utils.js', () => {
     document.body.appendChild(main);
     expect(await getRenewBanner(getConfig)).toEqual(null);
   });
+  it('Don\'t show renew banner if partner has countryCode RU', async () => {
+    const expiredDate = new Date();
+    expiredDate.setDate(expiredDate.getDate() + 30);
+    const cookieObject = {
+      CPP: {
+        primaryContact: true,
+        status: 'MEMBER',
+        level: 'gold',
+        accountAnniversary: expiredDate,
+        countryCode: 'RU',
+      },
+    };
+    document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+    const getConfig = () => ({ locale: '' });
+    global.fetch = jest.fn(() => Promise.resolve({
+      ok: true,
+      text: () => Promise.resolve('<div class="notification">Test</div>'),
+    }));
+    const main = document.createElement('main');
+    document.body.appendChild(main);
+    await getRenewBanner(getConfig);
+    const banner = document.querySelector('.notification');
+    expect(banner).toBeFalsy();
+  });
+  it('Don\'t show renew banner if partner has countryCode BY', async () => {
+    const expiredDate = new Date();
+    expiredDate.setDate(expiredDate.getDate() + 30);
+    const cookieObject = {
+      CPP: {
+        primaryContact: true,
+        status: 'MEMBER',
+        level: 'gold',
+        accountAnniversary: expiredDate,
+        countryCode: 'BY',
+      },
+    };
+    document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+    const getConfig = () => ({ locale: '' });
+    global.fetch = jest.fn(() => Promise.resolve({
+      ok: true,
+      text: () => Promise.resolve('<div class="notification">Test</div>'),
+    }));
+    const main = document.createElement('main');
+    document.body.appendChild(main);
+    await getRenewBanner(getConfig);
+    const banner = document.querySelector('.notification');
+    expect(banner).toBeFalsy();
+  });
   it('Update ims config if user is signed in', () => {
     jest.useFakeTimers();
     window.adobeIMS = {
