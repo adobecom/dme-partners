@@ -27,6 +27,8 @@ export const RESSELER_LEVELS = [LEVELS.REGISTERED, LEVELS.CERTIFIED, LEVELS.GOLD
 const MAX_PARTNER_ERROR_REDIRECTS_COUNT = 3;
 const PARTNER_ERROR_REDIRECTS_COUNT_COOKIE = 'partner_redirects_count';
 
+const dontShowRenewBannerTo = ['ru', 'by'];
+
 export const [setLibs, getLibs] = (() => {
   let libs;
   return [
@@ -204,6 +206,9 @@ export function redirectLoggedinPartner(win = window) {
 export function isRenew() {
   const programType = getCurrentProgramType();
 
+  const countryCode = getPartnerCookieValue(programType, 'countrycode');
+  if (dontShowRenewBannerTo.includes(countryCode)) return;
+
   const primaryContact = getPartnerCookieValue(programType, 'primarycontact');
   if (!primaryContact) return;
 
@@ -239,10 +244,9 @@ export function isRenew() {
 
 export async function getRenewBanner(getConfig) {
   const programType = getCurrentProgramType();
-  const countryCode = getPartnerCookieValue(programType, 'countrycode');
-  const dontShowBannerTo = ['ru', 'by'];
 
-  if (dontShowBannerTo.includes(countryCode)) return;
+  const countryCode = getPartnerCookieValue(programType, 'countrycode');
+  if (dontShowRenewBannerTo.includes(countryCode)) return;
 
   const renew = isRenew();
   if (!renew) return;
