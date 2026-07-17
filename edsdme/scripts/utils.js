@@ -361,7 +361,11 @@ function preloadLit(miloLibs) {
 
 export function getPermissionSpecializations() {
   const permissionSpecializations = getPartnerCookieValue(getCurrentProgramType(), 'permissionspecializations');
-  return permissionSpecializations?.replace(/\s+/g, '-').toLowerCase() || '';
+  if (!permissionSpecializations) return [];
+  return permissionSpecializations
+    .split(',')
+    .map((spec) => spec.trim().replace(/\s+/g, '-').toLowerCase())
+    .filter(Boolean);
 }
 
 function getPartnerLevelParams(portal) {
