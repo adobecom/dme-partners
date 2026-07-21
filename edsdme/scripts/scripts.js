@@ -6,6 +6,7 @@ import {
   updateIMSConfig,
   preloadResources,
   getRenewBanner,
+  getSanctionedBanner,
   updateNavigation,
   updateFooter,
   enableGeoPopup,
@@ -129,6 +130,7 @@ function setUpPage() {
   setConfig({ ...CONFIG, miloLibs });
   await setFeedback(getConfig);
   await getRenewBanner(getConfig);
+  await getSanctionedBanner(getConfig);
   await loadArea();
   applyPagePersonalization();
   rewriteLinks(document);
