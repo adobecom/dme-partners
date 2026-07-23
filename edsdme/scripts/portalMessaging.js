@@ -104,9 +104,8 @@ export async function getRenewBanner(locales) {
 
     const div = document.createElement('div');
     div.appendChild(block);
-
-    const main = document.querySelector('main');
-    if (main) main.insertBefore(div, main.firstChild);
+    // eslint-disable-next-line consistent-return
+    return div;
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('There has been a problem with your fetch operation:', error);
@@ -115,8 +114,9 @@ export async function getRenewBanner(locales) {
   }
 }
 
-export async function prependContent(locales) {
+export async function prependContent(config) {
   const documentMain = document.querySelector('main');
+  const { locales } = config;
   if (!documentMain) return;
 
   const [globalBannerContent, sanctionedBannerContent, renewBannerContent] = await Promise.all([
