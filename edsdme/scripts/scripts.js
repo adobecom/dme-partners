@@ -5,8 +5,6 @@ import {
   redirectLoggedinPartner,
   updateIMSConfig,
   preloadResources,
-  getRenewBanner,
-  getSanctionedBanner,
   updateNavigation,
   updateFooter,
   enableGeoPopup,
@@ -119,7 +117,7 @@ function setUpPage() {
 }
 
 (async function loadPage() {
-  await prependContent();
+  await prependContent(CONFIG.locales);
   applyPagePersonalization();
   setUpPage();
   redirectLoggedinPartner();
@@ -129,8 +127,6 @@ function setUpPage() {
 
   setConfig({ ...CONFIG, miloLibs });
   await setFeedback(getConfig);
-  await getRenewBanner(getConfig);
-  await getSanctionedBanner(getConfig);
   await loadArea();
   applyPagePersonalization();
   rewriteLinks(document);
