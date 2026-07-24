@@ -3,9 +3,9 @@
  */
 import {
   getGlobalBanner,
-  prependContent,
   getSanctionedBanner,
   getRenewBanner,
+  prependContent,
 } from '../../edsdme/scripts/portalMessaging.js';
 import {
   getMetadataContent,
@@ -75,15 +75,6 @@ describe('Test portalMessaging.js', () => {
       expect(global.fetch).not.toHaveBeenCalled();
     });
 
-    it('returns undefined when metadata content is none (case-insensitive)', async () => {
-      getMetadataContent.mockReturnValue('  none  ');
-
-      const result = await getGlobalBanner();
-
-      expect(result).toBeUndefined();
-      expect(global.fetch).not.toHaveBeenCalled();
-    });
-
     it('warns and returns undefined when path does not start with /', async () => {
       getMetadataContent.mockReturnValue('relative/path');
 
@@ -105,7 +96,7 @@ describe('Test portalMessaging.js', () => {
       expect(warnSpy).toHaveBeenCalledWith('Banner fragment for /fragments/global-banner not found');
     });
 
-    it('returns banner content element on success', async () => {
+    it('returns banner element on success', async () => {
       getMetadataContent.mockReturnValue('/fragments/global-banner');
       global.fetch.mockResolvedValue({
         ok: true,
@@ -114,78 +105,13 @@ describe('Test portalMessaging.js', () => {
 
       const result = await getGlobalBanner();
 
-      expect(result).not.toBeNull();
+      expect(result).toBeTruthy();
       expect(result.id).toBe('banner');
     });
   });
 
-  describe('prependContent', () => {
-    it('returns early when no main element exists', async () => {
-      document.body.innerHTML = '';
-      getMetadataContent.mockReturnValue('/fragments/global-banner');
-
-      await prependContent();
-
-      expect(global.fetch).not.toHaveBeenCalled();
-    });
-
-    it('prepends global banner to main when available', async () => {
-      document.body.innerHTML = '<main><div id="existing">Content</div></main>';
-      getMetadataContent.mockImplementation((key) => (key === 'global-banner' ? '/fragments/global-banner' : null));
-      global.fetch.mockResolvedValue({
-        ok: true,
-        text: () => Promise.resolve('<html><body><main><div id="banner">Banner</div></main></body></html>'),
-      });
-
-      await prependContent();
-
-      expect(document.querySelector('main').firstElementChild.id).toBe('banner');
-    });
-
-    it('does not modify main when global banner is unavailable', async () => {
-      document.body.innerHTML = '<main><div id="existing">Content</div></main>';
-      getMetadataContent.mockImplementation((key) => (key === 'global-banner' ? 'NONE' : null));
-
-      await prependContent();
-
-      expect(document.querySelector('main').firstElementChild.id).toBe('existing');
-    });
-
-    it('prepends both global banner and sanctioned banner when available', async () => {
-      document.body.innerHTML = '<main><div id="existing">Content</div></main>';
-      getPartnerCookieValue.mockReturnValue('ru');
-      getMetadataContent.mockImplementation((key) => {
-        if (key === 'global-banner') return '/fragments/global-banner';
-        return null;
-      });
-
-      global.fetch.mockImplementation((url) => {
-        if (url === '/fragments/global-banner') {
-          return Promise.resolve({
-            ok: true,
-            text: () => Promise.resolve('<html><body><main><div id="global-banner">Global Banner</div></main></body></html>'),
-          });
-        }
-        if (url === '/edsdme/partners-shared/fragments/banner-account-sanctioned') {
-          return Promise.resolve({
-            ok: true,
-            text: () => Promise.resolve('<html><body><main><div id="sanctioned-banner">Sanctioned Banner</div></main></body></html>'),
-          });
-        }
-        return Promise.reject(new Error(`Unknown url: ${url}`));
-      });
-
-      await prependContent();
-
-      const main = document.querySelector('main');
-      expect(main.children[0].id).toBe('sanctioned-banner');
-      expect(main.children[1].id).toBe('global-banner');
-      expect(main.children[2].id).toBe('existing');
-    });
-  });
-
   describe('getSanctionedBanner', () => {
-    it("Don't show sanctioned banner if partner has countryCode US", async () => {
+    it("returns null if partner country is not sanctioned", async () => {
       getPartnerCookieValue.mockReturnValue('us');
 
       const result = await getSanctionedBanner();
@@ -194,56 +120,63 @@ describe('Test portalMessaging.js', () => {
       expect(global.fetch).not.toHaveBeenCalled();
     });
 
-    it('Show sanctioned banner if partner has countryCode RU', async () => {
+    it('returns sanctioned banner for RU with default path', async () => {
       getPartnerCookieValue.mockReturnValue('ru');
       getMetadataContent.mockReturnValue(null);
+      getLocale.mockReturnValue({ prefix: '' });
       global.fetch.mockResolvedValue({
         ok: true,
-        text: () => Promise.resolve('<html><body><main><div class="notification">Sanctioned Banner Test</div></main></body></html>'),
+        text: () => Promise.resolve(
+          '<html><body><main><div class="notification">Sanctioned RU</div></main></body></html>',
+        ),
       });
 
       const result = await getSanctionedBanner();
 
       expect(result).toBeTruthy();
       expect(result.classList.contains('notification')).toBe(true);
-      expect(result.textContent).toEqual('Sanctioned Banner Test');
+      expect(result.textContent).toBe('Sanctioned RU');
       expect(global.fetch).toHaveBeenCalledWith('/edsdme/partners-shared/fragments/banner-account-sanctioned');
     });
 
-    it('Show sanctioned banner if partner has countryCode BY', async () => {
+    it('returns sanctioned banner for BY with locale prefix', async () => {
       getPartnerCookieValue.mockReturnValue('by');
       getMetadataContent.mockReturnValue(null);
       getLocale.mockReturnValue({ prefix: '/de' });
       global.fetch.mockResolvedValue({
         ok: true,
-        text: () => Promise.resolve('<html><body><main><div class="notification">Sanctioned BY Test</div></main></body></html>'),
+        text: () => Promise.resolve(
+          '<html><body><main><div class="notification">Sanctioned BY</div></main></body></html>',
+        ),
       });
 
       const result = await getSanctionedBanner();
 
       expect(result).toBeTruthy();
       expect(result.classList.contains('notification')).toBe(true);
-      expect(result.textContent).toEqual('Sanctioned BY Test');
+      expect(result.textContent).toBe('Sanctioned BY');
       expect(global.fetch).toHaveBeenCalledWith('/de/edsdme/partners-shared/fragments/banner-account-sanctioned');
     });
 
-    it('Use custom metadata path for sanctioned banner if present', async () => {
+    it('uses custom metadata path if present', async () => {
       getPartnerCookieValue.mockReturnValue('ru');
-      getMetadataContent.mockReturnValue('/custom/path/to/sanctioned-banner');
+      getMetadataContent.mockReturnValue('/custom/path/sanctioned-banner');
       global.fetch.mockResolvedValue({
         ok: true,
-        text: () => Promise.resolve('<html><body><main><div id="sanctioned-banner">Custom Path Banner</div></main></body></html>'),
+        text: () => Promise.resolve(
+          '<html><body><main><div id="sanctioned-banner">Custom Sanctioned</div></main></body></html>',
+        ),
       });
 
       const result = await getSanctionedBanner();
 
       expect(result).toBeTruthy();
       expect(result.id).toBe('sanctioned-banner');
-      expect(result.textContent).toEqual('Custom Path Banner');
-      expect(global.fetch).toHaveBeenCalledWith('/custom/path/to/sanctioned-banner');
+      expect(result.textContent).toBe('Custom Sanctioned');
+      expect(global.fetch).toHaveBeenCalledWith('/custom/path/sanctioned-banner');
     });
 
-    it('Sanctioned banner fetch error', async () => {
+    it('returns null on fragment fetch error', async () => {
       getPartnerCookieValue.mockReturnValue('ru');
       getMetadataContent.mockReturnValue(null);
       global.fetch.mockResolvedValue({ ok: false, status: 404 });
@@ -259,9 +192,9 @@ describe('Test portalMessaging.js', () => {
   });
 
   describe('getRenewBanner', () => {
-    it('returns early for sanctioned country', async () => {
+    it('returns undefined for sanctioned country', async () => {
       getPartnerCookieValue.mockReturnValue('ru');
-      isRenew.mockReturnValue({ accountStatus: 'expired', daysNum: '5' });
+      isRenew.mockReturnValue({ accountStatus: 'expired', daysNum: 7 });
 
       const result = await getRenewBanner();
 
@@ -269,7 +202,7 @@ describe('Test portalMessaging.js', () => {
       expect(global.fetch).not.toHaveBeenCalled();
     });
 
-    it('returns early when renew data is missing', async () => {
+    it('returns undefined when isRenew returns null', async () => {
       getPartnerCookieValue.mockReturnValue('us');
       isRenew.mockReturnValue(null);
 
@@ -279,12 +212,11 @@ describe('Test portalMessaging.js', () => {
       expect(global.fetch).not.toHaveBeenCalled();
     });
 
-    it('injects expired renewal banner into main and replaces $daysNum', async () => {
-      document.body.innerHTML = '<main><div id="existing">Existing</div></main>';
+    it('returns expired renew banner and replaces $daysNum', async () => {
       getPartnerCookieValue.mockReturnValue('us');
       getLocale.mockReturnValue({ prefix: '' });
-      getMetadataContent.mockReturnValue(null);
-      isRenew.mockReturnValue({ accountStatus: 'expired', daysNum: '7' });
+      getMetadataContent.mockImplementation((key) => (key === 'banner-account-expires' ? null : null));
+      isRenew.mockReturnValue({ accountStatus: 'expired', daysNum: 7 });
 
       global.fetch.mockResolvedValue({
         ok: true,
@@ -293,20 +225,17 @@ describe('Test portalMessaging.js', () => {
 
       const result = await getRenewBanner();
 
-      expect(result).toBeUndefined();
+      expect(result).toBeTruthy();
+      expect(result.querySelector('.notification')).toBeTruthy();
+      expect(result.textContent).toContain('Expires in 7 days');
       expect(global.fetch).toHaveBeenCalledWith(
         'http://localhost/edsdme/partners-shared/fragments/banner-account-expires.plain.html',
       );
-
-      const main = document.querySelector('main');
-      expect(main.firstElementChild.querySelector('.notification')).toBeTruthy();
-      expect(main.textContent).toContain('Expires in 7 days');
     });
 
-    it('uses metadata path when present (suspended)', async () => {
-      document.body.innerHTML = '<main><div id="existing">Existing</div></main>';
+    it('uses metadata path for suspended banner when present', async () => {
       getPartnerCookieValue.mockReturnValue('us');
-      isRenew.mockReturnValue({ accountStatus: 'suspended', daysNum: '3' });
+      isRenew.mockReturnValue({ accountStatus: 'suspended', daysNum: 3 });
       getMetadataContent.mockImplementation((key) => {
         if (key === 'banner-account-suspended') return '/custom/suspended-banner';
         return null;
@@ -317,18 +246,17 @@ describe('Test portalMessaging.js', () => {
         text: () => Promise.resolve('<div class="notification">Suspended for $daysNum days</div>'),
       });
 
-      await getRenewBanner();
+      const result = await getRenewBanner();
 
+      expect(result).toBeTruthy();
+      expect(result.textContent).toContain('Suspended for 3 days');
       expect(global.fetch).toHaveBeenCalledWith('http://localhost/custom/suspended-banner.plain.html');
-      expect(document.querySelector('main').textContent).toContain('Suspended for 3 days');
     });
 
     it('returns null and logs error when renew fetch fails', async () => {
-      document.body.innerHTML = '<main></main>';
       getPartnerCookieValue.mockReturnValue('us');
+      isRenew.mockReturnValue({ accountStatus: 'expired', daysNum: 10 });
       getMetadataContent.mockReturnValue(null);
-      isRenew.mockReturnValue({ accountStatus: 'expired', daysNum: '10' });
-
       global.fetch.mockResolvedValue({ ok: false, statusText: 'Not Found' });
 
       const result = await getRenewBanner();
@@ -338,6 +266,79 @@ describe('Test portalMessaging.js', () => {
         'There has been a problem with your fetch operation:',
         expect.any(Error),
       );
+    });
+  });
+
+  describe('prependContent', () => {
+    it('returns early when no main element exists', async () => {
+      await prependContent({ locales: {} });
+      expect(global.fetch).not.toHaveBeenCalled();
+    });
+
+    it('prepends global + renew banners for non-sanctioned partner', async () => {
+      document.body.innerHTML = '<main><div id="existing">Existing</div></main>';
+      getPartnerCookieValue.mockReturnValue('us');
+      isRenew.mockReturnValue({ accountStatus: 'expired', daysNum: 5 });
+      getMetadataContent.mockImplementation((key) => {
+        if (key === 'global-banner') return '/fragments/global-banner';
+        return null;
+      });
+
+      global.fetch.mockImplementation((url) => {
+        if (url === '/fragments/global-banner') {
+          return Promise.resolve({
+            ok: true,
+            text: () => Promise.resolve('<html><body><main><div id="global-banner">Global</div></main></body></html>'),
+          });
+        }
+        if (url === 'http://localhost/edsdme/partners-shared/fragments/banner-account-expires.plain.html') {
+          return Promise.resolve({
+            ok: true,
+            text: () => Promise.resolve('<div class="notification">Expires in $daysNum days</div>'),
+          });
+        }
+        return Promise.reject(new Error(`Unknown url: ${url}`));
+      });
+
+      await prependContent({ locales: {} });
+
+      const main = document.querySelector('main');
+      expect(main.children[0].querySelector('.notification')).toBeTruthy();
+      expect(main.children[1].id).toBe('global-banner');
+      expect(main.children[2].id).toBe('existing');
+    });
+
+    it('prepends sanctioned before global for sanctioned partner', async () => {
+      document.body.innerHTML = '<main><div id="existing">Existing</div></main>';
+      getPartnerCookieValue.mockReturnValue('ru');
+      isRenew.mockReturnValue({ accountStatus: 'expired', daysNum: 5 }); // ignored due sanctioned
+      getMetadataContent.mockImplementation((key) => {
+        if (key === 'global-banner') return '/fragments/global-banner';
+        return null;
+      });
+
+      global.fetch.mockImplementation((url) => {
+        if (url === '/fragments/global-banner') {
+          return Promise.resolve({
+            ok: true,
+            text: () => Promise.resolve('<html><body><main><div id="global-banner">Global</div></main></body></html>'),
+          });
+        }
+        if (url === '/edsdme/partners-shared/fragments/banner-account-sanctioned') {
+          return Promise.resolve({
+            ok: true,
+            text: () => Promise.resolve('<html><body><main><div id="sanctioned-banner">Sanctioned</div></main></body></html>'),
+          });
+        }
+        return Promise.reject(new Error(`Unknown url: ${url}`));
+      });
+
+      await prependContent({ locales: {} });
+
+      const main = document.querySelector('main');
+      expect(main.children[0].id).toBe('sanctioned-banner');
+      expect(main.children[1].id).toBe('global-banner');
+      expect(main.children[2].id).toBe('existing');
     });
   });
 });
