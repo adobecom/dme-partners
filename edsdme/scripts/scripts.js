@@ -62,7 +62,7 @@ const CONFIG = {
   codeRoot: '/edsdme',
   contentRoot: '/edsdme/partners-shared',
   imsClientId,
-  imsScope: 'AdobeID,openid,gnav,pps.read,additional_info.roles,read_organizations,account_cluster.read',
+  imsScope: 'AdobeID,openid,gnav,pps.read,read_organizations',
   clientEnv: prodHosts.includes(window.location.host) ? 'prod' : null,
   geoRouting: enableGeoPopup(),
   // fallbackRouting: 'off',
