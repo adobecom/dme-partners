@@ -111,7 +111,7 @@ describe('Test portalMessaging.js', () => {
   });
 
   describe('getSanctionedBanner', () => {
-    it("returns null if partner country is not sanctioned", async () => {
+    it('returns null if partner country is not sanctioned', async () => {
       getPartnerCookieValue.mockReturnValue('us');
 
       const result = await getSanctionedBanner();
