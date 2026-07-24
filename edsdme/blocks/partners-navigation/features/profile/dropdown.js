@@ -184,10 +184,7 @@ class ProfileDropdown {
         </div>
         ${this.localMenu ? this.decorateLocalMenu() : ''}
         <ul class="feds-profile-actions">
-<!--      PARTNERS_NAVIGATION START -->
-<!--      MWPW-201826 [MAPC] Profile Dropdown - 'go to admin console' link is shown when the user has multiple IMS profiles -->
-<!--      ${this.hasOrgs ? decorateAction(this.placeholders.goToAdminConsole || 'Go to Admin Console') : ''}-->
-<!--      PARTNERS_NAVIGATION END -->
+          ${this.hasOrgs ? decorateAction(this.placeholders.goToAdminConsole || 'Go to Admin Console') : ''}
           ${this.decorateSignOut()}
         </ul>
       </div>

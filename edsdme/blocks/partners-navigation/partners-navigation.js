@@ -939,6 +939,7 @@ class Gnav {
 
     // Get user profile for x-account-id
     let accountId = '';
+    let hasOrgs = false;
     // PARTNERS_NAVIGATION START
     // MWPW-201826
     try {
