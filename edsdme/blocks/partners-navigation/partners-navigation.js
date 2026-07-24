@@ -949,6 +949,7 @@ class Gnav {
       accountId = profile?.userId || '';
     } catch (e) {
       accountId = '';
+      // eslint-disable-next-line no-unused-vars
       hasOrgs = false;
       lanaLog({
         message: 'GNAV: decorateProfile has failed to fetch profile or organizations data',
