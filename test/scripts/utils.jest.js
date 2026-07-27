@@ -31,6 +31,7 @@ import {
   getNodesByXPath,
   setLibs,
   enableGeoPopup,
+  deleteCookieValue,
 } from '../../edsdme/scripts/utils.js';
 
 describe('Test utils.js', () => {
@@ -40,6 +41,9 @@ describe('Test utils.js', () => {
   });
   afterEach(() => {
     document.getElementsByTagName('html')[0].innerHTML = '';
+    deleteCookieValue('partner_data');
+    deleteCookieValue('partner_info');
+    deleteCookieValue('partner_redirects_count');
   });
   it('Milo libs', () => {
     const location = {
@@ -290,8 +294,30 @@ describe('Test utils.js', () => {
     metaTag.content = '/channelpartners/home';
     document.head.appendChild(metaTag);
     redirectLoggedinPartner(fakeWindow);
-    const { calls } = fakeWindow.location.assign.mock;
-    expect(calls[0][0]).toBe(metaTag.content);
+    expect(fakeWindow.location.assign).toHaveBeenCalledWith('/channelpartners/home');
+  });
+  it('Don\'t redirect logged in partner if adobe-target-after-login is NONE', () => {
+    const fakeWindow = { location: { assign: jest.fn() } };
+    const cookieObjectMember = { CPP: { status: 'MEMBER' } };
+    document.cookie = `partner_data=${JSON.stringify(cookieObjectMember)}`;
+    const metaTag = document.createElement('meta');
+    metaTag.name = 'adobe-target-after-login';
+    metaTag.content = 'NONE';
+    document.head.appendChild(metaTag);
+    redirectLoggedinPartner(fakeWindow);
+    expect(fakeWindow.location.assign).not.toHaveBeenCalled();
+  });
+  it('Don\'t redirect logged in partner if redirect count reaches max', () => {
+    const fakeWindow = { location: { assign: jest.fn() } };
+    const cookieObjectMember = { CPP: { status: 'MEMBER' } };
+    document.cookie = `partner_data=${JSON.stringify(cookieObjectMember)}`;
+    document.cookie = 'partner_redirects_count=3';
+    const metaTag = document.createElement('meta');
+    metaTag.name = 'adobe-target-after-login';
+    metaTag.content = '/channelpartners/home';
+    document.head.appendChild(metaTag);
+    redirectLoggedinPartner(fakeWindow);
+    expect(fakeWindow.location.assign).not.toHaveBeenCalled();
   });
   it('Check if partners account is expired', () => {
     const expiredDate = new Date();
@@ -351,7 +377,7 @@ describe('Test utils.js', () => {
       },
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-    const getConfig = () => ({ locale: '' });
+    const getConfig = () => ({ locale: { prefix: '' } });
     global.fetch = jest.fn(() => Promise.resolve({
       ok: true,
       text: () => Promise.resolve('<div class="notification">Test</div>'),
@@ -374,7 +400,7 @@ describe('Test utils.js', () => {
       },
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-    const getConfig = () => ({ locale: '' });
+    const getConfig = () => ({ locale: { prefix: '' } });
     global.fetch = jest.fn(() => Promise.resolve({
       ok: true,
       text: () => Promise.resolve('<div class="notification">Test</div>'),
@@ -398,7 +424,7 @@ describe('Test utils.js', () => {
       },
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-    const getConfig = () => ({ locale: '' });
+    const getConfig = () => ({ locale: { prefix: '' } });
     global.fetch = jest.fn(() => Promise.resolve({ ok: false }));
     const main = document.createElement('main');
     document.body.appendChild(main);
@@ -417,7 +443,7 @@ describe('Test utils.js', () => {
       },
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-    const getConfig = () => ({ locale: '' });
+    const getConfig = () => ({ locale: { prefix: '' } });
     global.fetch = jest.fn(() => Promise.resolve({
       ok: true,
       text: () => Promise.resolve('<div class="notification">Test</div>'),
@@ -441,7 +467,7 @@ describe('Test utils.js', () => {
       },
     };
     document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
-    const getConfig = () => ({ locale: '' });
+    const getConfig = () => ({ locale: { prefix: '' } });
     global.fetch = jest.fn(() => Promise.resolve({
       ok: true,
       text: () => Promise.resolve('<div class="notification">Test</div>'),
@@ -563,6 +589,7 @@ describe('Test utils.js', () => {
     jest.advanceTimersByTime(1000);
     const redirectUrl = new URL(window.adobeIMS.adobeIdData.redirect_uri);
     expect(redirectUrl.pathname).toEqual(metaTag.content);
+    jest.useRealTimers();
   });
   it('Update ims config if user is not signed in', () => {
     jest.useFakeTimers();
@@ -580,6 +607,7 @@ describe('Test utils.js', () => {
     const redirectUrl = new URL(window.adobeIMS.adobeIdData.redirect_uri);
     expect(redirectUrl.pathname).toEqual(metaTag.content);
     expect(redirectUrl.searchParams.has('partnerLogin')).toEqual(true);
+    jest.useRealTimers();
   });
   it('Get locale', () => {
     const locales = {
