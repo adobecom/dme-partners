@@ -90,8 +90,11 @@ const CONFIG = {
 
 // Load LCP image immediately
 (function loadLCPImage() {
-  const lcpImg = document.querySelector('img');
-  lcpImg?.removeAttribute('loading');
+  const lcpImg = document.querySelector('main img') || document.querySelector('img');
+  if (!lcpImg) return;
+
+  lcpImg.setAttribute('loading', 'eager');
+  lcpImg.setAttribute('fetchpriority', 'high');
 }());
 
 /*
