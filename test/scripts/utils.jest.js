@@ -267,6 +267,20 @@ describe('Test utils.js', () => {
     document.cookie = `partner_data=${JSON.stringify(cookieObjectMember)}`;
     expect(redirectLoggedinPartner()).toBeFalsy();
   });
+  it('Don\'t redirect logged in partner if adobe-loggedin-no-redirect meta is present', () => {
+    const fakeWindow = { location: { assign: jest.fn() } };
+    const cookieObjectMember = { CPP: { status: 'MEMBER' } };
+    document.cookie = `partner_data=${JSON.stringify(cookieObjectMember)}`;
+    const noRedirectMeta = document.createElement('meta');
+    noRedirectMeta.name = 'adobe-loggedin-no-redirect';
+    document.head.appendChild(noRedirectMeta);
+    const targetMeta = document.createElement('meta');
+    targetMeta.name = 'adobe-target-after-login';
+    targetMeta.content = '/channelpartners/home';
+    document.head.appendChild(targetMeta);
+    redirectLoggedinPartner(fakeWindow);
+    expect(fakeWindow.location.assign).not.toHaveBeenCalled();
+  });
   it('Redirect logged in partner to protected home', () => {
     const fakeWindow = { location: { assign: jest.fn() } };
     const cookieObjectMember = { CPP: { status: 'MEMBER' } };
@@ -541,7 +555,6 @@ describe('Test utils.js', () => {
       isSignedInUser: () => true,
       adobeIdData: {},
     };
-    // document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
     const metaTag = document.createElement('meta');
     metaTag.name = 'adobe-target-after-logout';
     metaTag.content = '/channelpartners/home';
