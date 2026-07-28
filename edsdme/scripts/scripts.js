@@ -62,7 +62,7 @@ const CONFIG = {
   codeRoot: '/edsdme',
   contentRoot: '/edsdme/partners-shared',
   imsClientId,
-  imsScope: 'AdobeID,openid,gnav,pps.read,additional_info.roles,read_organizations,account_cluster.read',
+  imsScope: 'AdobeID,openid,gnav,pps.read,read_organizations',
   clientEnv: prodHosts.includes(window.location.host) ? 'prod' : null,
   geoRouting: enableGeoPopup(),
   // fallbackRouting: 'off',
@@ -90,8 +90,11 @@ const CONFIG = {
 
 // Load LCP image immediately
 (function loadLCPImage() {
-  const lcpImg = document.querySelector('img');
-  lcpImg?.removeAttribute('loading');
+  const lcpImg = document.querySelector('main img') || document.querySelector('img');
+  if (!lcpImg) return;
+
+  lcpImg.setAttribute('loading', 'eager');
+  lcpImg.setAttribute('fetchpriority', 'high');
 }());
 
 /*
