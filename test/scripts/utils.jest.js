@@ -275,13 +275,18 @@ describe('Test utils.js', () => {
     const fakeWindow = { location: { assign: jest.fn() } };
     const cookieObjectMember = { CPP: { status: 'MEMBER' } };
     document.cookie = `partner_data=${JSON.stringify(cookieObjectMember)}`;
-    const noRedirectMeta = document.createElement('meta');
-    noRedirectMeta.name = 'adobe-loggedin-no-redirect';
-    document.head.appendChild(noRedirectMeta);
+    document.cookie = `partner_info=${JSON.stringify({})}`;
+
     const targetMeta = document.createElement('meta');
     targetMeta.name = 'adobe-target-after-login';
     targetMeta.content = '/channelpartners/home';
     document.head.appendChild(targetMeta);
+
+    const noRedirectMeta = document.createElement('meta');
+    noRedirectMeta.name = 'adobe-loggedin-no-redirect';
+    noRedirectMeta.content = 'true';
+    document.head.appendChild(noRedirectMeta);
+
     redirectLoggedinPartner(fakeWindow);
     expect(fakeWindow.location.assign).not.toHaveBeenCalled();
   });
