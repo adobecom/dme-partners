@@ -186,7 +186,7 @@ test.describe('Smoke Tests', () => {
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
       await smokeTest.smokeSignIn(page, baseURL, `${features[6].data.partnerLevel}`);
-      await page.waitForLoadState('networkidle');
+      await smokeTest.profileIcon.waitFor({ state: 'visible', timeout: 30000 });
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
         features[6].data.expectedPublicPageURL,
