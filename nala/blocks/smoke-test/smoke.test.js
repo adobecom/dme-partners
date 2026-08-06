@@ -165,7 +165,7 @@ test.describe('Smoke Tests', () => {
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
       await smokeTest.smokeSignIn(page, baseURL, `${features[5].data.partnerLevel}`);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
@@ -670,6 +670,7 @@ test.describe('Smoke Tests', () => {
     await test.step('Verify PRP collection page', async () => {
       await page.goto(`${baseURL}${path}`);
       await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`);
+      await smokeTest.partnersCardsCollection.waitFor({ state: 'visible', timeout: 30000 });
     });
     await test.step('Verify number of collections', async () => {
       const numberOfCollections = await smokeTest.getNumberOfCollectionsCount();
