@@ -141,6 +141,90 @@ describe('Marketing Resources block', () => {
       expect(topicTags).to.include('getting-started');
     });
 
+    it('orders product and topic filter values alphabetically', async () => {
+      const app = await setupAndRunInit();
+      await app.updateComplete;
+
+      app.blockData.filters = [
+        {
+          key: 'product',
+          value: 'Product',
+          tags: [],
+          hideTags: true,
+          hasHiddenTags: false,
+        },
+        {
+          key: 'topic',
+          value: 'Topic',
+          tags: [],
+          hideTags: true,
+          hasHiddenTags: false,
+        },
+      ];
+
+      app.cardFiltersMap = new Map([
+        ['product', ['adobe-sign', 'adobe-photoshop', 'adobe-acrobat']],
+        ['topic', ['onboarding', 'getting-started', 'analytics']],
+      ]);
+
+      app.blockData.localizedText = {
+        ...app.blockData.localizedText,
+        '{{product}}': 'Product',
+        '{{topic}}': 'Topic',
+      };
+
+      await app.createFilters();
+
+      const productTags = app.blockData.filters.find((f) => f.key === 'product').tags;
+      const topicTags = app.blockData.filters.find((f) => f.key === 'topic').tags;
+
+      expect(productTags.map((t) => t.key)).to.deep.equal([
+        'adobe-acrobat',
+        'adobe-photoshop',
+        'adobe-sign',
+      ]);
+      expect(topicTags.map((t) => t.key)).to.deep.equal([
+        'analytics',
+        'getting-started',
+        'onboarding',
+      ]);
+    });
+
+    it('keeps tags hidden behind "show more" after the visible ones when sorting', async () => {
+      const app = await setupAndRunInit();
+      await app.updateComplete;
+
+      app.blockData.filters = [
+        {
+          key: 'product',
+          value: 'Product',
+          tags: [
+            { key: 'adobe-target', parentKey: 'product', value: 'Adobe Target', checked: false, initialHidden: true },
+            { key: 'adobe-sign', parentKey: 'product', value: 'Adobe Sign', checked: false, initialHidden: false },
+          ],
+          hideTags: true,
+          hasHiddenTags: true,
+        },
+      ];
+
+      app.cardFiltersMap = new Map([['product', ['adobe-acrobat']]]);
+
+      app.blockData.localizedText = {
+        ...app.blockData.localizedText,
+        '{{product}}': 'Product',
+      };
+
+      await app.createFilters();
+
+      const productTags = app.blockData.filters.find((f) => f.key === 'product').tags;
+      expect(productTags.map((t) => t.key)).to.deep.equal([
+        'adobe-acrobat',
+        'adobe-sign',
+        'adobe-target',
+      ]);
+      expect(productTags[2].initialHidden).to.be.true;
+    });
+
     it('creates filters with correct tag structure', async () => {
       const app = await setupAndRunInit();
       await app.updateComplete;

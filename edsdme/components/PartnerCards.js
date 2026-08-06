@@ -22,6 +22,13 @@ export function filterRestrictedCardsByCurrentSite(cards) {
   });
 }
 
+export function sortTagsAlphabetically(tags) {
+  return [...tags].sort((a, b) => {
+    if (!!a.initialHidden !== !!b.initialHidden) return a.initialHidden ? 1 : -1;
+    return a.key.localeCompare(b.key, 'en', { numeric: true, sensitivity: 'base' });
+  });
+}
+
 export default class PartnerCards extends LitElement {
   createRenderRoot() { return this; }
 
@@ -293,6 +300,10 @@ export default class PartnerCards extends LitElement {
         const localizedKey = `{{${tag.key}}}`;
         this.blockData.localizedText[localizedKey] = tag.value;
       });
+
+    this.blockData.filters.forEach((filterObj) => {
+      filterObj.tags = sortTagsAlphabetically(filterObj.tags);
+    });
 
     this.blockData.filters = this.blockData.filters.filter(
       (filterObj) => filterObj.tags.length > 0,
