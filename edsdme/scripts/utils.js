@@ -188,7 +188,7 @@ export function getMetadata(name) {
 }
 
 export function redirectLoggedinPartner(win = window) {
-  if (!isMember()) return;
+  if (!isMember() || getMetadataContent('adobe-loggedin-no-redirect')) return;
   const partnerErrorRedirectsCount = getCookieValue(PARTNER_ERROR_REDIRECTS_COUNT_COOKIE);
   if (partnerErrorRedirectsCount) {
     const count = Number(partnerErrorRedirectsCount);
@@ -596,7 +596,7 @@ export async function setFeedback(getConfig) {
     const block = page.querySelector('.feedback');
     const div = document.createElement('div');
     div.appendChild(block);
-    if (main) main.insertBefore(div, main.firstChild);
+    if (main) main.appendChild(div);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error fetching plain html of feedback fragment:', error);
