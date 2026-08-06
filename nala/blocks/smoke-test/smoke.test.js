@@ -144,7 +144,8 @@ test.describe('Smoke Tests', () => {
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
       await smokeTest.smokeSignIn(page, baseURL, `${features[4].data.partnerLevel}`);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
+      await smokeTest.profileIcon.waitFor({ state: 'visible', timeout: 30000 });
 
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
@@ -166,6 +167,7 @@ test.describe('Smoke Tests', () => {
       // entering user email and password
       await smokeTest.smokeSignIn(page, baseURL, `${features[5].data.partnerLevel}`);
       await page.waitForLoadState('domcontentloaded');
+      await smokeTest.profileIcon.waitFor({ state: 'visible', timeout: 30000 });
 
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
