@@ -256,7 +256,6 @@ describe('Marketing Resources block', () => {
           hasHiddenTags: true,
         },
       ];
-      
 
       app.cardFiltersMap = new Map([['product', ['adobe-acrobat']]]);
 
