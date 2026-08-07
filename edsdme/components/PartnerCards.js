@@ -22,10 +22,26 @@ export function filterRestrictedCardsByCurrentSite(cards) {
   });
 }
 
-export function sortTagsAlphabetically(tags) {
+const EN_PLACEHOLDERS_PATH = '/edsdme/partners-shared/placeholders.json';
+let englishLabelsPromise;
+
+export function getEnglishLabels() {
+  if (!englishLabelsPromise) {
+    englishLabelsPromise = fetch(EN_PLACEHOLDERS_PATH)
+      .then((res) => (res.ok ? res.json() : { data: [] }))
+      .then(({ data = [] }) => new Map(
+        data.map(({ key, value }) => [key.trim().toLowerCase(), value]),
+      ))
+      .catch(() => new Map());
+  }
+  return englishLabelsPromise;
+}
+
+export function sortTagsAlphabetically(tags, englishLabels = new Map()) {
+  const sortValue = (tag) => englishLabels.get(tag.key.trim().toLowerCase()) ?? tag.key;
   return [...tags].sort((a, b) => {
     if (!!a.initialHidden !== !!b.initialHidden) return a.initialHidden ? 1 : -1;
-    return a.key.localeCompare(b.key, 'en', { numeric: true, sensitivity: 'base' });
+    return sortValue(a).localeCompare(sortValue(b), 'en', { numeric: true, sensitivity: 'base' });
   });
 }
 
@@ -301,8 +317,9 @@ export default class PartnerCards extends LitElement {
         this.blockData.localizedText[localizedKey] = tag.value;
       });
 
+    const englishLabels = await getEnglishLabels();
     this.blockData.filters.forEach((filterObj) => {
-      filterObj.tags = sortTagsAlphabetically(filterObj.tags);
+      filterObj.tags = sortTagsAlphabetically(filterObj.tags, englishLabels);
     });
 
     this.blockData.filters = this.blockData.filters.filter(

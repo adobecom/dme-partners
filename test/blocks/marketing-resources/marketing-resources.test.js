@@ -2,7 +2,7 @@ import { readFile } from '@web/test-runner-commands';
 import { expect } from '@esm-bundle/chai';
 import sinon from 'sinon';
 import init from '../../../edsdme/blocks/marketing-resources/marketing-resources.js';
-import PartnerCards from '../../../edsdme/components/PartnerCards.js';
+import PartnerCards, { sortTagsAlphabetically } from '../../../edsdme/components/PartnerCards.js';
 
 const cardsString = await readFile({ path: './mocks/cards.json' });
 const cardsData = JSON.parse(cardsString);
@@ -62,6 +62,56 @@ describe('Marketing Resources block', () => {
   it('renders desktop sidebar filters when viewport is wide', async () => {
     const app = await setupAndRunInit(1500);
     expect(app.querySelector('.sidebar-filters-wrapper')).to.exist;
+  });
+
+  describe('sortTagsAlphabetically', () => {
+    const asTags = (keys) => keys.map((key) => ({ key, initialHidden: false }));
+
+    it('orders by English label, not by tag key', () => {
+      const englishLabels = new Map([
+        ['adobe-captivate-prime', 'Adobe Captivate Prime'],
+        ['adobe-cc-education', 'Adobe Creative Cloud for education'],
+        ['adobe-cc-teams', 'Adobe Creative Cloud for teams'],
+        ['adobe-coldfusion', 'Adobe ColdFusion'],
+        ['adobe-connect', 'Adobe Connect'],
+        ['adobe-creative-cloud', 'Adobe Creative Cloud'],
+      ]);
+      const tags = asTags([
+        'adobe-cc-teams',
+        'adobe-coldfusion',
+        'adobe-creative-cloud',
+        'adobe-captivate-prime',
+        'adobe-cc-education',
+        'adobe-connect',
+      ]);
+
+      expect(sortTagsAlphabetically(tags, englishLabels).map((t) => t.key)).to.deep.equal([
+        'adobe-captivate-prime',
+        'adobe-coldfusion',
+        'adobe-connect',
+        'adobe-creative-cloud',
+        'adobe-cc-education',
+        'adobe-cc-teams',
+      ]);
+    });
+
+    it('falls back to the tag key when a value has no English label', () => {
+      const tags = asTags(['pepe-bundle', 'behance', 'adobe-sign']);
+
+      expect(sortTagsAlphabetically(tags, new Map()).map((t) => t.key)).to.deep.equal([
+        'adobe-sign',
+        'behance',
+        'pepe-bundle',
+      ]);
+    });
+
+    it('does not mutate the array it is given', () => {
+      const tags = asTags(['zeta', 'alpha']);
+
+      sortTagsAlphabetically(tags, new Map());
+
+      expect(tags.map((t) => t.key)).to.deep.equal(['zeta', 'alpha']);
+    });
   });
 
   describe('createFilters method', () => {
