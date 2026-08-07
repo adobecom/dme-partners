@@ -266,6 +266,7 @@ test.describe('Smoke Tests', () => {
     await test.step('Verify if the URL search query parameter does not exist after the logout', async () => {
       await smokeTest.profileIcon.click();
       await profileDropdownPage.getLogoutByText('Sign Out').click();
+      await smokeTest.signInButton.waitFor({ state: 'visible', timeout: 30000 });
       expect(page.url()).not.toContain(data.searchText);
     });
   });
