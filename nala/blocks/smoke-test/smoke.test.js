@@ -144,7 +144,8 @@ test.describe('Smoke Tests', () => {
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
       await smokeTest.smokeSignIn(page, baseURL, `${features[4].data.partnerLevel}`);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
+      await smokeTest.profileIcon.waitFor({ state: 'visible', timeout: 30000 });
 
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
@@ -165,7 +166,8 @@ test.describe('Smoke Tests', () => {
     await test.step('Sing In, verify user redirection', async () => {
       // entering user email and password
       await smokeTest.smokeSignIn(page, baseURL, `${features[5].data.partnerLevel}`);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
+      await smokeTest.profileIcon.waitFor({ state: 'visible', timeout: 30000 });
 
       const currentURL = await page.evaluate(() => window.location.href);
       await expect(currentURL).toContain(
@@ -264,6 +266,7 @@ test.describe('Smoke Tests', () => {
     await test.step('Verify if the URL search query parameter does not exist after the logout', async () => {
       await smokeTest.profileIcon.click();
       await profileDropdownPage.getLogoutByText('Sign Out').click();
+      await smokeTest.signInButton.waitFor({ state: 'visible', timeout: 30000 });
       expect(page.url()).not.toContain(data.searchText);
     });
   });
@@ -670,6 +673,7 @@ test.describe('Smoke Tests', () => {
     await test.step('Verify PRP collection page', async () => {
       await page.goto(`${baseURL}${path}`);
       await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`);
+      await smokeTest.partnersCardsCollection.waitFor({ state: 'visible', timeout: 30000 });
     });
     await test.step('Verify number of collections', async () => {
       const numberOfCollections = await smokeTest.getNumberOfCollectionsCount();
