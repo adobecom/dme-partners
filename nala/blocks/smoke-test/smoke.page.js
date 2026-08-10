@@ -58,6 +58,7 @@ export default class SmokeTest {
     this.feedbackTextArea = page.locator('.feedback-textarea');
     this.feedbackSendButton = page.locator('.feedback-dialog-button.cta');
     this.feedBackStars3 = page.locator('sp-action-button[data-rating="3"]');
+    this.partnersCardsCollection = page.locator('.single-marketing-resources-card').nth(0);
   }
 
   async smokeSignIn(page, baseURL, partnerLevel) {
