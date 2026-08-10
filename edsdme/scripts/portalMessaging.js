@@ -114,9 +114,8 @@ export async function getRenewBanner(locales) {
   }
 }
 
-export async function prependContent(config) {
+export async function prependContent(locales) {
   const documentMain = document.querySelector('main');
-  const { locales } = config;
   if (!documentMain) return;
 
   const [globalBannerContent, sanctionedBannerContent, renewBannerContent] = await Promise.all([
