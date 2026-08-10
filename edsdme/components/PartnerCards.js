@@ -4,7 +4,7 @@ import './SinglePartnerCard.js';
 const miloLibs = getLibs();
 const { html, LitElement, repeat } = await import(`${miloLibs}/deps/lit-all.min.js`);
 const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
-const { replaceText } = await import(`${miloLibs}/features/placeholders.js`);
+const { replaceText, fetchPlaceholders } = await import(`${miloLibs}/features/placeholders.js`);
 
 export function filterRestrictedCardsByCurrentSite(cards) {
   const currentSite = window.location.pathname.split('/')[1];
@@ -23,18 +23,16 @@ export function filterRestrictedCardsByCurrentSite(cards) {
 }
 
 const EN_PLACEHOLDERS_PATH = '/edsdme/partners-shared/placeholders.json';
-let englishLabelsPromise;
 
-export function getEnglishLabels() {
-  if (!englishLabelsPromise) {
-    englishLabelsPromise = fetch(EN_PLACEHOLDERS_PATH)
-      .then((res) => (res.ok ? res.json() : { data: [] }))
-      .then(({ data = [] }) => new Map(
-        data.map(({ key, value }) => [key.trim().toLowerCase(), value]),
-      ))
-      .catch(() => new Map());
-  }
-  return englishLabelsPromise;
+export async function getEnglishLabels(config) {
+  const placeholders = await fetchPlaceholders({
+    config,
+    placeholderPath: EN_PLACEHOLDERS_PATH,
+  }).catch(() => ({}));
+
+  return new Map(
+    Object.entries(placeholders ?? {}).map(([key, value]) => [key.trim().toLowerCase(), value]),
+  );
 }
 
 export function sortTagsAlphabetically(tags, englishLabels = new Map()) {
@@ -317,7 +315,7 @@ export default class PartnerCards extends LitElement {
         this.blockData.localizedText[localizedKey] = tag.value;
       });
 
-    const englishLabels = await getEnglishLabels();
+    const englishLabels = await getEnglishLabels(this.blockData.config);
     this.blockData.filters.forEach((filterObj) => {
       filterObj.tags = sortTagsAlphabetically(filterObj.tags, englishLabels);
     });
