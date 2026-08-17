@@ -288,7 +288,6 @@ export async function getRenewBanner(getConfig) {
 
 export async function getSanctionedBanner(getConfig) {
   const programType = getCurrentProgramType();
-
   const countryCode = getPartnerCookieValue(programType, 'countrycode');
   if (!SANCTIONED_COUNTRIES.includes(countryCode)) return;
 
