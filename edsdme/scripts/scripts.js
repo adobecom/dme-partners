@@ -134,6 +134,7 @@ function setUpPage() {
   await loadArea();
   applyPagePersonalization();
   rewriteLinks(document);
+  console.log('if window.location.host add sidekickListener');
   if (previewHosts.includes(window.location.host)) {
     sidekickListener(CONFIG.locales);
   }
