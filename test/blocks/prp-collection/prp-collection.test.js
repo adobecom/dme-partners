@@ -89,6 +89,40 @@ describe('PRP Collection block', () => {
     expect(firstFilter).to.exist;
   });
 
+  describe('filter values ordering', () => {
+    it('orders authored and card-derived filter values alphabetically', async () => {
+      Object.defineProperty(window, 'innerWidth', { value: 1500 });
+
+      const component = await init(document.querySelector('.prp-collection'));
+      await component.updateComplete;
+
+      component.cardFiltersMap = new Map([
+        ['language', ['croatian', 'danish']],
+        ['category', ['email', 'brochure']],
+      ]);
+
+      await component.createFilters();
+
+      const tagKeys = (filterKey) => component.blockData.filters
+        .find((filter) => filter.key === filterKey).tags.map((tag) => tag.key);
+
+      expect(tagKeys('language')).to.deep.equal([
+        'bulgarian',
+        'croatian',
+        'danish',
+        'enguk',
+        'italian',
+        'spanish',
+      ]);
+      expect(tagKeys('category')).to.deep.equal([
+        'brochure',
+        'datasheet',
+        'email',
+        'type-2',
+      ]);
+    });
+  });
+
   describe('filterCardsByUserRegions', () => {
     const noRegionCardId = '7d1e9529-6702-351e-a7e8-0442100860ec';
     const northAmericaCardId = '1d2855ff-d481-3d8a-8851-d3ea88668f39';
