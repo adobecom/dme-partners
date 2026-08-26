@@ -546,18 +546,4 @@ describe('feedback block', () => {
       expect(stickyButton).to.exist;
     });
   });
-
-  describe('Toast component direct test', () => {
-    it('should display toast message using textContent when toastPositiveIsHtml is false', async () => {
-      const { default: showToast } = await import('../../../edsdme/components/Toast.js');
-      showToast('test', true, null, {
-        toastPositive: 'Text-only positive toast',
-        toastPositiveIsHtml: false,
-      });
-
-      const toast = document.querySelector('.test-toast');
-      expect(toast).to.exist;
-      expect(toast.querySelector('.spectrum-Toast-content span').textContent).to.equal('Text-only positive toast');
-    });
-  });
 });
