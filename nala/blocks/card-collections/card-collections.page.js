@@ -17,7 +17,6 @@ export default class PrpCollectionPage {
     this.filterByBtn = page.locator('.filters-btn-mobile');
     this.applyFiltersMobile = page.locator('.all-filters-footer-buttons-mobile sp-button');
     this.resourcesHeading = page.locator('.partner-cards-title-wrapper');
-    // per-filter accordion clear button shares the same label, so target the all-filters panel footer clear button by class
     this.clearAllFiltersMobile = page.locator('.all-filters-footer-clear-btn-mobile');
   }
 
