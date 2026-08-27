@@ -91,25 +91,19 @@ export default class PrpCollectionPage {
   }
 
   async getSearchCardDate(title) {
-    const card = this.page.locator('.card-wrapper').filter({
-      has: this.page.locator('.card-title').getByText(title, { exact: true }),
-    });
+    const card = this.page.locator('.card-wrapper').filter({ has: this.page.locator('.card-title').getByText(title, { exact: true }) });
     const dateText = await card.locator('.card-date').innerText();
     const sizeText = await card.locator('.card-size').innerText();
     return dateText.replace(sizeText, '').split(':').pop().trim();
   }
 
   async getSearchCardSize(title) {
-    const card = this.page.locator('.card-wrapper').filter({
-      has: this.page.locator('.card-title').getByText(title, { exact: true }),
-    });
+    const card = this.page.locator('.card-wrapper').filter({ has: this.page.locator('.card-title').getByText(title, { exact: true }) });
     return (await card.locator('.card-size').innerText()).trim();
   }
 
   filterSelectedCount(filterLabel) {
-    return this.page.locator('.filter').filter({
-      has: this.page.locator(`button.filter-header[aria-label="${filterLabel}"]`),
-    }).locator('.filter-selected-tags-total-num');
+    return this.page.locator('.filter').filter({ has: this.page.locator(`button.filter-header[aria-label="${filterLabel}"]`) }).locator('.filter-selected-tags-total-num');
   }
 
   getMobileFilter(filterLabel) {
@@ -117,21 +111,15 @@ export default class PrpCollectionPage {
   }
 
   applyMobileFilterAccordion(filterLabel) {
-    return this.page.locator('.filter-wrapper-mobile').filter({
-      has: this.page.locator(`button.filter-header-mobile[aria-label="${filterLabel}"]`),
-    }).locator('sp-button');
+    return this.page.locator('.filter-wrapper-mobile').filter({ has: this.page.locator(`button.filter-header-mobile[aria-label="${filterLabel}"]`) }).locator('sp-button');
   }
 
   cardOpenBtn(cardTitle) {
-    return this.page.locator('.card-wrapper').filter({
-      has: this.page.locator('.card-title').getByText(cardTitle, { exact: true }),
-    }).getByRole('link', { name: 'Open' });
+    return this.page.locator('.card-wrapper').filter({ has: this.page.locator('.card-title').getByText(cardTitle, { exact: true }) }).getByRole('link', { name: 'Open' });
   }
 
   clearMobileFilterAccordion(filterLabel) {
-    return this.page.locator('.filter-wrapper-mobile').filter({
-      has: this.page.locator(`button.filter-header-mobile[aria-label="${filterLabel}"]`),
-    }).locator('.filter-footer-clear-btn-mobile');
+    return this.page.locator('.filter-wrapper-mobile').filter({ has: this.page.locator(`button.filter-header-mobile[aria-label="${filterLabel}"]`) }).locator('.filter-footer-clear-btn-mobile');
   }
 
   closeFilterChipMobile(tagLabel) {
@@ -139,27 +127,19 @@ export default class PrpCollectionPage {
   }
 
   cardThumbnail(cardTitle) {
-    return this.page.locator('.card-wrapper').filter({
-      has: this.page.locator('.card-title').getByText(cardTitle, { exact: true }),
-    }).locator('.card-header');
+    return this.page.locator('.card-wrapper').filter({ has: this.page.locator('.card-title').getByText(cardTitle, { exact: true }) }).locator('.card-header');
   }
 
   cardDate(cardTitle) {
-    return this.page.locator('.card-wrapper').filter({
-      has: this.page.locator('.card-title').getByText(cardTitle, { exact: true }),
-    }).locator('.card-date');
+    return this.page.locator('.card-wrapper').filter({ has: this.page.locator('.card-title').getByText(cardTitle, { exact: true }) }).locator('.card-date');
   }
 
   cardDescription(cardTitle) {
-    return this.page.locator('.card-wrapper').filter({
-      has: this.page.locator('.card-title').getByText(cardTitle, { exact: true }),
-    }).locator('.card-description');
+    return this.page.locator('.card-wrapper').filter({ has: this.page.locator('.card-title').getByText(cardTitle, { exact: true }) }).locator('.card-description');
   }
 
   cardLanguage(cardTitle) {
-    return this.page.locator('.card-wrapper').filter({
-      has: this.page.locator('.card-title').getByText(cardTitle, { exact: true }),
-    }).locator('.card-details');
+    return this.page.locator('.card-wrapper').filter({ has: this.page.locator('.card-title').getByText(cardTitle, { exact: true }) }).locator('.card-details');
   }
 
   async visibleCardCount() {

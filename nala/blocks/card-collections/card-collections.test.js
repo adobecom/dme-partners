@@ -56,10 +56,10 @@ test.describe('PRP Collection validation', () => {
     });
 
     await test.step('Verify all cards are present on the page', async () => {
-       await expect(prpCollectionPage.card(data.title1)).toBeVisible();
-       await expect(prpCollectionPage.card(data.title2)).toBeVisible();
-       await expect(prpCollectionPage.card(data.title3)).toBeVisible();
-       await expect(prpCollectionPage.prpCollectionTitle).toHaveText(data.collectionTitle);
+      await expect(prpCollectionPage.card(data.title1)).toBeVisible();
+      await expect(prpCollectionPage.card(data.title2)).toBeVisible();
+      await expect(prpCollectionPage.card(data.title3)).toBeVisible();
+      await expect(prpCollectionPage.prpCollectionTitle).toHaveText(data.collectionTitle);
     });
     await test.step('Verify all texts are present on the page', async () => {
       await expect(prpCollectionPage.textOnPage(data.text1)).toBeVisible();
@@ -86,12 +86,12 @@ test.describe('PRP Collection validation', () => {
     });
 
     await test.step('Verify card present on the page', async () => {
-       await expect(prpCollectionPage.card(data.title1)).toBeVisible();
-       await expect(prpCollectionPage.textOnPage(data.title1)).toBeVisible();
-       await expect(prpCollectionPage.textOnPage(data.date)).toBeVisible();
-       await expect(prpCollectionPage.cardFormat(data.format)).toBeVisible();
-       await expect(prpCollectionPage.cardTag(data.tag)).toBeVisible();
-       await expect(prpCollectionPage.cardDownloadBtn(data.downloadBtn)).toBeVisible();
+      await expect(prpCollectionPage.card(data.title1)).toBeVisible();
+      await expect(prpCollectionPage.textOnPage(data.title1)).toBeVisible();
+      await expect(prpCollectionPage.textOnPage(data.date)).toBeVisible();
+      await expect(prpCollectionPage.cardFormat(data.format)).toBeVisible();
+      await expect(prpCollectionPage.cardTag(data.tag)).toBeVisible();
+      await expect(prpCollectionPage.cardDownloadBtn(data.downloadBtn)).toBeVisible();
     });
   });
   test(`${features[6].name}, ${features[6].tags}`, async ({ page }) => {
@@ -173,7 +173,7 @@ test.describe('PRP Collection validation', () => {
       await expect(prpCollectionPage.card(data.title1)).toBeVisible();
       await expect(prpCollectionPage.card(data.title2)).toBeVisible();
       await expect(prpCollectionPage.card(data.title3)).toBeVisible();
-      });
+    });
     await test.step('Check cards on search page', async () => {
       await page.goto(`${data.searchPageUrl}`);
       await page.waitForLoadState('domcontentloaded');
@@ -201,7 +201,7 @@ test.describe('PRP Collection validation', () => {
       await prpCollectionPage.cardWrapper.nth(0).waitFor({ state: 'visible', timeout: 20000 });
     });
 
-    await test.step('Check card', async() => {
+    await test.step('Check card', async () => {
       await expect(prpCollectionPage.card(data.title1)).toBeVisible();
       const cardTags = await prpCollectionPage.getCardTags(0);
       expect(cardTags).not.toContain(data.tag);
@@ -219,7 +219,7 @@ test.describe('PRP Collection validation', () => {
       await prpCollectionPage.cardWrapper.nth(0).waitFor({ state: 'visible', timeout: 20000 });
     });
 
-    await test.step('Check card', async() => {
+    await test.step('Check card', async () => {
       await expect(prpCollectionPage.card(data.title1)).toBeVisible();
       await expect(prpCollectionPage.card(data.title2)).toBeVisible();
       const cardTags = await prpCollectionPage.getCardTags(0);
@@ -241,7 +241,7 @@ test.describe('PRP Collection validation', () => {
       await prpCollectionPage.cardWrapper.nth(0).waitFor({ state: 'visible', timeout: 20000 });
     });
 
-    await test.step('Check card', async() => {
+    await test.step('Check card', async () => {
       await expect(prpCollectionPage.card(data.title1)).toBeVisible();
       await expect(prpCollectionPage.card(data.title2)).toBeVisible();
 
@@ -263,7 +263,7 @@ test.describe('PRP Collection validation', () => {
       await prpCollectionPage.cardWrapper.nth(0).waitFor({ state: 'visible', timeout: 20000 });
     });
 
-    await test.step('Search card collections', async() => {
+    await test.step('Search card collections', async () => {
       await prpCollectionPage.searchField.fill(data.searchKeyword);
       await prpCollectionPage.searchField.press('Enter');
       await page.waitForLoadState('domcontentloaded');
@@ -278,13 +278,13 @@ test.describe('PRP Collection validation', () => {
       await prpCollectionPage.cardWrapper.nth(0).waitFor({ state: 'visible', timeout: 20000 });
       await expect(prpCollectionPage.loadMoreBtn).toBeVisible();
     });
-    await test.step('Sort card collections', async() => {
+    await test.step('Sort card collections', async () => {
       const titleOfFirstCardBeforeSorting = await prpCollectionPage.firstCardTitle();
       await prpCollectionPage.sortingOption(data.sortOption);
       const titleOfFirstCardAfterSorting = await prpCollectionPage.firstCardTitle();
       expect(titleOfFirstCardAfterSorting).not.toEqual(titleOfFirstCardBeforeSorting);
     });
-    await test.step('Open Collection', async() => {
+    await test.step('Open Collection', async () => {
       await prpCollectionPage.getCardTitle(data.title1).click();
       await page.waitForLoadState('domcontentloaded');
       await expect(page.url()).toContain(data.expectedURL);
@@ -310,14 +310,12 @@ test.describe('PRP Collection validation', () => {
       expect(numberOfCards).toBe(3);
     });
     await test.step('Filter page', async () => {
-
       await prpCollectionPage.getFilter(data.filter1).click();
       await prpCollectionPage.getCheckBox(data.checkBox1).click();
       const numberOfCardsAcrobat = await prpCollectionPage.numberOfCards();
       expect(numberOfCardsAcrobat).toBe(2);
       await expect(prpCollectionPage.card(data.title1)).toBeVisible();
       await expect(prpCollectionPage.card(data.title2)).toBeVisible();
-
 
       await prpCollectionPage.getCheckBox(data.checkBox2).click();
       const numberOfCardsConnect = await prpCollectionPage.numberOfCards();

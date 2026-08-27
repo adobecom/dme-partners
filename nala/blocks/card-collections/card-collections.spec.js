@@ -142,7 +142,7 @@ export default {
         partnerLevel: 'cpp-japan-distributor:',
         title1: 'PRP Worldwide PPTX',
         title2: 'PRP Japan XLSX',
-        tag: ["メッセージングまたはポジショニング", "セールスガイド", "報告", "英語（ユニバーサル）（EU）"],
+        tag: ['メッセージングまたはポジショニング', 'セールスガイド', '報告', '英語（ユニバーサル）（EU）'],
         cardDownloadBtn: 'ダウンロードする',
       },
     },
