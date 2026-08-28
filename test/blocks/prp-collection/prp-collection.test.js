@@ -215,7 +215,7 @@ describe('PRP Collection block', () => {
       expect(getCardIds(result)).to.not.include(northAmericaCardId);
     });
 
-    it('includes cards matching Japan cookie value', () => {
+    it('includes cards matching Japan cookie value ', () => {
       setPartnerRegionCookie('Japan');
 
       const result = filterCardsByUserRegions(cards);
