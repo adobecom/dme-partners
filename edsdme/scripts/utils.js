@@ -52,14 +52,14 @@ export const [setLibs, getLibs] = (() => {
 })();
 
 export const prodHosts = [
-  'main--dme-partners--adobecom.hlx.page',
-  'main--dme-partners--adobecom.hlx.live',
-  'main--dme-partners--adobecom.aem.page',
-  'main--dme-partners--adobecom.aem.live',
+  'main--da-dme-partners--adobecom.hlx.page',
+  'main--da-dme-partners--adobecom.hlx.live',
+  'main--da-dme-partners--adobecom.aem.page',
+  'main--da-dme-partners--adobecom.aem.live',
   'partners.adobe.com',
   'partnerspreview.adobe.com',
 ];
-export const previewHosts = ['partnerspreview.adobe.com', 'stage--dme-partners--adobecom.aem.live'];
+export const previewHosts = ['partnerspreview.adobe.com', 'stage--da-dme-partners--adobecom.aem.live'];
 
 /*
  * ------------------------------------------------------------
