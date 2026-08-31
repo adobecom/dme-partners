@@ -738,7 +738,7 @@ test.describe('Smoke Tests', () => {
     await test.step('Log in', async () => {
       await smokeTest.signInButton.waitFor({ state: 'visible', timeout: 30000 });
       await smokeTest.signInButton.click();
-      await smokeTest.smokeSignIn(page, data.partnerLevel);
+      await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`);
       await smokeTest.profileIcon.waitFor({ state: 'visible', timeout: 30000 });
     });
     await test.step('Check Feedback Dialog after login', async () => {
