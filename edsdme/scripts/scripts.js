@@ -118,7 +118,7 @@ function setUpPage() {
   updateFooter(CONFIG.locales);
 }
 
-(async function loadPage() {
+async function loadPage() {
   await prependContent();
   applyPagePersonalization();
   setUpPage();
@@ -144,7 +144,9 @@ function setUpPage() {
   window.addEventListener('pageshow', () => {
     loadPageToAnchor();
   });
-}());
+}
+
+loadPage();
 
 (async function loadDa() {
   if (!new URL(window.location.href).searchParams.get('dapreview')) return;
