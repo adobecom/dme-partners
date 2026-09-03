@@ -711,23 +711,18 @@ test.describe('Smoke Tests', () => {
   test(`${features[25].name},${features[25].tags}`, async ({ page, baseURL }) => {
     const { data, path } = features[25];
 
-    await test.step('Log in', async () => {
-      await page.goto(`${baseURL}${path}`);
-      await smokeTest.signInButton.waitFor({ state: 'visible', timeout: 30000 });
-      await smokeTest.signInButton.click();
-      await smokeTest.smokeSignIn(page, baseURL, data.partnerLevel);
-      await smokeTest.profileIcon.waitFor({ state: 'visible', timeout: 30000 });
-    });
     await test.step('Check Feedback Dialog', async () => {
+      await page.goto(`${baseURL}${path}`);
       await smokeTest.feedbackButton.waitFor({ state: 'visible', timeout: 30000 });
-      expect(smokeTest.feedbackButton).toBeVisible();
-      expect(smokeTest.feedbackButton).toBeEnabled();
-      await smokeTest.feedbackButton.click();
+      await expect(smokeTest.feedbackButton).toBeVisible();
+      await expect(smokeTest.feedbackButton).toBeEnabled();
 
+      await smokeTest.feedbackButton.click();
       await smokeTest.feedbackTitle.waitFor({ state: 'visible', timeout: 30000 });
       await expect(smokeTest.feedbackTitle).toBeVisible();
       await expect(smokeTest.feedbackTitle).toHaveText(data.feedbackTitle);
 
+      await smokeTest.feedbackEmailField.waitFor({ state: 'visible', timeout: 30000 });
       await smokeTest.feedbackTextArea.waitFor({ state: 'visible', timeout: 30000 });
 
       await smokeTest.feedbackTextArea.fill(data.feedbackTextArea);
@@ -739,6 +734,18 @@ test.describe('Smoke Tests', () => {
       await smokeTest.feedBackStars3.waitFor({ state: 'visible', timeout: 30000 });
       await smokeTest.feedBackStars3.click();
       await expect(smokeTest.feedbackSendButton).toBeEnabled();
+    });
+    await test.step('Log in', async () => {
+      await smokeTest.signInButton.waitFor({ state: 'visible', timeout: 30000 });
+      await smokeTest.signInButton.click();
+      await smokeTest.smokeSignIn(page, baseURL, `${data.partnerLevel}`);
+      await smokeTest.profileIcon.waitFor({ state: 'visible', timeout: 30000 });
+    });
+    await test.step('Check Feedback Dialog after login', async () => {
+      await smokeTest.feedbackButton.waitFor({ state: 'visible', timeout: 30000 });
+      await expect(smokeTest.feedbackButton).toBeVisible();
+      await smokeTest.feedbackButton.click();
+      await expect(smokeTest.feedbackEmailField).not.toBeVisible();
     });
   });
 });

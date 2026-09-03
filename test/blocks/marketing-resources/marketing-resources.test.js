@@ -2,6 +2,7 @@ import { readFile } from '@web/test-runner-commands';
 import { expect } from '@esm-bundle/chai';
 import sinon from 'sinon';
 import init from '../../../edsdme/blocks/marketing-resources/marketing-resources.js';
+import MarketingResourcesCards from '../../../edsdme/blocks/marketing-resources/marketing-resources-cards.js';
 import PartnerCards, { sortTagsAlphabetically } from '../../../edsdme/components/PartnerCards.js';
 
 const cardsString = await readFile({ path: './mocks/cards.json' });
@@ -40,6 +41,70 @@ describe('Marketing Resources block', () => {
     expect(app.getAttribute('daa-lh')).to.equal('Marketing Resources Cards');
     return app;
   }
+
+  describe('MarketingResourcesCards overrides', () => {
+    it('adds a placeholder filter tag list when the authored filter row has only two columns', () => {
+      const row = document.createElement('div');
+      row.innerHTML = '<div>Filter</div><div>Product</div>';
+
+      const instance = new MarketingResourcesCards();
+      instance.blockData = {
+        tableData: [row],
+        localizedText: { '{{filter}}': 'Filter' },
+      };
+
+      instance.setBlockData();
+
+      expect(instance.blockData.filters).to.have.length(1);
+      expect(instance.blockData.filters[0].key).to.equal('product');
+      expect(row.children).to.have.length(3);
+      expect(row.children[2].querySelector('ul')).to.exist;
+    });
+
+    it('creates a tag list for a filter row when there is no <ul> in the tag column', () => {
+      const row = document.createElement('div');
+      const label = document.createElement('div');
+      const value = document.createElement('div');
+      const tagColumn = document.createElement('div');
+      label.textContent = 'Filter';
+      value.textContent = 'Product';
+      row.append(label, value, tagColumn);
+
+      const instance = new MarketingResourcesCards();
+      instance.blockData = {
+        tableData: [row],
+        localizedText: { '{{filter}}': 'Filter', '{{product}}': 'Product' },
+      };
+
+      instance.setBlockData();
+
+      expect(tagColumn.querySelector('ul')).to.exist;
+      expect(instance.blockData.filters[0].value).to.equal('Product');
+    });
+
+    it('filters cards to the current site before rendering results', () => {
+      window.history.pushState({}, '', '/channelpartners/');
+
+      const instance = new MarketingResourcesCards();
+      const data = {
+        cards: [
+          { id: 'same-site', contentArea: { url: 'https://partners.example.com/channelpartners/resource-1' } },
+          { id: 'other-site', contentArea: { url: 'https://partners.example.com/other-site/resource-2' } },
+        ],
+      };
+
+      instance.onDataFetched(data);
+
+      expect(data.cards.map((card) => card.id)).to.deep.equal(['same-site']);
+    });
+
+    it('uses the collections label for the results text', () => {
+      const instance = new MarketingResourcesCards();
+      instance.blockData = { localizedText: { '{{collections}}': 'Collections' } };
+
+      expect(instance.resultsText).to.equal('Collections');
+    });
+  });
 
   it('replaces block with marketing-resources-cards and renders cards, search, and pagination', async () => {
     const app = await setupAndRunInit();
