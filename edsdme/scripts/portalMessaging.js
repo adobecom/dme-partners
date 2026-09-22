@@ -8,7 +8,7 @@ import {
 } from './utils.js';
 
 async function loadPopupFragment(fragmentPath) {
-  const response = await fetch(fragmentPath);
+  const response = await fetch(`${fragmentPath}.plain.html`);
   if (!response.ok) {
     // eslint-disable-next-line no-console
     console.error(`Fetching fragment failed, status ${response.status}`);
@@ -18,8 +18,7 @@ async function loadPopupFragment(fragmentPath) {
   const { body } = new DOMParser().parseFromString(text, 'text/html');
   if (!body) return null;
 
-  const main = body.querySelector('main');
-  return main.firstElementChild;
+  return body.firstElementChild;
 }
 
 async function loadBannerContent(bannerType, defaultPath) {
@@ -114,15 +113,19 @@ export async function getRenewBanner(locales) {
   }
 }
 
-export async function prependContent(locales) {
-  const documentMain = document.querySelector('main');
-  if (!documentMain) return;
-
+export async function fetchBannerContent(locales) {
   const [globalBannerContent, sanctionedBannerContent, renewBannerContent] = await Promise.all([
     getGlobalBanner(),
     getSanctionedBanner(locales),
     getRenewBanner(locales),
   ]);
+
+  return { globalBannerContent, sanctionedBannerContent, renewBannerContent };
+}
+
+export function insertBannerContent({ globalBannerContent, sanctionedBannerContent, renewBannerContent }) {
+  const documentMain = document.querySelector('main');
+  if (!documentMain) return;
 
   if (globalBannerContent) documentMain.prepend(globalBannerContent);
   if (sanctionedBannerContent) documentMain.prepend(sanctionedBannerContent);

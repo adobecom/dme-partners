@@ -5,7 +5,8 @@ import {
   getGlobalBanner,
   getSanctionedBanner,
   getRenewBanner,
-  prependContent,
+  fetchBannerContent,
+  insertBannerContent,
 } from '../../edsdme/scripts/portalMessaging.js';
 import {
   getMetadataContent,
@@ -100,13 +101,14 @@ describe('Test portalMessaging.js', () => {
       getMetadataContent.mockReturnValue('/fragments/global-banner');
       global.fetch.mockResolvedValue({
         ok: true,
-        text: () => Promise.resolve('<html><body><main><div id="banner">Banner</div></main></body></html>'),
+        text: () => Promise.resolve('<div id="banner">Banner</div>'),
       });
 
       const result = await getGlobalBanner();
 
       expect(result).toBeTruthy();
       expect(result.id).toBe('banner');
+      expect(global.fetch).toHaveBeenCalledWith('/fragments/global-banner.plain.html');
     });
   });
 
@@ -126,9 +128,7 @@ describe('Test portalMessaging.js', () => {
       getLocale.mockReturnValue({ prefix: '' });
       global.fetch.mockResolvedValue({
         ok: true,
-        text: () => Promise.resolve(
-          '<html><body><main><div class="notification">Sanctioned RU</div></main></body></html>',
-        ),
+        text: () => Promise.resolve('<div class="notification">Sanctioned RU</div>'),
       });
 
       const result = await getSanctionedBanner();
@@ -136,7 +136,7 @@ describe('Test portalMessaging.js', () => {
       expect(result).toBeTruthy();
       expect(result.classList.contains('notification')).toBe(true);
       expect(result.textContent).toBe('Sanctioned RU');
-      expect(global.fetch).toHaveBeenCalledWith('/edsdme/partners-shared/fragments/banner-account-sanctioned');
+      expect(global.fetch).toHaveBeenCalledWith('/edsdme/partners-shared/fragments/banner-account-sanctioned.plain.html');
     });
 
     it('returns sanctioned banner for BY with locale prefix', async () => {
@@ -145,9 +145,7 @@ describe('Test portalMessaging.js', () => {
       getLocale.mockReturnValue({ prefix: '/de' });
       global.fetch.mockResolvedValue({
         ok: true,
-        text: () => Promise.resolve(
-          '<html><body><main><div class="notification">Sanctioned BY</div></main></body></html>',
-        ),
+        text: () => Promise.resolve('<div class="notification">Sanctioned BY</div>'),
       });
 
       const result = await getSanctionedBanner();
@@ -155,7 +153,7 @@ describe('Test portalMessaging.js', () => {
       expect(result).toBeTruthy();
       expect(result.classList.contains('notification')).toBe(true);
       expect(result.textContent).toBe('Sanctioned BY');
-      expect(global.fetch).toHaveBeenCalledWith('/de/edsdme/partners-shared/fragments/banner-account-sanctioned');
+      expect(global.fetch).toHaveBeenCalledWith('/de/edsdme/partners-shared/fragments/banner-account-sanctioned.plain.html');
     });
 
     it('uses custom metadata path if present', async () => {
@@ -163,9 +161,7 @@ describe('Test portalMessaging.js', () => {
       getMetadataContent.mockReturnValue('/custom/path/sanctioned-banner');
       global.fetch.mockResolvedValue({
         ok: true,
-        text: () => Promise.resolve(
-          '<html><body><main><div id="sanctioned-banner">Custom Sanctioned</div></main></body></html>',
-        ),
+        text: () => Promise.resolve('<div id="sanctioned-banner">Custom Sanctioned</div>'),
       });
 
       const result = await getSanctionedBanner();
@@ -173,7 +169,7 @@ describe('Test portalMessaging.js', () => {
       expect(result).toBeTruthy();
       expect(result.id).toBe('sanctioned-banner');
       expect(result.textContent).toBe('Custom Sanctioned');
-      expect(global.fetch).toHaveBeenCalledWith('/custom/path/sanctioned-banner');
+      expect(global.fetch).toHaveBeenCalledWith('/custom/path/sanctioned-banner.plain.html');
     });
 
     it('returns null on fragment fetch error', async () => {
@@ -269,10 +265,10 @@ describe('Test portalMessaging.js', () => {
     });
   });
 
-  describe('prependContent', () => {
-    it('returns early when no main element exists', async () => {
-      await prependContent({ locales: {} });
-      expect(global.fetch).not.toHaveBeenCalled();
+  describe('insertBannerContent', () => {
+    it('returns early when no main element exists', () => {
+      expect(() => insertBannerContent({})).not.toThrow();
+      expect(document.querySelector('main')).toBeNull();
     });
 
     it('prepends global + renew banners for non-sanctioned partner', async () => {
@@ -285,10 +281,10 @@ describe('Test portalMessaging.js', () => {
       });
 
       global.fetch.mockImplementation((url) => {
-        if (url === '/fragments/global-banner') {
+        if (url === '/fragments/global-banner.plain.html') {
           return Promise.resolve({
             ok: true,
-            text: () => Promise.resolve('<html><body><main><div id="global-banner">Global</div></main></body></html>'),
+            text: () => Promise.resolve('<div id="global-banner">Global</div>'),
           });
         }
         if (url === 'http://localhost/edsdme/partners-shared/fragments/banner-account-expires.plain.html') {
@@ -300,7 +296,8 @@ describe('Test portalMessaging.js', () => {
         return Promise.reject(new Error(`Unknown url: ${url}`));
       });
 
-      await prependContent({ locales: {} });
+      const banners = await fetchBannerContent({ locales: {} });
+      insertBannerContent(banners);
 
       const main = document.querySelector('main');
       expect(main.children[0].querySelector('.notification')).toBeTruthy();
@@ -318,22 +315,23 @@ describe('Test portalMessaging.js', () => {
       });
 
       global.fetch.mockImplementation((url) => {
-        if (url === '/fragments/global-banner') {
+        if (url === '/fragments/global-banner.plain.html') {
           return Promise.resolve({
             ok: true,
-            text: () => Promise.resolve('<html><body><main><div id="global-banner">Global</div></main></body></html>'),
+            text: () => Promise.resolve('<div id="global-banner">Global</div>'),
           });
         }
-        if (url === '/edsdme/partners-shared/fragments/banner-account-sanctioned') {
+        if (url === '/edsdme/partners-shared/fragments/banner-account-sanctioned.plain.html') {
           return Promise.resolve({
             ok: true,
-            text: () => Promise.resolve('<html><body><main><div id="sanctioned-banner">Sanctioned</div></main></body></html>'),
+            text: () => Promise.resolve('<div id="sanctioned-banner">Sanctioned</div>'),
           });
         }
         return Promise.reject(new Error(`Unknown url: ${url}`));
       });
 
-      await prependContent({ locales: {} });
+      const banners = await fetchBannerContent({ locales: {} });
+      insertBannerContent(banners);
 
       const main = document.querySelector('main');
       expect(main.children[0].id).toBe('sanctioned-banner');

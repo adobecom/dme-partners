@@ -1,5 +1,5 @@
 import { applyPagePersonalization } from './personalization.js';
-import { prependContent } from './portalMessaging.js';
+import { fetchBannerContent, insertBannerContent } from './portalMessaging.js';
 import {
   setLibs,
   redirectLoggedinPartner,
@@ -103,6 +103,25 @@ const CONFIG = {
 
 const miloLibs = setLibs(LIBS);
 
+(function preloadHeroBlock() {
+  const heroBlock = document.querySelector('main .marquee, main .hero-marquee');
+  if (!heroBlock) return;
+  const name = heroBlock.classList.contains('hero-marquee') ? 'hero-marquee' : 'marquee';
+  const preload = (href, as) => {
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'preload');
+    link.setAttribute('as', as);
+    link.setAttribute('href', href);
+    if (as === 'script') link.setAttribute('crossorigin', 'anonymous');
+    document.head.appendChild(link);
+  };
+  preload(`${miloLibs}/blocks/${name}/${name}.js`, 'script');
+  preload(`${miloLibs}/blocks/${name}/${name}.css`, 'style');
+  preload(`${miloLibs}/utils/decorate.js`, 'script');
+  preload(`${miloLibs}/styles/iconography.css`, 'style');
+  preload(`${miloLibs}/styles/breakpoint-theme.css`, 'style');
+}());
+
 (function loadStyles() {
   const paths = [`${miloLibs}/styles/styles.css`];
   if (STYLES) { paths.push(STYLES); }
@@ -120,12 +139,13 @@ function setUpPage() {
 }
 
 (async function loadPage() {
-  await prependContent(CONFIG.locales);
+  const bannerContentPromise = fetchBannerContent(CONFIG.locales);
   applyPagePersonalization();
   setUpPage();
   redirectLoggedinPartner();
   updateIMSConfig();
-  await preloadResources(CONFIG.locales, miloLibs);
+  const [bannerContent] = await Promise.all([bannerContentPromise, preloadResources(CONFIG.locales, miloLibs)]);
+  insertBannerContent(bannerContent);
   const { loadArea, setConfig, getConfig } = await import(`${miloLibs}/utils/utils.js`);
   setConfig({ ...CONFIG, miloLibs });
   await setFeedback(getConfig);
