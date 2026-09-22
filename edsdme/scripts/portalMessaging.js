@@ -123,6 +123,7 @@ export async function fetchBannerContent(locales) {
   return { globalBannerContent, sanctionedBannerContent, renewBannerContent };
 }
 
+// eslint-disable-next-line max-len
 export function insertBannerContent({ globalBannerContent, sanctionedBannerContent, renewBannerContent }) {
   const documentMain = document.querySelector('main');
   if (!documentMain) return;

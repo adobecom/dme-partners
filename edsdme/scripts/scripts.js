@@ -144,6 +144,8 @@ function setUpPage() {
   setUpPage();
   redirectLoggedinPartner();
   updateIMSConfig();
+
+  // eslint-disable-next-line max-len
   const [bannerContent] = await Promise.all([bannerContentPromise, preloadResources(CONFIG.locales, miloLibs)]);
   insertBannerContent(bannerContent);
   const { loadArea, setConfig, getConfig } = await import(`${miloLibs}/utils/utils.js`);
