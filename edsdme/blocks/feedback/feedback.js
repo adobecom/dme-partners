@@ -1,80 +1,9 @@
 import { getCurrentProgramType, getPartnerCookieObject, partnerIsSignedIn, getLibs, prodHosts } from '../../scripts/utils.js';
 import { getConfig } from '../utils/utils.js';
+import showToast from '../../components/Toast.js';
 
 const miloLibs = getLibs();
 const { processTrackingLabels } = await import(`${miloLibs}/martech/attributes.js`);
-
-function showToast(success, onTryAgain, config) {
-  const existingToast = document.querySelector('.feedback-toast');
-  if (existingToast) existingToast.remove();
-
-  const toast = document.createElement('div');
-  toast.className = success
-    ? 'spectrum-Toast spectrum-Toast--positive feedback-toast'
-    : 'spectrum-Toast spectrum-Toast--negative feedback-toast';
-
-  const iconWrapper = document.createElement('span');
-  iconWrapper.className = 'feedback-toast-icon feedback-toast-icon-left';
-
-  const iconImg = document.createElement('img');
-  iconImg.src = success ? '/edsdme/img/icons/checkmark.svg' : '/edsdme/img/icons/alert.svg';
-  iconWrapper.appendChild(iconImg);
-
-  const body = document.createElement('div');
-  body.className = 'spectrum-Toast-body';
-
-  const content = document.createElement('div');
-  content.className = 'spectrum-Toast-content';
-
-  const message = document.createElement('span');
-  if (success && config.toastPositiveIsHtml) {
-    message.innerHTML = config.toastPositive;
-  } else if (success) {
-    message.textContent = config.toastPositive;
-  } else {
-    message.textContent = config.toastNegative;
-  }
-  content.appendChild(message);
-
-  if (!success) {
-    const tryAgainBtn = document.createElement('button');
-    tryAgainBtn.type = 'button';
-    tryAgainBtn.className = 'feedback-try-again-cta feedback-toast-cta';
-    tryAgainBtn.textContent = config.tryAgain;
-    tryAgainBtn.addEventListener('click', onTryAgain);
-    content.appendChild(tryAgainBtn);
-  }
-
-  body.appendChild(content);
-
-  const buttons = document.createElement('div');
-  buttons.className = 'spectrum-Toast-buttons';
-
-  const closeBtn = document.createElement('button');
-  closeBtn.type = 'button';
-  closeBtn.className = 'feedback-toast-icon feedback-toast-cta feedback-toast-icon-close';
-  closeBtn.innerHTML = '×';
-  closeBtn.addEventListener('click', () => toast.remove());
-
-  buttons.appendChild(closeBtn);
-
-  toast.appendChild(iconWrapper);
-  toast.appendChild(body);
-  toast.appendChild(buttons);
-
-  document.body.appendChild(toast);
-
-  setTimeout(() => {
-    toast.classList.add('feedback-toast-show');
-  }, 10);
-
-  if (success) {
-    setTimeout(() => {
-      toast.classList.remove('feedback-toast-show');
-      setTimeout(() => toast.remove(), 300);
-    }, 5000);
-  }
-}
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -243,7 +172,7 @@ async function renderDialog(feedbackButton, formDefinitionUrl, config) {
   const submitFeedback = async () => {
     if (honeypotInput.value.length > 0) {
       closeDialog();
-      showToast(true, null, config);
+      showToast('feedback', true, null, config);
       return;
     }
     if (!isSignedIn) {
@@ -303,7 +232,7 @@ async function renderDialog(feedbackButton, formDefinitionUrl, config) {
     }).catch(() => false);
     if (!resp || !resp.ok) {
       closeDialog();
-      showToast(false, () => {
+      showToast('feedback', false, () => {
         renderDialog(feedbackButton, formDefinitionUrl, config);
       }, config);
       return;
@@ -313,7 +242,7 @@ async function renderDialog(feedbackButton, formDefinitionUrl, config) {
     config.savedComment = '';
     if (!isSignedIn) config.savedEmail = '';
     closeDialog();
-    showToast(true, null, config);
+    showToast('feedback', true, null, config);
   };
 
   sendButton.addEventListener('click', submitFeedback);
