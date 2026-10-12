@@ -261,12 +261,13 @@ export default {
     {
       tcid: '21',
       name: '@sso-integration-between-apc-and-finder',
-      path: '/na/channelpartners/home/#?georouting=on&martech=off',
+      path: '/na/channelpartners/#?georouting=on&martech=off',
       tags: '@dme-smoke-test',
       data: {
         partnerLevel: 'cpp-distributor-us:',
-        expectedSalesForceURL: '/s/directory/channel?lang=en&view=distributor',
+        signInButtonInternationalText: 'Sign In',
         expectedFindURL: '/s/directory/channel?lang=en&view=distributor',
+        expectedPartnerURL: '/s/directory/channel',
       },
     },
     {
