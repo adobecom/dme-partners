@@ -351,6 +351,23 @@ describe('Test utils.js', () => {
     expect(accountStatus).toEqual('suspended');
     expect(daysNum).toBeLessThanOrEqual(60);
   });
+  it('Returns whole number of days when range spans a DST change', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2026-10-20T10:00:00'));
+    const cookieObject = {
+      CPP: {
+        primaryContact: true,
+        status: 'MEMBER',
+        level: 'registered',
+        accountAnniversary: '2026-11-01T00:00:00',
+      },
+    };
+    document.cookie = `partner_data=${JSON.stringify(cookieObject)}`;
+    const { accountStatus, daysNum } = isRenew();
+    expect(accountStatus).toEqual('expired');
+    expect(Number.isInteger(daysNum)).toBe(true);
+    expect(daysNum).toEqual(11);
+    jest.useRealTimers();
+  });
 
   it('Update ims config if user is signed in', () => {
     jest.useFakeTimers();
