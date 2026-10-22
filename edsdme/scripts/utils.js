@@ -218,15 +218,11 @@ export function isRenew() {
   const accountExpiration = getPartnerCookieValue(programType, 'accountanniversary');
   if (!accountExpiration) return;
 
-  const expirationDate = new Date(accountExpiration);
-  const expirationDay = Date.UTC(
-    expirationDate.getUTCFullYear(),
-    expirationDate.getUTCMonth(),
-    expirationDate.getUTCDate(),
-  );
+  const dayInMs = 1000 * 60 * 60 * 24;
+  const expirationDay = Math.floor(new Date(accountExpiration).getTime() / dayInMs);
   const now = new Date();
-  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-  const daysUntilExpiration = (expirationDay - today) / (1000 * 60 * 60 * 24);
+  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / dayInMs;
+  const daysUntilExpiration = expirationDay - today;
 
   let accountStatus;
   let daysNum;
